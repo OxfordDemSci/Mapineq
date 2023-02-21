@@ -1,4 +1,4 @@
-# DGG launch script to configure server
+# launch script to configure server
 
 # update
 sudo apt-get update 
@@ -43,10 +43,10 @@ echo -e "\tIdentityFile ~/.ssh/id_rsa" >> ~/.ssh/config
 
 # clone repository
 cd ~
-git clone git@github.com:OxfordDemSci/UK_vehicle_database
+git clone git@github.com:OxfordDemSci/MapIneq
 
 # deploy
-cd ~/UK_vehicle_database
+cd ~/MapIneq
 docker-compose up -d --build
 
 
