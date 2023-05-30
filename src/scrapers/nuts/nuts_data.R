@@ -67,4 +67,3 @@ for (i in 1:length(df_list)){
     unnest(c(geometry, properties), names_sep = ".")
   jsonlite::write_json(path = paste0("nuts", i - 1, "_info.json"), df_list[[i]], pretty = TRUE)
 }
-
