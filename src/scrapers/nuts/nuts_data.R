@@ -1,3 +1,6 @@
+# cleanup
+rm(list = ls()); gc(); cat("\014"); try(dev.off(), silent = T); options(scipen = 999)
+
 # Load libraries
 library(httr)
 library(tidyr)

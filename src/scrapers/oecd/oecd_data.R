@@ -1,8 +1,19 @@
+# cleanup
+rm(list = ls()); gc(); cat("\014"); try(dev.off(), silent = T); options(scipen = 999)
+
 # Load necessary libraries
 library(httr)
 library(jsonlite)
 library(tidyr)
 library(stringr)
+
+# working directory
+setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path), "..", "..", ".."))
+
+# directories
+srcdir = file.path('src', 'scrapers', 'oecd')
+outdir <- file.path('data', 'oecd')
+dir.create(outdir, showWarnings=F, recursive=T)
 
 # Function to reformat data for merging later on
 correct_format = function(
@@ -91,7 +102,7 @@ api_to_data_set = function(
 
 # Load API URLs and define ID variables for data sets
 id.vars = c("Country", "iso3", "Region", "Gender", "Year")
-url_list = as.list(as.character(read.delim('oecd_api_urls.txt', sep = ',', header = F, colClasses = "character")[1, ]))
+url_list = as.list(as.character(read.delim(file.path(srcdir, 'oecd_api_urls.txt'), sep = ',', header = F, colClasses = "character")[1, ]))
 
 # Regional statistics on education (selection of countries and regions)
 oecd_education_country = api_to_data_set(url_list[[1]], id.vars)[[1]]
@@ -115,4 +126,4 @@ oecd_df_list = list(
   oecd_gender_country
 )
 df_oecd = Reduce(function(dtf1, dtf2) merge(dtf1, dtf2, by = id.vars, all.x = TRUE), oecd_df_list)
-write.csv(df_oecd, "oecd_data.csv")
+write.csv(df_oecd, file.path(outdir, "oecd_data.csv"))
