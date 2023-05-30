@@ -1,8 +1,16 @@
 # Load libraries
 library(httr)
-library(jsonlite)
 library(tidyr)
 library(stringr)
+library(geojsonsf)
+library(sf)
+
+# working directory
+setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path), "..", "..", ".."))
+
+# output directory
+outdir <- file.path('data', 'nuts')
+dir.create(outdir, showWarnings=F, recursive=T)
 
 # Define the arguments for the type of data to retrieve
 nuts_args = list(
@@ -39,8 +47,9 @@ urls = create_api_url(nuts_args)
 # based on URL, returning raw data
 url_to_data_frame = function(url){
   res = GET(url)
-  data = fromJSON(rawToChar(res$content))
-  return(data$features)
+  data = geojson_sf(rawToChar(res$content))
+  data$FID = seq(1, nrow(data))
+  return(data)
 }
 
 # Retrieve data for each URL
@@ -54,16 +63,17 @@ for (i in 1:length(df_list)){
   vals = seq(0, i - 1)
   for (j in vals){
     if (i == (j + 1)){
-      df_list[[i]][paste0("id_nuts_", j)] = df_list[[i]]$id
+      df_list[[i]][paste0("id_nuts_", j)] = df_list[[i]]$NUTS_ID
     } else {
-      df_list[[i]][paste0("id_nuts_", j)] = substr(df_list[[i]]$id, 1, j + 2)
+      df_list[[i]][paste0("id_nuts_", j)] = substr(df_list[[i]]$NUTS_ID, 1, j + 2)
     }
   }
 }
 
 # Write the data sets for different NUTS levels to .csv
 for (i in 1:length(df_list)){
-  df_list[[i]] = df_list[[i]] %>%
-    unnest(c(geometry, properties), names_sep = ".")
-  jsonlite::write_json(path = paste0("nuts", i - 1, "_info.json"), df_list[[i]], pretty = TRUE)
+  sf::st_write(obj = df_list[[i]],
+               dsn = file.path(outdir, paste0("nuts", i - 1, "_info.gpkg")),
+               append = FALSE)
 }
+
