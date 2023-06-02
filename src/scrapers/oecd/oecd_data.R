@@ -6,6 +6,8 @@ library(httr)
 library(jsonlite)
 library(tidyr)
 library(stringr)
+library(plyr)
+library(dplyr)
 
 # working directory
 setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path), "..", "..", ".."))
@@ -35,7 +37,10 @@ correct_format = function(
     df["Indicator"] = apply( df[ , c("Indicator", spread_col_nowhite)] , 1, paste, collapse = ".")
     df = df[, !names(df) %in% spread_col_nowhite]
   }
-  df = pivot_wider(df, values_from = "Value", names_from = "Indicator", values_fn = list)
+  df = df %>%
+    dplyr::group_by_at(vars(one_of(c(id.vars, "Indicator")))) %>%
+    dplyr::summarise(Value = mean(Value, na.rm = T))
+  df = pivot_wider(df, values_from = "Value", names_from = "Indicator")
   
   # Add unpresent variables for consistency with other data sets
   not_present = id.vars[!id.vars %in% names(df)]
@@ -100,6 +105,21 @@ api_to_data_set = function(
   return(final_list)
 }
 
+# Function to make names of data sets consistent for rbind() later on
+consistent_columns = function(
+    data_list
+){
+  cols = unique(unlist(lapply(data_list, names)))
+  for (i in 1:length(cols)){
+    for (j in 1:length(data_list)){
+      if (!cols[i] %in% names(data_list[[j]])){
+        data_list[[j]][cols[i]] = NA
+      }
+    }
+  }
+  return(data_list)
+}
+
 # Load API URLs and define ID variables for data sets
 id.vars = c("Country", "iso3", "Region", "Gender", "Year")
 url_list = as.list(as.character(read.delim(file.path(srcdir, 'oecd_api_urls.txt'), sep = ',', header = F, colClasses = "character")[1, ]))
@@ -107,11 +127,15 @@ url_list = as.list(as.character(read.delim(file.path(srcdir, 'oecd_api_urls.txt'
 # Regional statistics on education (selection of countries and regions)
 oecd_education_country = api_to_data_set(url_list[[1]], id.vars)[[1]]
 oecd_education_region = api_to_data_set(url_list[[2]], id.vars)[[1]]
+oecd_edu_list = list(oecd_education_country, oecd_education_region)
+oecd_education = rbind.fill(consistent_columns(oecd_edu_list))
 
 # Regional statistics on well-being (selection of countries and regions)
 data_wellbeing = api_to_data_set(url_list[[3]], id.vars)
 oecd_wellbeing_country = data_wellbeing$final_countries
 oecd_wellbeing_region = data_wellbeing$final_regions
+oecd_wb_list = list(oecd_wellbeing_country, oecd_wellbeing_region)
+oecd_wellbeing = rbind.fill(consistent_columns(oecd_wb_list))
 
 # Policy-relevant gender data variables
 # Might take a bit longer because OECD data are large
@@ -119,10 +143,8 @@ oecd_gender_country = api_to_data_set(url_list[[4]], id.vars)[[1]]
 
 # Combine OECD data into one data frame
 oecd_df_list = list(
-  oecd_education_country,
-  oecd_education_region,
-  oecd_wellbeing_country,
-  oecd_wellbeing_region,
+  oecd_education,
+  oecd_wellbeing,
   oecd_gender_country
 )
 df_oecd = Reduce(function(dtf1, dtf2) merge(dtf1, dtf2, by = id.vars, all.x = TRUE), oecd_df_list)
