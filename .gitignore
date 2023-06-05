@@ -1,4 +1,5 @@
-data/
+private/
+out/
 .idea/
 
 #---- R -----#
