@@ -1,0 +1,456 @@
+"tl2_id","tl1_id","iso3","name_or","name_en","name_fr","continenta","reg_name_p","EU","EEA","mapineq"
+"999","999","999","Non-Categorized-Other Territory","Non-Categorized-Other Territory","Non-Categorized-Other Territory","t","Non-Categorized-Other Territory",FALSE,FALSE,FALSE
+"AL01","ALB44","ALB","Veri","Veri","Veri","f","Veri",FALSE,FALSE,FALSE
+"AL02","ALB44","ALB","Qender","Qender","Qender","f","Qender",FALSE,FALSE,FALSE
+"AL03","ALB44","ALB","Jug","Jug","Jug","f","Jug",FALSE,FALSE,FALSE
+"AT11","AUT27","AUT","Burgenland","Burgenland","Burgenland","f","Burgenland",TRUE,TRUE,TRUE
+"AT12","AUT27","AUT","Niederösterreich","Lower Austria","Basse-Autriche","f","Lower Austria",TRUE,TRUE,TRUE
+"AT13","AUT27","AUT","Wien","Vienna","Vienne","f","Vienna",TRUE,TRUE,TRUE
+"AT21","AUT27","AUT","Kärnten","Carinthia","Carinthie","f","Carinthia",TRUE,TRUE,TRUE
+"AT22","AUT27","AUT","Steiermark","Styria","Styrie","f","Styria",TRUE,TRUE,TRUE
+"AT31","AUT27","AUT","Oberösterreich","Upper Austria","Haute-Autriche","f","Upper Austria",TRUE,TRUE,TRUE
+"AT32","AUT27","AUT","Salzburg","Salzburg","Salzbourg","f","Salzburg",TRUE,TRUE,TRUE
+"AT33","AUT27","AUT","Tirol","Tyrol","Tyrol","f","Tyrol",TRUE,TRUE,TRUE
+"AT34","AUT27","AUT","Vorarlberg","Vorarlberg","Vorarlberg","f","Vorarlberg",TRUE,TRUE,TRUE
+"AU1","AUS223","AUS","New South Wales","New South Wales","New South Wales","t","New South Wales",FALSE,FALSE,FALSE
+"AU2","AUS223","AUS","Victoria","Victoria","Victoria","t","Victoria",FALSE,FALSE,FALSE
+"AU3","AUS223","AUS","Queensland","Queensland","Qeensland","t","Queensland",FALSE,FALSE,FALSE
+"AU4","AUS223","AUS","South Australia","South Australia","South Australia","t","South",FALSE,FALSE,FALSE
+"AU5","AUS223","AUS","Western Australia","Western Australia","Western Australia","t","West",FALSE,FALSE,FALSE
+"AU6","AUS223","AUS","Tasmania","Tasmania","Tasmania","t","Tasmania",FALSE,FALSE,FALSE
+"AU7","AUS223","AUS","Northern Territory","Northern Territory","Northern Territory","t","N. Territory",FALSE,FALSE,FALSE
+"AU8","AUS223","AUS","Australian Capital Territory","Australian Capital Territory","Australian Capital Territory","t","Canberra Region",FALSE,FALSE,FALSE
+"BE1","BEL16","BEL","Reg -Bruxelles-Cap -/Brussels Hfdst -Gew -","Brussels Capital Region","Région de Bruxelles-Capitale","f","Brussels Region",FALSE,FALSE,FALSE
+"BE2","BEL16","BEL","Vlaams Gewest","Flemish Region","Région flamande","f","Flemish Region",FALSE,FALSE,FALSE
+"BE3","BEL16","BEL","Région wallonne","Wallonia","Wallonie","f","Wallonia",FALSE,FALSE,FALSE
+"BG31","BGR37","BGR","Severozapaden","North West","Nord-Ouest","f","North West",TRUE,TRUE,TRUE
+"BG32","BGR37","BGR","Severen Tsentralen","North Central","Nord-Central","f","North Central",TRUE,TRUE,TRUE
+"BG33","BGR37","BGR","Severoiztochen","North East","Nord-Est","f","North East",TRUE,TRUE,TRUE
+"BG34","BGR37","BGR","Yugoiztochen","South East","Sud-Est","f","South East",TRUE,TRUE,TRUE
+"BG41","BGR37","BGR","Yugozapaden","South West","Sud-Ouest","f","South West",TRUE,TRUE,TRUE
+"BG42","BGR37","BGR","Yuzhen Tsentralen","South Central","Sud-Central","f","South Central",TRUE,TRUE,TRUE
+"CA10","CAN47","CAN","Newfoundland and Labrador","Newfoundland and Labrador","Newfoundland and Labrador","t","Newfoundland Labrador",FALSE,FALSE,FALSE
+"CA11","CAN47","CAN","Prince Edward Island","Prince Edward Island","Prince Edward Island","t","Prince Edward I.",FALSE,FALSE,FALSE
+"CA12","CAN47","CAN","Nova Scotia","Nova Scotia","Nova Scotia","t","Nova Scotia",FALSE,FALSE,FALSE
+"CA13","CAN47","CAN","New Brunswick","New Brunswick","New Brunswick","t","New Brunswick",FALSE,FALSE,FALSE
+"CA24","CAN47","CAN","Quebec","Quebec","Quebec","t","Quebec",FALSE,FALSE,FALSE
+"CA35","CAN47","CAN","Ontario","Ontario","Ontario","t","Ontario",FALSE,FALSE,FALSE
+"CA46","CAN47","CAN","Manitoba","Manitoba","Manitoba","t","Manitoba",FALSE,FALSE,FALSE
+"CA47","CAN47","CAN","Saskatchewan","Saskatchewan","Saskatchewan","t","Saskatchewan",FALSE,FALSE,FALSE
+"CA48","CAN47","CAN","Alberta","Alberta","Alberta","t","Alberta",FALSE,FALSE,FALSE
+"CA59","CAN47","CAN","British Columbia","British Columbia","British Columbia","t","British Columbia",FALSE,FALSE,FALSE
+"CA60","CAN47","CAN","Yukon","Yukon","Yukon","t","Yukon",FALSE,FALSE,FALSE
+"CA61","CAN47","CAN","Northwest Territories","Northwest Territories","Northwest Territories","t","N.W. Territories",FALSE,FALSE,FALSE
+"CA62","CAN47","CAN","Nunavut","Nunavut","Nunavut","t","Nunavut",FALSE,FALSE,FALSE
+"CH01","CHE33","CHE","Région lémanique","Lake Geneva Region","Région lémanique","f","Lake Geneva",FALSE,FALSE,FALSE
+"CH02","CHE33","CHE","Espace Mittelland","Espace Mittelland","Espace Mittelland","f","Espace Mittelland",FALSE,FALSE,FALSE
+"CH03","CHE33","CHE","Nordwestschweiz","Northwestern Switzerland","Suisse du Nord-Ouest","f","Northwestern",FALSE,FALSE,FALSE
+"CH04","CHE33","CHE","Zürich","Zurich","Zurich","f","Zurich",FALSE,FALSE,FALSE
+"CH05","CHE33","CHE","Ostschweiz","Eastern Switzerland","Suisse orientale","f","East",FALSE,FALSE,FALSE
+"CH06","CHE33","CHE","Zentralschweiz","Central Switzerland","Suisse centrale","f","Central",FALSE,FALSE,FALSE
+"CH07","CHE33","CHE","Ticino","Ticino","Tessin","f","Ticino",FALSE,FALSE,FALSE
+"CL01","CHL225","CHL","Tarapacá","Tarapacá","Tarapacá","t","Tarapacá",FALSE,FALSE,FALSE
+"CL02","CHL225","CHL","Antofagasta","Antofagasta","Antofagasta","t","Antofagasta",FALSE,FALSE,FALSE
+"CL03","CHL225","CHL","Atacama","Atacama","Atacama","t","Atacama",FALSE,FALSE,FALSE
+"CL04","CHL225","CHL","Coquimbo","Coquimbo","Coquimbo","t","Coquimbo",FALSE,FALSE,FALSE
+"CL05","CHL225","CHL","Valparaíso","Valparaíso","Valparaíso","t","Valparaíso",FALSE,FALSE,FALSE
+"CL06","CHL225","CHL","O'Higgins","O'Higgins","O'Higgins","t","O'Higgins",FALSE,FALSE,FALSE
+"CL07","CHL225","CHL","Maule","Maule","Maule","t","Maule",FALSE,FALSE,FALSE
+"CL08","CHL225","CHL","Bío-Bío","Bío-Bío","Bío-Bío","t","Bío-Bío",FALSE,FALSE,FALSE
+"CL09","CHL225","CHL","Araucanía","Araucanía","Araucanía","t","Araucanía",FALSE,FALSE,FALSE
+"CL10","CHL225","CHL","Los Lagos","Los Lagos","Los Lagos","t","Los Lagos",FALSE,FALSE,FALSE
+"CL11","CHL225","CHL","Aysén","Aysén","Aysén","t","Aysen",FALSE,FALSE,FALSE
+"CL12","CHL225","CHL","Magallanes","Magallanes","Magallanes","t","Magallanes",FALSE,FALSE,FALSE
+"CL13","CHL225","CHL","Metropolitana de Santiago","Santiago Metropolitan","Métropole de Santiago","t","Santiago",FALSE,FALSE,FALSE
+"CL14","CHL225","CHL","Los Ríos","Los Ríos","Los Ríos","t","Los Ríos",FALSE,FALSE,FALSE
+"CL15","CHL225","CHL","Arica y Parinacota","Arica y Parinacota","Arica y Parinacota","t","Arica y Parinacota",FALSE,FALSE,FALSE
+"CO05","COL160","COL","Antioquia","Antioquia","Antioquia","t","Antioquia",FALSE,FALSE,FALSE
+"CO08","COL160","COL","Atlántico","Atlántico","Atlántico","t","Atlántico",FALSE,FALSE,FALSE
+"CO11","COL160","COL","Bogotá Capital District","Bogotá Capital District","Bogotá Capital District","t","Bogotá Capital District",FALSE,FALSE,FALSE
+"CO13","COL160","COL","Bolívar","Bolívar","Bolívar","t","Bolívar",FALSE,FALSE,FALSE
+"CO15","COL160","COL","Boyacá","Boyacá","Boyacá","t","Boyacá",FALSE,FALSE,FALSE
+"CO17","COL160","COL","Caldas","Caldas","Caldas","t","Caldas",FALSE,FALSE,FALSE
+"CO18","COL160","COL","Caquetá","Caquetá","Caquetá","t","Caquetá",FALSE,FALSE,FALSE
+"CO19","COL160","COL","Cauca","Cauca","Cauca","t","Cauca",FALSE,FALSE,FALSE
+"CO20","COL160","COL","Cesar","Cesar","Cesar","t","Cesar",FALSE,FALSE,FALSE
+"CO23","COL160","COL","Córdoba (CO)","Córdoba (CO)","Córdoba (CO)","t","Córdoba (CO)",FALSE,FALSE,FALSE
+"CO25","COL160","COL","Cundinamarca","Cundinamarca","Cundinamarca","t","Cundinamarca",FALSE,FALSE,FALSE
+"CO27","COL160","COL","Chocó","Chocó","Chocó","t","Chocó",FALSE,FALSE,FALSE
+"CO41","COL160","COL","Huila","Huila","Huila","t","Huila",FALSE,FALSE,FALSE
+"CO44","COL160","COL","La Guajira","La Guajira","La Guajira","t","La Guajira",FALSE,FALSE,FALSE
+"CO47","COL160","COL","Magdalena","Magdalena","Magdalena","t","Magdalena",FALSE,FALSE,FALSE
+"CO50","COL160","COL","Meta","Meta","Meta","t","Meta",FALSE,FALSE,FALSE
+"CO52","COL160","COL","Nariño","Nariño","Nariño","t","Nariño",FALSE,FALSE,FALSE
+"CO54","COL160","COL","Norte de Santander","Norte de Santander","Norte de Santander","t","Norte de Santander",FALSE,FALSE,FALSE
+"CO63","COL160","COL","Quindio","Quindio","Quindio","t","Quindio",FALSE,FALSE,FALSE
+"CO66","COL160","COL","Risaralda","Risaralda","Risaralda","t","Risaralda",FALSE,FALSE,FALSE
+"CO68","COL160","COL","Santander","Santander","Santander","t","Santander",FALSE,FALSE,FALSE
+"CO70","COL160","COL","Sucre","Sucre","Sucre","t","Sucre",FALSE,FALSE,FALSE
+"CO73","COL160","COL","Tolima","Tolima","Tolima","t","Tolima",FALSE,FALSE,FALSE
+"CO76","COL160","COL","Valle del Cauca","Valle del Cauca","Valle del Cauca","t","Valle del Cauca",FALSE,FALSE,FALSE
+"CO81","COL160","COL","Arauca","Arauca","Arauca","t","Arauca",FALSE,FALSE,FALSE
+"CO85","COL160","COL","Casanare","Casanare","Casanare","t","Casanare",FALSE,FALSE,FALSE
+"CO86","COL160","COL","Putumayo","Putumayo","Putumayo","t","Putumayo",FALSE,FALSE,FALSE
+"CO88","COL160","COL","San Andrés","San Andrés","San Andrés","t","San Andrés",FALSE,FALSE,FALSE
+"CO90","COL160","COL","Grupo Amazonía","Grupo Amazonía","Grupo Amazonía","t","Grupo Amazonía",FALSE,FALSE,FALSE
+"CO91","COL160","COL","Amazonas","Amazonas","Amazonas","t","Amazonas",FALSE,FALSE,FALSE
+"CO94","COL160","COL","Guainía","Guainía","Guainía","t","Guainía",FALSE,FALSE,FALSE
+"CO95","COL160","COL","Guaviare","Guaviare","Guaviare","t","Guaviare",FALSE,FALSE,FALSE
+"CO97","COL160","COL","Vaupés","Vaupés","Vaupés","t","Vaupés",FALSE,FALSE,FALSE
+"CY00","CYP58","CYP","Kypros/kibris","Cyprus","Chypre","f","Cyprus",TRUE,TRUE,TRUE
+"CZ01","CZE18","CZE","Praha","Prague","Prague","f","Prague",TRUE,TRUE,TRUE
+"CZ02","CZE18","CZE","Stredni Cechy","Central Bohemian Region","Région de Bohême centrale","f","Central Bohemia",TRUE,TRUE,TRUE
+"CZ03","CZE18","CZE","Jihozápad","Southwest","Sud-Ouest","f","Southwest",TRUE,TRUE,TRUE
+"CZ04","CZE18","CZE","Severozápad","Northwest","Nord-Ouest","f","Northwest",TRUE,TRUE,TRUE
+"CZ05","CZE18","CZE","Severovýchod","Northeast","Nord-Est","f","Northeast",TRUE,TRUE,TRUE
+"CZ06","CZE18","CZE","Jihovýchod","Southeast","Sud-Est","f","Southeast",TRUE,TRUE,TRUE
+"CZ07","CZE18","CZE","Strední Morava","Central Moravia","Moravie centrale","f","Central Moravia",TRUE,TRUE,TRUE
+"CZ08","CZE18","CZE","Moravskoslezsko","Moravia-Silesia","Moravie-Silésie","f","Moravia-Silesia",TRUE,TRUE,TRUE
+"DE1","DEU26","DEU","Baden-Württemberg","Baden-Württemberg","Baden-Württemberg","f","Baden-Württemberg",TRUE,TRUE,TRUE
+"DE2","DEU26","DEU","Bayern","Bavaria","Bavière","f","Bavaria",TRUE,TRUE,TRUE
+"DE3","DEU26","DEU","Berlin","Berlin","Berlin","f","Berlin",TRUE,TRUE,TRUE
+"DE4","DEU26","DEU","Brandenburg","Brandenburg","Branderbourg","f","Brandenburg",TRUE,TRUE,TRUE
+"DE5","DEU26","DEU","Bremen","Bremen","Brême","f","Bremen",TRUE,TRUE,TRUE
+"DE6","DEU26","DEU","Hamburg","Hamburg","Hambourg","f","Hamburg",TRUE,TRUE,TRUE
+"DE7","DEU26","DEU","Hessen","Hesse","Hesse","f","Hesse",TRUE,TRUE,TRUE
+"DE8","DEU26","DEU","Mecklenburg-Vorpommern","Mecklenburg-Vorpommern","Mecklembourg-Poméranie-Occidentale","f","Mecklenburg-Vorpommern",TRUE,TRUE,TRUE
+"DE9","DEU26","DEU","Niedersachsen","Lower Saxony","Basse-Saxe","f","Lower Saxony",TRUE,TRUE,TRUE
+"DEA","DEU26","DEU","Nordrhein-Westfalen","North Rhine-Westphalia","Rhénanie du Nord-Westphalie","f","N. Rhine-Westphalia",TRUE,TRUE,TRUE
+"DEB","DEU26","DEU","Rheinland-Pfalz","Rhineland-Palatinate","Rhénanie-Palatinat","f","Rhineland-Palatinate",TRUE,TRUE,TRUE
+"DEC","DEU26","DEU","Saarland","Saarland","Sarre","f","Saarland",TRUE,TRUE,TRUE
+"DED","DEU26","DEU","Sachsen","Saxony","Saxe","f","Saxony",TRUE,TRUE,TRUE
+"DEE","DEU26","DEU","Sachsen-Anhalt","Saxony-Anhalt","Saxe-Anhalt","f","Saxony-Anhalt",TRUE,TRUE,TRUE
+"DEF","DEU26","DEU","Schleswig-Holstein","Schleswig-Holstein","Schleswig-Holstein","f","Schleswig-Holstein",TRUE,TRUE,TRUE
+"DEG","DEU26","DEU","Thüringen","Thuringia","Thuringe","f","Thuringia",TRUE,TRUE,TRUE
+"DK01","DNK11","DNK","Hovedstaden","Capital City Region","Région-Capitale","f","Copenhagen Region",TRUE,TRUE,TRUE
+"DK02","DNK11","DNK","Sjælland","Zealand","Zélande","f","Zealand",TRUE,TRUE,TRUE
+"DK03","DNK11","DNK","Syddanmark","Southern Denmark","Danemark du Sud","f","South",TRUE,TRUE,TRUE
+"DK04","DNK11","DNK","Midtjylland","Central Jutland","Jutland-Central","f","Central Jutland",TRUE,TRUE,TRUE
+"DK05","DNK11","DNK","Nordjylland","Northern Jutland","Jutland du Nord","f","N. Jutland",TRUE,TRUE,TRUE
+"EE00","EST7","EST","Estonia","Estonia","Estonie","f","Estonia",TRUE,TRUE,TRUE
+"EL30","GRC60","GRC","Attiki","Attica","Attique","f","Attica",TRUE,TRUE,TRUE
+"EL41","GRC60","GRC","North Aegean","North Aegean","Nord de l'Égée","f","N. Aegean",TRUE,TRUE,TRUE
+"EL42","GRC60","GRC","South Aegean","South Aegean","Sud de l'Égée","f","S. Aegean",TRUE,TRUE,TRUE
+"EL43","GRC60","GRC","Crete","Crete","Crète","f","Crete",TRUE,TRUE,TRUE
+"EL51","GRC60","GRC","Eastern Macedonia and Thrace","Eastern Macedonia, Thrace","Macédoine orientale, Thrace","f","E. Macedonia, Thrace",TRUE,TRUE,TRUE
+"EL52","GRC60","GRC","Central Macedonia","Central Macedonia","Macédoine centrale","f","Central Macedonia",TRUE,TRUE,TRUE
+"EL53","GRC60","GRC","Western Macedonia","Western Macedonia","Macédoine occidentale","f","W. Macedonia",TRUE,TRUE,TRUE
+"EL54","GRC60","GRC","Epirus","Epirus","Épire","f","Epirus",TRUE,TRUE,TRUE
+"EL61","GRC60","GRC","Thessaly","Thessaly","Thessalie","f","Thessaly",TRUE,TRUE,TRUE
+"EL62","GRC60","GRC","Ionian Islands","Ionian Islands","Îles ioniennes","f","Ionian I.",TRUE,TRUE,TRUE
+"EL63","GRC60","GRC","Western Greece","Western Greece","Grèce occidentale","f","West",TRUE,TRUE,TRUE
+"EL64","GRC60","GRC","Central Greece","Central Greece","Grèce centrale","f","Central Greece",TRUE,TRUE,TRUE
+"EL65","GRC60","GRC","Peloponnese","Peloponnese","Péloponnèse","f","Peloponnese",TRUE,TRUE,TRUE
+"ES11","ESP73","ESP","Galicia","Galicia","Galice","f","Galicia",TRUE,TRUE,TRUE
+"ES12","ESP73","ESP","Asturias","Asturias","Asturies","f","Asturias",TRUE,TRUE,TRUE
+"ES13","ESP73","ESP","Cantabria","Cantabria","Cantabria","f","Cantabria",TRUE,TRUE,TRUE
+"ES21","ESP73","ESP","País Vasco","Basque Country","Pays Basque","f","Basque Country",TRUE,TRUE,TRUE
+"ES22","ESP73","ESP","Navarra","Navarra","Navarra","f","Navarra",TRUE,TRUE,TRUE
+"ES23","ESP73","ESP","La Rioja (ES)","La Rioja","La Rioja","f","La Rioja",TRUE,TRUE,TRUE
+"ES24","ESP73","ESP","Aragón","Aragon","Aragon","f","Aragon",TRUE,TRUE,TRUE
+"ES30","ESP73","ESP","Comunidad de Madrid","Madrid","Madrid","f","Madrid",TRUE,TRUE,TRUE
+"ES41","ESP73","ESP","Castilla y León","Castile and León","Castille-et-León","f","Castile and León",TRUE,TRUE,TRUE
+"ES42","ESP73","ESP","Castilla-La Mancha","Castile-La Mancha","Castille-La Mancha","f","Castile-La Mancha",TRUE,TRUE,TRUE
+"ES43","ESP73","ESP","Extremadura","Extremadura","Extremadura","f","Extremadura",TRUE,TRUE,TRUE
+"ES51","ESP73","ESP","Cataluña","Catalonia","Catalogne","f","Catalonia",TRUE,TRUE,TRUE
+"ES52","ESP73","ESP","Comunidad Valenciana","Valencia","Valence","f","Valencia",TRUE,TRUE,TRUE
+"ES53","ESP73","ESP","Baleares","Balearic Islands","Îles Baléares","f","Balearic I.",TRUE,TRUE,TRUE
+"ES61","ESP73","ESP","Andalucía","Andalusia","Andalousie","f","Andalusia",TRUE,TRUE,TRUE
+"ES62","ESP73","ESP","Región de Murcia","Murcia","Murcia","f","Murcia",TRUE,TRUE,TRUE
+"ES63","ESP73","ESP","Ciudad Autónoma de Ceuta (ES)","Ceuta","Ceuta","f","Ceuta",TRUE,TRUE,TRUE
+"ES64","ESP73","ESP","Ciudad Autónoma de Melilla (ES)","Melilla","Melilla","f","Melilla",TRUE,TRUE,TRUE
+"ES70","ESP73","ESP","Canarias (ES)","Canary Islands","Îles Canaries","f","Canary Islands",TRUE,TRUE,TRUE
+"FI19","FIN247","FIN","Länsi-Suomi","Western Finland","Finlande occidentale","f","West",TRUE,TRUE,TRUE
+"FI1B","FIN247","FIN","Helsinki-Uusimaa","Helsinki-Uusimaa","Helsinki-Uusimaa","f","Helsinki-Uusimaa",TRUE,TRUE,TRUE
+"FI1C","FIN247","FIN","Etelä-Suomi","Southern Finland","Sud de la Finlande","f","South",TRUE,TRUE,TRUE
+"FI1D","FIN247","FIN","Pohjois- ja Itä-Suomi","Eastern and Northern Finland","Est et Nord de la Finlande","f","East and North",TRUE,TRUE,TRUE
+"FI20","FIN247","FIN","Åland","Åland","Åland","f","Åland",TRUE,TRUE,TRUE
+"FR1","FRA260","FRA","Île-de-France","Île-de-France","Île-de-France","f","Île-de-France",TRUE,TRUE,TRUE
+"FRB","FRA260","FRA","Centre - Val de Loire","Centre - Val de Loire","Centre - Val de Loire","f","Centre Val de Loire",TRUE,TRUE,TRUE
+"FRC","FRA260","FRA","Bourgogne-Franche-Comté","Bourgogne-Franche-Comté","Bourgogne-Franche-Comté","f","Bourgogne-Franche-C.",TRUE,TRUE,TRUE
+"FRD","FRA260","FRA","Normandie","Normandy","Normandie","f","Normandy",TRUE,TRUE,TRUE
+"FRE","FRA260","FRA","Hauts-de-France","Hauts-de-France","Hauts-de-France","f","Hauts-de-France",TRUE,TRUE,TRUE
+"FRF","FRA260","FRA","Grand Est","Grand Est","Grand Est","f","Grand Est",TRUE,TRUE,TRUE
+"FRG","FRA260","FRA","Pays de la Loire","Pays de la Loire","Pays de la Loire","f","Pays de la Loire",TRUE,TRUE,TRUE
+"FRH","FRA260","FRA","Bretagne","Brittany","Bretagne","f","Brittany",TRUE,TRUE,TRUE
+"FRI","FRA260","FRA","Nouvelle-Aquitaine","Nouvelle-Aquitaine","Nouvelle-Aquitaine","f","Nouvelle-Aquitaine",TRUE,TRUE,TRUE
+"FRJ","FRA260","FRA","Occitanie","Occitanie","Occitanie","f","Occitanie",TRUE,TRUE,TRUE
+"FRK","FRA260","FRA","Auvergne-Rhône-Alpes","Auvergne-Rhône-Alpes","Auvergne-Rhône-Alpes","f","Auvergne-Rhône-Alpes",TRUE,TRUE,TRUE
+"FRL","FRA260","FRA","Provence-Alpes-Côte d’Azur","Provence-Alpes-Côte d’Azur","Provence-Alpes-Côte d’Azur","f","Provence-Alpes-Côte d’A.",TRUE,TRUE,TRUE
+"FRM","FRA260","FRA","Corse","Corsica","Corse","f","Corsica",TRUE,TRUE,TRUE
+"FRY1","FRA260","FRA","Guadeloupe","Guadeloupe","Guadeloupe","f","Guadeloupe",TRUE,TRUE,TRUE
+"FRY2","FRA260","FRA","Martinique","Martinique","Martinique","f","Martinique",TRUE,TRUE,TRUE
+"FRY3","FRA260","FRA","Guyane","French Guiana","Guyane","f","French Guiana",TRUE,TRUE,TRUE
+"FRY4","FRA260","FRA","La Réunion","La Réunion","La Réunion","f","La Réunion",TRUE,TRUE,TRUE
+"FRY5","FRA260","FRA","Mayotte","Mayotte","Mayotte","f","Mayotte",TRUE,TRUE,TRUE
+"HR03","HRV43","HRV","Jadranska Hrvatska","Adriatic Croatia","Croatie Adriatique","f","Adriatic Croatia",TRUE,TRUE,TRUE
+"HR04","HRV43","HRV","Kontinentalna Hrvatska","Continental Croatia","Croatie continentale","f","Continental Croatia",TRUE,TRUE,TRUE
+"HU11","HUN24","HUN","Budapest","Budapest","Budapest","f","Budapest",TRUE,TRUE,TRUE
+"HU12","HUN24","HUN","Pest","Pest","Pest","f","Pest",TRUE,TRUE,TRUE
+"HU21","HUN24","HUN","Közép-Dunántúl/Central Transdanubia","Central Transdanubia","Transdanubie centrale","f","C. Transdanubia",TRUE,TRUE,TRUE
+"HU22","HUN24","HUN","Nyugat-Dunántúl/Western Transdanubia","Western Transdanubia","Transdanubie occidentale","f","W. Transdanubia",TRUE,TRUE,TRUE
+"HU23","HUN24","HUN","Del-Dunántúl/Southern Transdanubia","Southern Transdanubia","Transdanubie du Sud","f","S. Transdanubia",TRUE,TRUE,TRUE
+"HU31","HUN24","HUN","Eszak-Magyarorszag/Northern Hungary","Northern Hungary","Hongrie du Nord","f","North",TRUE,TRUE,TRUE
+"HU32","HUN24","HUN","Eszak-Alfold/Northern Great Plain","Northern Great Plain","Grande Plaine du Nord","f","N. Great Plain",TRUE,TRUE,TRUE
+"HU33","HUN24","HUN","Del-Alfold/Southern Great Plain","Southern Great Plain","Grande Plaine du Sud","f","S. Great Plain",TRUE,TRUE,TRUE
+"IE04","IRL15","IRL","Northern and Western","Northern and Western","Northern and Western","f","Northern and Western",TRUE,TRUE,TRUE
+"IE05","IRL15","IRL","Southern","Southern","Southern","f","Southern",TRUE,TRUE,TRUE
+"IE06","IRL15","IRL","Eastern and Midland","Eastern and Midland","Eastern and Midland","f","Eastern and Midland",TRUE,TRUE,TRUE
+"IL01","ISR65","ISR","Jerusalem district","Jerusalem district","Jerusalem district","t","Jerusalem",FALSE,FALSE,FALSE
+"IL02","ISR65","ISR","Northern district","Northern district","Northern district","t","North",FALSE,FALSE,FALSE
+"IL03","ISR65","ISR","Haifa district","Haifa district","Haifa district","t","Haifa",FALSE,FALSE,FALSE
+"IL04","ISR65","ISR","Central district","Central district","Central district","t","Central",FALSE,FALSE,FALSE
+"IL05","ISR65","ISR","Tel Aviv district","Tel Aviv district","Tel Aviv district","t","Tel Aviv",FALSE,FALSE,FALSE
+"IL06","ISR65","ISR","Southern district","Southern district","Southern district","t","South",FALSE,FALSE,FALSE
+"IS01","ISL2","ISL","Höfuðborgarsvæði","Greater Reykjavík","Grand Reykjavik","f","Reykjavik Region",FALSE,TRUE,TRUE
+"IS02","ISL2","ISL","Landsbyggð","Other regions","Autres régions","f","Other regions",FALSE,TRUE,TRUE
+"ITC1","ITA59","ITA","Piemonte","Piedmont","Piémont","f","Piedmont",TRUE,TRUE,TRUE
+"ITC2","ITA59","ITA","Valle d'Aosta/Vallée d'Aoste","Aosta Valley","Vallée d'Aoste","f","Aosta Valley",TRUE,TRUE,TRUE
+"ITC3","ITA59","ITA","Liguria","Liguria","Ligurie","f","Liguria",TRUE,TRUE,TRUE
+"ITC4","ITA59","ITA","Lombardia","Lombardy","Lombardie","f","Lombardy",TRUE,TRUE,TRUE
+"ITF1","ITA59","ITA","Abruzzo","Abruzzo","Abruzzes","f","Abruzzo",TRUE,TRUE,TRUE
+"ITF2","ITA59","ITA","Molise","Molise","Molise","f","Molise",TRUE,TRUE,TRUE
+"ITF3","ITA59","ITA","Campania","Campania","Campanie","f","Campania",TRUE,TRUE,TRUE
+"ITF4","ITA59","ITA","Puglia","Apulia","Pouilles","f","Apulia",TRUE,TRUE,TRUE
+"ITF5","ITA59","ITA","Basilicata","Basilicata","Basilicate","f","Basilicata",TRUE,TRUE,TRUE
+"ITF6","ITA59","ITA","Calabria","Calabria","Calabre","f","Calabria",TRUE,TRUE,TRUE
+"ITG1","ITA59","ITA","Sicilia","Sicily","Sicile","f","Sicily",TRUE,TRUE,TRUE
+"ITG2","ITA59","ITA","Sardegna","Sardinia","Sardaigne","f","Sardinia",TRUE,TRUE,TRUE
+"ITH1","ITA59","ITA","Provincia Autonoma di Bolzano/Bozen","Province of Bolzano-Bozen","Province de Bolzano-Bozen","f","Bolzano-Bozen",TRUE,TRUE,TRUE
+"ITH2","ITA59","ITA","Provincia Autonoma di Trento","Province of Trento","Province de Trente","f","Trento",TRUE,TRUE,TRUE
+"ITH3","ITA59","ITA","Veneto","Veneto","Veneto","f","Veneto",TRUE,TRUE,TRUE
+"ITH4","ITA59","ITA","Friuli-Venezia Giulia","Friuli-Venezia Giulia","Frioul-Vénétie julienne","f","Friuli-Venezia Giulia",TRUE,TRUE,TRUE
+"ITH5","ITA59","ITA","Emilia-Romagna","Emilia-Romagna","Émilie-Romagne","f","Emilia-Romagna",TRUE,TRUE,TRUE
+"ITI1","ITA59","ITA","Toscana","Tuscany","Toscane","f","Tuscany",TRUE,TRUE,TRUE
+"ITI2","ITA59","ITA","Umbria","Umbria","Ombrie","f","Umbria",TRUE,TRUE,TRUE
+"ITI3","ITA59","ITA","Marche","Marche","Marche","f","Marche",TRUE,TRUE,TRUE
+"ITI4","ITA59","ITA","Lazio","Lazio","Lazio","f","Lazio",TRUE,TRUE,TRUE
+"JPA","JPN80","JPN","Hokkaido","Hokkaido","Hokkaido","t","Hokkaido",FALSE,FALSE,FALSE
+"JPB","JPN80","JPN","Tohoku","Tohoku","Tohoku","t","Tohoku",FALSE,FALSE,FALSE
+"JPC","JPN80","JPN","Northern-Kanto, Koshin","Northern-Kanto, Koshin","Northern-Kanto, Koshin","t","N.-Kanto, Koshin",FALSE,FALSE,FALSE
+"JPD","JPN80","JPN","Southern-Kanto","Southern-Kanto","Southern-Kanto","t","S.-Kanto",FALSE,FALSE,FALSE
+"JPE","JPN80","JPN","Hokuriku","Hokuriku","Hokuriku","t","Hokuriku",FALSE,FALSE,FALSE
+"JPF","JPN80","JPN","Toukai","Toukai","Toukai","t","Toukai",FALSE,FALSE,FALSE
+"JPG","JPN80","JPN","Kansai region","Kinki","Kinki","t","Kansai",FALSE,FALSE,FALSE
+"JPH","JPN80","JPN","Chugoku","Chugoku","Chugoku","t","Chugoku",FALSE,FALSE,FALSE
+"JPI","JPN80","JPN","Shikoku","Shikoku","Shikoku","t","Shikoku",FALSE,FALSE,FALSE
+"JPJ","JPN80","JPN","Kyushu, Okinawa","Kyushu, Okinawa","Kyushu, Okinawa","t","Kyushu, Okinawa",FALSE,FALSE,FALSE
+"KR01","KOR62","KOR","Capital Region","Capital Region","Capital Region","t","Seoul Region",FALSE,FALSE,FALSE
+"KR02","KOR62","KOR","Gyeongnam Region","Gyeongnam Region","Gyeongnam Region","t","Gyeongnam",FALSE,FALSE,FALSE
+"KR03","KOR62","KOR","Gyeongbuk Region","Gyeongbuk Region","Gyeongbuk Region","t","Gyeongbuk",FALSE,FALSE,FALSE
+"KR04","KOR62","KOR","Jeolla Region","Jeolla Region","Jeolla Region","t","Jeolla",FALSE,FALSE,FALSE
+"KR05","KOR62","KOR","Chungcheong Region","Chungcheong Region","Chungcheong Region","t","Chungcheong",FALSE,FALSE,FALSE
+"KR06","KOR62","KOR","Gangwon Region","Gangwon Region","Gangwon Region","t","Gangwon",FALSE,FALSE,FALSE
+"KR07","KOR62","KOR","Jeju","Jeju","Jeju","t","Jeju",FALSE,FALSE,FALSE
+"LI00","LIE28","LIE","Liechtenstein","Liechtenstein","Liechtenstein","f","Liechtenstein",FALSE,TRUE,TRUE
+"LT01","LTU10","LTU","Sostines regionas","Vilnius Region","Capital Region","f","Vilnius",TRUE,TRUE,TRUE
+"LT02","LTU10","LTU","Vidurio ir vakaru Lietuvos regionas","Central and Western Lithuania","Central and Western Lithuania","f","Centre and West",TRUE,TRUE,TRUE
+"LU00","LUX19","LUX","Luxembourg","Luxembourg","Luxembourg","f","Luxembourg",TRUE,TRUE,TRUE
+"LV00","LVA5","LVA","Latvija","Latvia","Lettonie","f","Latvia",TRUE,TRUE,TRUE
+"ME00","MNE40","MNE","Montenegro","Montenegro","Monténégro","f","Montenegro",FALSE,FALSE,FALSE
+"ME01","MEX111","MEX","Aguascalientes","Aguascalientes","Aguascalientes","t","Aguacalientes",FALSE,FALSE,FALSE
+"ME02","MEX111","MEX","Baja California Norte","Baja California Norte","Baja California Norte","t","Baja California",FALSE,FALSE,FALSE
+"ME03","MEX111","MEX","Baja California Sur","Baja California Sur","Baja California Sur","t","Baja California S.",FALSE,FALSE,FALSE
+"ME04","MEX111","MEX","Campeche","Campeche","Campeche","t","Campeche",FALSE,FALSE,FALSE
+"ME05","MEX111","MEX","Coahuila","Coahuila","Coahuila","t","Coahuila",FALSE,FALSE,FALSE
+"ME06","MEX111","MEX","Colima","Colima","Colima","t","Colima",FALSE,FALSE,FALSE
+"ME07","MEX111","MEX","Chiapas","Chiapas","Chiapas","t","Chiapas",FALSE,FALSE,FALSE
+"ME08","MEX111","MEX","Chihuahua","Chihuahua","Chihuahua","t","Chihuahua",FALSE,FALSE,FALSE
+"ME09","MEX111","MEX","Ciudad de México","City of Mexico","Ville de Mexico","t","Mexico City",FALSE,FALSE,FALSE
+"ME10","MEX111","MEX","Durango","Durango","Durango","t","Durango",FALSE,FALSE,FALSE
+"ME11","MEX111","MEX","Guanajuato","Guanajuato","Guanajuato","t","Guanajuato",FALSE,FALSE,FALSE
+"ME12","MEX111","MEX","Guerrero","Guerrero","Guerrero","t","Guerrero",FALSE,FALSE,FALSE
+"ME13","MEX111","MEX","Hidalgo","Hidalgo","Hidalgo","t","Hidalgo",FALSE,FALSE,FALSE
+"ME14","MEX111","MEX","Jalisco","Jalisco","Jalisco","t","Jalisco",FALSE,FALSE,FALSE
+"ME15","MEX111","MEX","Mexico","Mexico","Mexico","t","Edo. Mexico",FALSE,FALSE,FALSE
+"ME16","MEX111","MEX","Michoacan","Michoacan","Michoacan","t","Michoacan",FALSE,FALSE,FALSE
+"ME17","MEX111","MEX","Morelos","Morelos","Morelos","t","Morelos",FALSE,FALSE,FALSE
+"ME18","MEX111","MEX","Nayarit","Nayarit","Nayarit","t","Nayarit",FALSE,FALSE,FALSE
+"ME19","MEX111","MEX","Nuevo Leon","Nuevo Leon","Nuevo Leon","t","Nuevo Leon",FALSE,FALSE,FALSE
+"ME20","MEX111","MEX","Oaxaca","Oaxaca","Oaxaca","t","Oaxaca",FALSE,FALSE,FALSE
+"ME21","MEX111","MEX","Puebla","Puebla","Puebla","t","Puebla",FALSE,FALSE,FALSE
+"ME22","MEX111","MEX","Queretaro","Queretaro","Queretaro","t","Queretaro",FALSE,FALSE,FALSE
+"ME23","MEX111","MEX","Quintana Roo","Quintana Roo","Quintana Roo","t","Quintana Roo",FALSE,FALSE,FALSE
+"ME24","MEX111","MEX","San Luis Potosi","San Luis Potosi","San Luis Potosi","t","San Luis Potosi",FALSE,FALSE,FALSE
+"ME25","MEX111","MEX","Sinaloa","Sinaloa","Sinaloa","t","Sinaloa",FALSE,FALSE,FALSE
+"ME26","MEX111","MEX","Sonora","Sonora","Sonora","t","Sonora",FALSE,FALSE,FALSE
+"ME27","MEX111","MEX","Tabasco","Tabasco","Tabasco","t","Tabasco",FALSE,FALSE,FALSE
+"ME28","MEX111","MEX","Tamaulipas","Tamaulipas","Tamaulipas","t","Tamaulipas",FALSE,FALSE,FALSE
+"ME29","MEX111","MEX","Tlaxcala","Tlaxcala","Tlaxcala","t","Tlaxcala",FALSE,FALSE,FALSE
+"ME30","MEX111","MEX","Veracruz","Veracruz","Veracruz","t","Veracruz",FALSE,FALSE,FALSE
+"ME31","MEX111","MEX","Yucatan","Yucatan","Yucatan","t","Yucatan",FALSE,FALSE,FALSE
+"ME32","MEX111","MEX","Zacatecas","Zacatecas","Zacatecas","t","Zacatecas",FALSE,FALSE,FALSE
+"MK00","MKD46","MKD","Severna Makedonija","North Macedonia","Macédoine (l'ex République yougoslave de)","f","North Macedonia",FALSE,FALSE,FALSE
+"MT00","MLT56","MLT","Malta","Malta","Malte","f","Malta",TRUE,TRUE,TRUE
+"NL11","NLD17","NLD","Groningen","Groningen","Groningue","f","Groningen",TRUE,TRUE,TRUE
+"NL12","NLD17","NLD","Friesland","Friesland","Frise","f","Friesland",TRUE,TRUE,TRUE
+"NL13","NLD17","NLD","Drenthe","Drenthe","Drenthe","f","Drenthe",TRUE,TRUE,TRUE
+"NL21","NLD17","NLD","Overijssel","Overijssel","Overijssel","f","Overijssel",TRUE,TRUE,TRUE
+"NL22","NLD17","NLD","Gelderland","Gelderland","Gueldre","f","Gelderland",TRUE,TRUE,TRUE
+"NL23","NLD17","NLD","Flevoland","Flevoland","Flevoland","f","Flevoland",TRUE,TRUE,TRUE
+"NL31","NLD17","NLD","Utrecht","Utrecht","Utrecht","f","Utrecht",TRUE,TRUE,TRUE
+"NL32","NLD17","NLD","Noord-Holland","North Holland","Hollande-Septentrionale","f","N. Holland",TRUE,TRUE,TRUE
+"NL33","NLD17","NLD","Zuid-Holland","South Holland","Hollande-Méridionale","f","S. Holland",TRUE,TRUE,TRUE
+"NL34","NLD17","NLD","Zeeland","Zeeland","Zélande","f","Zeeland",TRUE,TRUE,TRUE
+"NL41","NLD17","NLD","Noord-Brabant","North Brabant","Brabant-du-Nord","f","N. Brabant",TRUE,TRUE,TRUE
+"NL42","NLD17","NLD","Limburg (NL)","Limburg","Limbourg","f","Limburg",TRUE,TRUE,TRUE
+"NO01","NOR6","NOR","Oslo og Akershus","Oslo and Akershus","Oslo et Akershus","f","Oslo Region",FALSE,TRUE,TRUE
+"NO02","NOR6","NOR","Hedmark og Oppland","Hedmark and Oppland","Hedmark et Oppland","f","Hedmark and Oppland",FALSE,TRUE,TRUE
+"NO03","NOR6","NOR","Sør-Østlandet","South-Eastern Norway","Norvège du Sud-Est","f","South-East",FALSE,TRUE,TRUE
+"NO04","NOR6","NOR","Agder og Rogaland","Agder and Rogaland","Agder et Rogaland","f","Agder and Rogaland",FALSE,TRUE,TRUE
+"NO05","NOR6","NOR","Vestlandet","Western Norway","Norvège de l'Ouest","f","West",FALSE,TRUE,TRUE
+"NO06","NOR6","NOR","Trøndelag","Trøndelag","Trøndelag","f","Trøndelag",FALSE,TRUE,TRUE
+"NO07","NOR6","NOR","Nord-Norge","Northern Norway","Nord de la Norvège","f","North",FALSE,TRUE,TRUE
+"NZ11","NZL220","NZL","Northland Region","Northland Region","Northland Region","t","Northland",FALSE,FALSE,FALSE
+"NZ12","NZL220","NZL","Auckland Region","Auckland Region","Auckland Region","t","Auckland",FALSE,FALSE,FALSE
+"NZ13","NZL220","NZL","Waikato Region","Waikato Region","Waikato Region","t","Waikato",FALSE,FALSE,FALSE
+"NZ14","NZL220","NZL","Bay of Plenty Region","Bay of Plenty Region","Bay of Plenty Region","t","Bay of Plenty",FALSE,FALSE,FALSE
+"NZ15","NZL220","NZL","Gisborne Region","Gisborne Region","Gisborne Region","t","Gisborne",FALSE,FALSE,FALSE
+"NZ16","NZL220","NZL","Hawke's Bay Region","Hawke's Bay Region","Hawke's Bay Region","t","Hawke's Bay",FALSE,FALSE,FALSE
+"NZ17","NZL220","NZL","Taranaki Region","Taranaki Region","Taranaki Region","t","Taranaki",FALSE,FALSE,FALSE
+"NZ18","NZL220","NZL","Manawatu-Wanganui Region","Manawatu-Wanganui Region","Manawatu-Wanganui Region","t","Manawatu-Wanganui",FALSE,FALSE,FALSE
+"NZ19","NZL220","NZL","Wellington Region","Wellington Region","Wellington Region","t","Wellington",FALSE,FALSE,FALSE
+"NZ21","NZL220","NZL","Tasman-Nelson-Marlborough","Tasman-Nelson-Marlborough","Tasman-Nelson-Marlborough","t","Tasman-Nelson-Marl.",FALSE,FALSE,FALSE
+"NZ22","NZL220","NZL","West Coast Region","West Coast Region","West Coast Region","t","West Coast",FALSE,FALSE,FALSE
+"NZ23","NZL220","NZL","Canterbury Region","Canterbury Region","Canterbury Region","t","Canterbury",FALSE,FALSE,FALSE
+"NZ24","NZL220","NZL","Otago Region","Otago Region","Otago Region","t","Otago",FALSE,FALSE,FALSE
+"NZ25","NZL220","NZL","Southland Region","Southland Region","Southland Region","t","Southland",FALSE,FALSE,FALSE
+"PL21","POL13","POL","Malopolskie","Lesser Poland","Petite-Pologne","f","Lesser Poland",TRUE,TRUE,TRUE
+"PL22","POL13","POL","Slaskie","Silesia","Silésie","f","Silesia",TRUE,TRUE,TRUE
+"PL41","POL13","POL","Wielkopolskie","Greater Poland","Grande-Pologne","f","Greater Poland",TRUE,TRUE,TRUE
+"PL42","POL13","POL","Zachodniopomorskie","West Pomerania","Poméranie occidentale","f","W. Pomerania",TRUE,TRUE,TRUE
+"PL43","POL13","POL","Lubuskie","Lubusz","Lubusz","f","Lubusz",TRUE,TRUE,TRUE
+"PL51","POL13","POL","Dolnoslaskie","Lower Silesia","Basse-Silésie","f","Lower Silesia",TRUE,TRUE,TRUE
+"PL52","POL13","POL","Opolskie","Opole region","Région d'Opole","f","Opole region",TRUE,TRUE,TRUE
+"PL61","POL13","POL","Kujawsko-Pomorskie","Kuyavian-Pomerania","Cujavie-Poméranie","f","Kuyavian-Pomerania",TRUE,TRUE,TRUE
+"PL62","POL13","POL","Warminsko-Mazurskie","Warmian-Masuria","Varmie-Mazurie","f","Warmian-Masuria",TRUE,TRUE,TRUE
+"PL63","POL13","POL","Pomorskie","Pomerania","Poméranie","f","Pomerania",TRUE,TRUE,TRUE
+"PL71","POL13","POL","Lódzkie","Lodzkie","Lodz","f","Lodzkie",TRUE,TRUE,TRUE
+"PL72","POL13","POL","Swietokrzyskie","Swietokrzyskie","Sainte-Croix","f","Swietokrzyskie",TRUE,TRUE,TRUE
+"PL81","POL13","POL","Lubelskie","Lublin Province","Province Lublin","f","Lublin",TRUE,TRUE,TRUE
+"PL82","POL13","POL","Podkarpackie","Podkarpacia","Podkarpacia","f","Podkarpacia",TRUE,TRUE,TRUE
+"PL84","POL13","POL","Podlaskie","Podlaskie","Podlasie","f","Podlaskie",TRUE,TRUE,TRUE
+"PL91","POL13","POL","Warszawski stoleczny","Warsaw's capital city","Warsaw's capital city","f","Warsaw",TRUE,TRUE,TRUE
+"PL92","POL13","POL","Mazowiecki regionalny","Mazowiecki region","Mazowiecki region","f","Mazowiecki",TRUE,TRUE,TRUE
+"PT11","PRT69","PRT","Norte","North","Région Nord","f","North",TRUE,TRUE,TRUE
+"PT15","PRT69","PRT","Algarve","Algarve","Algarve","f","Algarve",TRUE,TRUE,TRUE
+"PT16","PRT69","PRT","Centro","Central Portugal","Centre du Portugal","f","Centro",TRUE,TRUE,TRUE
+"PT17","PRT69","PRT","Área Metropolitana de Lisboa","Metropolitan area of Lisbon","Région métropolitaine de Lisbonne","f","Lisbon Metropolitan",TRUE,TRUE,TRUE
+"PT18","PRT69","PRT","Alentejo","Alentejo","Alentejo","f","Alentejo",TRUE,TRUE,TRUE
+"PT20","PRT69","PRT","Região Autónoma dos Açores","Autonomous Region of the Azores","Région autonome des Açores","f","Azores",TRUE,TRUE,TRUE
+"PT30","PRT69","PRT","Região Autónoma da Madeira","Autonomous Region of Madeira","Région autonome de Madère","f","Madeira",TRUE,TRUE,TRUE
+"RO11","ROU35","ROU","Nord-Vest","North West","Nord-Ouest","f","North West",TRUE,TRUE,TRUE
+"RO12","ROU35","ROU","Centru","Center","Centre","f","Center",TRUE,TRUE,TRUE
+"RO21","ROU35","ROU","Nord-Est","North East","Nord-Est","f","North East",TRUE,TRUE,TRUE
+"RO22","ROU35","ROU","Sud-Est","South East","Sud-Est","f","South East",TRUE,TRUE,TRUE
+"RO31","ROU35","ROU","Sud - Muntenia","South - Muntenia","Sud - Muntenia","f","S. Muntenia",TRUE,TRUE,TRUE
+"RO32","ROU35","ROU","Bucuresti - Ilfov","Bucharest - Ilfov","Bucarest - Ilfov","f","Bucharest - Ilfov",TRUE,TRUE,TRUE
+"RO41","ROU35","ROU","Sud-Vest Oltenia","South West Oltenia","Sud-Ouest Olténie","f","S.W. Oltenia",TRUE,TRUE,TRUE
+"RO42","ROU35","ROU","Vest","West","Ouest","f","West",TRUE,TRUE,TRUE
+"RS11","SRB233","SRB","Beogradski region","Belgrade region","Région de Belgrade","f","Belgrade",FALSE,FALSE,FALSE
+"RS12","SRB233","SRB","Region Vojvodine","Vojvodina region","Voïvodine","f","Vojvodina",FALSE,FALSE,FALSE
+"RS21","SRB233","SRB","Region Šumadije i Zapadne Srbije","Šumadija and Western Serbia","Šumadija et Serbie occidentale","f","Šumadija and West",FALSE,FALSE,FALSE
+"RS22","SRB233","SRB","Region Južne i Istocne Srbije","Southern and Eastern Serbia","Serbie méridionale et orientale","f","South and East",FALSE,FALSE,FALSE
+"SE11","SWE9","SWE","Stockholm","Stockholm","Stockholm","f","Stockholm",TRUE,TRUE,TRUE
+"SE12","SWE9","SWE","Östra Mellansverige","East Middle Sweden","Région Centre Est","f","East Middle",TRUE,TRUE,TRUE
+"SE21","SWE9","SWE","Småland med öarna","Småland with Islands","Småland avec les îles","f","Småland with I.",TRUE,TRUE,TRUE
+"SE22","SWE9","SWE","Sydsverige","South Sweden","Sud de la Suède","f","South",TRUE,TRUE,TRUE
+"SE23","SWE9","SWE","Västsverige","West Sweden","Ouest de la Suède","f","West",TRUE,TRUE,TRUE
+"SE31","SWE9","SWE","Norra Mellansverige","North Middle Sweden","Région Centre Nord","f","N. Middle",TRUE,TRUE,TRUE
+"SE32","SWE9","SWE","Mellersta Norrland","Central Norrland","Norrland central","f","Central Norrland",TRUE,TRUE,TRUE
+"SE33","SWE9","SWE","Övre Norrland","Upper Norrland","Norrland septentrional","f","Upper Norrland",TRUE,TRUE,TRUE
+"SI03","SVN29","SVN","Vzhodna Slovenija","Eastern Slovenia","Slovénie orientale","f","East",TRUE,TRUE,TRUE
+"SI04","SVN29","SVN","Zahodna Slovenija","Western Slovenia","Slovénie occidentale","f","West",TRUE,TRUE,TRUE
+"SK01","SVK21","SVK","Bratislavský kraj","Bratislava Region","Région de Bratislava","f","Bratislava",TRUE,TRUE,TRUE
+"SK02","SVK21","SVK","Západné Slovensko","West Slovakia","Slovaquie de l'Ouest","f","West",TRUE,TRUE,TRUE
+"SK03","SVK21","SVK","Stredné Slovensko","Central Slovakia","Slovaquie centrale","f","Central",TRUE,TRUE,TRUE
+"SK04","SVK21","SVK","Východné Slovensko","East Slovakia","Slovaquie de l'Est","f","East",TRUE,TRUE,TRUE
+"TR10","TUR55","TUR","Istanbul","Istanbul","Istanbul","f","Istanbul",FALSE,FALSE,FALSE
+"TR21","TUR55","TUR","Tekirdag, Edirne, Kirklareli","Thrace","Thrace","f","Thrace",FALSE,FALSE,FALSE
+"TR22","TUR55","TUR","Balikesir, Çanakkale","Southern Marmara - West","Marmara méridionale - Ouest","f","S. Marmara - W.",FALSE,FALSE,FALSE
+"TR31","TUR55","TUR","Izmir","Izmir","Izmir","f","Izmir",FALSE,FALSE,FALSE
+"TR32","TUR55","TUR","Aydin, Denizli, Mugla","Southern Aegean","Région égéenne méridionale","f","S. Aegean",FALSE,FALSE,FALSE
+"TR33","TUR55","TUR","Manisa, Afyonkarahisar, Kütahya, Usak","Northern Aegean","Région égéenne septentrionale","f","N. Aegean",FALSE,FALSE,FALSE
+"TR41","TUR55","TUR","Bursa, Eskisehir, Bilecik","Eastern Marmara - South","Marmara orientale - Sud","f","E. Marmara S.",FALSE,FALSE,FALSE
+"TR42","TUR55","TUR","Kocaeli, Sakarya, Düzce, Bolu, Yalova","Eastern Marmara - North","Marmara orientale - Nord","f","E. Marmara N.",FALSE,FALSE,FALSE
+"TR51","TUR55","TUR","Ankara","Ankara","Ankara","f","Ankara",FALSE,FALSE,FALSE
+"TR52","TUR55","TUR","Konya, Karaman","Central Anatolia - West and South","Anatolie centrale - Ouest et Sud","f","C. Anatolia - W.S.",FALSE,FALSE,FALSE
+"TR61","TUR55","TUR","Antalya, Isparta, Burdur","Mediterranean region - West","Région méditerranéenne - Ouest","f","Mediterranean W.",FALSE,FALSE,FALSE
+"TR62","TUR55","TUR","Adana, Mersin","Mediterranean region - Middle","Région méditerranéenne - Centre","f","Mediterranean M.",FALSE,FALSE,FALSE
+"TR63","TUR55","TUR","Hatay, Kahramanmaras, Osmaniye","Mediterranean region - East","Région méditerranéenne - Est","f","Mediterranean E.",FALSE,FALSE,FALSE
+"TR71","TUR55","TUR","Kirikkale, Aksaray, Nigde, Nevsehir, Kirsehir","Central Anatolia - Middle","Anatolie centrale - Centre","f","C. Anatolia Middle",FALSE,FALSE,FALSE
+"TR72","TUR55","TUR","Kayseri, Sivas, Yozgat","Central Anatolia - East","Anatolie centrale - Est","f","C. Anatolia E.",FALSE,FALSE,FALSE
+"TR81","TUR55","TUR","Zonguldak, Karabük, Bartin","Western Black Sea - West","Mer Noire occidentale - Ouest","f","W. Black Sea W.",FALSE,FALSE,FALSE
+"TR82","TUR55","TUR","Kastamonu, Çankiri, Sinop","Western Black Sea - Middle and East","Mer Noire occidentale - Centre et Est","f","W. Black Sea - ME",FALSE,FALSE,FALSE
+"TR83","TUR55","TUR","Samsun, Tokat, Çorum, Amasya","Middle Black Sea","Mer Noire centrale","f","Middle Black Sea",FALSE,FALSE,FALSE
+"TR90","TUR55","TUR","Trabzon, Ordu, Giresun, Rize, Artvin, Gümüshane","Eastern Black Sea","Mer Noire orientale","f","Eastern Black Sea",FALSE,FALSE,FALSE
+"TRA1","TUR55","TUR","Erzurum, Erzincan, Bayburt","Northeastern Anatolia - West","Nord-Est de l'Anatolie - Ouest","f","N.E. Anatolia W.",FALSE,FALSE,FALSE
+"TRA2","TUR55","TUR","Agri, Kars, Igdir, Ardahan","Northeastern Anatolia - East","Nord-Est de l'Anatolie - Est","f","N.E. Anatolia E.",FALSE,FALSE,FALSE
+"TRB1","TUR55","TUR","Malatya, Elazig, Bingöl, Tunceli","Eastern Anatolia - West","Anatolie orientale - Ouest","f","E. Anatolia W.",FALSE,FALSE,FALSE
+"TRB2","TUR55","TUR","Van, Mus, Bitlis, Hakkari","Eastern Anatolia - East","Anatolie orientale - Est","f","E. Anatolia E.",FALSE,FALSE,FALSE
+"TRC1","TUR55","TUR","Gaziantep, Adiyaman, Kilis","Southeastern Anatolia - West","Anatolie méridionale - Ouest","f","S.E. Anatolia W.",FALSE,FALSE,FALSE
+"TRC2","TUR55","TUR","Sanliurfa, Diyarbakir","Southeastern Anatolia - Middle","Anatolie méridionale - Centre","f","S.E. Anatolia Middle",FALSE,FALSE,FALSE
+"TRC3","TUR55","TUR","Mardin, Batman, Sirnak, Siirt","Southeastern Anatolia - East","Anatolie méridionale - Est","f","S.E. Anatolia E.",FALSE,FALSE,FALSE
+"UKC","GBR20","GBR","North East England","North East England","Angleterre du Nord-Est","f","N.E. England",FALSE,FALSE,TRUE
+"UKD","GBR20","GBR","North West England","North West England","Angleterre du Nord-Ouest","f","N.W. England",FALSE,FALSE,TRUE
+"UKE","GBR20","GBR","Yorkshire and The Humber","Yorkshire and The Humber","Yorkshire et Humber","f","Yorkshire, Humber",FALSE,FALSE,TRUE
+"UKF","GBR20","GBR","East Midlands","East Midlands","Midlands de l'Est","f","E. Midlands",FALSE,FALSE,TRUE
+"UKG","GBR20","GBR","West Midlands","West Midlands","Midlands de l'Ouest","f","W. Midlands",FALSE,FALSE,TRUE
+"UKH","GBR20","GBR","East of England","East of England","Angleterre de l'Est","f","E. of England",FALSE,FALSE,TRUE
+"UKI","GBR20","GBR","London","Greater London","Grand Londres","f","Greater London",FALSE,FALSE,TRUE
+"UKJ","GBR20","GBR","South East England","South East England","Angleterre du Sud-Est","f","S.E. England",FALSE,FALSE,TRUE
+"UKK","GBR20","GBR","South West England","South West England","Angleterre du Sud-Ouest","f","S.W. England",FALSE,FALSE,TRUE
+"UKL","GBR20","GBR","Wales","Wales","Pays de Galles","f","Wales",FALSE,FALSE,TRUE
+"UKM","GBR20","GBR","Scotland","Scotland","Écosse","f","Scotland",FALSE,FALSE,TRUE
+"UKN","GBR20","GBR","Northern Ireland","Northern Ireland","Irlande du Nord","f","North",FALSE,FALSE,TRUE
+"US01","USA92","USA","Alabama","Alabama","Alabama","t","Alabama",FALSE,FALSE,FALSE
+"US02","USA92","USA","Alaska","Alaska","Alaska","f","Alaska",FALSE,FALSE,FALSE
+"US04","USA92","USA","Arizona","Arizona","Arizona","t","Arizona",FALSE,FALSE,FALSE
+"US05","USA92","USA","Arkansas","Arkansas","Arkansas","t","Arkansas",FALSE,FALSE,FALSE
+"US06","USA92","USA","California","California","California","t","California",FALSE,FALSE,FALSE
+"US08","USA92","USA","Colorado","Colorado","Colorado","t","Colorado",FALSE,FALSE,FALSE
+"US09","USA92","USA","Connecticut","Connecticut","Connecticut","t","Connecticut",FALSE,FALSE,FALSE
+"US10","USA92","USA","Delaware","Delaware","Delaware","t","Delaware",FALSE,FALSE,FALSE
+"US11","USA92","USA","District Of Columbia","District Of Columbia","District Of Columbia","t","D. of Columbia",FALSE,FALSE,FALSE
+"US12","USA92","USA","Florida","Florida","Florida","t","Florida",FALSE,FALSE,FALSE
+"US13","USA92","USA","Georgia","Georgia","Georgia","t","Georgia",FALSE,FALSE,FALSE
+"US15","USA92","USA","Hawaii","Hawaii","Hawaii","f","Hawaii",FALSE,FALSE,FALSE
+"US16","USA92","USA","Idaho","Idaho","Idaho","t","Idaho",FALSE,FALSE,FALSE
+"US17","USA92","USA","Illinois","Illinois","Illinois","t","Illinois",FALSE,FALSE,FALSE
+"US18","USA92","USA","Indiana","Indiana","Indiana","t","Indiana",FALSE,FALSE,FALSE
+"US19","USA92","USA","Iowa","Iowa","Iowa","t","Iowa",FALSE,FALSE,FALSE
+"US20","USA92","USA","Kansas","Kansas","Kansas","t","Kansas",FALSE,FALSE,FALSE
+"US21","USA92","USA","Kentucky","Kentucky","Kentucky","t","Kentucky",FALSE,FALSE,FALSE
+"US22","USA92","USA","Louisiana","Louisiana","Louisiana","t","Louisiana",FALSE,FALSE,FALSE
+"US23","USA92","USA","Maine","Maine","Maine","t","Maine",FALSE,FALSE,FALSE
+"US24","USA92","USA","Maryland","Maryland","Maryland","t","Maryland",FALSE,FALSE,FALSE
+"US25","USA92","USA","Massachusetts","Massachusetts","Massachusetts","t","Massachusetts",FALSE,FALSE,FALSE
+"US26","USA92","USA","Michigan","Michigan","Michigan","t","Michigan",FALSE,FALSE,FALSE
+"US27","USA92","USA","Minnesota","Minnesota","Minnesota","t","Minnesota",FALSE,FALSE,FALSE
+"US28","USA92","USA","Mississippi","Mississippi","Mississippi","t","Mississippi",FALSE,FALSE,FALSE
+"US29","USA92","USA","Missouri","Missouri","Missouri","t","Missouri",FALSE,FALSE,FALSE
+"US30","USA92","USA","Montana","Montana","Montana","t","Montana",FALSE,FALSE,FALSE
+"US31","USA92","USA","Nebraska","Nebraska","Nebraska","t","Nebraska",FALSE,FALSE,FALSE
+"US32","USA92","USA","Nevada","Nevada","Nevada","t","Nevada",FALSE,FALSE,FALSE
+"US33","USA92","USA","New Hampshire","New Hampshire","New Hampshire","t","New Hampshire",FALSE,FALSE,FALSE
+"US34","USA92","USA","New Jersey","New Jersey","New Jersey","t","New Jersey",FALSE,FALSE,FALSE
+"US35","USA92","USA","New Mexico","New Mexico","New Mexico","t","New Mexico",FALSE,FALSE,FALSE
+"US36","USA92","USA","New York","New York","New York","t","New York",FALSE,FALSE,FALSE
+"US37","USA92","USA","North Carolina","North Carolina","North Carolina","t","North Carolina",FALSE,FALSE,FALSE
+"US38","USA92","USA","North Dakota","North Dakota","North Dakota","t","North Dakota",FALSE,FALSE,FALSE
+"US39","USA92","USA","Ohio","Ohio","Ohio","t","Ohio",FALSE,FALSE,FALSE
+"US40","USA92","USA","Oklahoma","Oklahoma","Oklahoma","t","Oklahoma",FALSE,FALSE,FALSE
+"US41","USA92","USA","Oregon","Oregon","Oregon","t","Oregon",FALSE,FALSE,FALSE
+"US42","USA92","USA","Pennsylvania","Pennsylvania","Pennsylvania","t","Pennsylvania",FALSE,FALSE,FALSE
+"US44","USA92","USA","Rhode Island","Rhode Island","Rhode Island","t","Rhode Island",FALSE,FALSE,FALSE
+"US45","USA92","USA","South Carolina","South Carolina","South Carolina","t","South Carolina",FALSE,FALSE,FALSE
+"US46","USA92","USA","South Dakota","South Dakota","South Dakota","t","South Dakota",FALSE,FALSE,FALSE
+"US47","USA92","USA","Tennessee","Tennessee","Tennessee","t","Tennessee",FALSE,FALSE,FALSE
+"US48","USA92","USA","Texas","Texas","Texas","t","Texas",FALSE,FALSE,FALSE
+"US49","USA92","USA","Utah","Utah","Utah","t","Utah",FALSE,FALSE,FALSE
+"US50","USA92","USA","Vermont","Vermont","Vermont","t","Vermont",FALSE,FALSE,FALSE
+"US51","USA92","USA","Virginia","Virginia","Virginia","t","Virginia",FALSE,FALSE,FALSE
+"US53","USA92","USA","Washington","Washington","Washington","t","Washington",FALSE,FALSE,FALSE
+"US54","USA92","USA","West Virginia","West Virginia","West Virginia","t","West Virginia",FALSE,FALSE,FALSE
+"US55","USA92","USA","Wisconsin","Wisconsin","Wisconsin","t","Wisconsin",FALSE,FALSE,FALSE
+"US56","USA92","USA","Wyoming","Wyoming","Wyoming","t","Wyoming",FALSE,FALSE,FALSE

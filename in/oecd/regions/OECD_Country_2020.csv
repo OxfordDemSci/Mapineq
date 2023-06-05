@@ -1,0 +1,250 @@
+"tl1_id","iso3","iso2","tl1_name_f","tl1_name_e","EU","EEA","mapineq"
+"999","999","99","Non-Categorized-Other Territory","Non-Categorized-Other Territory",FALSE,FALSE,FALSE
+"ABW125","ABW","AW","Aruba","Aruba",FALSE,FALSE,FALSE
+"AFG51","AFG","AF","Afghanistan","Afghanistan",FALSE,FALSE,FALSE
+"AGO196","AGO","AO","Angola","Angola",FALSE,FALSE,FALSE
+"AIA96","AIA","AI","Anguilla","Anguilla",FALSE,FALSE,FALSE
+"ALB44","ALB","AL","Albanie","Albania",FALSE,FALSE,FALSE
+"AND45","AND","AD","Andorre","Andorra",FALSE,FALSE,FALSE
+"ANT238","ANT","BQ","Saba","Saba",FALSE,FALSE,FALSE
+"ARE79","ARE","AE","Émirats arabes unis","United Arab Emirates",FALSE,FALSE,FALSE
+"ARG224","ARG","AR","Argentine","Argentina",FALSE,FALSE,FALSE
+"ARM251","ARM","AM","Arménie","Armenia",FALSE,FALSE,FALSE
+"ASM192","ASM","AS","Samoa américaines","American Samoa",FALSE,FALSE,FALSE
+"ATF219","ATF","TF","Terres australes et antarctiques françai","es French Southern and Antarctic Lands",FALSE,FALSE,FALSE
+"ATG106","ATG","AG","Antigua-et-Barbuda","Antigua and Barbuda",FALSE,FALSE,FALSE
+"AUS223","AUS","AU","Australie","Australia",FALSE,FALSE,FALSE
+"AUT27","AUT","AT","Autriche","Austria",TRUE,TRUE,TRUE
+"AZE252","AZE","AZ","Azerbaïdjan","Azerbaijan",FALSE,FALSE,FALSE
+"BDI171","BDI","BI","Burundi","Burundi",FALSE,FALSE,FALSE
+"BEL16","BEL","BE","Belgique","Belgium",FALSE,FALSE,FALSE
+"BEN127","BEN","BJ","Bénin","Benin",FALSE,FALSE,FALSE
+"BFA113","BFA","BF","Burkina Faso","Burkina Faso",FALSE,FALSE,FALSE
+"BGD90","BGD","BD","Bangladesh","Bangladesh",FALSE,FALSE,FALSE
+"BGR37","BGR","BG","Bulgarie","Bulgaria",TRUE,TRUE,TRUE
+"BHR75","BHR","BH","Bahreïn","Bahrain",FALSE,FALSE,FALSE
+"BHS88","BHS","BS","Bahamas","Bahamas",FALSE,FALSE,FALSE
+"BIH34","BIH","BA","Bosnie-Herzégovine","Bosnia and Herzegovina",FALSE,FALSE,FALSE
+"BLR8","BLR","BY","Bélarus","Belarus",FALSE,FALSE,FALSE
+"BLZ107","BLZ","BZ","Belize","Belize",FALSE,FALSE,FALSE
+"BMU67","BMU","BM","Bermudes","Bermuda",FALSE,FALSE,FALSE
+"BOL181","BOL","BO","Bolivie","Bolivia",FALSE,FALSE,FALSE
+"BRA215","BRA","BR","Brésil","Brazil",FALSE,FALSE,FALSE
+"BRB120","BRB","BB","Barbade","Barbados",FALSE,FALSE,FALSE
+"BRN153","BRN","BN","Brunei Darussalam","Brunei Darussalam",FALSE,FALSE,FALSE
+"BTN72","BTN","BT","Bhoutan","Bhutan",FALSE,FALSE,FALSE
+"BVT222","BVT","BV","Ile Bouvet","Bouvet Island",FALSE,FALSE,FALSE
+"BWA197","BWA","BW","Botswana","Botswana",FALSE,FALSE,FALSE
+"CAF134","CAF","CF","République centrafricaine","Central African Republic",FALSE,FALSE,FALSE
+"CAN47","CAN","CA","Canada","Canada",FALSE,FALSE,FALSE
+"CHE33","CHE","CH","Suisse","Switzerland",FALSE,FALSE,FALSE
+"CHL225","CHL","CL","Chili","Chile",FALSE,FALSE,FALSE
+"CHN234","CHN","TW","Taipei chinois","Chinese Taipei",FALSE,FALSE,FALSE
+"CHN255","CHN","CN","Chine (République populaire de)","China (People's Republic of)",FALSE,FALSE,FALSE
+"CIV152","CIV","CI","Côte d'Ivoire","Côte d'Ivoire",FALSE,FALSE,FALSE
+"CMR155","CMR","CM","Cameroun","Cameroon",FALSE,FALSE,FALSE
+"COD175","COD","CD","République démocratique du Congo","Democratic Republic of the Congo",FALSE,FALSE,FALSE
+"COG159","COG","CG","Congo","Congo",FALSE,FALSE,FALSE
+"COK204","COK","CK","Iles Cook","Cook Islands",FALSE,FALSE,FALSE
+"COL160","COL","CO","Colombie","Colombia",FALSE,FALSE,FALSE
+"COM188","COM","KM","Comores","Comoros",FALSE,FALSE,FALSE
+"CPV114","CPV","CV","Cabo Verde","Cabo Verde",FALSE,FALSE,FALSE
+"CRI150","CRI","CR","Costa Rica","Costa Rica",FALSE,FALSE,FALSE
+"CUB91","CUB","CU","Cuba","Cuba",FALSE,FALSE,FALSE
+"CXR184","CXR","CX","Ile Christmas","Christmas Island",FALSE,FALSE,FALSE
+"CYM94","CYM","KY","Îles Caïmanes","Cayman Islands",FALSE,FALSE,FALSE
+"CYP58","CYP","CY","Chypre","Cyprus",TRUE,TRUE,TRUE
+"CZE18","CZE","CZ","République tchèque","Czech Republic",TRUE,TRUE,TRUE
+"DEU26","DEU","DE","Allemagne","Germany",TRUE,TRUE,TRUE
+"DJI124","DJI","DJ","Djibouti","Djibouti",FALSE,FALSE,FALSE
+"DMA112","DMA","DM","Dominique","Dominica",FALSE,FALSE,FALSE
+"DNK11","DNK","DK","Danemark","Denmark",TRUE,TRUE,TRUE
+"DOM103","DOM","DO","République dominicaine","Dominican Republic",FALSE,FALSE,FALSE
+"DT264","DT","DT","DT6Kashmir region","DT6Kashmir region",FALSE,FALSE,FALSE
+"DT265","DT","DT","DT6Kashmir region","DT6Kashmir region",FALSE,FALSE,FALSE
+"DT227","DT","DT","DT1Abyei area","DT1Abyei area",FALSE,FALSE,FALSE
+"DT232","DT","DT","DT5Hala'ib Triangle and Bir Tawil","DT5Hala'ib Triangle and Bir Tawil",FALSE,FALSE,FALSE
+"DT267","DT","DT","IL","IL",FALSE,FALSE,FALSE
+"DT41","DT","DT","DT2Southern Kuril Islands","DT2Southern Kuril Islands",FALSE,FALSE,FALSE
+"DT249","DT","CC","Iles Cocos","Cocos (Keeling) Islands",FALSE,FALSE,FALSE
+"DT250","DT","GI","Gibraltar","Gibraltar",FALSE,FALSE,FALSE
+"DT230","DT","DT","DT3Takeshima/Dokdo Island","DT3Takeshima/Dokdo Island",FALSE,FALSE,FALSE
+"DT231","DT","DT","DT4Senkaku Islands","DT4Senkaku Islands",FALSE,FALSE,FALSE
+"DT253","DT","DT","DT6Kashmir region","DT6Kashmir region",FALSE,FALSE,FALSE
+"DZA54","DZA","DZ","Algérie","Algeria",FALSE,FALSE,FALSE
+"ECU172","ECU","EC","Équateur","Ecuador",FALSE,FALSE,FALSE
+"EGY84","EGY","EG","Égypte","Egypt",FALSE,FALSE,FALSE
+"ERI123","ERI","ER","Érythrée","Eritrea",FALSE,FALSE,FALSE
+"ESH74","ESH","ES","Sahara occidental","Western Sahara",FALSE,FALSE,FALSE
+"ESP73","ESP","ES","Espagne","Spain",TRUE,TRUE,TRUE
+"EST7","EST","EE","Estonie","Estonia",TRUE,TRUE,TRUE
+"ETH115","ETH","ET","Éthiopie","Ethiopia",FALSE,FALSE,FALSE
+"FIN247","FIN","AX","Finlande","Finland",TRUE,TRUE,TRUE
+"FJI202","FJI","FJ","Fidji","Fiji",FALSE,FALSE,FALSE
+"FRA260","FRA","FR","France","France",TRUE,TRUE,TRUE
+"FRO3","FRO","FO","Iles Féroé","Faroe Islands",FALSE,FALSE,FALSE
+"FSM151","FSM","FM","Micronésie","Micronesia",FALSE,FALSE,FALSE
+"GAB164","GAB","GA","Gabon","Gabon",FALSE,FALSE,FALSE
+"GBR20","GBR","GB","Royaume-Uni","United Kingdom",FALSE,FALSE,TRUE
+"GEO39","GEO","GE","Géorgie","Georgia",FALSE,FALSE,FALSE
+"GGY22","GGY","GG","Guernesey","Guernsey",FALSE,FALSE,FALSE
+"GHA132","GHA","GH","Ghana","Ghana",FALSE,FALSE,FALSE
+"GIN139","GIN","GN","Guinée","Guinea",FALSE,FALSE,FALSE
+"GMB118","GMB","GM","Gambie","Gambia",FALSE,FALSE,FALSE
+"GNB135","GNB","GW","Guinée-Bissau","Guinea-Bissau",FALSE,FALSE,FALSE
+"GNQ170","GNQ","GQ","Guinée équatoriale","Equatorial Guinea",FALSE,FALSE,FALSE
+"GRC60","GRC","GR","Grèce","Greece",TRUE,TRUE,TRUE
+"GRD128","GRD","GD","Grenade","Grenada",FALSE,FALSE,FALSE
+"GRL4","GRL","GL","Groenland","Greenland",FALSE,FALSE,FALSE
+"GTM101","GTM","GT","Guatemala","Guatemala",FALSE,FALSE,FALSE
+"GUM119","GUM","GU","Guam","Guam",FALSE,FALSE,FALSE
+"GUY147","GUY","GY","Guyana","Guyana",FALSE,FALSE,FALSE
+"HKG86","HKG","HK","Hong Kong (Chine)","Hong Kong (China)",FALSE,FALSE,FALSE
+"HMD221","HMD","HM","Iles Heard et McDonald","Heard Island and McDonald Islands",FALSE,FALSE,FALSE
+"HND121","HND","HN","Honduras","Honduras",FALSE,FALSE,FALSE
+"HRV43","HRV","HR","Croatie","Croatia",TRUE,TRUE,TRUE
+"HTI99","HTI","HT","Haïti","Haiti",FALSE,FALSE,FALSE
+"HUN24","HUN","HU","Hongrie","Hungary",TRUE,TRUE,TRUE
+"IDN185","IDN","ID","Indonésie","Indonesia",FALSE,FALSE,FALSE
+"IMN12","IMN","IM","Ile de Man","Isle of Man",FALSE,FALSE,FALSE
+"IND254","IND","IN","Inde","India",FALSE,FALSE,FALSE
+"IOT176","IOT","IO","Territoire Britannique de l’Océan Indi","British Indian Ocean Territory",FALSE,FALSE,FALSE
+"IRL15","IRL","IE","Irlande","Ireland",TRUE,TRUE,TRUE
+"IRN76","IRN","IR","Iran","Iran",FALSE,FALSE,FALSE
+"IRQ70","IRQ","IQ","Iraq","Iraq",FALSE,FALSE,FALSE
+"ISL2","ISL","IS","Islande","Iceland",FALSE,TRUE,TRUE
+"ISR65","ISR","IL","Israël","Israel",FALSE,FALSE,FALSE
+"ITA59","ITA","IT","Italie","Italy",TRUE,TRUE,TRUE
+"JAM100","JAM","JM","Jamaïque","Jamaica",FALSE,FALSE,FALSE
+"JEY23","JEY","JE","Jersey","Jersey",FALSE,FALSE,FALSE
+"JOR64","JOR","JO","Jordanie","Jordan",FALSE,FALSE,FALSE
+"JPN80","JPN","JP","Japon","Japan",FALSE,FALSE,FALSE
+"KAZ36","KAZ","KZ","Kazakhstan","Kazakhstan",FALSE,FALSE,FALSE
+"KEN173","KEN","KE","Kenya","Kenya",FALSE,FALSE,FALSE
+"KGZ42","KGZ","KG","Kirghizistan","Kyrgyzstan",FALSE,FALSE,FALSE
+"KHM137","KHM","KH","Cambodge","Cambodia",FALSE,FALSE,FALSE
+"KIR174","KIR","KI","Kiribati","Kiribati",FALSE,FALSE,FALSE
+"KNA105","KNA","KN","Saint-Kitts-et-Nevis","Saint Kitts and Nevis",FALSE,FALSE,FALSE
+"KOR62","KOR","KR","Corée","Korea",FALSE,FALSE,FALSE
+"KWT71","KWT","KW","Koweït","Kuwait",FALSE,FALSE,FALSE
+"LAO85","LAO","LA","République démocratique populaire lao","Lao People's Democratic Republic",FALSE,FALSE,FALSE
+"LBN266","LBN","LB","Liban","Lebanon",FALSE,FALSE,FALSE
+"LBR141","LBR","LR","Libéria","Liberia",FALSE,FALSE,FALSE
+"LBY66","LBY","LY","Libye","Libya",FALSE,FALSE,FALSE
+"LCA117","LCA","LC","Sainte-Lucie","Saint Lucia",FALSE,FALSE,FALSE
+"LIE28","LIE","LI","Liechtenstein","Liechtenstein",FALSE,TRUE,TRUE
+"LKA142","LKA","LK","Sri Lanka","Sri Lanka",FALSE,FALSE,FALSE
+"LSO213","LSO","LS","Lesotho","Lesotho",FALSE,FALSE,FALSE
+"LTU10","LTU","LT","Lituanie","Lithuania",TRUE,TRUE,TRUE
+"LUX19","LUX","LU","Luxembourg","Luxembourg",TRUE,TRUE,TRUE
+"LVA5","LVA","LV","Lettonie","Latvia",TRUE,TRUE,TRUE
+"MAC87","MAC","MO","Macao (Chine)","Macau (China)",FALSE,FALSE,FALSE
+"MAR57","MAR","MA","Maroc","Morocco",FALSE,FALSE,FALSE
+"MCO241","MCO","MC","Monaco","Monaco",FALSE,FALSE,FALSE
+"MDA25","MDA","MD","Moldova","Moldova",FALSE,FALSE,FALSE
+"MDG205","MDG","MG","Madagascar","Madagascar",FALSE,FALSE,FALSE
+"MDV167","MDV","MV","Maldives","Maldives",FALSE,FALSE,FALSE
+"MEX111","MEX","MX","Mexique","Mexico",FALSE,FALSE,FALSE
+"MHL157","MHL","MH","Iles Marshall","Marshall Islands",FALSE,FALSE,FALSE
+"MKD46","MKD","MK","Macédoine du Nord","North Macedonia",FALSE,FALSE,FALSE
+"MLI77","MLI","ML","Mali","Mali",FALSE,FALSE,FALSE
+"MLT56","MLT","MT","Malte","Malta",TRUE,TRUE,TRUE
+"MMR138","MMR","MM","Myanmar","Myanmar",FALSE,FALSE,FALSE
+"MNE40","MNE","ME","Monténégro","Montenegro",FALSE,FALSE,FALSE
+"MNG14","MNG","MN","Mongolie","Mongolia",FALSE,FALSE,FALSE
+"MNP116","MNP","MP","Iles Mariannes du Nord","Northern Mariana Islands",FALSE,FALSE,FALSE
+"MOZ210","MOZ","MZ","Mozambique","Mozambique",FALSE,FALSE,FALSE
+"MRT93","MRT","MR","Mauritanie","Mauritania",FALSE,FALSE,FALSE
+"MSR108","MSR","MS","Montserrat","Montserrat",FALSE,FALSE,FALSE
+"MUS200","MUS","MU","Maurice","Mauritius",FALSE,FALSE,FALSE
+"MWI187","MWI","MW","Malawi","Malawi",FALSE,FALSE,FALSE
+"MYS161","MYS","MY","Malaisie","Malaysia",FALSE,FALSE,FALSE
+"MYT190","MYT","YT","Mayotte","Mayotte",FALSE,FALSE,FALSE
+"NAM211","NAM","NA","Namibie","Namibia",FALSE,FALSE,FALSE
+"NCL207","NCL","NC","Nouvelle-Calédonie","New Caledonia",FALSE,FALSE,FALSE
+"NER82","NER","NE","Niger","Niger",FALSE,FALSE,FALSE
+"NFK214","NFK","NF","Ile Norfolk","Norfolk Island",FALSE,FALSE,FALSE
+"NGA156","NGA","NG","Nigéria","Nigeria",FALSE,FALSE,FALSE
+"NIC129","NIC","NI","Nicaragua","Nicaragua",FALSE,FALSE,FALSE
+"NIU198","NIU","NU","Niue","Niue",FALSE,FALSE,FALSE
+"NLD17","NLD","NL","Pays-Bas","Netherlands",TRUE,TRUE,TRUE
+"NOR6","NOR","NO","Norvège","Norway",FALSE,TRUE,TRUE
+"NPL68","NPL","NP","Népal","Nepal",FALSE,FALSE,FALSE
+"NRU166","NRU","NR","Nauru","Nauru",FALSE,FALSE,FALSE
+"NZL220","NZL","NZ","Nouvelle-Zélande","New Zealand",FALSE,FALSE,FALSE
+"OMN104","OMN","OM","Oman","Oman",FALSE,FALSE,FALSE
+"PAK81","PAK","PK","Pakistan","Pakistan",FALSE,FALSE,FALSE
+"PAN145","PAN","PA","Panama","Panama",FALSE,FALSE,FALSE
+"PCN208","PCN","PN","Pitcairn","Pitcairn",FALSE,FALSE,FALSE
+"PER193","PER","PE","Pérou","Peru",FALSE,FALSE,FALSE
+"PHL154","PHL","PH","Philippines","Philippines",FALSE,FALSE,FALSE
+"PLW146","PLW","PW","Palaos","Palau",FALSE,FALSE,FALSE
+"PNG186","PNG","PG","Papouasie-Nouvelle-Guinée","Papua New Guinea",FALSE,FALSE,FALSE
+"POL13","POL","PL","Pologne","Poland",TRUE,TRUE,TRUE
+"PRI97","PRI","PR","Porto Rico","Puerto Rico",FALSE,FALSE,FALSE
+"PRK52","PRK","KP","République populaire démocratique de Co","Democratic People's Republic of Korea",FALSE,FALSE,FALSE
+"PRT69","PRT","PT","Portugal","Portugal",TRUE,TRUE,TRUE
+"PRY199","PRY","PY","Paraguay","Paraguay",FALSE,FALSE,FALSE
+"PSE235","PSE","PS","Cisjordanie et bande de Gaza","West Bank and Gaza Strip",FALSE,FALSE,FALSE
+"PYF212","PYF","PF","Polynésie française","French Polynesia",FALSE,FALSE,FALSE
+"QAT78","QAT","QA","Qatar","Qatar",FALSE,FALSE,FALSE
+"ROU35","ROU","RO","Roumanie","Romania",TRUE,TRUE,TRUE
+"RUS263","RUS","RU","Russie","Russia",FALSE,FALSE,FALSE
+"RWA168","RWA","RW","Rwanda","Rwanda",FALSE,FALSE,FALSE
+"SAU110","SAU","SA","Arabie saoudite","Saudi Arabia",FALSE,FALSE,FALSE
+"SDN98","SDN","SD","Soudan","Sudan",FALSE,FALSE,FALSE
+"SDN229","SDN","SS","Sud Soudan","South Sudan",FALSE,FALSE,FALSE
+"SEN109","SEN","SN","Sénégal","Senegal",FALSE,FALSE,FALSE
+"SGP162","SGP","SG","Singapour","Singapore",FALSE,FALSE,FALSE
+"SGS226","SGS","SG","Iles Géorgie du Sud et Sandwich du Sud","South Georgia and the South Sandwich Isla",FALSE,FALSE,FALSE
+"SHN217","SHN","SH","Sainte-Hélène","Saint Helena",FALSE,FALSE,FALSE
+"SJM1","SJM","SJ","Svalbard et Jan Mayen","Svalbard and Jan Mayen",FALSE,FALSE,FALSE
+"SLB189","SLB","SB","Iles Salomon","Solomon Islands",FALSE,FALSE,FALSE
+"SLE144","SLE","SL","Sierra Leone","Sierra Leone",FALSE,FALSE,FALSE
+"SLV122","SLV","SV","El Salvador","El Salvador",FALSE,FALSE,FALSE
+"SMR38","SMR","SM","Saint-Marin","San Marino",FALSE,FALSE,FALSE
+"SOM169","SOM","SO","Somalie","Somalia",FALSE,FALSE,FALSE
+"SPM30","SPM","PM","Saint-Pierre-et-Miquelon","Saint Pierre and  Miquelon",FALSE,FALSE,FALSE
+"SRB31","SRB","KV","Kosovo","Kosovo",FALSE,FALSE,FALSE
+"SRB233","SRB","RS","Serbie","Serbia",FALSE,FALSE,FALSE
+"STP163","STP","ST","Sao Tomé-et-Principe","Sao Tome and Principe",FALSE,FALSE,FALSE
+"SUR149","SUR","SR","Suriname","Suriname",FALSE,FALSE,FALSE
+"SVK21","SVK","SK","République slovaque","Slovak Republic",TRUE,TRUE,TRUE
+"SVN29","SVN","SI","Slovénie","Slovenia",TRUE,TRUE,TRUE
+"SWE9","SWE","SE","Suède","Sweden",TRUE,TRUE,TRUE
+"SWZ209","SWZ","SZ","Swaziland","Eswatini",FALSE,FALSE,FALSE
+"SYC182","SYC","SC","Seychelles","Seychelles",FALSE,FALSE,FALSE
+"SYR53","SYR","SY","République arabe syrienne","Syrian Arab Republic",FALSE,FALSE,FALSE
+"TCA89","TCA","TC","Iles Turques et Caïques","Turks and Caicos Islands",FALSE,FALSE,FALSE
+"TCD83","TCD","TD","Tchad","Chad",FALSE,FALSE,FALSE
+"TGO133","TGO","TG","Togo","Togo",FALSE,FALSE,FALSE
+"THA148","THA","TH","Thaïlande","Thailand",FALSE,FALSE,FALSE
+"TJK49","TJK","TJ","Tadjikistan","Tajikistan",FALSE,FALSE,FALSE
+"TKL179","TKL","TK","Tokélaou","Tokelau",FALSE,FALSE,FALSE
+"TKM50","TKM","TM","Turkménistan","Turkmenistan",FALSE,FALSE,FALSE
+"TLS178","TLS","TL","Timor-Leste","Timor-Leste",FALSE,FALSE,FALSE
+"TON206","TON","TO","Tonga","Tonga",FALSE,FALSE,FALSE
+"TTO136","TTO","TT","Trinité-et-Tobago","Trinidad and Tobago",FALSE,FALSE,FALSE
+"TUN63","TUN","TN","Tunisie","Tunisia",FALSE,FALSE,FALSE
+"TUR55","TUR","TR","Turquie","Turkey",FALSE,FALSE,FALSE
+"TUV180","TUV","TV","Tuvalu","Tuvalu",FALSE,FALSE,FALSE
+"TZA183","TZA","TZ","Tanzanie","Tanzania",FALSE,FALSE,FALSE
+"UGA158","UGA","UG","Ouganda","Uganda",FALSE,FALSE,FALSE
+"UKR32","UKR","UA","Ukraine","Ukraine",FALSE,FALSE,FALSE
+"UMI165","UMI","UM","Iles Mineures éloignées des États-Unis","United States Minor Outlying Islands",FALSE,FALSE,FALSE
+"URY216","URY","UY","Uruguay","Uruguay",FALSE,FALSE,FALSE
+"USA92","USA","US","États-Unis","United States",FALSE,FALSE,FALSE
+"UZB48","UZB","UZ","Ouzbékistan","Uzbekistan",FALSE,FALSE,FALSE
+"VAT261","VAT","VA","Saint-Siège","Holy See",FALSE,FALSE,FALSE
+"VCT126","VCT","VC","Saint-Vincent-et-les-Grenadines","Saint Vincent and the Grenadines",FALSE,FALSE,FALSE
+"VEN140","VEN","VE","Venezuela","Venezuela",FALSE,FALSE,FALSE
+"VGB95","VGB","VG","Iles Vierges britanniques","British Virgin Islands",FALSE,FALSE,FALSE
+"VIR102","VIR","VI","Iles Vierges des États-Unis","United States Virgin Islands",FALSE,FALSE,FALSE
+"VNM143","VNM","VN","Viet Nam","Viet Nam",FALSE,FALSE,FALSE
+"VUT201","VUT","VU","Vanuatu","Vanuatu",FALSE,FALSE,FALSE
+"WLF194","WLF","WF","Wallis-et-Futuna","Wallis and Futuna",FALSE,FALSE,FALSE
+"WSM191","WSM","WS","Samoa","Samoa",FALSE,FALSE,FALSE
+"YEM130","YEM","YE","Yémen","Yemen",FALSE,FALSE,FALSE
+"ZAF218","ZAF","ZA","Afrique du Sud","South Africa",FALSE,FALSE,FALSE
+"ZMB177","ZMB","ZM","Zambie","Zambia",FALSE,FALSE,FALSE
+"ZWE195","ZWE","ZW","Zimbabwe","Zimbabwe",FALSE,FALSE,FALSE
