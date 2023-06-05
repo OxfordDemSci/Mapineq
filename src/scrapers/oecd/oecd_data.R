@@ -14,7 +14,7 @@ setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path), "..", "..", 
 
 # directories
 srcdir = file.path('src', 'scrapers', 'oecd')
-outdir <- file.path('data', 'oecd')
+outdir <- file.path('out', 'oecd')
 dir.create(outdir, showWarnings=F, recursive=T)
 
 # Function to reformat data for merging later on
