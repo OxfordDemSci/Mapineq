@@ -1,13 +1,6 @@
 # cleanup
 rm(list = ls()); gc(); cat("\014"); try(dev.off(), silent = T); options(scipen = 999)
 
-# Load necessary libraries
-library(httr)
-library(jsonlite)
-library(tidyr)
-library(stringr)
-library(rsdmx)
-
 # working directory
 setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path), "..", "..", ".."))
 
@@ -16,17 +9,20 @@ srcdir <- file.path('src', 'scrapers', 'oecd')
 outdir <- file.path('out', 'oecd')
 dir.create(outdir, showWarnings=F, recursive=T)
 
+# load functions
+source(file.path(srcdir, 'functions.R'))
+
 # load data
 oecd_regions <- read.csv(file.path('in', 'oecd', 'regions', 'OECD_TL3_2020.csv'))
 
 # mapineq countries
 oecd_regions <- oecd_regions[oecd_regions$mapineq, ]
 
-# query demographic variables
-query_string <- paste0('http://stats.oecd.org/restsdmx/sdmx.ashx/GetData/REGION_DEMOGR/2.',
-                       '.',
-                       'T.T.ALL.',
-                       '2021',
-                       '/all?')
+# GET REGION_DEMOGR
+dat_list <- get_region_demogr(oecd_key = oecd_regions)
 
-tl2_popwgt <- as.data.frame(readSDMX(query_string))
+for(i in c('tl1', 'tl2', 'tl3')){
+  write.csv(dat_list[[i]], 
+            file = file.path(outdir, paste0('region_demogr_',i,'.csv')), 
+            row.names = F)
+}
