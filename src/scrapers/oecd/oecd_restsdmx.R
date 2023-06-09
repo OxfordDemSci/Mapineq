@@ -7,88 +7,61 @@ setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path),
 
 # define directories
 srcdir <- file.path('src', 'scrapers', 'oecd')
+indir <- file.path('in', 'oecd')
 outdir <- file.path('out', 'oecd')
 dir.create(outdir, showWarnings=F, recursive=T)
 
 # load functions
 source(file.path(srcdir, 'functions.R'))
 
-# define queries
-query <- list(region_st = paste0('REGION_ST/',  # endpoint FAIL 400
-                                 '1+2+3.',  # TL
-                                 '.',  # REG_ID
-                                 '.',  # IND
-                                 ''),  # TIME
-              region_econom = paste0('REGION_ECONOM/',  # endpoint SUCCESS
-                                     '1+2+3.',  # TL
-                                     '.',  # REG_ID
-                                     'SNA_2008.',  # SERIES
-                                     '.',  # VAR
-                                     '.',  # MEAS,
-                                     'ALL.',  # POS
-                                     ''),  # TIME
-              region_busi_demog = paste0('REGION_BUSI_DEMOG/',  # endpoint FAIL 500
-                                     '1+2+3.',  # TL
-                                     '.',  # REG_ID
-                                     '.',  # VAR
-                                     '.',  # SECTOR
-                                     '.',  # SIZECLASS
-                                     ''),  # TIME
-              region_demogr = paste0('REGION_DEMOGR/',  # endpoint SUCCESS
-                                     '1+2+3.',  # TL
-                                     '.',  # REG_ID
-                                     '.',  # VAR
-                                     'T+F+M.',  # SEX
-                                     'ALL.',  # POS
-                                     '',  # TIME
-                                     '/all?'),
-              region_labour = paste0('REGION_LABOUR/',  # endpoint SUCCESS
-                                     '1+2+3.',  # TL
-                                     '.',  # REG_ID
-                                     '.',  # VAR
-                                     'T+F+M.',  # SEX
-                                     'ALL.',  # POS
-                                     ''),  # TIME
-              region_educat = paste0('REGION_EDUCAT/',  # endpoint FAIL 400
-                                     '.',  # LOCATION
-                                     '.',  # REG_ID
-                                     '.',  # IND
-                                     '.',  # ISC11
-                                     'T+F+M.',  # GENDER
-                                     '.',  # MEAS
-                                     ''),  # TIME
-              region_innovation = paste0('REGION_INNOVATION/',  # endpoint SUCCESS
-                                         '1+2+3.',  # TL
-                                         '.',  # REG_ID
-                                         '.',  # VAR
-                                         'ALL.',  # POS
-                                         ''),  # TIME
-              region_social = paste0('REGION_SOCIAL/',  # endpoint SUCCESS
-                                     '1+2+3.',  # TL
-                                     '.',  # REG_ID
-                                     '.',  # VAR
-                                     'ALL.',  # POS
-                                     ''),  # TIME
-              region_migrants = paste0('REGION_MIGRANTS/',  # endpoint FAIL 400
-                                       '1+2+3.',  # TL
-                                       '.',  # REG_ID
-                                       '.',  # ORIGIN
-                                       '.',  # IND
-                                       'ALL.',  # POS
-                                       ''),  # TIME
-              region_rwb = paste0('REGION_RWB/',  # endpoint FAIL 500
-                                 '1+2+3.',  # TL
-                                 '.',  # REG_ID
-                                 '.',  # VAR
-                                 '.',  # MEAS
-                                 'ALL.',  # POS
-                                 '')  # TIME
-)
 
-# submit http requests
-dat <- list()
-for(endpoint in names(query)){
-  dat[[endpoint]] <- request_oecd(query = query[[endpoint]], 
-                                  fname = file.path(outdir, paste0(endpoint, '.csv')),
-                                  overwrite = FALSE)
+# get OECD catalogue
+oecd_catalogue <- as.data.frame(readSDMX('https://stats.oecd.org/restsdmx/sdmx.ashx/GetDataStructure/ALL'))
+
+# data-of-interest
+endpoints <- c('SOCR', 'SOCR_REF', 'SOCX_AGG', 'SOCX_DET', 'SOCX_REF', 'PAG', 
+               'IDD', 'WEALTH', 'NRR', 'HGRR', 'METR', 'IA', 'HOURSPOV', 'SBE', 
+               'IMW', 'NCC', 'BLI', 'GIDDB2023', 'SIGI2023', 'GIDDB2019', 
+               'SIGI2019', 'GIDDB2014', 'SIGI2014', 'GIDDB2012', 'GID2', 
+               'GENDER_ENT1', 'GENDER_EMP', 'TIME_USE', 'FAMILY', 'CWB',
+               'REGION_ST', 'REGION_ECONOM', 'REG_BUSI_DEMOG', 'REGION_DEMOGR', 
+               'REGION_LABOUR', 'REGION_EDUCAT', 'REGION_INNOVATION', 
+               'REGION_SOCIAL', 'REGION_MIGRANTS', 'RWB')
+
+oecd_catalogue$mapineq <- as.numeric(oecd_catalogue$id %in% endpoints)
+
+# save catalogue
+write.csv(oecd_catalogue, file.path(outdir, 'oecd_catalogue.csv'), row.names=F)
+
+
+# get xml metadata
+mdat <- list()
+for(endpoint in endpoints){
+  
+  # get metadata
+  mdat[[endpoint]] <- get_xml(endpoint = endpoint,
+                              datdir = file.path(outdir, 'data'),
+                              overwrite = FALSE)
 }
+
+# get indicator lists
+indicators <- list()
+for(endpoint in endpoints){
+  
+  # get metadata
+  indicators[[endpoint]] <- get_indicators(endpoint = endpoint,
+                                           datdir = file.path(outdir, 'data'),
+                                           overwrite = FALSE)
+}
+
+# get data
+dat <- list()
+for(endpoint in endpoints){
+  
+  # get data
+  dat[[endpoint]] <- get_data(endpoint = endpoint,
+                              datdir = file.path(outdir, 'data'),
+                              query = '/all?',
+                              overwrite = FALSE)
+}
+
