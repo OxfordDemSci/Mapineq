@@ -19,14 +19,16 @@ source(file.path(srcdir, 'functions.R'))
 oecd_catalogue <- as.data.frame(readSDMX('https://stats.oecd.org/restsdmx/sdmx.ashx/GetDataStructure/ALL'))
 
 # data-of-interest
-endpoints <- c('SOCR', 'SOCR_REF', 'SOCX_AGG', 'SOCX_DET', 'SOCX_REF', 'PAG', 
-               'IDD', 'WEALTH', 'NRR', 'HGRR', 'METR', 'IA', 'HOURSPOV', 'SBE', 
-               'IMW', 'NCC', 'BLI', 'GIDDB2023', 'SIGI2023', 'GIDDB2019', 
-               'SIGI2019', 'GIDDB2014', 'SIGI2014', 'GIDDB2012', 'GID2', 
-               'GENDER_ENT1', 'GENDER_EMP', 'TIME_USE', 'FAMILY', 'CWB',
-               'REGION_ST', 'REGION_ECONOM', 'REG_BUSI_DEMOG', 'REGION_DEMOGR', 
-               'REGION_LABOUR', 'REGION_EDUCAT', 'REGION_INNOVATION', 
-               'REGION_SOCIAL', 'REGION_MIGRANTS', 'RWB')
+endpoints <- c('BLI', 'CWB', 'EPER', 'FAMILY', 'GBARD_NABS2007', 'GENDER_EMP', 
+               'GENDER_ENT1', 'GID2', 'GIDDB2012', 'GIDDB2014', 'GIDDB2019', 
+               'GIDDB2023', 'HGRR', 'HOURSPOV', 'IA', 'IDD', 'IMW', 'MEM4', 
+               'METR', 'MW_CURP', 'NCC', 'NRR', 'PAG', 'RDTAX', 
+               'REG_BUSI_DEMOG', 'REGION_DEMOGR', 'REGION_ECONOM', 
+               'REGION_EDUCAT', 'REGION_INNOVATION', 'REGION_LABOUR', 
+               'REGION_MIGRANTS', 'REGION_SOCIAL', 'REGION_ST', 'RWB', 'SBE', 
+               'SIGI2014', 'SIGI2019', 'SIGI2023', 'SNA_TABLE10', 'SNA_TABLE11', 
+               'SOCR', 'SOCR_REF', 'SOCX_AGG', 'SOCX_DET', 'SOCX_REF', 
+               'TIME_USE', 'WEALTH')
 
 oecd_catalogue$mapineq <- as.numeric(oecd_catalogue$id %in% endpoints)
 
@@ -53,6 +55,8 @@ for(endpoint in endpoints){
                                            datdir = file.path(outdir, 'data'),
                                            overwrite = FALSE)
 }
+codebook <- build_codebook(datdir = file.path(outdir, 'data'))
+write.csv(codebook, file = file.path(outdir, 'codebook.csv'), row.names = FALSE)
 
 # get data
 dat <- list()
