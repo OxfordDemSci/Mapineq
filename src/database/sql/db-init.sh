@@ -19,7 +19,7 @@ CREATE TABLE NUTS(
 GRANT SELECT ON NUTS TO reader;
 
 CREATE TABLE catalogue(
-  id INT PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   provider VARCHAR(5),
   resource VARCHAR(40),
   descr VARCHAR(300),
@@ -28,4 +28,11 @@ CREATE TABLE catalogue(
   UNIQUE(provider, resource, version)
 );
 GRANT SELECT ON catalogue TO reader;
+"
+psql -U $POSTGRES_USER -d $POSTGRES_DB -c \
+"
+COPY catalogue(provider, resource, descr, version, url)
+FROM '/var/lib/postgresql/init_data/catalogue.csv'
+DELIMITER ','
+CSV HEADER;
 "
