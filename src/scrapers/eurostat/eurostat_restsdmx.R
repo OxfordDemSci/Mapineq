@@ -38,37 +38,11 @@ if(file.exists(file.path(indir, 'eurostat_catalogue.csv'))){
 }
 
 
-# # get xml metadata
-# mdat <- list()
-# for(endpoint in endpoints){
-#   
-#   # get metadata
-#   mdat[[endpoint]] <- get_xml(endpoint = endpoint,
-#                               datdir = file.path(outdir, 'data'),
-#                               overwrite = FALSE)
-# }
-
-
-# # get indicator lists
-# indicators <- list()
-# for(endpoint in endpoints){
-#   
-#   # get metadata
-#   indicators[[endpoint]] <- get_indicators(endpoint = endpoint,
-#                                            datdir = file.path(outdir, 'data'),
-#                                            overwrite = FALSE)
-# }
-# codebook <- build_codebook(datdir = file.path(outdir, 'data'))
-# write.csv(codebook, file = file.path(outdir, 'codebook.csv'), row.names = FALSE)
-
-
 # get data
 dat <- list()
 for(endpoint in endpoints){
-  
-  # get data
-  dat[[endpoint]] <- get_data(endpoint = endpoint,
-                              datdir = file.path(outdir, 'data'),
-                              overwrite = FALSE)
+  get_data(endpoint = endpoint,
+           datdir = file.path(outdir, 'data'),
+           overwrite = FALSE)
 }
 
