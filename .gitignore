@@ -1,6 +1,7 @@
 private/
 out/
 .idea/
+*.env
 
 #---- R -----#
 

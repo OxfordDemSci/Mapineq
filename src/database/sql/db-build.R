@@ -10,7 +10,7 @@ library(RPostgres)
 setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path), ".."))
 
 # environment variables
-source('.env')
+source('production.env')
 
 # define directories
 datdir <- file.path('sql', 'init_data')
@@ -18,7 +18,7 @@ datdir <- file.path('sql', 'init_data')
 # database connection
 db <- DBI::dbConnect(drv = RPostgres::Postgres(),
                      dbname = POSTGRES_DB,
-                     host = '127.0.0.1',
+                     host = '15.236.82.244', # '15.236.82.244' or '127.0.0.1'
                      port = 5432,
                      password = POSTGRES_PASSWORD,
                      user = POSTGRES_USER)
