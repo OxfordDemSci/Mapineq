@@ -76,9 +76,9 @@ for (i in 1:length(df_list)){
     eu_ind = which(df_list[[i]]$id_nuts_0 %in% eu_countries)
     exc_ind = which(df_list[[i]]$id_nuts_0 %in% exc_countries)
     df_list[[i]][paste0("tl", j, "_id")] = NA
-    df_list[[i]][eu_ind, paste0("tl", j, "_id")] = df_list[[i]][eu_ind, paste0("id_nuts_", j)]
+    df_list[[i]][eu_ind, paste0("tl", j, "_id")] = sf::st_drop_geometry(df_list[[i]])[eu_ind, paste0("id_nuts_", j)]
     if (j == 2){
-      df_list[[i]][exc_ind, paste0("tl", j, "_id")] = df_list[[i]][exc_ind, paste0("id_nuts_", j - 1)]
+      df_list[[i]][exc_ind, paste0("tl", j, "_id")] = sf::st_drop_geometry(df_list[[i]])[exc_ind, paste0("id_nuts_", j - 1)]
       df_list[[i]][exc_ind, paste0("tl", j - 1, "_id")] = NA
     }
   }
