@@ -7,6 +7,7 @@ library(tidyr)
 library(stringr)
 library(geojsonsf)
 library(sf)
+library(countrycode)
 
 # working directory
 setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path), "..", "..", ".."))
@@ -63,6 +64,8 @@ df_list = lapply(urls, url_to_data_frame)
 # For example, for NUTS1 also add relevant NUTS0
 # For NUTS2 also add relevant NUTS1 and NUTS0
 # For NUTS3 also add relevant NUTS2, NUTS1 and NUTS0, etc.
+eu_countries = c("UK", countrycode::codelist$iso2c[!is.na(countrycode::codelist$eu28)])
+exc_countries = c('DE', 'BE', 'UK')
 for (i in 1:length(df_list)){
   vals = seq(0, i - 1)
   for (j in vals){
@@ -70,6 +73,14 @@ for (i in 1:length(df_list)){
       df_list[[i]][paste0("id_nuts_", j)] = df_list[[i]]$NUTS_ID
     } else {
       df_list[[i]][paste0("id_nuts_", j)] = substr(df_list[[i]]$NUTS_ID, 1, j + 2)
+    }
+    eu_ind = which(df_list[[i]]$id_nuts_0 %in% eu_countries)
+    exc_ind = which(df_list[[i]]$id_nuts_0 %in% exc_countries)
+    df_list[[i]][paste0("tl", j, "_id")] = NA
+    df_list[[i]][eu_ind, paste0("tl", j, "_id")] = sf::st_drop_geometry(df_list[[i]])[eu_ind, paste0("id_nuts_", j)]
+    if (j == 2){
+      df_list[[i]][exc_ind, paste0("tl", j, "_id")] = sf::st_drop_geometry(df_list[[i]])[exc_ind, paste0("id_nuts_", j - 1)]
+      df_list[[i]][exc_ind, paste0("tl", j - 1, "_id")] = NA
     }
   }
 }
