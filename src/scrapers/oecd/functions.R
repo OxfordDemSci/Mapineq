@@ -185,4 +185,5 @@ build_codebook <- function(datdir){
     result <- rbind(result, 
                     read.csv(file.path(datdir, lf[i])))
   }
+  return(result)
 }

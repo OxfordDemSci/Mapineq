@@ -12,7 +12,7 @@ library(sf)
 setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path), "..", "..", ".."))
 
 # output directory
-outdir <- file.path('data', 'nuts')
+outdir <- file.path('out', 'nuts')
 dir.create(outdir, showWarnings=F, recursive=T)
 
 # Define the arguments for the type of data to retrieve
