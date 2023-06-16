@@ -54,6 +54,7 @@ url_to_data_frame = function(url){
   data = geojson_sf(rawToChar(res$content))
   data$FID = seq(1, nrow(data))
   data[,paste0('id_nuts_', 0:3)] <- NA
+  data[,paste0('tl', 0:3, '_id')] <- NA
   return(data)
 }
 

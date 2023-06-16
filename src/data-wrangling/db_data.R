@@ -3,6 +3,7 @@ rm(list = ls()); gc(); cat("\014"); try(dev.off(), silent = T); options(scipen =
 
 # libraries
 library(sf)
+library(countrycode)
 
 # working directory
 setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path), "..", ".."))
@@ -63,17 +64,10 @@ for(i in 1:length(lf)){
 
 # combine NUTS levels into one sf data.frame
 df_combined <- do.call('rbind', df_list)
-df_combined$FID <- seq(1, nrow(df_combined))
 
-# reduce cols
-keep_cols <- !names(df_combined) %in% c('CNTR_CODE', 'NAME_LATN', 'FID')
-df_combined <- df_combined[keep_cols]
-
-# add column for tl id
-df_combined$tl_id <- NA
-
-# rename columns
+# map new column names
 new_names = list(NUTS_ID = 'id',
+                 CNTR_CODE = 'country',
                  LEVL_CODE = 'level', 
                  NUTS_NAME = 'name',
                  URBN_TYPE = 'urban',
@@ -83,15 +77,30 @@ new_names = list(NUTS_ID = 'id',
                  id_nuts_1 = 'nuts1_id',
                  id_nuts_2 = 'nuts2_id',
                  id_nuts_3 = 'nuts3_id',
-                 tl_id = 'tl_id',
+                 tl0_id = 'tl0_id',
+                 tl1_id = 'tl1_id',
+                 tl2_id = 'tl2_id',
+                 tl3_id = 'tl3_id',
                  geom = 'geom')
+
+# reduce cols
+df_combined <- df_combined[names(new_names)]
+
+# rename cols
 match_idx <- match(names(df_combined), names(new_names))
 names(df_combined)[match_idx] <- unlist(new_names)
 
-# rename columns
+# rearrange columns
 df_combined <- df_combined[,unlist(new_names)]
 
-  # copy combined data to database directory
+# country names
+df_combined$country[df_combined$country=='EL'] <- 'GR'
+df_combined$country[df_combined$country=='UK'] <- 'GB'
+df_combined$name[df_combined$level==0] <- countrycode(sourcevar = df_combined$country[df_combined$level==0], 
+                                                      origin = 'iso2c', 
+                                                      destination = 'country.name')
+
+# copy combined data to database directory
 sf::st_write(obj = df_combined,
              dsn = file.path(outdir, 'nuts.gpkg'),
              append = FALSE)
