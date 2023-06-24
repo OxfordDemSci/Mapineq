@@ -46,3 +46,28 @@ for(endpoint in endpoints){
            overwrite = FALSE)
 }
 
+#---------------------------------------------------------------
+# Obtain XML files of all codelists available 
+# for interpreting variable (values)
+#---------------------------------------------------------------
+
+# Identify all the different codelists available
+cl_url = 'https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/codelist/ESTAT/all?detail=allstubs'
+clists = xml2::read_xml(cl_url)
+(current_node <- xml_find_all(clists, "//s:Codelists"))
+meta_files = unlist(lapply(
+  xml_attrs(xml_children(current_node)), 
+  function(x){ return(x["id"]) }
+))
+
+# Load the codelists using the SDMX API
+# and save them to the data directory
+mdat <- list()
+for (mfile in meta_files){
+  mdat[[mfile]] <- get_meta_xml(
+    endpoint = mfile,
+    datdir = file.path(outdir, 'data'),
+    overwrite = FALSE
+  )
+}
+
