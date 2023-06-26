@@ -9,7 +9,11 @@ library(RPostgres)
 # working directory
 setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path), '..', '..', '..'))
 
+# functions
+source('functions.R')
+
 # environment variables
+# TODO: file not found
 source('prod.env')
 
 # define directories
@@ -18,13 +22,15 @@ oecddir <- file.path('out', 'oecd', 'data')
 estatdir <- file.path('out', 'eurostat', 'data')
 
 # database connection
-db <- DBI::dbConnect(drv = RPostgres::Postgres(),
-                     dbname = POSTGRES_DB,
-                     host = POSTGRES_HOST, 
-                     port = POSTGRES_PORT,
-                     password = POSTGRES_PASSWORD,
-                     user = POSTGRES_USER)
-
+# TODO: define PostGres arguments
+db <- DBI::dbConnect(
+  drv = RPostgres::Postgres(),
+  dbname = POSTGRES_DB,
+  host = POSTGRES_HOST, 
+  port = POSTGRES_PORT,
+  password = POSTGRES_PASSWORD,
+  user = POSTGRES_USER
+)
 
 #---- NUTS ----#
 
@@ -32,10 +38,12 @@ db <- DBI::dbConnect(drv = RPostgres::Postgres(),
 nuts <- sf::st_read(file.path(datdir, 'nuts.gpkg'))
 
 # write table
-sf::dbWriteTable(conn = db,
-                 name = 'nuts',
-                 value = nuts,
-                 overwrite = TRUE)
+sf::dbWriteTable(
+  conn = db,
+  name = 'nuts',
+  value = nuts,
+  overwrite = TRUE
+)
 
 
 #---- catalogue ----#
@@ -44,33 +52,76 @@ sf::dbWriteTable(conn = db,
 catalogue <- read.csv(file.path(datdir, 'catalogue.csv'))
 
 # write table
-sf::dbWriteTable(conn = db,
-                 name = 'catalogue',
-                 value = catalogue,
-                 overwrite = TRUE)
+sf::dbWriteTable(
+  conn = db,
+  name = 'catalogue',
+  value = catalogue,
+  overwrite = TRUE
+)
 
 
 #---- oecd data ----#
 
-# list data
-lf <- list.files(oecddir, pattern='.csv')
-lf <- lf[!grepl('_codebook.csv', lf)]
+# List data and codebook files
+oecd_data_files = list.files(oecddir, pattern = '.csv')
+oecd_data_files = oecd_data_files[!grepl('_codebook.csv', oecd_data_files)]
+oecd_cobo_files = oecd_data_files[grepl('_codebook.csv', oecd_data_files)]
 
-for(l in lf){
-  # create target db table
-  # modify data as needed
-  # write data into table
+# List metadata files
+oecd_meta_files = list.files(oecddir, pattern = '.xml')
+
+for (dfile in oecd_data_files){
+  
+  # Load original data file into R
+  data_df = load_data_file(oecddir, dfile)
+  
+  # TODO: modify data file as needed (attention: geographies)
+  
+  # Write data into database table
+  # TODO: define separate folders for different data sources?
+  sf::dbWriteTable(
+    conn = db,
+    name = gsub(".csv", "", dfile), 
+    value = data_df,
+    overwrite = TRUE
+  )
+  
 }
 
 
-#---- estat data ----#
+#------------------------------------------------------
+# Eurostat data
+#------------------------------------------------------
 
-# list data
-lf <- list.files(estatdir, pattern='.csv')
+# List data files
+euro_data_files = list.files(estatdir, pattern = '.csv')
 
-for(l in lf){
-  # create target db table
-  # modify data as needed
-  # write data into table
+# List metadata files
+euro_meta_files = list.files(estatdir, pattern = '.xml')
+
+for (dfile in euro_data_files){
+  
+  # Load original data file into R
+  data_df = load_data_file(estatdir, dfile)
+  
+  # Modify file to get intuitive variable descriptions/values
+  for (variable in names(data_df)){
+    file_nam = paste0(toupper(variable), ".xml")
+    if (file_nam %in% euro_meta_files){
+      match_df = meta_xml_to_data_frame(paste0(estatdir, "/", file_nam))
+      index = match(data_df[, variable], rownames(match_df))
+      data_df[paste0(variable, "_metadesc")] = match_df$en[index]
+    }
+  }
+  
+  # Write data into database table
+  # TODO: define separate folders for different data sources?
+  sf::dbWriteTable(
+    conn = db,
+    name = gsub(".csv", "", dfile), 
+    value = data_df,
+    overwrite = TRUE
+  )
+  
 }
 
