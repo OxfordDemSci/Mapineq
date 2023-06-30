@@ -1,5 +1,6 @@
 # libraries
 library(xml2)
+library(plyr)
 
 # print with timestamp
 tprint <- function(x){
@@ -20,11 +21,49 @@ load_data_file = function(
   })
 }
 
+# Convert XML metadata to a data frame
+# that contains intuitive descriptions 
+# for variables and values (OECD data)
+oecd_meta_xml_to_data_frame = function(
+    xml_file
+){
+  meta_xml = xml2::read_xml(xml_file)
+  (current_node <- xml_find_all(meta_xml, "//message:CodeLists"))
+  variables = xml_children(current_node)
+  df_vars = list()
+  for (var in variables){
+    atts = xml_attrs(xml_children(var))
+    lang_atts = atts[unlist(lapply(atts, function(x){"lang" %in% names(x)}))]
+    code_inds = unlist(lapply(atts, function(x){"value" %in% names(x)}))
+    code_atts = atts[code_inds]
+    code_child = xml_children(var)[code_inds]
+    df_rows = list()
+    for (i in 1:length(code_atts)){
+      df_rows[[i]] = data.frame(matrix(code_atts[[i]], nrow = 1))
+      names(df_rows[[i]]) = names(code_atts[[i]])
+      if (!"parentCode" %in% names(code_atts[[i]])){
+        df_rows[[i]]["parentCode"] = df_rows[[i]]$value
+      }
+      for (j in 1:length(lang_atts)){
+        df_rows[[i]][paste0("desc_", unname(lang_atts[[j]]))] = xml_text(xml_children(code_child[[i]])[[j]])
+      }
+    }
+    code_df = rbind.fill(df_rows)
+    for (i in 1:length(lang_atts)){
+      code_df[[unname(lang_atts[[i]])]] = xml_text(xml_children(var)[[i]])
+    }
+    code_df["id"] = xml_attrs(var)["id"]
+    code_df["agencyID"] = xml_attrs(var)["agencyID"]
+    df_vars[[xml_attrs(var)["id"]]] = code_df
+  }
+  return(rbind.fill(df_vars))
+}
+
 
 # Convert XML metadata to a data frame
 # that contains intuitive descriptions 
-# for variables and values
-meta_xml_to_data_frame = function(
+# for variables and values (Eurostat data)
+eurostat_meta_xml_to_data_frame = function(
     xml_file
 ){
   

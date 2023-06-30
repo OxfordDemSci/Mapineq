@@ -60,22 +60,36 @@ sf::dbWriteTable(
 )
 
 
-#---- oecd data ----#
+#------------------------------------------------------
+# OECD data
+#------------------------------------------------------
 
 # List data and codebook files
 oecd_data_files = list.files(oecddir, pattern = '.csv')
-oecd_data_files = oecd_data_files[!grepl('_codebook.csv', oecd_data_files)]
 oecd_cobo_files = oecd_data_files[grepl('_codebook.csv', oecd_data_files)]
+oecd_data_files = oecd_data_files[!grepl('_codebook.csv', oecd_data_files)]
 
 # List metadata files
 oecd_meta_files = list.files(oecddir, pattern = '.xml')
 
+dlist = list()
 for (dfile in oecd_data_files){
   
   # Load original data file into R
   data_df = load_data_file(oecddir, dfile)
   
-  # TODO: modify data file as needed (attention: geographies)
+  # Modify file to get intuitive variable descriptions/values
+  # TODO: match names of columns (e.g. COUNTRY means LOCATION)
+  meta_file = paste0(oecddir, "/", gsub(".csv", ".xml", dfile))
+  match_df = oecd_meta_xml_to_data_frame(meta_file)
+  for (col in names(data_df)){
+    match_sub = match_df[gsub(paste0("CL_", gsub(".csv", "", dfile), "_"), "", match_df$id) == col, ]
+    if ("parentCode" %in% names(match_sub)){
+      data_df[paste0(col, "_PARENT")] = match_sub$parentCode[match(data_df[, col], match_sub$value)]
+      data_df[paste0(col, "_PARENT_DESC.EN")] = match_sub$desc_en[match(data_df[, paste0(col, "_PARENT")], match_sub$parentCode)]
+    } 
+    data_df[paste0(col, "_DESC.EN")] = match_sub$desc_en[match(data_df[, col], match_sub$value)]
+  }
   
   # Write data into database table
   # TODO: define separate folders for different data sources?
@@ -108,7 +122,7 @@ for (dfile in euro_data_files){
   for (variable in names(data_df)){
     file_nam = paste0(toupper(variable), ".xml")
     if (file_nam %in% euro_meta_files){
-      match_df = meta_xml_to_data_frame(paste0(estatdir, "/", file_nam))
+      match_df = eurostat_meta_xml_to_data_frame(paste0(estatdir, "/", file_nam))
       index = match(data_df[, variable], rownames(match_df))
       data_df[paste0(variable, "_metadesc")] = match_df$en[index]
     }
