@@ -45,6 +45,32 @@ db_cat <- rbind(oecd_cat[,db_cols],
                 estat_cat[,db_cols])
 names(db_cat) <- c('provider', 'resource', 'descr', 'version', 'url')
 
+# add information for climate raster variables
+clim_raster_info = data.frame(
+  agencyID = rep("WorldClim", 7),
+  id = paste0("wc2.1_30s_", c("tmin", "tmax", "tavg", "prec", "srad", "wind", "vapr")),
+  Name.en = c(
+    "Minimum temperature (degrees Celsius) 1970-2000; 30 seconds (~1 km2)",
+    "Maximum temperature (degrees Celsius) 1970-2000; 30 seconds (~1 km2)",
+    "Average temperature (degrees Celsius) 1970-2000; 30 seconds (~1 km2)",
+    "Precipitation 1970-2000 (mm); 30 seconds (~1 km2)",
+    "Solar radiation 1970-2000 (kJ/m2 per day); 30 seconds (~1 km2)",
+    "Wind speed 1970-2000 (m/s); 30 seconds (~1 km2)",
+    "Water vapor pressure (kPa) 1970-2000; 30 seconds (~1 km2)"
+  ),
+  version = rep("v2.1", 7),
+  url = c(
+    "https://biogeo.ucdavis.edu/data/worldclim/v2.1/base/wc2.1_30s_tmin.zip",
+    "https://biogeo.ucdavis.edu/data/worldclim/v2.1/base/wc2.1_30s_tmax.zip",
+    "https://biogeo.ucdavis.edu/data/worldclim/v2.1/base/wc2.1_30s_tavg.zip",
+    "https://biogeo.ucdavis.edu/data/worldclim/v2.1/base/wc2.1_30s_prec.zip",
+    "https://biogeo.ucdavis.edu/data/worldclim/v2.1/base/wc2.1_30s_srad.zip",
+    "https://biogeo.ucdavis.edu/data/worldclim/v2.1/base/wc2.1_30s_wind.zip",
+    "https://biogeo.ucdavis.edu/data/worldclim/v2.1/base/wc2.1_30s_vapr.zip"
+  )
+)
+db_cat = rbind(db_cat, clim_raster_info)
+
 # save to disk
 write.csv(db_cat, 
           file = file.path(outdir, 'catalogue.csv'), 
