@@ -44,14 +44,14 @@ get_data <- function(file, zipdir, datdir, overwrite=F){
       if (grepl(".tif", file)){
         raster_df = raster(unzip(zipdir, file))
         writeRaster(raster_df, datpath)
-      } else if (grepl(".shp", file)){
+      } else if (grepl(".shp", file) | grepl(".csv", file)){
         if (length(zipdir) > 1){
           file_to_read = zipdir[grepl(".gpkg", zipdir)]
         } else {
           file_to_read = zipdir
         }
         polygon_df = st_read(file_to_read)
-        st_write(polygon_df, datpath)
+        st_write(polygon_df, file, layer_options = ifelse(grepl(".csv", file), "GEOMETRY=AS_XY", NULL))
       } else {
         break("Data type not recognized -- should be either 'raster (.tif)' or 'polygon (.shp)'.")
       }
