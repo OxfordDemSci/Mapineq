@@ -71,6 +71,21 @@ clim_raster_info = data.frame(
 )
 db_cat = rbind(db_cat, clim_raster_info)
 
+# add information for geospatial polygon variables
+envir_polygon_info = data.frame(
+  agencyID = c("North American Cartographic Information Society", rep("World Wild Life (WWF)", 3)),
+  id = c("natural_earth_vector", "8ark3lcpfw_GLWD_level1", "65sv5l285i_GLWD_level2", "9slil0ww7t_GLWD_level3"),
+  Name.en = c("Natural Earth", paste0("Lakes and wetlands (Level ", 1:3, ")")),
+  version = rep(NA, 4),
+  url = c(
+    "https://naciscdn.org/naturalearth/packages/natural_earth_vector.gpkg.zip",
+    "https://files.worldwildlife.org/wwfcmsprod/files/Publication/file/8ark3lcpfw_GLWD_level1.zip?_ga=2.6743986.1226121816.1690982761-579293559.1690982761",
+    "https://files.worldwildlife.org/wwfcmsprod/files/Publication/file/65sv5l285i_GLWD_level2.zip?_ga=2.6743986.1226121816.1690982761-579293559.1690982761",
+    "https://files.worldwildlife.org/wwfcmsprod/files/Publication/file/9slil0ww7t_GLWD_level3.zip?_ga=2.6743986.1226121816.1690982761-579293559.1690982761"
+  )
+)
+db_cat = rbind(db_cat, envir_polygon_info)
+
 # save to disk
 write.csv(db_cat, 
           file = file.path(outdir, 'catalogue.csv'), 
