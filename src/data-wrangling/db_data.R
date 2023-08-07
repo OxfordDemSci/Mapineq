@@ -86,6 +86,27 @@ envir_polygon_info = data.frame(
 )
 db_cat = rbind(db_cat, envir_polygon_info)
 
+# add information for geospatial line data variables
+envir_line_info = data.frame(
+  agencyID = c("UK Ordnance Survey"),
+  id = c("gb_roads"),
+  Name.en = c("Roads in Great Britain"),
+  version = c("v1"),
+  url = c("https://api.os.uk/downloads/v1/products/OpenRoads/downloads?area=GB&format=GeoPackage&redirect")
+)
+db_cat = rbind(db_cat, envir_line_info)
+
+# add information for geospatial point data variables
+n_datasets = 91
+envir_point_info = data.frame(
+  agencyID = rep("The World Ozone and Ultraviolet Radiation Data Centre", n_datasets),
+  id = paste0("uv_ozone_", 1:n_datasets),
+  Name.en = paste0("UV and Ozone levels (starting from feature ", 1:n_datasets * 1e4, ")"),
+  version = rep("1.1", n_datasets),
+  url = paste0('https://geo.woudc.org/ows?service=WFS&version=1.1.0&request=GetFeature&outputformat=GeoJSON&typename=filelist&filter=%3Cogc:Filter%3E%3Cogc:And%3E%3Cogc:BBOX%3E%3CPropertyName%3EmsGeometry%3C/PropertyName%3E%3CBox%20srsName=%22EPSG:4326%22%3E%3Ccoordinates%3E-189.14062500000003,-83.67694304841552%20189.84375,85.51339830988749%3C/coordinates%3E%3C/Box%3E%3C/ogc:BBOX%3E%3Cogc:PropertyIsBetween%3E%3Cogc:PropertyName%3Einstance_datetime%3C/ogc:PropertyName%3E%3Cogc:LowerBoundary%3E1924-01-01%2000:00:00%3C/ogc:LowerBoundary%3E%3Cogc:UpperBoundary%3E2023-12-30%2023:59:59%3C/ogc:UpperBoundary%3E%3C/ogc:PropertyIsBetween%3E%3C/ogc:And%3E%3C/ogc:Filter%3E&sortby=instance_datetime%20DESC&startindex=', 1:n_datasets * 1e4,'&maxfeatures=10000')
+)
+db_cat = rbind(db_cat, envir_point_info)
+
 # save to disk
 write.csv(db_cat, 
           file = file.path(outdir, 'catalogue.csv'), 
