@@ -45,7 +45,12 @@ get_data <- function(file, zipdir, datdir, overwrite=F){
         raster_df = raster(unzip(zipdir, file))
         writeRaster(raster_df, datpath)
       } else if (grepl(".shp", file)){
-        polygon_df = st_read(zipdir[grepl(".gpkg", zipdir)])
+        if (length(zipdir) > 1){
+          file_to_read = zipdir[grepl(".gpkg", zipdir)]
+        } else {
+          file_to_read = zipdir
+        }
+        polygon_df = st_read(file_to_read)
         st_write(polygon_df, datpath)
       } else {
         break("Data type not recognized -- should be either 'raster (.tif)' or 'polygon (.shp)'.")
