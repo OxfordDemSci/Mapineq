@@ -13,8 +13,18 @@ load_data_file = function(
     file
 ){
   tryCatch({
-    tprint(dfile)
-    return(read.csv(paste0(dir, "/", file)))
+    tprint(file)
+    whole_file = paste0(dir, "/", file)
+    if (grepl(".csv", file)){
+      df = read.csv(whole_file)
+    } else if (grepl(".shp", file)){
+      df = sf::read_sf(whole_file)
+    } else if (grepl(".tif", file)){
+      df = raster::raster(whole_file)
+    } else {
+      break
+    }
+    return(df)
   }, error = function(e) {
     tprint(paste0('     Problem with loading data file, skipping it: ', file))
     tprint(e)

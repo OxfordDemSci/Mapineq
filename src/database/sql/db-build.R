@@ -5,6 +5,7 @@ rm(list = ls()); gc(); cat("\014"); try(dev.off(), silent = T); options(scipen =
 library(sf)
 library(DBI)
 library(RPostgres)
+library(mgsub)
 
 # working directory
 setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path), '..', '..', '..'))
@@ -20,6 +21,7 @@ source('prod.env')
 datdir <- file.path('src', 'database', 'sql', 'init_data')
 oecddir <- file.path('out', 'oecd', 'data')
 estatdir <- file.path('out', 'eurostat', 'data')
+envirdir <- file.path('out', 'environmental', 'data')
 
 # database connection
 # TODO: define PostGres arguments
@@ -139,3 +141,29 @@ for (dfile in euro_data_files){
   
 }
 
+#------------------------------------------------------
+# Environmental data
+#------------------------------------------------------
+
+# List data files
+envir_csv_files = list.files(envirdir, pattern = '.csv')
+envir_shp_files = list.files(envirdir, pattern = '.shp')
+envir_tif_files = list.files(envirdir, pattern = '.tif')
+envir_files = c(envir_csv_files, envir_shp_files, envir_tif_files)
+
+#
+for (dfile in envir_files){
+  
+  # Load original data file into R
+  data_df = load_data_file(envirdir, dfile)
+  
+  # Write data into database table
+  # TODO: define separate folders for different data sources?
+  sf::dbWriteTable(
+    conn = db,
+    name = mgsub(dfile, c(".tif", ".csv", ".shp"), rep("", 3)),
+    value = data_df,
+    overwrite = TRUE
+  )
+  
+}
