@@ -18,9 +18,9 @@ load_data_file = function(
     if (grepl(".csv", file)){
       df = read.csv(whole_file)
     } else if (grepl(".shp", file)){
-      df = sf::read_sf(whole_file)
+      df = sf::st_read(whole_file)
     } else if (grepl(".tif", file)){
-      df = raster::raster(whole_file)
+      df = as.data.frame(raster::raster(whole_file))
     } else {
       break
     }

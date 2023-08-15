@@ -10,18 +10,19 @@ library(mgsub)
 # working directory
 setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path), '..', '..', '..'))
 
-# functions
-source('functions.R')
-
 # environment variables
 # TODO: file not found
 source('prod.env')
 
 # define directories
+sqldir <- file.path('src', 'database', 'sql')
 datdir <- file.path('src', 'database', 'sql', 'init_data')
 oecddir <- file.path('out', 'oecd', 'data')
 estatdir <- file.path('out', 'eurostat', 'data')
 envirdir <- file.path('out', 'environmental', 'data')
+
+# functions
+source(file.path(sqldir, 'functions.R'))
 
 # database connection
 # TODO: define PostGres arguments
@@ -103,7 +104,6 @@ for (dfile in oecd_data_files){
   )
   
 }
-
 
 #------------------------------------------------------
 # Eurostat data
