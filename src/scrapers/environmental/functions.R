@@ -4,6 +4,7 @@ library(jsonlite)
 library(raster)
 library(sf)
 library(stringr)
+options(timeout=3600)
 
 # print with timestamp
 tprint <- function(x){
@@ -11,14 +12,14 @@ tprint <- function(x){
 }
 
 # load zip file for particular environmental variable
-load_data = function(url){
+load_climate_data = function(url, datdir){
   split_url = str_split(url, "/")[[1]]
   base_url = gsub(".zip", "", split_url[length(split_url)])
   temp = tempfile()
   download.file(url, temp)
   for (month in 1:12){
     file = paste0(base_url, '_', sprintf("%02d", month), '.tif')
-    get_data(file, temp, outdir)
+    get_data(file, temp, datdir)
   }
   unlink(temp)
 }
@@ -51,17 +52,19 @@ get_data <- function(file, zipdir, datdir, overwrite=F){
           file_to_read = zipdir
         }
         polygon_df = st_read(file_to_read)
-        st_write(polygon_df, file, layer_options = ifelse(grepl(".csv", file), "GEOMETRY=AS_XY", NULL))
+        st_write(polygon_df, datpath, layer_options = ifelse(grepl(".csv", file), "GEOMETRY=AS_XY", NULL), append = !overwrite)
       } else {
         break("Data type not recognized -- should be either 'raster (.tif)' or 'polygon (.shp)'.")
       }
       
       tprint('     Data saved to disk.')
+      return(T)
       
     }
   }, error = function(e) {
     
     tprint(e)
+    return(F)
     
   })
 }
