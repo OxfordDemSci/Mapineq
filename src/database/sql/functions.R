@@ -1,6 +1,7 @@
 # libraries
 library(xml2)
 library(plyr)
+library(raster)
 
 # print with timestamp
 tprint <- function(x){
@@ -20,7 +21,7 @@ load_data_file = function(
     } else if (grepl(".shp", file)){
       df = sf::st_read(whole_file)
     } else if (grepl(".tif", file)){
-      df = as.data.frame(raster::raster(whole_file))
+      df = data.frame(rasterToPoints(raster::raster(whole_file)))
     } else {
       break
     }

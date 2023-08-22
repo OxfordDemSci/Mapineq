@@ -1686,6 +1686,421 @@ CREATE TABLE IF NOT EXISTS ozone_uv_92(
       version SMALLINT
     );
     GRANT SELECT ON ozone_uv_92 TO reader;
+    
+CREATE TABLE IF NOT EXISTS oproad_gb(
+      id VARCHAR(50),
+      jnctn_n VARCHAR(15),
+      geometry POINT
+    );
+    GRANT SELECT ON oproad_gb TO reader;
+    
+CREATE TABLE IF NOT EXISTS glwd_1(
+      GLWD_ID SMALLINT,
+      TYPE VARCHAR(10),
+      LAKE_NAME VARCHAR(100),
+      DAM_NAME VARCHAR(100),
+      POLY_SRC VARCHAR(100),
+      AREA_SKM INT,
+      PERIM_KM INT,
+      LONG_DEG DECIMAL(2, 1),
+      LAT_DEG DECIMAL(2, 1),
+      ELEV_M INT,
+      CATCH_TSKM INT,
+      INFLOW_CMS G DECIMAL(4, 1),
+      VOLUME_CKM INT,
+      VOL_SRC VARCHAR(100),
+      COUNTRY VARCHAR(100),
+      SEC_CNTRY VARCHAR(100),
+      RIVER VARCHAR(100),
+      NEAR_CITY VARCHAR(100),
+      MGLD_TYPE VARCHAR(10),
+      MGLD_AREA INT,
+      LRS_AREA INT,
+      LRS_AR_SRC VARCHAR(100),
+      LRS_CATCH INT,
+      DAM_HEIGHT INT,
+      DAM_YEAR INT,
+      USE_1 VARCHAR(10),
+      USE_2 VARCHAR(10),
+      USE_3 VARCHAR(10),
+      geometry MULTIPOLYGON
+    );
+    GRANT SELECT ON glwd_1 TO reader;
+    
+CREATE TABLE IF NOT EXISTS natural_earth(
+      type VARCHAR(10),
+      scalerank SMALLINT,
+      featurecla VARCHAR(100),
+      ne_id INT(10),
+      BRK_A3 BIGINT,
+      geometry LINESTRING
+    );
+    GRANT SELECT ON natural_earth TO reader;
+
+CREATE TABLE IF NOT EXISTS wc2.1_30s_prec_01(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      precipitation INT
+    );
+    GRANT SELECT ON wc2.1_30s_prec_01 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_prec_02(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      precipitation INT
+    );
+    GRANT SELECT ON wc2.1_30s_prec_02 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_prec_03(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      precipitation INT
+    );
+    GRANT SELECT ON wc2.1_30s_prec_03 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_prec_04(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      precipitation INT
+    );
+    GRANT SELECT ON wc2.1_30s_prec_04 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_prec_05(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      precipitation INT
+    );
+    GRANT SELECT ON wc2.1_30s_prec_05 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_prec_06(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      precipitation INT
+    );
+    GRANT SELECT ON wc2.1_30s_prec_06 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_prec_07(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      precipitation INT
+    );
+    GRANT SELECT ON wc2.1_30s_prec_07 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_prec_08(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      precipitation INT
+    );
+    GRANT SELECT ON wc2.1_30s_prec_08 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_prec_09(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      precipitation INT
+    );
+    GRANT SELECT ON wc2.1_30s_prec_09 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_prec_10(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      precipitation INT
+    );
+    GRANT SELECT ON wc2.1_30s_prec_10 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_prec_11(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      precipitation INT
+    );
+    GRANT SELECT ON wc2.1_30s_prec_11 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_prec_12(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      precipitation INT
+    );
+    GRANT SELECT ON wc2.1_30s_prec_12 TO reader;
+
+CREATE TABLE IF NOT EXISTS wc2.1_30s_srad_01(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      solar_radiation INT
+    );
+    GRANT SELECT ON wc2.1_30s_srad_01 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_srad_02(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      solar_radiation INT
+    );
+    GRANT SELECT ON wc2.1_30s_srad_02 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_srad_03(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      solar_radiation INT
+    );
+    GRANT SELECT ON wc2.1_30s_srad_03 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_srad_04(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      solar_radiation INT
+    );
+    GRANT SELECT ON wc2.1_30s_srad_04 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_srad_05(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      solar_radiation INT
+    );
+    GRANT SELECT ON wc2.1_30s_srad_05 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_srad_06(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      solar_radiation INT
+    );
+    GRANT SELECT ON wc2.1_30s_srad_06 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_srad_07(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      solar_radiation INT
+    );
+    GRANT SELECT ON wc2.1_30s_srad_07 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_srad_08(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      solar_radiation INT
+    );
+    GRANT SELECT ON wc2.1_30s_srad_08 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_srad_09(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      solar_radiation INT
+    );
+    GRANT SELECT ON wc2.1_30s_srad_09 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_srad_10(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      solar_radiation INT
+    );
+    GRANT SELECT ON wc2.1_30s_srad_10 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_srad_11(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      solar_radiation INT
+    );
+    GRANT SELECT ON wc2.1_30s_srad_11 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_srad_12(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      solar_radiation INT
+    );
+    GRANT SELECT ON wc2.1_30s_srad_12 TO reader;
+
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tavg_01(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      average_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tavg_01 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tavg_02(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      average_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tavg_02 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tavg_03(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      average_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tavg_03 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tavg_04(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      average_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tavg_04 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tavg_05(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      average_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tavg_05 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tavg_06(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      average_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tavg_06 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tavg_07(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      average_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tavg_07 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tavg_08(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      average_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tavg_08 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tavg_09(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      average_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tavg_09 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tavg_10(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      average_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tavg_10 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tavg_11(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      average_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tavg_11 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tavg_12(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      average_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tavg_12 TO reader;
+
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tmax_01(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      maximum_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tmax_01 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tmax_02(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      maximum_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tmax_02 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tmax_03(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      maximum_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tmax_03 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tmax_04(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      maximum_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tmax_04 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tmax_05(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      maximum_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tmax_05 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tmax_06(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      maximum_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tmax_06 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tmax_07(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      maximum_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tmax_07 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tmax_08(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      maximum_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tmax_08 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tmax_09(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      maximum_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tmax_09 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tmax_10(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      maximum_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tmax_10 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tmax_11(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      maximum_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tmax_11 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tmax_12(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      maximum_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tmax_12 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tmin_01(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      minimum_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tmin_01 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tmin_02(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      minimum_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tmin_02 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tmin_03(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      minimum_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tmin_03 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tmin_04(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      minimum_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tmin_04 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tmin_05(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      minimum_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tmin_05 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tmin_06(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      minimum_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tmin_06 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tmin_07(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      minimum_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tmin_07 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tmin_08(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      minimum_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tmin_08 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tmin_09(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      minimum_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tmin_09 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tmin_10(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      minimum_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tmin_10 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tmin_11(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      minimum_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tmin_11 TO reader;
+CREATE TABLE IF NOT EXISTS wc2.1_30s_tmin_12(
+      x DECIMAL(3, 5),
+      y DECIMAL(3, 5),
+      minimum_temperature INT
+    );
+    GRANT SELECT ON wc2.1_30s_tmin_12 TO reader;
+
 "
 psql -U $POSTGRES_USER -d $POSTGRES_DB -c \
 "
