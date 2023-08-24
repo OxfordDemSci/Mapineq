@@ -152,10 +152,21 @@ envir_tif_files = list.files(envirdir, pattern = '.tif')
 envir_files = c(envir_csv_files, envir_shp_files, envir_tif_files)
 
 #
+name_match = data.frame(
+  original_name = c("prec", "srad", "tavg", "tmax", "tmin"),
+  new_name = c("precipitation", "solar_radiation", "average_temperature", "maximum_temperature", "minimum_temperature")
+)
 for (dfile in envir_files){
   
   # Load original data file into R
   data_df = load_data_file(envirdir, dfile)
+  
+  # Change names of variables if necessary
+  if (grepl(".tif", dfile)){
+    name_idx = which(!names(data_df) %in% c("x", "y"))
+    match_idx = match(substr(dfile, 11, 14), name_match$original_name)
+    names(data_df)[name_idx] = name_match$new_name[match_idx]
+  }
   
   # Write data into database table
   # TODO: define separate folders for different data sources?
