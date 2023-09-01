@@ -1,6 +1,7 @@
 private/
 out/
 .idea/
+*.env
 
 #---- R -----#
 
@@ -185,3 +186,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+src/database/prod.env
