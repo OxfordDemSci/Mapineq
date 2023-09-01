@@ -12,7 +12,7 @@ setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path), '..', '..', 
 
 # environment variables
 # TODO: file not found
-source('prod.env')
+source('src/database/prod.env')
 
 # define directories
 sqldir <- file.path('src', 'database', 'sql')
