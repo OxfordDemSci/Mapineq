@@ -72,3 +72,41 @@ load_data <- function(datdir){
   return(result)
 }
 
+#---------------------------------------------------------------
+# Obtain XML files of all codelists available 
+# for interpreting variable (values)
+#---------------------------------------------------------------
+
+get_meta_xml  <- function(
+    endpoint, # API endpoint
+    datdir, # Data directory
+    overwrite=F # Overwrite existing files?
+){
+  
+  tryCatch({
+    
+    tprint(endpoint)
+    dir.create(datdir, showWarnings = F, recursive = T)
+    datpath <- file.path(datdir, paste0(endpoint, '.xml'))
+    
+    # Retrieve data (from file if exists and no overwriting, otherwise from API)
+    if(file.exists(datpath) & !overwrite){
+      
+      tprint(paste0('     File exists and overwrite=F. Skipping endpoint: ', endpoint))
+      result <- xml2::read_xml(datpath)
+      
+    } else {
+      
+      query <- paste0('https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/codelist/ESTAT/', endpoint)
+      result <- xml2::read_xml(query)
+      xml2::write_xml(result, file = datpath)
+      tprint('     Metadata XML saved to disk.')
+      
+    }
+  }, error = function(e) {
+    
+    tprint(e)
+    
+  })
+}
+
