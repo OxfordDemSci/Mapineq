@@ -11,22 +11,22 @@ library(rpostgis)
 # working directory
 setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path), '..', '..', '..'))
 
-# environment variables
-source('src/database/prod.env')
-
 # define directories
-sqldir <- file.path('src', 'database', 'sql')
-datdir <- file.path('src', 'database', 'sql', 'init_data')
-gadmdir <- file.path('out', 'gadm')
-oecddir <- file.path('out', 'oecd', 'data')
-estatdir <- file.path('out', 'eurostat', 'data')
-envirdir <- file.path('out', 'environmental', 'data')
+sqldir = file.path('src', 'database', 'sql')
+initdir = file.path('src', 'database', 'sql', 'init_data')
+gadmdir = file.path('out', 'gadm', 'data')
+oecddir = file.path('out', 'oecd', 'data')
+estatdir = file.path('out', 'eurostat', 'data')
+envirdir = file.path('out', 'environmental', 'data')
 
 # functions
 source(file.path(sqldir, 'functions.R'))
 
+# environment variables
+source('src/database/prod.env')
+
 # database connection
-db <- DBI::dbConnect(
+db = DBI::dbConnect(
   drv = RPostgres::Postgres(),
   dbname = POSTGRES_DB,
   host = POSTGRES_HOST,
@@ -40,7 +40,7 @@ db <- DBI::dbConnect(
 #------------------------------------------------------
 
 # load data
-nuts <- sf::st_read(file.path(datdir, 'nuts.gpkg'))
+nuts = sf::st_read(file.path(initdir, 'nuts.gpkg'))
 
 # write table
 sf::dbWriteTable(
@@ -55,7 +55,7 @@ sf::dbWriteTable(
 #------------------------------------------------------
 
 # load data
-gadm <- sf::st_read(file.path(gadmdir, 'gadm_410.gpkg'))
+gadm = sf::st_read(file.path(gadmdir, 'gadm_410.gpkg'))
 
 # write table
 sf::dbWriteTable(
@@ -66,11 +66,11 @@ sf::dbWriteTable(
 )
 
 #------------------------------------------------------
-# Catalogue
+# Data catalogue
 #------------------------------------------------------
 
 # load data
-catalogue <- read.csv(file.path(datdir, 'catalogue.csv'))
+catalogue = read.csv(file.path(initdir, 'catalogue.csv'))
 
 # write table
 sf::dbWriteTable(
@@ -79,7 +79,6 @@ sf::dbWriteTable(
   value = catalogue,
   overwrite = TRUE
 )
-
 
 #------------------------------------------------------
 # OECD data
