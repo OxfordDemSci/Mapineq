@@ -15,14 +15,16 @@ source(file.path(srcdir, 'functions.R'))
 
 # define list of URLs to scrape data from
 base = "https://biogeo.ucdavis.edu/data/worldclim/v2.1/base/"
+version = "2.1"
+resolution = "10m"
 climate_urls = list(
-  minimum_temperature = paste0(base, "wc2.1_30s_tmin.zip"),
-  maximum_temperature = paste0(base, "wc2.1_30s_tmax.zip"),
-  average_temperature = paste0(base, "wc2.1_30s_tavg.zip"),
-  precipitation = paste0(base, "wc2.1_30s_prec.zip"),
-  solar_radiation = paste0(base, "wc2.1_30s_srad.zip"),
-  wind_speed = paste0(base, "wc2.1_30s_wind.zip"),
-  water_vapor_pressure = paste0(base, "wc2.1_30s_vapr.zip")
+  minimum_temperature = paste0(base, "wc", version, "_", resolution, "_tmin.zip"),
+  maximum_temperature = paste0(base, "wc", version, "_", resolution, "_tmax.zip"),
+  average_temperature = paste0(base, "wc", version, "_", resolution, "_tavg.zip"),
+  precipitation = paste0(base, "wc", version, "_", resolution, "_prec.zip"),
+  solar_radiation = paste0(base, "wc", version, "_", resolution, "_srad.zip"),
+  wind_speed = paste0(base, "wc", version, "_", resolution, "_wind.zip"),
+  water_vapor_pressure = paste0(base, "wc", version, "_", resolution, "_vapr.zip"),
 )
 
 # get data

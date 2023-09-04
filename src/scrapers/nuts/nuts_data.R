@@ -21,7 +21,7 @@ nuts_args = list(
   year = "2021",
   filetype = "geojson",
   geotype = "RG",
-  scale = "20",
+  scale = "01",
   epsg = "4326"
 )
 
