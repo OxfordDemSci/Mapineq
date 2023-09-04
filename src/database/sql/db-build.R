@@ -12,7 +12,7 @@ library(rpostgis)
 setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path), '..', '..', '..'))
 
 # environment variables
-source('prod.env')
+source('src/database/prod.env')
 
 # define directories
 sqldir <- file.path('src', 'database', 'sql')
@@ -29,7 +29,7 @@ source(file.path(sqldir, 'functions.R'))
 db <- DBI::dbConnect(
   drv = RPostgres::Postgres(),
   dbname = POSTGRES_DB,
-  host = POSTGRES_HOST, 
+  host = POSTGRES_HOST,
   port = POSTGRES_PORT,
   password = POSTGRES_PASSWORD,
   user = POSTGRES_USER
@@ -95,10 +95,10 @@ oecd_meta_files = list.files(oecddir, pattern = '.xml')
 
 dlist = list()
 for (dfile in oecd_data_files){
-  
+
   # Load original data file into R
   data_df = load_data_file(oecddir, dfile)
-  
+
   # Modify file to get intuitive variable descriptions/values
   meta_file = paste0(oecddir, "/", gsub(".csv", ".xml", dfile))
   match_df = oecd_meta_xml_to_data_frame(meta_file)
@@ -107,18 +107,18 @@ for (dfile in oecd_data_files){
     if ("parentCode" %in% names(match_sub)){
       data_df[paste0(col, "_PARENT")] = match_sub$parentCode[match(data_df[, col], match_sub$value)]
       data_df[paste0(col, "_PARENT_DESC.EN")] = match_sub$desc_en[match(data_df[, paste0(col, "_PARENT")], match_sub$parentCode)]
-    } 
+    }
     data_df[paste0(col, "_DESC.EN")] = match_sub$desc_en[match(data_df[, col], match_sub$value)]
   }
-  
+
   # Write data into database table
   sf::dbWriteTable(
     conn = db,
-    name = gsub(".csv", "", dfile), 
+    name = gsub(".csv", "", dfile),
     value = data_df,
     overwrite = TRUE
   )
-  
+
 }
 
 #------------------------------------------------------
@@ -132,10 +132,10 @@ euro_data_files = list.files(estatdir, pattern = '.csv')
 euro_meta_files = list.files(estatdir, pattern = '.xml')
 
 for (dfile in euro_data_files){
-  
+
   # Load original data file into R
   data_df = load_data_file(estatdir, dfile)
-  
+
   # Modify file to get intuitive variable descriptions/values
   for (variable in names(data_df)){
     file_nam = paste0(toupper(variable), ".xml")
@@ -145,15 +145,15 @@ for (dfile in euro_data_files){
       data_df[paste0(variable, "_metadesc")] = match_df$en[index]
     }
   }
-  
+
   # Write data into database table
   sf::dbWriteTable(
     conn = db,
-    name = gsub(".csv", "", dfile), 
+    name = gsub(".csv", "", dfile),
     value = data_df,
     overwrite = TRUE
   )
-  
+
 }
 
 #------------------------------------------------------
@@ -174,17 +174,17 @@ name_match = data.frame(
 
 # For each data set: load, wrangle and write into database
 for (dfile in envir_files){
-  
+
   # Load original data file into R
   data_df = load_data_file(envirdir, dfile)
-  
+
   # Write data into database table
   if (all(grepl("raster", class(data_df), ignore.case = T))){
     # Change names of variables if necessary
     name_idx = which(!names(data_df) %in% c("x", "y"))
     match_idx = match(substr(dfile, 11, 14), name_match$original_name)
     names(data_df)[name_idx] = name_match$new_name[match_idx]
-    
+
     # Write geospatial data into database (skip if not completed after 10 minutes)
     tryCatch(
       expr = {
@@ -197,18 +197,18 @@ for (dfile in envir_files){
             blocks = c(1e4, 1e4)
           )
         }, timeout = 600)
-      }, 
+      },
       TimeoutException = function(ex) cat("Timeout. Skipping.\n")
     )
-    
+
   } else {
-    
+
     # Convert coordinates to geometry if needed
     if (grepl("ozone_uv", dfile)){
       coord_inds = which(names(data_df) %in% c("X", "Y"))
       data_df = st_as_sf(data_df, coords = coord_inds)
     }
-    
+
     # Write geospatial data into database
     sf::dbWriteTable(
       conn = db,
@@ -216,9 +216,9 @@ for (dfile in envir_files){
       value = data_df,
       overwrite = TRUE
     )
-    
+
   }
-  
+
 }
 
 # Disconnect from database
