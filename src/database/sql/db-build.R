@@ -185,14 +185,22 @@ for (dfile in envir_files){
     match_idx = match(substr(dfile, 11, 14), name_match$original_name)
     names(data_df)[name_idx] = name_match$new_name[match_idx]
     
-    # Write geospatial data into database
-    rpostgis::pgWriteRast(
-      conn = db,
-      name = mgsub(dfile, c(".tif", ".csv", ".shp"), rep("", 3)),
-      raster = data_df,
-      overwrite = TRUE,
-      blocks = NULL
+    # Write geospatial data into database (skip if not completed after 10 minutes)
+    tryCatch(
+      expr = {
+        withTimeout({
+          rpostgis::pgWriteRast(
+            conn = db,
+            name = mgsub(dfile, c(".tif", ".csv", ".shp"), rep("", 3)),
+            raster = data_df,
+            overwrite = TRUE,
+            blocks = c(1e4, 1e4)
+          )
+        }, timeout = 600)
+      }, 
+      TimeoutException = function(ex) cat("Timeout. Skipping.\n")
     )
+    
   } else {
     
     # Convert coordinates to geometry if needed
