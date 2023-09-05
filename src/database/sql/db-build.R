@@ -167,8 +167,9 @@ envir_files = c(envir_csv_files, envir_shp_files, envir_tif_files)
 
 # Define more intuitive variable names for climate data
 name_match = data.frame(
-  original_name = c("prec", "srad", "tavg", "tmax", "tmin"),
-  new_name = c("precipitation", "solar_radiation", "average_temperature", "maximum_temperature", "minimum_temperature")
+  original_name = c("prec", "srad", "tavg", "tmax", "tmin", "wind", "vapr"),
+  new_name = c("precipitation", "solar_radiation", "average_temperature", 
+               "maximum_temperature", "minimum_temperature", "wind_speed", "water_vapor_pressure")
 )
 
 # For each data set: load, wrangle and write into database

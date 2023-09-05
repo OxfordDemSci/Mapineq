@@ -24,7 +24,7 @@ climate_urls = list(
   precipitation = paste0(base, "wc", version, "_", resolution, "_prec.zip"),
   solar_radiation = paste0(base, "wc", version, "_", resolution, "_srad.zip"),
   wind_speed = paste0(base, "wc", version, "_", resolution, "_wind.zip"),
-  water_vapor_pressure = paste0(base, "wc", version, "_", resolution, "_vapr.zip"),
+  water_vapor_pressure = paste0(base, "wc", version, "_", resolution, "_vapr.zip")
 )
 
 # get data
