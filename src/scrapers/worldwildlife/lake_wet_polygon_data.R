@@ -18,8 +18,8 @@ begin_url = "https://files.worldwildlife.org/wwfcmsprod/files/Publication/file/"
 end_url = "_ga=2.6743986.1226121816.1690982761-579293559.1690982761"
 lake_wet_urls = list(
   level1 = paste0(begin_url, "8ark3lcpfw_GLWD_level1.zip?", end_url),
-  level2 = paste0(begin_url, "65sv5l285i_GLWD_level2.zip?", end_url),
-  level3 = paste0(begin_url, "9slil0ww7t_GLWD_level3.zip?", end_url)
+  level2 = paste0(begin_url, "65sv5l285i_GLWD_level2.zip?", end_url)
+  # , level3 = paste0(begin_url, "9slil0ww7t_GLWD_level3.zip?", end_url)
 )
 
 # get data
