@@ -42,6 +42,7 @@ get_data <- function(file, zipdir, datdir, overwrite=F){
           file_to_read = zipdir
         }
         polygon_df = st_read(file_to_read)
+        file.remove(file_to_read)
         if (grepl(".csv", file)){
           lo = "GEOMETRY=AS_XY"
         } else {
