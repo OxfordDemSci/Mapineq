@@ -6,8 +6,7 @@ setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path),
                 "..", "..", ".."))
 
 # define directories
-srcdir <- file.pa
-th('src', 'scrapers', 'worldclim')
+srcdir <- file.path('src', 'scrapers', 'worldclim')
 outdir <- file.path('out', 'worldclim', 'data')
 dir.create(outdir, showWarnings=F, recursive=T)
 
