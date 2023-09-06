@@ -13,8 +13,12 @@ library(countrycode)
 setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path), "..", "..", ".."))
 
 # output directory
-outdir <- file.path('out', 'nuts')
+srcdir <- file.path('src', 'scrapers', 'nuts')
+outdir <- file.path('out', 'nuts', 'data')
 dir.create(outdir, showWarnings=F, recursive=T)
+
+# load functions
+source(file.path(srcdir, 'functions.R'))
 
 # Define the arguments for the type of data to retrieve
 nuts_args = list(
@@ -25,38 +29,9 @@ nuts_args = list(
   epsg = "4326"
 )
 
-# Function to create API URLs using previously defined args
+# Create API URLs using previously defined args
 base_url = "https://gisco-services.ec.europa.eu/distribution/v2/nuts/"
-create_api_url = function(args){
-  url_list = list()
-  for (i in 0:3){
-    url_list[[i + 1]] = paste0(
-      base_url,
-      args$filetype, "/",
-      "NUTS_", args$geotype, "_", 
-      args$scale, "M_", 
-      args$year, "_", 
-      args$epsg, 
-      "_LEVL_", i, ".", 
-      args$filetype
-    )
-  }
-  return(url_list)
-}
-
-# Create API urls from args
 urls = create_api_url(nuts_args)
-
-# Function to load data from API 
-# based on URL, returning raw data
-url_to_data_frame = function(url){
-  res = GET(url)
-  data = geojson_sf(rawToChar(res$content))
-  data$FID = seq(1, nrow(data))
-  data[,paste0('id_nuts_', 0:3)] <- NA
-  data[,paste0('tl', 0:3, '_id')] <- NA
-  return(data)
-}
 
 # Retrieve data for each URL
 df_list = lapply(urls, url_to_data_frame)
@@ -88,8 +63,9 @@ for (i in 1:length(df_list)){
 
 # Write the data sets for different NUTS levels to .csv
 for (i in 1:length(df_list)){
-  sf::st_write(obj = df_list[[i]],
-               dsn = file.path(outdir, paste0("nuts", i - 1, "_info.gpkg")),
-               append = FALSE)
+  sf::st_write(
+    obj = df_list[[i]],
+    dsn = file.path(outdir, paste0("nuts", i - 1, ".gpkg")),
+    append = FALSE)
 }
 
