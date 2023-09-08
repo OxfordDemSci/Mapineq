@@ -7,6 +7,7 @@ library(DBI)
 library(RPostgres)
 library(mgsub)
 library(rpostgis)
+library(R.utils)
 
 # working directory
 setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path), '..', '..', '..'))
@@ -14,10 +15,15 @@ setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path), '..', '..', 
 # define directories
 sqldir = file.path('src', 'database', 'sql')
 initdir = file.path('src', 'database', 'sql', 'init_data')
+nutsdir = file.path('out', 'nuts', 'data')
 gadmdir = file.path('out', 'gadm', 'data')
 oecddir = file.path('out', 'oecd', 'data')
 estatdir = file.path('out', 'eurostat', 'data')
-envirdir = file.path('out', 'environmental', 'data')
+orddir = file.path('out', 'ordnance', 'data')
+wwldir = file.path('out', 'worldwildlife', 'data')
+nacisdir = file.path('out', 'nacis', 'data')
+woudcdir = file.path('out', 'woudc', 'data')
+worldclimdir = file.path('out', 'worldclim', 'data')
 
 # functions
 source(file.path(sqldir, 'functions.R'))
@@ -39,16 +45,21 @@ db = DBI::dbConnect(
 # NUTS data
 #------------------------------------------------------
 
-# load data
-nuts = sf::st_read(file.path(initdir, 'nuts.gpkg'))
-
-# write table
-sf::dbWriteTable(
-  conn = db,
-  name = 'nuts',
-  value = nuts,
-  overwrite = TRUE
-)
+nuts_files = list.files(nutsdir, '.gpkg')
+for (file in nuts_files){
+  
+  # load data
+  nuts_df = sf::st_read(file.path(nutsdir, file))
+  
+  # write table
+  sf::dbWriteTable(
+    conn = db,
+    name = gsub(".gpkg", "", file),
+    value = nuts_df,
+    overwrite = TRUE
+  )
+  
+}
 
 #------------------------------------------------------
 # GADM data
@@ -81,6 +92,21 @@ sf::dbWriteTable(
 )
 
 #------------------------------------------------------
+# Source information for data sets
+#------------------------------------------------------
+
+# load data
+source = read.csv('out/source_data_info.csv')
+
+# write table
+sf::dbWriteTable(
+  conn = db,
+  name = 'source',
+  value = source,
+  overwrite = TRUE
+)
+
+#------------------------------------------------------
 # OECD data
 #------------------------------------------------------
 
@@ -91,8 +117,6 @@ oecd_data_files = oecd_data_files[!grepl('_codebook.csv', oecd_data_files)]
 
 # List metadata files
 oecd_meta_files = list.files(oecddir, pattern = '.xml')
-
-dlist = list()
 for (dfile in oecd_data_files){
 
   # Load original data file into R
@@ -111,12 +135,17 @@ for (dfile in oecd_data_files){
   }
 
   # Write data into database table
-  sf::dbWriteTable(
+  tryCatch({
+    sf::dbWriteTable(
     conn = db,
     name = gsub(".csv", "", dfile),
     value = data_df,
     overwrite = TRUE
   )
+  }, error = function(e){
+    message(paste0("Skipping writing to database of ", dfile, "\n"))
+    message(e)
+  })
 
 }
 
@@ -146,12 +175,17 @@ for (dfile in euro_data_files){
   }
 
   # Write data into database table
-  sf::dbWriteTable(
-    conn = db,
-    name = gsub(".csv", "", dfile),
-    value = data_df,
-    overwrite = TRUE
-  )
+  tryCatch({
+    sf::dbWriteTable(
+      conn = db,
+      name = gsub(".csv", "", dfile),
+      value = data_df,
+      overwrite = TRUE
+    )
+  }, error = function(e){
+    message(paste0("Skipping writing to database of ", dfile, "\n"))
+    message(e)
+  })
 
 }
 
@@ -160,9 +194,10 @@ for (dfile in euro_data_files){
 #------------------------------------------------------
 
 # List data files
-envir_csv_files = list.files(envirdir, pattern = '.csv')
-envir_shp_files = list.files(envirdir, pattern = '.shp')
-envir_tif_files = list.files(envirdir, pattern = '.tif')
+envir_directories = c(orddir, wwldir, nacisdir, woudcdir, worldclimdir)
+envir_csv_files = list_files_across_directories(envir_directories, ptrn = '.csv')
+envir_shp_files = list_files_across_directories(envir_directories, ptrn = '.shp')
+envir_tif_files = list_files_across_directories(envir_directories, ptrn = '.tif')
 envir_files = c(envir_csv_files, envir_shp_files, envir_tif_files)
 
 # Define more intuitive variable names for climate data
@@ -174,9 +209,12 @@ name_match = data.frame(
 
 # For each data set: load, wrangle and write into database
 for (dfile in envir_files){
-
+  
+  # Find directory of data
+  matchdir = envir_directories[which(unlist(lapply(lapply(envir_directories, list.files), function(x){ dfile %in% x })))]
+  
   # Load original data file into R
-  data_df = load_data_file(envirdir, dfile)
+  data_df = load_data_file(matchdir, dfile)
 
   # Write data into database table
   if (all(grepl("raster", class(data_df), ignore.case = T))){

@@ -8,6 +8,18 @@ tprint <- function(x){
   message(paste0('[', format(Sys.time(), "%Y-%m-%d %H:%M:%S"), '] ', x))
 }
 
+# list files across a vector of directories
+list_files_across_directories = function(
+    directories,
+    ptrn
+){
+  files = c()
+  for (dir in directories){
+    files = c(files, list.files(dir, pattern = ptrn))
+  }
+  return(files)
+}
+
 # Try to load Eurostat data files from folder
 load_data_file = function(
     dir,
