@@ -11,6 +11,14 @@ tprint <- function(x){
   message(paste0('[', format(Sys.time(), "%Y-%m-%d %H:%M:%S"), '] ', x))
 }
 
+# Collect only relevant data from messy .csv
+clean_woudc_data_csv = function(raw_df){
+  month_ind = which(grepl("#monthly", raw_df[, 1]) | grepl("#MONTHLY", raw_df[, 1]))
+  collect_row = raw_df[month_ind + 2, ]
+  names(collect_row) = raw_df[month_ind + 1, ]
+  return(collect_row)
+}
+
 # obtain monthly data from zip file of environmental variable
 get_data <- function(file, zipdir, datdir, overwrite=F){
   

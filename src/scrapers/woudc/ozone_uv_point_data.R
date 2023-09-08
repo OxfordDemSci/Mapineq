@@ -3,6 +3,7 @@ rm(list=ls()); gc(); cat("\014"); try(dev.off(), silent=T); options(scipen=999)
 
 # libraries
 library(plyr)
+library(stringr)
 
 # working directory
 setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path), 
@@ -16,7 +17,7 @@ dir.create(outdir, showWarnings=F, recursive=T)
 # load functions
 source(file.path(srcdir, 'functions.R'))
 
-# get data per 10000 features
+# get data set information per 10000 features
 start_idx = 0
 res = T
 while (res){
@@ -25,11 +26,45 @@ while (res){
   start_idx = start_idx + 1
 }
 
-# combine data into one big dataset and write to file
+# combine metadata into one big dataset and write to file
 data_files = as.list(list.files(outdir, '.csv', full.names = T))
 df_list = lapply(data_files, read.csv)
-df = plyr::rbind.fill(df_list)
-write.csv(df, file.path(outdir, 'ozone_uv.csv'))
+meta_df = plyr::rbind.fill(df_list)
+write.csv(meta_df, file.path(outdir, 'ozone_uv_meta.csv'))
 
 # remove all separate files
 lapply(data_files, file.remove)
+
+# check indicators available
+unique(unlist(lapply(as.list(meta_df$url), function(x){ str_split(x, "/")[[1]][6] })))
+
+# use metadata to load actual data sets
+ozone_uv = list()
+pb = txtProgressBar(min = 0, max = nrow(meta_df)) 
+for (idx in 1:nrow(meta_df)){
+  
+  tryCatch({
+    # Download data and process
+    dfile = read.csv(meta_df$url[idx])
+    
+    # Collect only relevant data from messy .csv
+    ozone_uv[[idx]] = clean_woudc_data_csv(dfile)
+  }, error = function(e){
+    message(paste0("Error in reading URL: ", meta_df$url[idx]))
+    message(paste0("Error message: ", e))
+  })
+  
+  # Update progress bar
+  setTxtProgressBar(pb, idx)
+  
+}
+close(pb)
+correct_indices = which(unlist(lapply(ozone_uv, is.data.frame)))
+ozone_uv = ozone_uv[correct_indices]
+
+# Add metadata but remove row names
+ozone_uv_df = cbind(plyr::rbind.fill(ozone_uv), meta_df[correct_indices, ])
+ozone_uv_df = ozone_uv_df[, names(ozone_uv_df) != "X.1"]
+
+# Write data set to .csv
+write.csv(ozone_uv_df, file.path(outdir, 'ozone_uv.csv'))
