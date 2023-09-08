@@ -18,17 +18,17 @@ log_file=${backup_dir}/log.txt
 printf "[`date +'%Y-%m-%d %H:%M:%S'`] ${dump_file}\n" >> ${log_file}
 
 # remote dump
-pg_dump -h 15.236.82.244 -U postgres -Fc mapineq > ${dump_file}
+/usr/lib/postgresql/15/bin/pg_dump -h 15.236.82.244 -U postgres -Fc mapineq > ${dump_file}
 
 # compress
 printf "[`date +'%Y-%m-%d %H:%M:%S'`] Compressing (gzip)\n" >> ${log_file}
 gzip -f ${dump_file}
 
-# delete backups older than 365 days
+# delete backups older than 180 days
 for i in "${past_backups[@]}"
 do
   let x=(`date +%s -d ${current_date}`-`date +%s -d ${i}`)/86400
-  if [ $x -ge 365 ]; then
+  if [ $x -ge 180 ]; then
     printf "[`date +'%Y-%m-%d %H:%M:%S'`] Deleting backup (${x} days old): ${i}\n" >> ${log_file}
     rm -R ${base_dir}/${i}
   fi
