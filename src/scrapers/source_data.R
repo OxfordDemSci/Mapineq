@@ -1,68 +1,650 @@
+# TODO: add DOIs and provisions
+# TODO: add Eurostat data info
+
+# cleanup
+rm(list = ls()); gc(); cat("\014"); try(dev.off(), silent = T); options(scipen = 999)
+
+# working directory
+setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path), '..', '..', '..'))
+
+# libraries
+library(stringr)
+
+# directories
+dir.create('out', showWarnings=F, recursive=T)
+
+# define directories
+sqldir = file.path('src', 'database', 'sql')
+nutsdir = file.path('out', 'nuts', 'data')
+gadmdir = file.path('out', 'gadm', 'data')
+oecddir = file.path('out', 'oecd', 'data')
+estatdir = file.path('out', 'eurostat', 'data')
+orddir = file.path('out', 'ordnance', 'data')
+wwldir = file.path('out', 'worldwildlife', 'data')
+nacisdir = file.path('out', 'nacis', 'data')
+woudcdir = file.path('out', 'woudc', 'data')
+worldclimdir = file.path('out', 'worldclim', 'data')
+
+# Define data sets per type
+gadm_files = list.files(gadmdir, '.gpkg')
+nuts_files = list.files(nutsdir, '.gpkg')
+oecd_files = list.files(oecddir, '.csv')[!grepl("codebook.csv", list.files(oecddir, '.csv'))]
+euro_files = list.files(estatdir, '.csv')
+wclim_files = list.files(worldclimdir, '.tif')
+wwf_files = list.files(wwldir, '.shp')
+ordsur_files = list.files(orddir, '.shp')
+nacis_files = list.files(nacisdir, '.shp')
+woudc_files = list.files(woudcdir, '.csv')[!grepl("meta", list.files(woudcdir, '.csv'))]
+
+# Define names of data files
+dnams = c(
+  gsub(".gpkg", "", gadm_files),
+  gsub(".gpkg", "", nuts_files),
+  gsub(".csv", "", oecd_files),
+  gsub(".csv", "", euro_files),
+  gsub(".tif", "", wclim_files),
+  gsub(".shp", "", wwf_files),
+  gsub(".shp", "", ordsur_files),
+  gsub(".shp", "", nacis_files),
+  gsub(".csv", "", woudc_files)
+)
+
+# File names for climate rasters
+remove_n = 15:17
+wclim_nams = unique(unlist(lapply(strsplit(gsub(".tif", ".zip", wclim_files), ""), function(x)
+  paste(x[-remove_n], collapse = ""))))
+  
 # Create data frame with information about data (metadata)
 df_source = data.frame(
-  data_name = c(
-    "gadm",
-    paste0("nuts", 0:3, "_info"), 
-    paste0("regional_education_", c("countries", "regions")),
-    paste0("regional_wellbeing_", c("countries", "regions")),
-    "gender_relevant_child_policies",
-    paste0("wc2.1_10m_prec_", sprintf("%02d", 1:12)),
-    paste0("wc2.1_10m_tmin_", sprintf("%02d", 1:12)),
-    paste0("wc2.1_10m_tmax_", sprintf("%02d", 1:12)),
-    paste0("wc2.1_10m_tavg_", sprintf("%02d", 1:12)),
-    paste0("wc2.1_10m_wind_", sprintf("%02d", 1:12)),
-    paste0("wc2.1_10m_vapr_", sprintf("%02d", 1:12)),
-    paste0("wc2.1_10m_srad_", sprintf("%02d", 1:12)),
-    
-  ),
+  data_name = dnams,
   date_retrieval = c(
-    rep(Sys.Date(), 94)
+    rep(Sys.Date(), length(dnams))
   ),
   organisation = c(
-    "GADM",
-    rep("Eurostat", 4),
-    rep("OECD", 5),
-    rep("WorldClim", 84)
+    rep("GADM", length(gadm_files)),
+    rep("Eurostat", length(nuts_files)),
+    rep("OECD", length(oecd_files)),
+    rep("Eurostat", length(euro_files)),
+    rep("WorldClim", length(wclim_files)),
+    rep("World Wide Fund for Nature (WWF) and Center for Environmental Systems Research, University of Kassel, Germany", length(wwf_files)),
+    rep("Ordnance Survey", length(ordsur_files)),
+    rep("North American Cartographic Information Society (NACIS)", length(nacis_files)),
+    rep("World Ozone and Ultraviolet Radiation Data Centre (WOUDC)", length(woudc_files))
     ),
-  doi = rep(NA, 94),
+  # doi = rep(NA, length(dnams)),
   contact_info = c(
-    "http://rasterra.com/contact/gadm_contact_form",
-    rep("ESTAT-GISCO@ec.europa.eu", 4),
-    rep("RegionStat@oecd.org", 4),
-    "social.contact@oecd.org",
-    rep("info@worldclim.org", 84)
+    rep("http://rasterra.com/contact/gadm_contact_form", length(gadm_files)),
+    rep("ESTAT-GISCO@ec.europa.eu", length(nuts_files)),
+    rep("RegionStat@oecd.org", length(oecd_files)),
+    rep("https://ec.europa.eu/eurostat/web/main/contact-us/user-support", length(euro_files)),
+    rep("info@worldclim.org", length(wclim_files)),
+    rep("bernhard.lehner@wwfus.org", length(wwf_files)),
+    rep("customerservices@ordnancesurvey.co.uk", length(ordsur_files)),
+    rep("nathaniel@naturalearthdata.com", length(nacis_files)),
+    rep("woudc@ec.gc.ca", length(woudc_files))
   ),
-  provisions = c(
-    NA,
-    rep("https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units", 4),
-    rep(NA, 89)
-  ),
+  # provisions = rep(NA, length(dnams)),
   information = c(
-    "https://gadm.org/about.html",
-    rep("https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts#nuts21", 4),
-    rep("http://www.oecd.org/gov/regional/statisticsindicators", 4),
-    "https://www.oecd.org/gender/data/",
-    rep("https://www.worldclim.org/about.html", 84)
+    rep("https://gadm.org/about.html", length(gadm_files)),
+    rep("https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts#nuts21", length(nuts_files)),
+    rep("https://data.oecd.org/api/sdmx-json-documentation/", length(oecd_files)),
+    rep("https://wikis.ec.europa.eu/display/EUROSTATHELP/API+for+data+access", length(euro_files)),
+    rep("https://www.worldclim.org/about.html", length(wclim_files)),
+    rep("https://www.worldwildlife.org/pages/global-lakes-and-wetlands-database", length(wwf_files)),
+    rep("https://www.ordnancesurvey.co.uk/products/os-open-roads", length(ordsur_files)),
+    rep("https://www.naturalearthdata.com/about/", length(nacis_files)),
+    rep("https://woudc.org/about/index.php", length(woudc_files))
     ),
   url = c(
-    "https://geodata.ucdavis.edu/gadm/gadm4.1/gadm_410-gpkg.zip",
-    paste0("https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_20M_2021_4326_LEVL_", 0:3, ".geojson"),
-    "https://stats.oecd.org/SDMX-JSON/data/REGION_EDUCAT/AUT+BEL+CZE+DNK+EST+FIN+FRA+DEU+GRC+HUN+ISL+IRL+ITA+LVA+LTU+LUX+NLD+NOR+POL+PRT+SVK+SVN+ESP+SWE+CHE+GBR.AUT+BEL+CZE+DNK+EST+FIN+FRA+DEU+GRC+HUN+ISL+IRL+ITA+LVA+LTU+LUX+NLD+NZL+NOR+POL+PRT+SVK+SVN+ESP+SWE+CHE+GBR.NEAC_SHARE_EA_Y25T64+NEAC_SHARE_EA_Y25T34.L0T2+L3T4+L5T8+L5+L6+L7+L8.T+F+M.VALUE/all?startTime=2015&endTime=2022&dimensionAtObservation=allDimensions,https://stats.oecd.org/SDMX-JSON/data/REGION_EDUCAT/AUT+BEL+DNK+EST+FIN.AT111+AT112+AT113+AT121+AT122+AT123+AT124+AT125+AT126+AT127+AT130+AT211+AT212+AT213+AT221+AT222+AT223+AT224+AT225+AT226+AT311+AT312+AT313+AT314+AT315+AT321+AT322+AT323+AT331+AT332+AT333+AT334+AT335+AT341+AT342+BE10+BE21+BE22+BE23+BE24+BE25+BE31+BE32+BE33+BE34+BE35+DK011+DK012+DK013+DK014+DK021+DK022+DK031+DK032+DK041+DK042+DK050+EE001+EE004+EE009+EE00A+EE006+EE007+EE008+FI193+FI194+FI195+FI196+FI197+FI1B1+FI1C1+FI1C2+FI1C3+FI1C4+FI1C5+FI1D1+FI1D2+FI1D3+FI1D8+FI1D5+FI1D9+FI1D7+FI200.NEAC_SHARE_EA_Y25T64+NEAC_SHARE_EA_Y25T34+NEAC_RATE_EMPLOYMENT_Y25T64+NEAC_RATE_EMPLOYMENT_Y25T34+ENRL_RATE_AGE_Y3T5+ENRL_RATE_AGE_Y6T14+ENRL_RATE_AGE_Y15T19+ENRL_RATE_AGE_Y20T29+ENRL_RATE_AGE_Y30T39+ENRL_RATE_AGE_Y40T64+TRANS_SHARE_EDULABOUR_NE_U_I_Y18T24+EARLY_LEAVERS_RATE_Y18T24+PIAAC_AL_FNFAET12_Y25T64+PIAAC_AL_FNFAET4_Y25T64.L0T2+L3T4+L5+L6+L7+L8.T+F+M.VALUE/all?startTime=2015&endTime=2022&dimensionAtObservation=allDimensions",
-    "https://stats.oecd.org/SDMX-JSON/data/REGION_EDUCAT/AUT+BEL+DNK+EST+FIN.AT111+AT112+AT113+AT121+AT122+AT123+AT124+AT125+AT126+AT127+AT130+AT211+AT212+AT213+AT221+AT222+AT223+AT224+AT225+AT226+AT311+AT312+AT313+AT314+AT315+AT321+AT322+AT323+AT331+AT332+AT333+AT334+AT335+AT341+AT342+BE10+BE21+BE22+BE23+BE24+BE25+BE31+BE32+BE33+BE34+BE35+DK011+DK012+DK013+DK014+DK021+DK022+DK031+DK032+DK041+DK042+DK050+EE001+EE004+EE009+EE00A+EE006+EE007+EE008+FI193+FI194+FI195+FI196+FI197+FI1B1+FI1C1+FI1C2+FI1C3+FI1C4+FI1C5+FI1D1+FI1D2+FI1D3+FI1D8+FI1D5+FI1D9+FI1D7+FI200.NEAC_SHARE_EA_Y25T64+NEAC_SHARE_EA_Y25T34+NEAC_RATE_EMPLOYMENT_Y25T64+NEAC_RATE_EMPLOYMENT_Y25T34+ENRL_RATE_AGE_Y3T5+ENRL_RATE_AGE_Y6T14+ENRL_RATE_AGE_Y15T19+ENRL_RATE_AGE_Y20T29+ENRL_RATE_AGE_Y30T39+ENRL_RATE_AGE_Y40T64+TRANS_SHARE_EDULABOUR_NE_U_I_Y18T24+EARLY_LEAVERS_RATE_Y18T24+PIAAC_AL_FNFAET12_Y25T64+PIAAC_AL_FNFAET4_Y25T64.L0T2+L3T4+L5+L6+L7+L8.T+F+M.VALUE/all?startTime=2015&endTime=2022&dimensionAtObservation=allDimensions",
-    rep("https://stats.oecd.org/SDMX-JSON/data/RWB/AUT+AT11+AT12+AT13+AT21+AT22+AT31+AT32+AT33+AT34+BEL+BE1+BE2+BE3+CZE+CZ01+CZ02+CZ03+CZ04+CZ05+CZ06+CZ07+CZ08+DNK+DK01+DK02+DK03+DK04+DK05+EST+EE00+EE001+EE004+EE006+EE007+EE008+FIN+FI19+FI1B+FI1C+FI1D+FI20+FRA+FR10+FR21+FR22+FR23+FR24+FR25+FR26+FR30+FR41+FR42+FR43+FR51+FR52+FR53+FR61+FR62+FR63+FR71+FR72+FR81+FR82+FR83+DEU+DE1+DE2+DE3+DE4+DE5+DE6+DE7+DE8+DE9+DEA+DEB+DEC+DED+DEE+DEF+DEG+GRC+GR1+GR11+GR12+GR13+GR14+GR2+GR21+GR22+GR23+GR24+GR25+GR3+GR30+GR4+GR41+GR42+GR43+HUN+HU1+HU10+HU2+HU21+HU22+HU23+HU3+HU31+HU32+HU33+ISL+IS01+IS02+IRL+IE01+IE02+ISR+IL01+IL02+IL03+IL04+IL05+IL06+ITA+ITC1+ITC2+ITC3+ITC4+ITF1+ITF2+ITF3+ITF4+ITF5+ITF6+ITG1+ITG2+ITH1+ITH2+ITH3+ITH4+ITH5+ITI1+ITI2+ITI3+ITI4+JPN+JPA+JPB+JPC+JPD+JPE+JPF+JPG+JPH+JPI+JPJ+KOR+KR01+KR02+KR03+KR04+KR05+KR06+KR07+LUX+LU00+MEX+ME01+ME02+ME03+ME04+ME05+ME06+ME07+ME08+ME09+ME10+ME11+ME12+ME13+ME14+ME15+ME16+ME17+ME18+ME19+ME20+ME21+ME22+ME23+ME24+ME25+ME26+ME27+ME28+ME29+ME30+ME31+ME32+NLD+NL1+NL11+NL12+NL13+NL2+NL21+NL22+NL23+NL3+NL31+NL32+NL33+NL34+NL4+NL41+NL42+NZL+NZ01+NZ011+NZ012+NZ013+NZ014+NZ015+NZ016+NZ017+NZ018+NZ019+NZ02+NZ021+NZ022+NZ023+NZ024+NZ025+NOR+NO01+NO02+NO03+NO04+NO05+NO06+NO07+POL+PL1+PL11+PL12+PL2+PL21+PL22+PL3+PL31+PL32+PL33+PL34+PL4+PL41+PL42+PL43+PL5+PL51+PL52+PL6+PL61+PL62+PL63+PRT+PT11+PT15+PT16+PT17+PT18+PT20+PT30+SVK+SK01+SK02+SK03+SK04+SVN+SI01+SI02+ESP+ES11+ES12+ES13+ES21+ES22+ES23+ES24+ES30+ES41+ES42+ES43+ES51+ES52+ES53+ES61+ES62+ES63+ES64+ES70+SWE+SE11+SE12+SE21+SE22+SE23+SE31+SE32+SE33+CHE+CH01+CH02+CH03+CH04+CH05+CH06+CH07+TUR+TR10+TR21+TR22+TR31+TR32+TR33+TR41+TR42+TR51+TR52+TR61+TR62+TR63+TR71+TR72+TR81+TR82+TR83+TR90+TRA1+TRA2+TRB1+TRB2+TRC1+TRC2+TRC3+GBR+UKC+UKD+UKE+UKF+UKG+UKH+UKI+UKJ+UKK+UKL+UKM+UKN+USA+US01+US02+US04+US05+US06+US08+US09+US10+US11+US12+US13+US15+US16+US17+US18+US19+US20+US21+US22+US23+US24+US25+US26+US27+US28+US29+US30+US31+US32+US33+US34+US35+US36+US37+US38+US39+US40+US41+US42+US44+US45+US46+US47+US48+US49+US50+US51+US53+US54+US55+US56.RWB+INCOME+INCOME_DISP+JOB+EMP_RA+UNEM_RA+HOUSE+ROOMS_PC+EDUC+EDU38_SH+HEALTH+LIFE_EXP+STD_MORT+ENVIR+AIR_POL+SAFE+HOMIC_RA+CIVIC+VOTERS_SH+ACCESS+BB_ACC+SOCIAL+SUBJ_SOC_SUPP+SATISF+SUBJ_LIFE_SAT+GOV+SUBJ_PERC_CORR+RIDD+INEQ+GINIB+GINI+S80S20A+PVT+PVT6B+PVT6A+PVT5B+PVT5A.VALUE/all?startTime=2000&endTime=2014&dimensionAtObservation=allDimensions", 2),
-    "https://stats.oecd.org/SDMX-JSON/data/GENDER_EMP/AUT+BEL+CRI+CZE+DNK+EST+FIN+FRA+DEU+GRC+HUN+ISL+IRL+ISR+ITA+JPN+KOR+LVA+LTU+LUX+MEX+NLD+NZL+NOR+POL+PRT+SVK+SVN+ESP+SWE+CHE+TUR+GBR+USA+OAVG+OECD+NMEC+BRA+BGR+CHN+HRV+CYP+IND+IDN+MLT+MKD+ROU+RUS+SAU+ZAF.EMP1+EMP2+EMP3+EMP4+EMP4_E+EMP4_U+EMP5+EMP6+EMP7+EMP8+EMP9+EMP9_5+EMP9_1+EMP9_9+EMP12+EMP12_P+EMP12_T+EMP10+EMP11+EMP13+EMP13_A+EMP13_I+EMP13_S+EMP15+EMP15_U+EMP15_P+EMP15_T+EMP17+EMP16+EMP18+EMP18_MAT+EMP18_PAR+EMP18_PAID+EMP18_PAT+EMP19+EMP10NEW.ALL_PERSONS+MEN+WOMEN.3-5+15PLUS+1524+1564+2554+5564+55PLUS+TOTAL.1970+1971+1972+1973+1974+1975+1976+1977+1978+1979+1980+1981+1982+1983+1984+1985+1986+1987+1988+1989+1990+1991+1992+1993+1994+1995+1996+1997+1998+1999+2000+2001+2002+2003+2004+2005+2006+2007+2008+2009+2010+2011+2012+2013+2014+2015+2016+2017+2018+2019+2020+2021+2022+Q1-2007+Q2-2007+Q3-2007+Q4-2007+Q1-2008+Q2-2008+Q3-2008+Q4-2008+Q1-2009+Q2-2009+Q3-2009+Q4-2009+Q1-2010+Q2-2010+Q3-2010+Q4-2010+Q1-2011+Q2-2011+Q3-2011+Q4-2011+Q1-2012+Q2-2012+Q3-2012+LATEST+Q4-2012+Q1-2013+Q2-2013+999999+Q3-2013+Q4-2013+LATEST_YEAR+Q1-2014+Q2-2014+Q3-2014+Q4-2014+Q1-2015+Q2-2015+Q3-2015+Q4-2015+Q1-2016+Q2-2016+Q3-2016+Q4-2016+Q1-2017+Q2-2017+Q3-2017+Q4-2017+Q1-2018+Q2-2018+Q3-2018+Q4-2018+Q1-2019+Q2-2019+Q3-2019+Q4-2019+Q1-2020+Q2-2020+Q3-2020+Q4-2020+Q1-2021+Q2-2021+Q3-2021+Q4-2021+Q1-2022+Q2-2022+Q3-2022+Q4-2022/all?&dimensionAtObservation=allDimensions",
-    rep("https://biogeo.ucdavis.edu/data/worldclim/v2.1/base/wc2.1_10m_prec.zip", 7),
-    rep("https://biogeo.ucdavis.edu/data/worldclim/v2.1/base/wc2.1_10m_tmin.zip", 7),
-    rep("https://biogeo.ucdavis.edu/data/worldclim/v2.1/base/wc2.1_10m_tmax.zip", 7),
-    rep("https://biogeo.ucdavis.edu/data/worldclim/v2.1/base/wc2.1_10m_tavg.zip", 7),
-    rep("https://biogeo.ucdavis.edu/data/worldclim/v2.1/base/wc2.1_10m_wind.zip", 7),
-    rep("https://biogeo.ucdavis.edu/data/worldclim/v2.1/base/wc2.1_10m_vapr.zip", 7),
-    rep("https://biogeo.ucdavis.edu/data/worldclim/v2.1/base/wc2.1_10m_srad.zip", 7),
+    rep("https://geodata.ucdavis.edu/gadm/gadm4.1/gadm_410-gpkg.zip", length(gadm_files)),
+    paste0("https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_20M_2021_4326_LEVL_", as.numeric(gsub("\\D", "", nuts_files)), ".geojson"),
+    paste0('https://stats.oecd.org/restsdmx/sdmx.ashx/GetData/', gsub(".csv", "", oecd_files), '/all?'),
+    paste0('https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/', gsub(".csv", "", euro_files)),
+    rep(wclim_nams, each = 12),
+    "https://files.worldwildlife.org/wwfcmsprod/files/Publication/file/8ark3lcpfw_GLWD_level1.zip?_ga=2.6743986.1226121816.1690982761-579293559.1690982761",
+    "https://files.worldwildlife.org/wwfcmsprod/files/Publication/file/65sv5l285i_GLWD_level2.zip?_ga=2.6743986.1226121816.1690982761-579293559.1690982761",
+    "https://api.os.uk/downloads/v1/products/OpenRoads/downloads?area=GB&format=GeoPackage&redirect",
+    paste0("https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_", gsub(".shp", "", gsub("natural_earth_", "", nacis_files)),".zip"),
+    "https://woudc.org/data/explore.php?lang=en"
+    # paste0("https://geo.woudc.org/ows?service=WFS&version=1.1.0&request=GetFeature&outputformat=GeoJSON&typename=filelist&filter=%3Cogc:Filter%3E%3Cogc:And%3E%3Cogc:BBOX%3E%3CPropertyName%3EmsGeometry%3C/PropertyName%3E%3CBox%20srsName=%22EPSG:4326%22%3E%3Ccoordinates%3E-189.14062500000003,-83.67694304841552%20189.84375,85.51339830988749%3C/coordinates%3E%3C/Box%3E%3C/ogc:BBOX%3E%3Cogc:PropertyIsBetween%3E%3Cogc:PropertyName%3Einstance_datetime%3C/ogc:PropertyName%3E%3Cogc:LowerBoundary%3E1924-01-01%2000:00:00%3C/ogc:LowerBoundary%3E%3Cogc:UpperBoundary%3E2023-12-30%2023:59:59%3C/ogc:UpperBoundary%3E%3C/ogc:PropertyIsBetween%3E%3C/ogc:And%3E%3C/ogc:Filter%3E&sortby=instance_datetime%20DESC&startindex=", 0:(length(woudc_files) - 1) * 1e4,"&maxfeatures=10000")
   ),
   license = c(
-    "The data are freely available for academic use and other non-commercial use. Redistribution or commercial use is not allowed without prior permission. Using the data to create maps for publishing of academic research articles is allowed. Thus you can use the maps you made with GADM data for figures in articles published by PLoS, Springer Nature, Elsevier, MDPI, etc. You are allowed (but not required) to publish these articles (and the maps they contain) under an open license such as CC-BY as is the case with PLoS journals and may be the case with other open access articles. Data for the following countries is covered by a a different license Austria: Creative Commons Attribution-ShareAlike 2.0 (source: Government of Ausria)",
-    ,
-    rep("The data are freely available for academic use and other non-commercial use. Redistribution or commercial use is not allowed without prior permission. Using the data to create maps for publishing of academic research articles is allowed. Thus you can use the maps you made with WorldClim data for figures in articles published by PLoS, Springer Nature, Elsevier, MDPI, etc. You are allowed (but not required) to publish these articles (and the maps they contain) under an open license such as CC-BY as is the case with PLoS journals and may be the case with other open access articles.", 84)
-  )
+    rep("The data are freely available for academic use and other non-commercial use. 
+        Redistribution or commercial use is not allowed without prior permission. 
+        Using the data to create maps for publishing of academic research articles is allowed. 
+        Thus you can use the maps you made with GADM data for figures in articles published by 
+        PLoS, Springer Nature, Elsevier, MDPI, etc. You are allowed (but not required) to publish 
+        these articles (and the maps they contain) under an open license such as CC-BY as is the 
+        case with PLoS journals and may be the case with other open access articles. Data for the 
+        following countries is covered by a a different license Austria: Creative Commons 
+        Attribution-ShareAlike 2.0 (source: Government of Ausria)", length(gadm_files)),
+    
+    rep('In addition to the general copyright and licence policy applicable to the whole Eurostat website, 
+    the following specific provisions apply to the datasets you are downloading. The download and usage of 
+    these data is subject to the acceptance of the following clauses: 
+    
+    The Commission agrees to grant the non-exclusive and not transferable right to use and process the Eurostat/
+    GISCO geographical data downloaded from this page (the "data").
+ 
+The permission to use the data is granted on condition that:
+ 
+the data will not be used for commercial purposes;
+the source will be acknowledged. A copyright notice, as specified below, will have to be visible on any printed or 
+electronic publication using the data downloaded from this page.
+
+Copyright notice
+
+When data downloaded from this page is used in any printed or electronic publication, in addition to any other 
+provisions applicable to the whole Eurostat website, data source will have to be acknowledged in the legend of the 
+map and in the introductory page of the publication with the following copyright notice:
+
+EN: © EuroGeographics for the administrative boundaries
+
+FR: © EuroGeographics pour les limites administratives
+
+DE: © EuroGeographics bezüglich der Verwaltungsgrenzen
+
+For publications in languages other than English, French or German, the translation of the copyright notice 
+in the language of the publication shall be used.
+
+If you intend to use the data commercially, please contact EuroGeographics for information regarding their 
+        licence agreements.', length(nuts_files)),
+    
+    rep("The use of www.oecd.org, any of its satellite or related website(s) or any of their pages (collectively 
+    the “OECD Websites”), as well as any Organisation for Economic Co-operation and Development (the “ OECD”) 
+    content whether digital, print or in any other medium, is governed by the terms and conditions found on this 
+    page (the “Terms and Conditions”). By accessing an OECD Website and/or using any OECD content, you 
+    (hereinafter referred to as “You” or the “User”) acknowledge that You have fully read and understood, 
+    and agree to be bound by, these Terms and Conditions. You also acknowledge that You have fully read and 
+    understood the OECD Privacy Policy and agree to its terms. These Terms and Conditions, as well as the OECD 
+    Privacy Policy, may be updated from time to time at the discretion of the OECD and it is the User’s 
+    responsibility to periodically review and take into account any changes.
+ 
+The OECD encourages the use of its data, publications and multimedia products (sound, image, software, etc.), 
+collectively, the 'Material'. Unless otherwise stated, the Material is the intellectual property of the OECD 
+and protected by copyright or other similar rights. Some content in the Material may be owned by third parties. 
+The User is responsible for verifying whether this is the case and, if so, securing the appropriate permissions 
+from these third parties before using such content.
+ 
+I. Use of Material
+
+
+No Association
+The User may neither represent nor imply that the OECD has participated in, approved, endorsed or otherwise 
+supported his or her use or reproduction of the Material. The User may not claim any affiliation with the OECD. 
+For information about use of the OECD name, acronym and logo, please see Section IV below
+ 
+(a) Reproduction and translation of the material   
+ 
+Except for content governed by specific terms (see sections (b) and (c)) or as may be otherwise indicated on 
+the specific Material, the reproduction and translation of the Material is authorised for commercial and 
+non-commercial purposes within established limits.
+
+You may need to submit a formal request in certain circumstances. See below for further instructions:
+
+Reproduction and translation authorisation for OECD Publications and Working Papers identified by DOI 
+and/or ISBN, ISSN
+- for excerpt(s), you should obtain the authorisation via Copyright Clearance Centre, Inc. (CCC) ; visit
+www.copyright.com  and enter the title that you are requesting permission for in the 'Get Permission' search box  
+- for requests to reproduce the complete text, please complete this form
+- for requests to translate the complete text, please complete this form
+ 
+Reproduction and translation authorisation for all Material OTHER than OECD Publications and Working Papers:
+- 30% or less of a complete work or a maximum of 5 tables and/or graphs taken from a workis granted free of 
+charge and without formal written permission provided You do not alter the Material in any way and You cite 
+the source as follows: OECD/(co-author(s) if any) (year), (Title), URL.
+
+In cases of translations of  such extracts, You must include the following disclaimer: “This translation was 
+not created by the OECD and should not be considered an official OECD translation. The OECD shall not be liable 
+for any content or error in this translation.”
+
+- for all other requests concerning reproduction please complete this form
+-  for all other requests concerning translation please complete this form
+ 
+Note:  The OECD does not allow posting of PDF files of its Material on any Internet sites, but You are welcome 
+to link to the Material and, whenever the  version is available, to share and embed it, in whole or in part, 
+without the need to request permission from the OECD.
+ 
+Read editions are optimised for browser-enabled mobile devices and can be read on screen wherever there is an 
+internet connection.
+ 
+(b) Content governed by specific terms and conditions
+Certain content is governed by specific terms and conditions. Please see below: 
+
+International Energy Agency (IEA) Material is governed by specific terms and conditions, which are available 
+at http://www.iea.org/t&c/termsandconditions. 
+
+Material licensed under a particular Creative Commons license (CC license) is governed by the specific CC 
+license as well as any other conditions or restrictions as indicated on the particular Material.
+If the CC license on the particular Material indicates NoDerivs (ND) but You would nonetheless like to to 
+create derivative works, including translations, please send us the corresponding form:
+- for requests concerning reproduction please complete this form
+- for requests concerning translation please complete this form
+ 
+- If the CC license on the particular Material indicates NonCommercial (NC) but You would nonetheless like 
+to use the Material for commercial purposes, submit a request to the Copyright Clearance Centre, Inc. (CCC), 
+www.copyright.com. 
+ 
+The content from the Programme for International Student Assessment (PISA), including reports, publications, 
+questionnaires, individual questions, sample tasks and any other content that may be accessed through any 
+PISA-related website, except for Data (see Section I (c) below), are licensed under the Creative Commons 
+Attribution-NonCommercial-ShareAlike 3.0 IGO (CC BY-NC-SA 3.0 IGO) licence.
+
+- Translations — If You create a translation of PISA content, please add the following disclaimer along 
+with the attribution: This translation was not created by the OECD and should not be considered an 
+official OECD translation. The quality of the translation and its coherence with the original language 
+text of the work are the sole responsibility of the author or authors of the translation.  In the event 
+of any discrepancy between the original work and the translation, only the text of original work shall 
+be considered valid.
+We encourage You to provide your translation (PDF format) to the OECD at pubrights [at] oecd.org.
+
+- Adaptations — If You create an adaptation of PISA content, please add the following disclaimer along 
+with the attribution: This is an adaptation of an original work by the OECD. The opinions expressed and 
+arguments employed in this adaptation are the sole responsibility of the author or authors of the adaptation 
+and should not be reported as representing the official views of the OECD or of its member countries.
+ 
+OECD Legal Instruments .
+Official texts of OECD Legal Instruments in both OECD official languages (English and French), as well 
+as related information, are made available in the Compendium of OECD Legal Instruments at 
+https://legalinstruments.oecd.org.  OECD Legal Instruments may be found elsewhere, including on OECD 
+websites, but You should always consult the Compendium, as it is the only source of the official and 
+up do date texts and information.
+
+You may reproduce and distribute individual OECD Legal Instruments free of charge and without requesting 
+any permissions, as long as You do not alter them in any way.  You may use excerpts of a Legal Instrument, 
+as long as You ensure that the legal nature/integrity of the Instrument is preserved and the excerpt is 
+not used out of context or provides incomplete information or otherwise mislead the reader as to the actual 
+legal nature,  scope or content of the Legal Instrument. OECD Legal Instruments may not be sold but may be 
+used in the context of commercial activities such as, for example, consulting or training services. 
+
+OECD Legal Instruments are available in the two OECD official languages (English and French). Translations 
+into other languages may be available on the website, but the only official texts remain the English and French versions.
+
+You may translate OECD Legal Instruments and related information and documents provided in the Compendium 
+into other languages, as long as the translation is labelled “unofficial translation” and You include the 
+following disclaimer: “This translation has been prepared by [translation author] for informational purpose 
+only and its accuracy cannot be guaranteed by the OECD. The only official versions are the English and French 
+texts available on the OECD website https://legalinstruments.oecd.org.
+
+ We encourage You to provide your translation (PDF format) to the OECD, e-mail legal@oecd.org
+ 
+(c) Data
+The OECD makes data (the “Data”) available for use and consultation by the public.  Data may be subject to
+restrictions beyond the scope of these Terms and Conditions, either because specific terms apply to those 
+Data or because third parties may have ownership interests. It is the User’s responsibility to verify, 
+either directly in the metadata or, if available, by clicking on the  icon and then referring to the 
+'source' tab, whether the Data is fully or partially owned by third parties and/or whether additional 
+restrictions may apply, and to contact the owner of the Data before incorporating it in your work in 
+order to secure the necessary permissions. The OECD in no way represents or warrants that it owns or 
+controls all rights in all Data, and the OECD will not be liable to any User for any claims brought 
+against the User by third parties in connection with the use of any Data.
+
+Permitted use
+Except where additional restrictions apply as stated above, You can extract from, download, copy, adapt, 
+print, distribute, share and embed Data for any purpose, even for commercial use. You must give appropriate 
+credit to the OECD by using the citation associated with the relevant Data, or, if no specific citation 
+is available, You must cite the source information using the following format: OECD (year), (dataset name),
+(data source) DOI or URL (accessed on (date)). When sharing or licensing work created using the Data, 
+You agree to include the same acknowledgment requirement in any sub-licenses that You grant, along with 
+the requirement that any further sub-licensees do the same.
+
+Availability of Data
+The availability of the Data is contingent upon the availability of the OECD’s corresponding resources, 
+whose capacity is subject to change at any time. The OECD may monitor your use of the Data and reserves 
+the right, at its sole discretion and without limitation, to modify the amount of Data You may request 
+in a single query, to modify the number of queries You may make over a specified time, to remove certain 
+Data and to alter the file formats in which Data are available.
+
+OECD Application Programming Interfaces (APIs)
+You may use one or more OECD-developed application programming interfaces (“APIs”) to facilitate access 
+to the Data. APIs are made available on an “as-is” basis, and use of an API is at your own risk. 
+In particular, but without limitation, the OECD disclaims all warranties as to an API’s compatibility 
+with your hardware and software and accepts no liability for any damages or claims arising out of or 
+in connection with your use of an API and/or the underlying Data accessed through an API. For the avoidance
+of doubt, the OECD accepts no obligation to provide technical, administrative or other support in connection
+with the APIs or for any other purpose. The OECD may decide to suspend or terminate the provision of the APIs 
+and API-accessible Data at any time.
+
+The OECD may release updated versions of the APIs from time to time and at its sole discretion. Once the 
+OECD releases updated versions, previous APIs may no longer function properly, and You therefore agree, 
+for each API, to use the most up-to-date version available.
+
+You agree not to modify, distribute, decompile, disassemble, reverse engineer or perform any similar action 
+on the APIs or any of their portions or components.
+
+The OECD reserves the right to limit or suspend any User’s IP address access to the APIs at any time and 
+without notice for any reason, including if the OECD determines that You are using or are attempting to 
+use the Data and/or the APIs in violation of these Terms and Conditions in such a way as to harm the OECD
+or any other party, or if You are placing too great a strain on the infrastructure necessary for making 
+the Data available to a reasonable number of people. You agree not to use any technical means to interfere
+with the OECD’s monitoring of usage of the above-mentioned resources. The OECD reserves the right to use 
+any technical means to overcome attempted technical interference with usage monitoring. Finally, the Data 
+and the APIs will be unavailable from time to time, at the OECD’s sole discretion, for periodic maintenance.
+
+When entering an API query, the OECD encourages, but does not require, You to register your details so 
+that we can keep You informed of technical updates to the APIs. The information You provide to the OECD
+during the voluntary registration process will be handled in accordance with the OECD Privacy Policy.  
+Registration in no way impacts the application of these Terms and Conditions on You or the OECD. 
+
+As noted above, these Terms and Conditions may be updated from time to time. By using an API, You agree
+to periodically review these Terms and Conditions, to take note of any changes thereto, and to adapt 
+your usage of the API accordingly.
+ 
+
+II. Communication and Messaging Facilities
+
+You shall not do any of the following in any messaging or communication facilities that may be found 
+on an OECD Website:
+
+defame, abuse, harass, threaten or otherwise violate the legal rights of others;
+publish, post, distribute or disseminate any defamatory, infringing, obscene, indecent or unlawful material;
+(Scam alert)
+upload or attach files that contain software or other material protected by intellectual property laws 
+unless You own or control the rights thereto or have received all necessary permissions;
+upload or attach files that contain viruses, corrupted files, or any other similar software or programs
+that may damage the operation of another's computer;
+upload, e-mail, transmit or otherwise make available unsolicited advertising of any goods or services, or 
+conduct or forward surveys, contests, 'spam' or chain letters; etc.
+
+The OECD reserves the right to deny, at its sole discretion, any User’s IP address online access to the 
+OECD Websites or any portion thereof without notice.
+
+You specifically acknowledge and agree that the OECD is not liable for any conduct of any other User, 
+including, but not limited to, the types of conduct listed above.
+ 
+III. Linking to the OECD Websites
+
+In order to promote its work, and because linking is an essential aspect of the Internet, the OECD 
+encourages You to include hyperlinks to the OECD Websites without having to ask prior permission, under 
+the following conditions:
+These hyperlinks must not:
+infringe the OECD's rights, in particular relating to its name, logo, acronym and intellectual property rights;
+be used for the promotion of an organisation or company, or of any commercial products or services.
+Consequently,
+if You link to an OECD Website, You must refrain from creating frames, or using other visual altering tools, 
+around the OECD Website;
+once a link to an OECD Website has been created, it should be tested to ensure that it works and meets the 
+above conditions. We would then appreciate being notified via webmaster@oecd.org.
+
+If You have further questions about linking to the OECD Websites, e-mail webmaster@oecd.org.
+ 
+IV. OECD Name, Acronym and Logo
+
+OECD logo for authorship and endorsement
+As stated in Section I above, You may not claim any affiliation with the OECD. If You wish to use the OECD 
+name, acronym, logo or other identifying symbol in a way that implies endorsement, partnership or authorship, 
+You must obtain our written permission and agreement on how the name, acronym, logo or other identifying symbol 
+will be used. Send your request to logo@oecd.org. If permission is granted, it is only granted for the specific
+usage referred to in OECD’s reply; each new use requires a new request.
+ 
+V. Disclaimers
+
+THE MATERIAL AS WELL AS ANY OTHER INFORMATION PROVIDED BY THE OECD ON THE OECD WEBSITES OR ON ANOTHER 
+MEDIUM IS PROVIDED ON AN 'AS IS' AND 'AS AVAILABLE' BASIS. The OECD makes every effort to ensure, but 
+does not guarantee, the accuracy or completeness of the Material (including the Data). If errors are 
+brought to our attention, we will try to correct them.
+ 
+The OECD may add, change, improve, or update the Material without notice. The OECD reserves its exclusive
+right in its sole discretion to alter, limit or discontinue all or part of the OECD Websites and/or any 
+Material. Under no circumstances shall the OECD be liable for any loss, damage, liability or expense 
+suffered which is claimed to result from use of the OECD Websites or the Material, including without
+limitation, any fault, error, omission, interruption or delay. In particular, and without limitation, 
+the OECD disclaims all guarantees as to the compatibility of the OECD Websites with any hardware, 
+operating system, web browser, or other means of accessing the OECD Websites. Use of the Material 
+or any OECD Website or any component thereof (including the Data and APIs) is at the User's sole risk.
+ 
+We make every effort to minimise disruption caused by technical errors. However, some Material on the 
+OECD Websites may have been created or structured in files or formats which are not error-free and it 
+cannot be guaranteed that the OECD Websites will not be interrupted or otherwise affected by such problems. 
+The OECD accepts no responsibility with regard to such problems (failure of performance, computer virus, 
+communication line failure, alteration of content, etc.) incurred as a result of using the OECD Websites 
+or any link to external sites.
+ 
+For site security purposes, and to ensure that the OECD Websites remain available to all Users, the OECD 
+employs software programs to monitor network traffic to identify unauthorised attempts to upload or make 
+changes to the OECD Websites or any Material, or otherwise cause damage and to detect other possible security breaches.
+ 
+The OECD Websites may contain advice, opinions and statements from external websites. Hyperlinks to 
+non-OECD Internet sites do not imply any official endorsement of or responsibility for the opinions, 
+ideas, data or products presented at these locations or guarantee the validity of the information provided. 
+The sole purpose of links to other sites is to indicate further information available on related topics.
+
+The mention of specific companies or certain products does not imply that they are endorsed or recommended 
+by the OECD in preference to others of a similar nature that are not mentioned.
+ 
+Territorial disclaimers
+Information contained in the Material and on the OECD Websites does not imply the expression of any 
+opinion whatsoever on the part of the OECD Secretariat or its Members concerning the legal status of 
+any country or of its authorities. Its content, as well as any data and any maps displayed are without
+prejudice to the status of or sovereignty over any territory, to the delimitation of international 
+frontiers and boundaries and to the name of any territory, city or area.
+
+The statistical data for Israel are supplied by and under the responsibility of the relevant Israeli 
+authorities. The use of such data by the OECD is without prejudice to the status of the Golan Heights, 
+East Jerusalem and Israeli settlements in the West Bank under the terms of international law.
+
+
+Note by Türkiye
+The information in the documents with reference to “Cyprus” relates to the southern part of the Island. 
+There is no single authority representing both Turkish and Greek Cypriot people on the Island. Türkiye 
+recognizes the Turkish Republic of Northern Cyprus (TRNC). Until a lasting and equitable solution is
+found within the context of the United Nations, Türkiye shall preserve its position concerning the “Cyprus issue”.
+
+
+Note by all the European Union Member States of the OECD and the European Union
+The Republic of Cyprus is recognised by all members of the United Nations with the exception of Türkiye. 
+The information in the documents relates to the area under the effective control of the Government of 
+the Republic of Cyprus.
+
+Disclaimers for OECD's Social Media Accounts
+The opinions expressed and arguments employed in the content displayed on the OECD’s social media accounts 
+do not necessarily reflect the official views of the OECD, its Member countries, or any stakeholders who 
+have contributed to or participated in any related work. 
+
+The content displayed on the OECD's social media accounts, as well as any data and any map displayed herein,
+are without prejudice to the status of or sovereignty over any territory, to the delimitation of international
+frontiers and boundaries and to the name of any territory, city or area. Please refer to the Section V 
+(Disclaimers) of the OECD Terms and Conditions for specific territorial disclaimers.
+
+The OECD’s social media accounts may display third party content or include hyperlinks to third party websites
+or social media accounts. The inclusion of such content or hyperlinks does not imply any endorsement of or 
+responsibility for the opinions, ideas, data, products or information presented in such content or at these
+locations or guarantee the validity of the information provided.
+
+The mention of specific companies, individuals or certain products in the content displayed on OECD’s social
+media accounts does not imply that they are endorsed or recommended by the OECD in preference to others of
+a similar nature that are not mentioned.
+
+The content displayed on the OECD's social media accounts may display or include hyperlinks to OECD documents, 
+data, publications and multimedia products (sound, image, software, etc.). Unless otherwise stated, all 
+content displayed on the OECD’s social media accounts are the intellectual property of the OECD and protected 
+by copyright or other similar rights. The OECD encourages the use of the ©OECD content subject to the Section
+I (Use of Materials) of the OECD Terms and Conditions. For third party content, please make sure that you 
+secured the appropriate permissions from these third parties before using such content.
+
+Please do not post any comment that is offensive, defamatory, threatening, insulting, abusive, hateful or 
+embarrassing to any person or entity. 
+
+The OECD does not guarantee the truthfulness, accuracy, or validity of any comments posted to its social
+media accounts and reserves the right to delete or edit any comments that it considers inappropriate or 
+unacceptable for any reason. 
+   
+ 
+VI. Preservation of immunities
+
+Nothing herein shall constitute or be considered to be a limitation upon or a waiver of the privileges and
+        immunities of the OECD or of any related body or entity, which are specifically reserved.", length(oecd_files)),
+    
+    rep("Eurostat has a policy of encouraging free re-use of its data, both for non-commercial and commercial purposes.
+    All statistical data, metadata, content of web pages or other dissemination tools, official publications and other 
+    documents published on its website, with the exceptions listed below, can be reused without any payment or written
+    licence provided that:
+
+the source is indicated as Eurostat;
+when re-use involves modifications to the data or text, this must be stated clearly to the end user of the information.
+Exceptions
+
+The permission granted above does not extend to any material whose copyright is identified as belonging to a third-party, 
+such as photos or illustrations from copyright holders other than the European Union. In these circumstances, authorisation
+must be obtained from the relevant copyright holder(s).
+ 
+Logos and trademarks are excluded from the above mentioned general permission, except if they are redistributed as an 
+integral part of a Eurostat publication and if the publication is redistributed unchanged.
+ 
+When reuse involves translations of publications or modifications to the data or text, this must be stated clearly to
+the end user of the information. A disclaimer regarding the non-responsibility of Eurostat shall be included.
+ 
+The following Eurostat data and documents may not be reused for commercial purposes (but non-commercial reuse is 
+possible without restriction):
+ 
+Data identified as belonging to sources other than Eurostat; all data published on Eurostat's website can be 
+regarded as belonging to Eurostat for the purpose of their reuse, with the exceptions stated below, or if it 
+is explicitly stated otherwise.
+ 
+Publications or documents where the copyright belongs partly or wholly to other organisations, for example 
+concerning co-publications between Eurostat and other publishers.
+ 
+Data on countries other than
+- Member States of the European Union (EU), and
+- Member States of the European Free Trade Association (EFTA), and
+- official EU acceding and candidate countries.
+Examples are data on the United States of America, Japan or China. Often, such data are included in Eurostat 
+data tables. In such cases, a re-user would need to eliminate such data from the tables before reusing them commercially.
+ 
+Trade data originating from Liechtenstein and Switzerland (as declaring countries), from 1995 onwards, and 
+concerning the following commodity classifications: HS, SITC, BEC, NSTR and national commodity classifications. 
+Thus it is, for example, not allowed to sell export/import data declared by Switzerland (concerning the above 
+named commodity classifications). However, it is allowed to sell Swiss export/import data declared by an EU
+Member State (but see below a similar exception for Austria).
+ 
+Trade data originating from Austria (as a declaring country) for a level of detail of the Combined Nomenclature 
+of 8 digits; again, it is not allowed to sell export/import declared by Austria (concerning the above named 
+commodity classifications), but it is allowed to sell Austrian export/import data declared by another EU Member State.
+What to do if you want to re-use Eurostat material for commercial purposes
+
+There is no special procedure or requirement for a written licence. Just download the material and use it
+(unless the material is listed in the exceptions above).
+
+Legal notice of the European Commission
+
+The basis for the copyright and licence policy of Eurostat is the legal notice of the European Commission 
+'Europa website' which can be found here: https://ec.europa.eu/info/legal-notice_en
+
+Political context
+
+This approach implements the policy of the European Statistical System (ESS), adopted in February 2013, 
+under which the ESS has committed itself to provide its statistics free of charge as a public good of high quality, 
+irrespective of subsequent commercial or non-commercial use.
+(see https://ec.europa.eu/eurostat/web/european-statistical-system/programmes-and-activities/reuse-ess-statistics)
+
+Contact
+
+Any question regarding the copyright or re-use of Eurostat data or texts may be sought from the Publications 
+Office of the European Union at the following address:
+
+Publications Office,
+Copyright and Legal Issues
+2, rue Mercier, 2985 Luxembourg
+e-mail: op-copyright@publications.europa.eu", length(euro_files)),
+    
+    rep("The data are freely available for academic use and other non-commercial use. Redistribution or 
+        commercial use is not allowed without prior permission. Using the data to create maps for publishing 
+        of academic research articles is allowed. Thus you can use the maps you made with WorldClim data for 
+        figures in articles published by PLoS, Springer Nature, Elsevier, MDPI, etc. You are allowed (but not
+        required) to publish these articles (and the maps they contain) under an open license such as CC-BY as
+        is the case with PLoS journals and may be the case with other open access articles. ", length(wclim_files)), 
+    
+    rep("The data is available for free download (for non-commercial scientific, conservation and 
+        educational purposes).", length(wwf_files)), 
+    
+    rep("The Crown (or, where applicable, Ordnance Survey’s suppliers) owns the intellectual property rights 
+    in the data contained in this product. You are free to use the product on the terms of the Open 
+    Government Licence, but must acknowledge the source of the data by including the following attribution
+    statement: Contains Ordnance Survey data © Crown copyright and database right 2013. Additional data 
+    sourced from third parties, including public sector information licensed under the Open Government Licence v1.0.", 
+        length(ordsur_files)),
+    
+    rep("All versions of Natural Earth raster + vector map data found on this website are in the public domain. You may 
+        use the maps in any manner, including modifying the content and design, electronic dissemination, and offset
+        printing. The primary authors, Tom Patterson and Nathaniel Vaughn Kelso, and all other contributors renounce 
+        all financial claim to the maps and invites you to use them for personal, educational, and commercial purposes.
+        No permission is needed to use Natural Earth. Crediting the authors is unnecessary.", length(nacis_files)),
+    
+    rep("Use of the WOUDC data are governed by the World Meteorological Organization (WMO) data policy and WMO 
+    Global Atmosphere Watch (GAW) data use policy.
+
+World Meteorological Organization Data Policy
+The WMO facilitates the free and unrestricted exchange of data and information, products and services in real 
+or near-real time on matters relating to safety and security of society, economic welfare and the protection 
+of the environment.
+
+Resolution 40 (Cg-XII): WMO policy and practice for the exchange of meteorological and related data and products
+including guidelines on the relationships in commercial meteorological activities.
+
+Global Atmosphere Watch Data Use Policy
+Use of data obtained from one of the WMO GAW World Data Centres (WDC) is subject to the following statement 
+endorsed by the WMO Executive Council and the Commission for Atmospheric Sciences (EC/CAS) panel of experts
+working group on environmental pollution and atmospheric chemistry [WMO, 2001a].:
+
+WMO Policy Statement
+
+For scientific, educational and policy related use, access to these [GAW] data is unlimited and provided 
+without charge. By their use you accept that an offer of co-authorship will be made through personal 
+contact with the data providers or owners whenever substantial use is made of their data. In all cases, 
+an acknowledgment must be made to the data providers or owners and to the data centre when these data are
+used within a publication.
+Digital Object Identifiers (DOI)
+WOUDC has registered DOIs for both Ozone and UV data. DOIs are persistent identifiers that allow research 
+data to be accessible and citable. They make research data easier to access, reuse and verify, thereby 
+making it easier to build on previous work, conduct new research and avoid duplicating already existing work.
+
+WOUDC Digital Object Identifiers (first order)
+Ozone: doi:10.14287/10000001
+UV Radiation: doi:10.14287/10000002
+WOUDC Digital Object Identifiers (datasets)
+Total Ozone - Daily Observations: doi:10.14287/10000004
+Total Ozone - Hourly Observations: doi:10.14287/10000003
+Lidar: doi:10.14287/10000007
+OzoneSonde: doi:10.14287/10000008
+UmkehrN14 (Level 1.0): doi:10.14287/10000005
+UmkehrN14 (Level 2.0): doi:10.14287/10000006
+RocketSonde: doi:10.14287/10000009
+Broadband: doi:10.14287/10000012
+Multiband: doi:10.14287/10000010
+Spectral: doi:10.14287/10000011
+UV Index: doi:10.14287/10000013
+Publishing Data
+When publishing data retrieved from the WOUDC you are expected to acknowledge the contributors who
+author these data as the data source and the WOUDC, using the appropriate citation as per the example provided.
+
+Example (1): Citation for ozone data originating (contributed) from the Japan Meteorological Agency
+(JMA) and NASA (NASA-WFF) retrieved from the WOUDC site
+JMA, & NASA-WFF. World Meteorological Organization-Global Atmosphere Watch Program (WMO-GAW)/World 
+Ozone and Ultraviolet Radiation Data Centre (WOUDC) [Data]. Retrieved October 24, 2013, from 
+https://woudc.org. doi:10.14287/10000001
+Example (2): Citation for data originating (contributed) from a large number of organizations 
+retrieved from the WOUDC site
+a) WMO/GAW Ozone Monitoring Community, World Meteorological Organization-Global Atmosphere Watch
+Program (WMO-GAW)/World Ozone and Ultraviolet Radiation Data Centre (WOUDC) [Data]. Retrieved October 24, 2013, 
+from https://woudc.org. A list of all contributors is available on the website. doi:10.14287/10000001
+b) WMO/GAW UV Radiation Monitoring Community, World Meteorological Organization-Global Atmosphere 
+Watch Program (WMO-GAW)/World Ozone and Ultraviolet Radiation Data Centre (WOUDC) [Data]. 
+Retrieved October 24, 2013, from https://woudc.org. A list of all contributors is available 
+on the website. doi:10.14287/10000002
+For a complete list of all contributors refer to the contributor list.
+
+Publishing Products
+When publishing products extracted from WOUDC such as graphs, lists, maps or metadata you are expected 
+to acknowledge the WOUDC, as the data and produce source, using the appropriate citation, as per the example provided.
+
+Example (3): Citation for products originating from the WOUDC site
+Environment and Climate Change Canada, Toronto (n.d.). World Meteorological Organization-Global 
+        Atmosphere Watch Program (WMO-GAW)/World Ozone and Ultraviolet Radiation Data Centre (WOUDC). 
+        Retrieved October 24, 2013, from https://woudc.org.", length(woudc_files))
+   )
 )
-write.csv(df_source, "source_data.csv")
+
+# Write data frame to file
+write.csv(df_source, "out/source_data_info.csv")
+
+
