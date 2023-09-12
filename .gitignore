@@ -187,3 +187,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 src/database/prod.env
+*.gpkg
