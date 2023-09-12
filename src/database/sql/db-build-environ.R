@@ -14,11 +14,6 @@ setwd(file.path(dirname(rstudioapi::getSourceEditorContext()$path), '..', '..', 
 
 # define directories
 sqldir = file.path('src', 'database', 'sql')
-initdir = file.path('src', 'database', 'sql', 'init_data')
-nutsdir = file.path('out', 'nuts', 'data')
-gadmdir = file.path('out', 'gadm', 'data')
-oecddir = file.path('out', 'oecd', 'data')
-estatdir = file.path('out', 'eurostat', 'data')
 orddir = file.path('out', 'ordnance', 'data')
 wwldir = file.path('out', 'worldwildlife', 'data')
 nacisdir = file.path('out', 'nacis', 'data')
