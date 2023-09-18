@@ -1,6 +1,9 @@
 if ("rvest" %in% rownames(installed.packages()) == FALSE) { install.packages("rvest")}
+if ("progress" %in% rownames(installed.packages()) == FALSE) { install.packages("progress")}
+
 library(httr)
 library(rvest)
+library(progress)
 
 complete_url <- function(base, path){
   return(paste0(base, path))
@@ -33,10 +36,14 @@ get_file_urls <- function (catalogue_file, base_url, base_path) {
 }
 
 download_data <- function (file_urls, outdir, access_token) {
+  pb <- progress_bar$new(format = "[:bar] :current/:total (:percent)", total = length(file_urls))
   for (i in 1:length(file_urls)) {
-    filename <-  tail(strsplit(file_urls[i], '/')[[1]], n = 1) # Keep original filename
-
-    # Write file to disk (authenticating with netrc) using the current directory/filename
-    response <- httr::GET(file_urls[i], add_headers(Authorization = paste('Bearer', access_token)), write_disk(file.path(outdir, filename), overwrite = TRUE), progress())
+    filename <-  tail(strsplit(file_urls[i], '/')[[1]], n = 1)
+    
+    if (!file.exists(file.path(outdir, filename))) {
+      # Write file to disk using the current directory/filename
+      response <- httr::GET(file_urls[i], add_headers(Authorization = paste('Bearer', access_token)), write_disk(file.path(outdir, filename), overwrite = TRUE))
+    }
+    pb$tick()
   }
 }
