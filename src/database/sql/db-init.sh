@@ -2100,6 +2100,19 @@ CREATE TABLE IF NOT EXISTS wc2.1_30s_tmin_12(
       minimum_temperature INT
     );
     GRANT SELECT ON wc2.1_30s_tmin_12 TO reader;
+CREATE TABLE IF NOT EXISTS earthdata_vnp46a4 (
+    year INTEGER,
+    composite FLOAT8,
+    num INTEGER,
+    quality INTEGER,
+    std FLOAT8,
+    snow BOOLEAN,
+    angle TEXT,
+    mask INTEGER,
+    platform INTEGER,
+    geom GEOGRAPHY(POINT, 4326)
+);
+GRANT SELECT ON earthdata_vnp46a4 TO reader;
 
 "
 psql -U $POSTGRES_USER -d $POSTGRES_DB -c \
