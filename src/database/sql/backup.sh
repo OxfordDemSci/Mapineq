@@ -4,7 +4,7 @@
 # restore using:  pg_restore -Fc --clean --host=localhost --username=postgres --dbname=dgg /research/backup/mapineq_db/mapineq.dump
 
 # backup directory
-base_dir=/research/backup/mapineq_db
+base_dir=~/ndph/J/backup/mapineq_db
 past_backups=($(ls ${base_dir}))
 current_date=$(date +"%Y%m%d")
 backup_dir=${base_dir}/${current_date}
