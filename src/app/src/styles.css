@@ -1,0 +1,27 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+
+:root {
+  --app-height: 100vh;
+  /*
+  --app-height: -webkit-fill-available;
+  */
+  --toolbar-top-height: 64px;
+  /*
+  --page-content-height: calc(100vh - var(--toolbar-top-height));
+  */
+  --page-content-height: calc(var(--app-height) - var(--toolbar-top-height));
+  --tab-header-height: 76px;
+  /*
+  --tab-content-height: calc(100vh - var(--toolbar-top-height) - var(--tab-header-height) + 2em)
+  */
+  --tab-content-height: calc(var(--app-height) - var(--toolbar-top-height) - var(--tab-header-height) + 2em);
+
+  --map-title-color: rgba(0,0,0,1);
+  --map-title-color-shadow: rgba(255,255,255,1);
+
+}

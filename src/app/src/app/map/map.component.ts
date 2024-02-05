@@ -1,0 +1,269 @@
+import {AfterViewInit, Component, OnInit} from '@angular/core';
+import Map from 'ol/Map';
+import View from 'ol/View';
+import TileLayer from 'ol/layer/Tile';
+import OSM from 'ol/source/OSM';
+import {transform} from "ol/proj";
+import {NutsLayer} from "../layers/nuts-layer";
+import { BirthsLayer } from '../layers/births-layer';
+import { Chart } from 'chart.js/auto';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
+import {FeatureService} from "../feature.service";
+import { Overlay} from "ol";
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+
+interface Area {
+  nuts_id: string;
+  name: string;
+}
+
+@Component({
+  selector: 'app-map',
+  templateUrl: './map.component.html',
+  standalone: true,
+  imports: [MatSelectModule, MatFormFieldModule, CommonModule, MatIconModule],
+  styleUrls: ['./map.component.css']
+})
+export class MapComponent implements OnInit, AfterViewInit {
+
+  map: Map | undefined;
+
+  nutsLayer: any;
+  birthsLayer: any;
+
+  years: number[] = [];
+  selectedYear = 2015;
+
+  tables: string[] = [];
+  selectedTable: string = 'unemployment';
+
+  area: string = '';
+  chart: any;
+
+  info = document.getElementById('info');
+  currentFeature: any;
+  areas: Area[] = [];
+
+  legenditems: any[] = [];
+
+  constructor(private featureService: FeatureService) {
+  }
+
+  ngOnInit(): void {
+    // nr_births
+    // for (let i = 1991; i < 2022; i++) {
+    //   this.years.push(i);
+    //   //this.years.push(1992);
+    // }
+    //unemployment
+    for (let i = 2011; i < 2022; i++) {
+      this.years.push(i);
+      //this.years.push(1992);
+    }
+    this.tables.push('unemployment');
+    this.tables.push('peopledensity');
+
+  } // END ngOnInit
+
+  ngAfterViewInit(): void {
+
+    this.initLayers();
+    this.initLegend();
+    this.activateYear(this.selectedYear.toString());
+    this.map = new Map({
+      view: new View({
+        center: transform([6.53601, 46.23808], 'EPSG:4326', 'EPSG:3857'),
+        zoom: 5,
+      }),
+      layers: this.getLayers(),
+      target: 'ol-map'
+    });
+    this.mouseclick();
+    this.mouseOver();
+    //this.addGraph();
+  } // END ngAfterViewInit
+
+
+  initLegend() {
+    for (let i =0; i<7; i++) {
+      let label = `${5*i}-${5*(i+1)}`;
+      let color = this.birthsLayer.getColor(5*i);
+      let legenditem = { 'label' : label, 'color' : color  }
+      this.legenditems.push(legenditem);
+    }
+
+  }
+
+
+
+  initLayers(): void {
+    this.nutsLayer = new NutsLayer("pgtileserv.percurban");
+    this.birthsLayer = new BirthsLayer("pgtileserv.unemployment");
+  }
+
+  mouseclick(): void {
+    this.map?.on('click', event => {
+      const feature = this.map?.forEachFeatureAtPixel(event.pixel, (feature) => feature);
+      if (feature) {
+        console.log('NUTS_ID', feature.getProperties()['NUTS_ID']);
+        this.area = feature.getProperties()['NUTS_NAME'] + ' (' + feature.getProperties()['NUTS_ID'] + ')';
+        let area = { 'nuts_id' : feature.getProperties()['NUTS_ID'], 'name' : feature.getProperties()['NUTS_NAME']};
+        this.areas.push(area);
+
+        this.updateGraph();
+      }
+    })
+  }
+
+  mouseOver(): void {
+    const tooltipContainer = document.getElementById('tooltip')!;
+    const tooltipContent = document.getElementById('tooltip-content')!;
+
+    const tooltip = new Overlay({
+      element: tooltipContainer,
+      autoPan: {
+        animation: {
+          duration: 250,
+        },
+      },
+    });
+    this.map?.addOverlay(tooltip);
+    let featureId = '';
+    this.map?.on('pointermove', (event) => {
+      const feature = this.map?.forEachFeatureAtPixel(event.pixel, (feature) => {
+        if (featureId === feature.get('NUTS_ID')) {
+          return feature;
+        };
+        featureId = feature.get('NUTS_ID');
+        // @ts-ignore
+        let coordinates = this.map?.getCoordinateFromPixel(event.pixel);
+        // @ts-ignore
+        tooltipContent.innerHTML = '<p>' + feature.get('NUTS_NAME') + ': ' + feature.get('entity') + '</p>';
+        tooltip.setPosition(coordinates);
+        return feature;
+      });
+      if (!feature && (featureId != '')) {
+        featureId = '';
+        tooltip.setPosition(undefined);
+      };
+    });
+  }
+
+
+  activateYear(year: string) {
+    this.birthsLayer.setYear(year);
+  }
+
+  private getLayers(): any[] {
+    return [
+      new TileLayer({
+        source: new OSM(),
+      }),
+      this.birthsLayer,
+    ]
+  }
+
+  selectChange(): void {
+    console.log('year', this.selectedYear);
+    this.activateYear(this.selectedYear.toString());
+  }
+
+  private addGraph(): void {
+    const ctx = document.getElementById('myChart');
+    // @ts-ignore
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['1990', '1991', '1992', '1993', '1994', '1995'],
+        datasets: [{
+          label: '# of births',
+          data: [34000, 19000, 30000, 50000, 20000, 30000],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+
+
+  private updateGraph() {
+    //let years = Array();
+    this.featureService.getFeatures(this.areas).subscribe((data) => {
+      //console.log('data=', data);
+      // data.features.forEach((feature: { [x: string]: any; })=> {
+      //   years.push(feature['properties']['year']);
+      // })
+      let years = data.features.map((xx: any) => {
+        return xx['properties']['year'];
+      });
+      let entities =  data.features.map((xx: any) => {
+        return xx['properties']['entity'];
+      });
+      console.log('entities', entities);
+      let nuts_ids = this.areas.map((xx: any) => {
+        return  xx['nuts_id'] ;
+      });
+      nuts_ids.sort();
+      let datasets: { label: string; data: any; }[]= [];
+      nuts_ids.forEach((nuts_id, index) => {
+        console.log('nuts_id', nuts_id, index);
+        let start = index * (entities.length/nuts_ids.length);
+        let end =  (index+1) * (entities.length/nuts_ids.length) - 1;
+        console.log(start, '->', end);
+        let dataset = {
+          label: nuts_id,
+          data: entities.slice(start, end)
+        }
+        datasets.push(dataset);
+      })
+      console.log(datasets);
+      const ctx = document.getElementById('myChart');
+      // @ts-ignore
+      if (this.chart) {
+        this.chart.destroy();
+      }
+      // @ts-ignore
+      this.chart = new Chart(ctx, {
+
+        type: 'line',
+        data: {
+          labels: years.slice(0,11),
+          datasets: datasets
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    });
+  }
+
+
+  removeArea(nuts_id: string) {
+    console.log('remove ', nuts_id);
+    this.areas = this.areas.filter((item)=> {
+      return item.nuts_id != nuts_id;
+    });
+    console.log('new array', this.areas);
+    if (this.areas.length > 0) {
+      this.updateGraph();
+    }
+
+  }
+
+  selectTable() {
+    console.log('table=', this.selectedTable);
+
+  }
+}
