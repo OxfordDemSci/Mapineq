@@ -188,3 +188,4 @@ dmypy.json
 .pyre/
 src/database/prod.env
 *.gpkg
+/MapIneq.iml
