@@ -3,14 +3,19 @@ import {Fill, Stroke, Style, Text} from "ol/style";
 
 export class BirthsLayer extends BaseLayer {
 
-  constructor(table: string) {
+  constructor(table: string, maxvalue: number) {
     super({
       minZoom: 4,
       zIndex: 70
-    }, table);
-    this.setStyle(this.birthsStyle.bind(this));
+    }, table, maxvalue);
+    this.changeStyle();
     //this.setMapSource();
     this.setOpacity(0.8);
+  }
+
+
+  changeStyle() {
+    this.setStyle(this.birthsStyle.bind(this));
   }
 
   birthsStyle(feature: any) : Style {
@@ -36,7 +41,7 @@ export class BirthsLayer extends BaseLayer {
       //label = feature.get('entity').toString();
       nrbirths = feature.get('entity');
     }
-    let polygoon_color = this.getColor(nrbirths);
+    let polygoon_color = this.getColor(this.maxvalue, nrbirths);
     return new Style({
       stroke: new Stroke({
         width: 1,
@@ -63,12 +68,13 @@ export class BirthsLayer extends BaseLayer {
     });
   }
 
-  getColor(entity: number): string {
+  getColor(max: number | undefined, entity: number): string {
 
-    const max = 35/7;
+    // @ts-ignore
+    const divider = max/7;
     let colors = ['rgb(254,240,217)','rgb(253,212,158)','rgb(253,187,132)',
       'rgb(252,141,89)','rgb(239,101,72)','rgb(215,48,31)','rgb(153,0,0)'];
-    let index = Math.ceil(entity/max);
+    let index = Math.ceil(entity/divider);
     //console.log('index=',index);
     return colors[index];
   }

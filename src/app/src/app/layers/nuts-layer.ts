@@ -1,14 +1,15 @@
 import {BaseLayer} from "./base-layer";
 import {Fill, Stroke, Style, Text} from "ol/style";
+import {max} from "rxjs";
 
 export class NutsLayer extends BaseLayer {
 
 
-  constructor(table: string) {
+  constructor(table: string, maxvalue: number) {
     super({
       minZoom: 4,
       zIndex: 70
-    }, table);
+    }, table,maxvalue);
     this.setStyle(this.nutsStyle);
     this.setMapSource();
   }

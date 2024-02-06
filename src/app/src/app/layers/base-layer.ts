@@ -5,12 +5,13 @@ import {MVT} from "ol/format";
 export const vectorServer = "https://mapineqtiles.web.rug.nl/";
 export class BaseLayer extends VectorTileLayer {
 
-  table:string;
+  table: string;
+  maxvalue: number = 0;
 
-
-  constructor(options: {  minZoom?: number, maxZoom?: number, zIndex?: number }, table: string) {
+  constructor(options: {  minZoom?: number, maxZoom?: number, zIndex?: number }, table: string, maxvalue: number) {
     super(options);
     this.table = table;
+    this.maxvalue = maxvalue;
   }
 
   setMapSource() {
@@ -18,6 +19,13 @@ export class BaseLayer extends VectorTileLayer {
       format: new MVT(),
       url: vectorServer + this.table + "/{z}/{x}/{y}.pbf"
     }));
+  }
+
+  changeTable(table: string, year: string, maxvalue: number) {
+    this.table = table;
+    this.maxvalue = maxvalue;
+    this.setYear(year);
+
   }
 
   setYear(year: string) {

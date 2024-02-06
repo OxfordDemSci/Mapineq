@@ -7,7 +7,7 @@
 </div>
 
 <div id="graph" class="graph" [hidden]="areas.length === 0" >
-  <div><h3 style="text-align: center">Unemployment in %</h3></div>
+  <div><h3 style="text-align: center">{{selectedTable?.title}}</h3></div>
   <div class="graphlabel" *ngFor="let areax of areas"><mat-icon (click)="removeArea(areax.nuts_id)">delete_outline</mat-icon><span class="arealabel"> {{areax.name}} ({{ areax.nuts_id }})</span></div>
   <canvas id="myChart"></canvas>
 
@@ -15,7 +15,7 @@
 
 <div id="legend" class="legend">
   <div class="title">Legend</div>
-  <div>Unemployment in % </div>
+  <div>{{ selectedTable?.title }}</div>
   <div *ngFor="let legenditem of legenditems">
     <table>
       <tr>
@@ -50,7 +50,7 @@
       <mat-label>table</mat-label>
       <mat-select [(value)]="selectedTable" (selectionChange)="selectTable()">
         @for (table of tables; track table) {
-          <mat-option [value]="table">{{table}}</mat-option>
+          <mat-option [value]="table">{{table.title}}</mat-option>
         }
       </mat-select>
     </mat-form-field>

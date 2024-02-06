@@ -19,6 +19,14 @@ interface Area {
   name: string;
 }
 
+interface DataSource {
+  table: string;
+  title: string;
+  startyear: number;
+  endyear: number;
+  maxvalue: number;
+}
+
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -36,8 +44,8 @@ export class MapComponent implements OnInit, AfterViewInit {
   years: number[] = [];
   selectedYear = 2015;
 
-  tables: string[] = [];
-  selectedTable: string = 'unemployment';
+  tables: DataSource[] = [];
+  selectedTable?: DataSource;
 
   area: string = '';
   chart: any;
@@ -62,15 +70,15 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.years.push(i);
       //this.years.push(1992);
     }
-    this.tables.push('unemployment');
-    this.tables.push('peopledensity');
-
+    this.tables.push({'table': 'unemployment', 'title' : 'Unemployment %', 'startyear': 2011, 'endyear' : 2022, 'maxvalue': 35});
+    this.tables.push({'table': 'peopledensity', 'title' : 'Population Density', 'startyear': 1990, 'endyear' : 2022, 'maxvalue': 1000});
+    this.selectedTable = this.tables[0];
   } // END ngOnInit
 
   ngAfterViewInit(): void {
 
     this.initLayers();
-    this.initLegend();
+    this.changeLegend();
     this.activateYear(this.selectedYear.toString());
     this.map = new Map({
       view: new View({
@@ -86,10 +94,13 @@ export class MapComponent implements OnInit, AfterViewInit {
   } // END ngAfterViewInit
 
 
-  initLegend() {
+  changeLegend() {
+    this.legenditems = [];
+    // @ts-ignore
+    let legendstep = this.selectedTable?.maxvalue/7
     for (let i =0; i<7; i++) {
-      let label = `${5*i}-${5*(i+1)}`;
-      let color = this.birthsLayer.getColor(5*i);
+      let label = `${Math.round(legendstep*i)}-${Math.round(legendstep*(i+1))}`;
+      let color = this.birthsLayer.getColor(this.selectedTable?.maxvalue, legendstep*i);
       let legenditem = { 'label' : label, 'color' : color  }
       this.legenditems.push(legenditem);
     }
@@ -99,8 +110,9 @@ export class MapComponent implements OnInit, AfterViewInit {
 
 
   initLayers(): void {
-    this.nutsLayer = new NutsLayer("pgtileserv.percurban");
-    this.birthsLayer = new BirthsLayer("pgtileserv.unemployment");
+    //this.nutsLayer = new NutsLayer("pgtileserv.percurban");
+    // @ts-ignore
+    this.birthsLayer = new BirthsLayer("pgtileserv.unemployment", this.selectedTable.maxvalue);
   }
 
   mouseclick(): void {
@@ -196,7 +208,8 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   private updateGraph() {
     //let years = Array();
-    this.featureService.getFeatures(this.areas).subscribe((data) => {
+    // @ts-ignore
+    this.featureService.getFeatures(this.areas, this.selectedTable.table).subscribe((data) => {
       //console.log('data=', data);
       // data.features.forEach((feature: { [x: string]: any; })=> {
       //   years.push(feature['properties']['year']);
@@ -212,11 +225,12 @@ export class MapComponent implements OnInit, AfterViewInit {
         return  xx['nuts_id'] ;
       });
       nuts_ids.sort();
+      let end = 0;
       let datasets: { label: string; data: any; }[]= [];
       nuts_ids.forEach((nuts_id, index) => {
         console.log('nuts_id', nuts_id, index);
         let start = index * (entities.length/nuts_ids.length);
-        let end =  (index+1) * (entities.length/nuts_ids.length) - 1;
+        end =  (index+1) * (entities.length/nuts_ids.length) - 1;
         console.log(start, '->', end);
         let dataset = {
           label: nuts_id,
@@ -231,11 +245,14 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.chart.destroy();
       }
       // @ts-ignore
+      let number_of_years = (this.selectedTable.endyear - this.selectTable.startyear);
+      console.log('number_of_years', number_of_years);
+      // @ts-ignore
       this.chart = new Chart(ctx, {
 
         type: 'line',
         data: {
-          labels: years.slice(0,11),
+          labels: years.slice(0,end/datasets.length),
           datasets: datasets
         },
         options: {
@@ -264,6 +281,9 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   selectTable() {
     console.log('table=', this.selectedTable);
-
+    // @ts-ignore
+    this.birthsLayer.changeTable('pgtileserv.' + this.selectedTable?.table, this.selectedYear.toString(), this.selectedTable.maxvalue);
+    this.birthsLayer.changeStyle();
+    this.changeLegend();
   }
 }
