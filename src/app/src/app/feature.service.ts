@@ -23,7 +23,7 @@ export class FeatureService {
     nuts_ids.sort();
     let nutsstring  = nuts_ids.join(',');
     console.log('nutsstring',nutsstring)
-    return this.httpClient.get<string>(`${this.baseUrl}${table}/items.json?filter=NUTS_ID in (${nutsstring})&properties=year,entity&limit=500`).pipe(
+    return this.httpClient.get<string>(`${this.baseUrl}${table}/items.json?filter=nuts_id in (${nutsstring})&limit=500`).pipe(
       tap((result) => {
         //console.log(result);
       }),
