@@ -205,28 +205,17 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
   }
 
-
   private updateGraph() {
     //let years = Array();
     // @ts-ignore
     this.featureService.getFeatures(this.areas, this.selectedTable.table).subscribe((data) => {
-      //console.log('data=', data);
-      // data.features.forEach((feature: { [x: string]: any; })=> {
-      //   years.push(feature['properties']['year']);
-      // })
       let allyears = data.features.map((xx: any) => {
         return xx['properties']['year'];
       });
       let years = allyears.filter((value: any, index: number, array: string | any[]) => array.indexOf(value) === index).sort();
-      console.log('years', years);
-      let entities =  data.features.map((xx: any) => {
-        return xx['properties']['entity'];
-      });
-      console.log('entities', entities);
       let properties =  data.features.map((xx: any) => {
         return xx['properties'];
       });
-      console.log('properties', properties);
       let nuts_ids = this.areas.map((xx: any) => {
         return  xx['nuts_id'] ;
       });
@@ -244,16 +233,13 @@ export class MapComponent implements OnInit, AfterViewInit {
         let dataset = { label: nuts_id, data: data};
         datasets.push(dataset);
       })
-      console.log('datasets=',datasets);
       const ctx = document.getElementById('myChart');
       // @ts-ignore
       if (this.chart) {
         this.chart.destroy();
       }
-
       // @ts-ignore
       this.chart = new Chart(ctx, {
-
         type: 'line',
         data: {
           labels: years,
