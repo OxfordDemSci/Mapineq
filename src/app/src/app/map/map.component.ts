@@ -73,12 +73,14 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.tables.push({'table': 'unemployment', 'title' : 'Unemployment %', 'startyear': 2011, 'endyear' : 2022, 'maxvalue': 35});
     this.tables.push({'table': 'peopledensity', 'title' : 'Population Density', 'startyear': 1990, 'endyear' : 2022, 'maxvalue': 1000});
     this.selectedTable = this.tables[0];
+    this.initLayers();
+    this.changeLegend();
   } // END ngOnInit
 
   ngAfterViewInit(): void {
 
-    this.initLayers();
-    this.changeLegend();
+
+
     this.activateYear(this.selectedYear.toString());
     this.map = new Map({
       view: new View({
@@ -99,7 +101,10 @@ export class MapComponent implements OnInit, AfterViewInit {
     // @ts-ignore
     let legendstep = this.selectedTable?.maxvalue/7
     for (let i =0; i<7; i++) {
-      let label = `${Math.round(legendstep*i)}-${Math.round(legendstep*(i+1))}`;
+      let label = `${Math.round(legendstep*i)}`;
+      if (i<6) {
+        label += `-${Math.round(legendstep*(i+1))}`;
+      }
       let color = this.birthsLayer.getColor(this.selectedTable?.maxvalue, legendstep*i);
       let legenditem = { 'label' : label, 'color' : color  }
       this.legenditems.push(legenditem);
@@ -209,30 +214,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     //let years = Array();
     // @ts-ignore
     this.featureService.getFeatures(this.areas, this.selectedTable.table).subscribe((data) => {
-      let allyears = data.features.map((xx: any) => {
-        return xx['properties']['year'];
-      });
-      let years = allyears.filter((value: any, index: number, array: string | any[]) => array.indexOf(value) === index).sort();
-      let properties =  data.features.map((xx: any) => {
-        return xx['properties'];
-      });
-      let nuts_ids = this.areas.map((xx: any) => {
-        return  xx['nuts_id'] ;
-      });
-      nuts_ids.sort();
-      let end = 0;
-      let datasets: { label: string; data: any; }[]= [];
-      nuts_ids.forEach((nuts_id, index) => {
-        console.log('nuts_id', nuts_id, index);
-        let areadata = properties.filter((property: { nuts_id: any; }) => {
-          return property.nuts_id === nuts_id;
-        })
-        let data = areadata.map((row: any) => {
-          return { x: row.year, y : row.entity}
-        });
-        let dataset = { label: nuts_id, data: data};
-        datasets.push(dataset);
-      })
+      let {years, datasets} = this.extracted(data);
       const ctx = document.getElementById('myChart');
       // @ts-ignore
       if (this.chart) {
@@ -256,6 +238,34 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
   }
 
+
+  private extracted(data: any) {
+    let allyears = data.features.map((xx: any) => {
+      return xx['properties']['year'];
+    });
+    let years = allyears.filter((value: any, index: number, array: string | any[]) => array.indexOf(value) === index).sort();
+    let properties = data.features.map((xx: any) => {
+      return xx['properties'];
+    });
+    let nuts_ids = this.areas.map((xx: any) => {
+      return xx['nuts_id'];
+    });
+    nuts_ids.sort();
+    let end = 0;
+    let datasets: { label: string; data: any; }[] = [];
+    nuts_ids.forEach((nuts_id, index) => {
+      console.log('nuts_id', nuts_id, index);
+      let areadata = properties.filter((property: { nuts_id: any; }) => {
+        return property.nuts_id === nuts_id;
+      })
+      let data = areadata.map((row: any) => {
+        return {x: row.year, y: row.entity}
+      });
+      let dataset = {label: nuts_id, data: data};
+      datasets.push(dataset);
+    })
+    return {years, datasets};
+  }
 
   removeArea(nuts_id: string) {
     console.log('remove ', nuts_id);
