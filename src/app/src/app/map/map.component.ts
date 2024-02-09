@@ -214,13 +214,19 @@ export class MapComponent implements OnInit, AfterViewInit {
       // data.features.forEach((feature: { [x: string]: any; })=> {
       //   years.push(feature['properties']['year']);
       // })
-      let years = data.features.map((xx: any) => {
+      let allyears = data.features.map((xx: any) => {
         return xx['properties']['year'];
       });
+      let years = allyears.filter((value: any, index: number, array: string | any[]) => array.indexOf(value) === index).sort();
+      console.log('years', years);
       let entities =  data.features.map((xx: any) => {
         return xx['properties']['entity'];
       });
       console.log('entities', entities);
+      let properties =  data.features.map((xx: any) => {
+        return xx['properties'];
+      });
+      console.log('properties', properties);
       let nuts_ids = this.areas.map((xx: any) => {
         return  xx['nuts_id'] ;
       });
@@ -229,30 +235,28 @@ export class MapComponent implements OnInit, AfterViewInit {
       let datasets: { label: string; data: any; }[]= [];
       nuts_ids.forEach((nuts_id, index) => {
         console.log('nuts_id', nuts_id, index);
-        let start = index * (entities.length/nuts_ids.length);
-        end =  (index+1) * (entities.length/nuts_ids.length) - 1;
-        console.log(start, '->', end);
-        let dataset = {
-          label: nuts_id,
-          data: entities.slice(start, end)
-        }
+        let areadata = properties.filter((property: { nuts_id: any; }) => {
+          return property.nuts_id === nuts_id;
+        })
+        let data = areadata.map((row: any) => {
+          return { x: row.year, y : row.entity}
+        });
+        let dataset = { label: nuts_id, data: data};
         datasets.push(dataset);
       })
-      console.log(datasets);
+      console.log('datasets=',datasets);
       const ctx = document.getElementById('myChart');
       // @ts-ignore
       if (this.chart) {
         this.chart.destroy();
       }
-      // @ts-ignore
-      let number_of_years = (this.selectedTable.endyear - this.selectTable.startyear);
-      console.log('number_of_years', number_of_years);
+
       // @ts-ignore
       this.chart = new Chart(ctx, {
 
         type: 'line',
         data: {
-          labels: years.slice(0,end/datasets.length),
+          labels: years,
           datasets: datasets
         },
         options: {
@@ -280,7 +284,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   selectTable() {
-    console.log('table=', this.selectedTable);
+
     // @ts-ignore
     this.birthsLayer.changeTable('pgtileserv.' + this.selectedTable?.table, this.selectedYear.toString(), this.selectedTable.maxvalue);
     this.birthsLayer.changeStyle();
