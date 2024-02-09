@@ -119,9 +119,9 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.map?.on('click', event => {
       const feature = this.map?.forEachFeatureAtPixel(event.pixel, (feature) => feature);
       if (feature) {
-        console.log('NUTS_ID', feature.getProperties()['NUTS_ID']);
-        this.area = feature.getProperties()['NUTS_NAME'] + ' (' + feature.getProperties()['NUTS_ID'] + ')';
-        let area = { 'nuts_id' : feature.getProperties()['NUTS_ID'], 'name' : feature.getProperties()['NUTS_NAME']};
+        console.log('NUTS_ID', feature.getProperties()['nuts_id']);
+        this.area = feature.getProperties()['nuts_name'] + ' (' + feature.getProperties()['nuts_id'] + ')';
+        let area = { 'nuts_id' : feature.getProperties()['nuts_id'], 'name' : feature.getProperties()['nuts_name']};
         this.areas.push(area);
 
         this.updateGraph();
@@ -145,14 +145,14 @@ export class MapComponent implements OnInit, AfterViewInit {
     let featureId = '';
     this.map?.on('pointermove', (event) => {
       const feature = this.map?.forEachFeatureAtPixel(event.pixel, (feature) => {
-        if (featureId === feature.get('NUTS_ID')) {
+        if (featureId === feature.get('nuts_id')) {
           return feature;
         };
-        featureId = feature.get('NUTS_ID');
+        featureId = feature.get('nuts_id');
         // @ts-ignore
         let coordinates = this.map?.getCoordinateFromPixel(event.pixel);
         // @ts-ignore
-        tooltipContent.innerHTML = '<p>' + feature.get('NUTS_NAME') + ': ' + feature.get('entity') + '</p>';
+        tooltipContent.innerHTML = '<p>' + feature.get('nuts_name') + ': ' + feature.get('entity') + '</p>';
         tooltip.setPosition(coordinates);
         return feature;
       });
