@@ -9,7 +9,7 @@ import { BirthsLayer } from '../layers/births-layer';
 import { Chart } from 'chart.js/auto';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
-import {FeatureService} from "../feature.service";
+import {FeatureService} from "../services/feature.service";
 import { Overlay} from "ol";
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
