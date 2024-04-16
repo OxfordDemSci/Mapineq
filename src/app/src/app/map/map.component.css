@@ -16,30 +16,6 @@
   border-radius: 5px;
 }
 
-.filter {
-  z-index:9998;
-  width: 220px;
-
-  right:10px;
-  top: 300px;
-  position: absolute;
-  background-color: rgba(255, 255, 255, .8);
-
-  border-radius: 5px;
-}
-
-
-.table {
-  z-index:9999;
-  width: 220px;
-
-  right:10px;
-  top: 72px;
-  position: absolute;
-  background-color: rgba(255, 255, 255, .8);
-
-  border-radius: 5px;
-}
 
 .legend {
 
@@ -59,15 +35,6 @@
   padding: 8px;
 }
 
-.title {
-  background-color: rgb(63, 81, 180);
-  color: white;
-  padding: 4px;
-  font-family: "Roboto Light", Verdana, serif;
-  border-radius: 5px 5px 0 0;
-  -moz-border-radius-topleft: 5px;
-  -moz-border-radius-topright: 5px;
-}
 
 .controls {
   /* Center child horizontally*/

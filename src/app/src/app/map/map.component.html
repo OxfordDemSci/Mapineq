@@ -26,36 +26,6 @@
   </div>
 </div>
 
-<div id="filter" class="filter">
-  <div class="title">Select year</div>
 
-  <div class="controls">
-    <mat-form-field>
-      <mat-label>year</mat-label>
-      <mat-select [(value)]="selectedYear" (selectionChange)="selectChange()">
-        @for (year of years; track year) {
-          <mat-option [value]="year">{{year}}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-  </div>
-
-</div>
-
-<div id="table" class="table">
-  <div class="title">Select table</div>
-
-  <div class="controls">
-    <mat-form-field>
-      <mat-label>table</mat-label>
-      <mat-select [(value)]="selectedTable" (selectionChange)="selectTable()">
-        @for (table of tables; track table) {
-          <mat-option [value]="table">{{table.title}}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-  </div>
-
-</div>
 
 

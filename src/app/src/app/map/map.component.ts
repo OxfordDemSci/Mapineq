@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
@@ -13,19 +13,13 @@ import {FeatureService} from "../services/feature.service";
 import { Overlay} from "ol";
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import {DataSource} from "../usercontrols/usercontrols.component";
 
 interface Area {
   nuts_id: string;
   name: string;
 }
 
-interface DataSource {
-  table: string;
-  title: string;
-  startyear: number;
-  endyear: number;
-  maxvalue: number;
-}
 
 @Component({
   selector: 'app-map',
@@ -34,18 +28,16 @@ interface DataSource {
   imports: [MatSelectModule, MatFormFieldModule, CommonModule, MatIconModule],
   styleUrls: ['./map.component.css']
 })
-export class MapComponent implements OnInit, AfterViewInit {
+export class MapComponent implements OnInit, AfterViewInit, OnChanges {
 
   map: Map | undefined;
 
   nutsLayer: any;
   birthsLayer: any;
 
-  years: number[] = [];
-  selectedYear = 2015;
+  @Input() selectedYear = 2015;
 
-  tables: DataSource[] = [];
-  selectedTable?: DataSource;
+  @Input() selectedTable?: DataSource;
 
   area: string = '';
   chart: any;
@@ -66,13 +58,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     //   //this.years.push(1992);
     // }
     //unemployment
-    for (let i = 2011; i < 2022; i++) {
-      this.years.push(i);
-      //this.years.push(1992);
-    }
-    this.tables.push({'table': 'unemployment', 'title' : 'Unemployment %', 'startyear': 2011, 'endyear' : 2022, 'maxvalue': 35});
-    this.tables.push({'table': 'peopledensity', 'title' : 'Population Density', 'startyear': 1990, 'endyear' : 2022, 'maxvalue': 1000});
-    this.selectedTable = this.tables[0];
+
     this.initLayers();
     this.changeLegend();
   } // END ngOnInit
@@ -158,13 +144,14 @@ export class MapComponent implements OnInit, AfterViewInit {
         let coordinates = this.map?.getCoordinateFromPixel(event.pixel);
         // @ts-ignore
         tooltipContent.innerHTML = '<p>' + feature.get('nuts_name') + ': ' + feature.get('entity') + '</p>';
+        //tooltipContent.innerHTML += '<p>' + feature.get('nuts_name') + ': ' + feature.get('entity1') + '</p>';
         tooltip.setPosition(coordinates);
         return feature;
       });
       if (!feature && (featureId != '')) {
         featureId = '';
         tooltip.setPosition(undefined);
-      };
+      }
     });
   }
 
@@ -182,10 +169,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     ]
   }
 
-  selectChange(): void {
-    console.log('year', this.selectedYear);
-    this.activateYear(this.selectedYear.toString());
-  }
+
 
   private addGraph(): void {
     const ctx = document.getElementById('myChart');
@@ -285,5 +269,30 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.birthsLayer.changeTable('pgtileserv.' + this.selectedTable?.table, this.selectedYear.toString(), this.selectedTable.maxvalue);
     this.birthsLayer.changeStyle();
     this.changeLegend();
+  }
+
+  selectYear(): void {
+    console.log('year', this.selectedYear);
+    this.activateYear(this.selectedYear.toString());
+  }
+
+
+  ngOnChanges(changes: SimpleChanges) {
+    // changes.prop contains the old and the new value...
+    if (this.birthsLayer === undefined) {
+      return;
+    }
+    for (const propName in changes) {
+      const chng = changes[propName];
+      const cur  = JSON.stringify(chng.currentValue);
+      const prev = JSON.stringify(chng.previousValue);
+      console.log(`${propName}: currentValue = ${cur}, previousValue = ${prev}`);
+      if (propName === 'selectedTable') {
+        this.selectTable();
+      }
+      if (propName === 'selectedYear') {
+        this.selectYear();
+      }
+    }
   }
 }
