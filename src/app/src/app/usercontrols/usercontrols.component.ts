@@ -44,7 +44,8 @@ export class UsercontrolsComponent implements OnInit {
     }
     this.tables.push({'table': 'unemployment', 'title' : 'Unemployment %', 'startyear': 2011, 'endyear' : 2022, 'maxvalue': 35});
     this.tables.push({'table': 'peopledensity', 'title' : 'Population Density', 'startyear': 1990, 'endyear' : 2022, 'maxvalue': 1000});
-    this.tables.push({'table': 'xyplot', 'title' : 'X and Y', 'startyear': 1990, 'endyear' : 2022, 'maxvalue': 1000});
+    this.tables.push({'table': 'lifeexpectancy', 'title' : 'Life expectancy', 'startyear': 1990, 'endyear' : 2022, 'maxvalue': 90});
+    //this.tables.push({'table': 'xyplot', 'title' : 'X and Y', 'startyear': 1990, 'endyear' : 2022, 'maxvalue': 1000});
     this.selectedTable = this.tables[0];
 
   }
