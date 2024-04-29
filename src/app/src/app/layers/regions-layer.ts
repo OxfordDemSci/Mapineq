@@ -1,7 +1,7 @@
 import {BaseLayer} from "./base-layer";
 import {Fill, Stroke, Style, Text} from "ol/style";
 
-export class BirthsLayer extends BaseLayer {
+export class RegionsLayer extends BaseLayer {
 
   constructor(table: string, maxvalue: number) {
     super({
@@ -15,10 +15,10 @@ export class BirthsLayer extends BaseLayer {
 
 
   changeStyle() {
-    this.setStyle(this.birthsStyle.bind(this));
+    this.setStyle(this.Style.bind(this));
   }
 
-  birthsStyle(feature: any) : Style {
+  Style(feature: any) : Style {
     let label = ' ';
     if (feature.get('NUTS_NAME') !== undefined) {
       label = feature.get('NUTS_NAME');
@@ -27,21 +27,17 @@ export class BirthsLayer extends BaseLayer {
     if (feature.get('id') !== undefined) {
       label += ' (' + feature.get('id').toString() + ')';
     }
-    //console.log('zoomlevel inside buildingStyle', this.getMapInternal().getView().getZoom());
-    // @ts-ignore
-    // if ( this.getMapInternal()!.getView().getZoom() < 17.2 || this.getMapInternal()!.getView().getZoom() > 18 ) {
-    //   label = '';
-    // }
+
     let transparency = 0;
     //console.log(feature.get('perc_urban'));
-    let nrbirths = 0;
+    let entity = 0;
     if (feature.get('entity')  !== undefined) {
       //transparency =  (+feature.get('perc_urban'))/100.0;
       //console.log('feature.get(\'entity\')', feature.get('entity'));
       //label = feature.get('entity').toString();
-      nrbirths = feature.get('entity');
+      entity = feature.get('entity');
     }
-    let polygoon_color = this.getColor(this.maxvalue, nrbirths);
+    let polygoon_color = this.getColor(this.maxvalue, entity);
     return new Style({
       stroke: new Stroke({
         width: 1,

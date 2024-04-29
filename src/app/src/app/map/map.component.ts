@@ -4,8 +4,8 @@ import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import {transform} from "ol/proj";
-import {NutsLayer} from "../layers/nuts-layer";
-import { BirthsLayer } from '../layers/births-layer';
+
+import { RegionsLayer } from '../layers/regions-layer';
 
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
@@ -73,7 +73,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
     this.activateYear(this.selectedYear.toString());
     this.map = new Map({
       view: new View({
-        center: transform([6.53601, 46.23808], 'EPSG:4326', 'EPSG:3857'),
+        center: transform([6.53601, 48.23808], 'EPSG:4326', 'EPSG:3857'),
         zoom: 5,
       }),
       layers: this.getLayers(),
@@ -106,7 +106,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
   initLayers(): void {
     //this.nutsLayer = new NutsLayer("pgtileserv.percurban");
     // @ts-ignore
-    this.birthsLayer = new BirthsLayer("pgtileserv.unemployment", this.selectedTable.maxvalue);
+    this.birthsLayer = new RegionsLayer("pgtileserv.unemployment", this.selectedTable.maxvalue);
   }
 
   mouseclick(): void {
