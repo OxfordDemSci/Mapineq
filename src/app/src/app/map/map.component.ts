@@ -6,7 +6,7 @@ import OSM from 'ol/source/OSM';
 import {transform} from "ol/proj";
 import {NutsLayer} from "../layers/nuts-layer";
 import { BirthsLayer } from '../layers/births-layer';
-import { Chart } from 'chart.js/auto';
+
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {FeatureService} from "../services/feature.service";
@@ -14,8 +14,10 @@ import { Overlay} from "ol";
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import {DataSource} from "../usercontrols/usercontrols.component";
+import {GraphComponent} from "../graph/graph.component";
 
-interface Area {
+
+export interface Area {
   nuts_id: string;
   name: string;
 }
@@ -25,7 +27,7 @@ interface Area {
   selector: 'app-map',
   templateUrl: './map.component.html',
   standalone: true,
-  imports: [MatSelectModule, MatFormFieldModule, CommonModule, MatIconModule],
+  imports: [MatSelectModule, MatFormFieldModule, CommonModule, MatIconModule, GraphComponent],
   styleUrls: ['./map.component.css']
 })
 export class MapComponent implements OnInit, AfterViewInit, OnChanges {
@@ -40,7 +42,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() selectedTable?: DataSource;
 
   area: string = '';
-  chart: any;
+
+  newarea?: Area;
 
   info = document.getElementById('info');
   currentFeature: any;
@@ -114,8 +117,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
         this.area = feature.getProperties()['nuts_name'] + ' (' + feature.getProperties()['nuts_id'] + ')';
         let area = { 'nuts_id' : feature.getProperties()['nuts_id'], 'name' : feature.getProperties()['nuts_name']};
         this.areas.push(area);
-
-        this.updateGraph();
+        //console.log('areas', this.areas);
+        this.newarea= area;
+        //this.updateGraph();
       }
     })
   }
@@ -171,97 +175,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
 
 
 
-  private addGraph(): void {
-    const ctx = document.getElementById('myChart');
-    // @ts-ignore
-    new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: ['1990', '1991', '1992', '1993', '1994', '1995'],
-        datasets: [{
-          label: '# of births',
-          data: [34000, 19000, 30000, 50000, 20000, 30000],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    });
-  }
-
-  private updateGraph() {
-    //let years = Array();
-    // @ts-ignore
-    this.featureService.getFeatures(this.areas, this.selectedTable.table).subscribe((data) => {
-      let {years, datasets} = this.extracted(data);
-      const ctx = document.getElementById('myChart');
-      // @ts-ignore
-      if (this.chart) {
-        this.chart.destroy();
-      }
-      // @ts-ignore
-      this.chart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: years,
-          datasets: datasets
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          }
-        }
-      });
-    });
-  }
 
 
-  private extracted(data: any) {
-    let allyears = data.features.map((xx: any) => {
-      return xx['properties']['year'];
-    });
-    let years = allyears.filter((value: any, index: number, array: string | any[]) => array.indexOf(value) === index).sort();
-    let properties = data.features.map((xx: any) => {
-      return xx['properties'];
-    });
-    let nuts_ids = this.areas.map((xx: any) => {
-      return xx['nuts_id'];
-    });
-    nuts_ids.sort();
-    let end = 0;
-    let datasets: { label: string; data: any; }[] = [];
-    nuts_ids.forEach((nuts_id, index) => {
-      console.log('nuts_id', nuts_id, index);
-      let areadata = properties.filter((property: { nuts_id: any; }) => {
-        return property.nuts_id === nuts_id;
-      })
-      let data = areadata.map((row: any) => {
-        return {x: row.year, y: row.entity}
-      });
-      let dataset = {label: nuts_id, data: data};
-      datasets.push(dataset);
-    })
-    return {years, datasets};
-  }
-
-  removeArea(nuts_id: string) {
-    console.log('remove ', nuts_id);
-    this.areas = this.areas.filter((item)=> {
-      return item.nuts_id != nuts_id;
-    });
-    console.log('new array', this.areas);
-    if (this.areas.length > 0) {
-      this.updateGraph();
-    }
-
-  }
 
   selectTable() {
 
