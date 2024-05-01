@@ -2,3 +2,252 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+
+
+
+
+:root {
+    --app-height: 100vh;
+    --toolbar-top-height: 64px;
+    --page-content-height: calc(var(--app-height) - var(--toolbar-top-height));
+    --tab-header-height: 76px;
+    --tab-content-height: calc(var(--app-height) - var(--toolbar-top-height) - var(--tab-header-height) + 2em);
+
+    --map-title-color: rgba(0,0,0,1);
+    --map-title-color-shadow: rgba(255,255,255,1);
+
+    --page-with-footer-content-height: calc(var(--app-height) - var(--toolbar-top-height) - var(--toolbar-top-height));
+
+    --select-cell-width: 100%;
+}
+
+@media only screen and (max-width: 599px) {
+    :root {
+        --toolbar-top-height: 56px;
+    }
+}
+
+
+
+/* TOOLBAR */
+.app-toolbar {
+    position: sticky;
+    position: -webkit-sticky; /* For macOS/iOS Safari */
+    top: 0; /* Sets the sticky toolbar to be on top */
+    z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
+}
+
+
+
+
+/* WIDE and NARROW screen ... */
+@media only screen and (max-width: 600px) {
+    .onlyWideScreen {
+        display: none !important;
+    }
+}
+@media only screen and (min-width: 601px) {
+    .onlyNarrowScreen {
+        display: none !important;
+    }
+}
+
+
+
+/* STYLES page content */
+
+
+.pageContainerDivNoPadding {
+    height: var(--page-content-height);
+    overflow: auto;
+    /*background-color: rgba(255,128,0,0.75);*/
+}
+
+.pageContainerDiv {
+    height: calc(var(--page-content-height) - 2em);
+    padding: 1em;
+    overflow: auto;
+    /*background-color: rgba(255,355,0,0.75);*/
+}
+
+#dialogComponentContent {
+    color: rgba(0,0,0,1) !important;
+}
+
+#dialogComponentContent .pageContainerDiv {
+    padding: 0px;
+    height: auto;
+}
+
+
+.tabContainerDivNoPadding {
+    height: var(--tab-content-height);
+    overflow: auto;
+    /*background-color: rgba(0,128,0,0.5);*/
+}
+
+.tabContainerDiv {
+    padding: 1em;
+    height: calc(var(--tab-content-height) - 2em);
+    overflow: auto;
+    /*background-color: rgba(0,128,0,0.5);*/
+}
+
+.pageContainerDiv > div,
+.pageContainerDiv > div > div,
+.tabContainerDiv > div,
+.tabContainerDiv > div > div {
+    margin-bottom: 1em;
+}
+
+.matIconInText {
+    font-size: inherit;
+    width: auto !important;
+    height: auto !important;
+}
+
+
+
+
+
+
+.mat-mdc-list-item-icon {
+    color: rgba(0, 0, 0, 1) !important;
+}
+
+.page-tab-label-container {
+    /* background-color: rgb(0,0,255,0.5); */
+}
+.page-tab-label-icon {
+    display: block;
+    text-align: center;
+}
+.page-tab-label-text {
+    display: block;
+    text-align: center;
+    font-size: 75%;
+}
+
+.page-tab-icon {
+    margin-right: 8px;
+}
+
+/* CSS om icon/text in actieve tab niet theme color (groen), maar zwart te maken */
+/* .mat-mdc-tab:not(.mat-mdc-tab-disabled).mdc-tab--active .mdc-tab__text-label, .mat-mdc-tab-link:not(.mat-mdc-tab-disabled).mdc-tab--active .mdc-tab__text-label */
+.mdc-tab--active .mdc-tab__text-label{
+    color: #000000 !important;
+}
+
+h2 {
+    margin-top: 1.5em !important;
+}
+
+.boldText {
+    font-weight: bold;
+}
+.boldHeader {
+    font-weight: bold;
+    font-size: 125%;
+    margin-bottom: 1em;
+}
+
+.linkLook, .linkLook:visited {
+    text-decoration: underline;
+    color: #dc002d;
+    cursor: pointer;
+}
+
+.divCentered {
+    text-align: center;
+}
+
+
+.formWhiteSpace {
+    height: 1em;
+}
+
+
+.map-container {
+    height: var(--page-content-height);
+}
+
+
+
+div.emptyDiv {
+    margin: 0;
+}
+
+.buttonsCentered {
+    text-align: center;
+}
+
+.buttonsRight {
+    text-align: right;
+}
+
+.mdc-button + .mdc-button {
+    margin-left: 8px;
+}
+
+
+/* .mat-form-field */
+.mat-mdc-form-field {
+    /*font-size: 14px;*/
+    width: 100%;
+}
+
+
+
+
+/* VERSION checker */
+.version_update {
+    align-content: center;
+    background-color: rgba(255,255,0,0.25);
+    padding: 0.5em;
+    border: 5px dashed rgba(255,0,0,1);
+}
+.version_bold {
+    font-weight: bold;
+}
+.version_small {
+    font-size: 75%;
+    font-style: italic;
+    /*text-align: center;*/
+}
+
+
+
+
+
+
+/* SELECTION LAYOUT */
+
+.selection-table:after {
+    display: table;
+    clear: both;
+    content: "";
+}
+.selection-cell {
+    box-sizing: border-box;
+    float: left;
+    width: var(--select-cell-width);
+    padding: 5px;
+}
+.selection-cell-header-image {
+    background-image: url('assets/img/selection_cell_header_img.png');
+    background-size: cover;
+}
+.selection-cell-map {
+    background-color: rgba(128,128,128,0.25);
+    height: 450px;
+}
+.selection-cell-map-container {
+    height: 100%;
+    width: 100%;
+}
+
+
+
+

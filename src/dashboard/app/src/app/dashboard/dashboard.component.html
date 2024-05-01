@@ -1,1 +1,27 @@
-<p>dashboard works!</p>
+<div>
+
+</div>
+
+
+<div class="selection-table">
+    <div class="selection-cell" *ngFor="let cell of cells; let mapNr = index;">
+        <mat-card class="example-card">
+            <mat-card-header>
+                <div mat-card-avatar class="selection-cell-header-image"></div>
+                <mat-card-title>{{cell.title}}</mat-card-title>
+                <mat-card-subtitle>{{cell.descr}}</mat-card-subtitle>
+
+            </mat-card-header>
+
+            <mat-card-content>
+                <div>
+                    {{cell.content}}
+                </div>
+
+            </mat-card-content>
+
+            <div class="selection-cell-map"><div class="selection-cell-map-container" [id]="('map_' + mapNr.toString())"></div></div>
+
+        </mat-card>
+    </div>
+</div>

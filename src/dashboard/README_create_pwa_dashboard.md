@@ -199,7 +199,7 @@ _NB volgende stappen vanuit directory `app/`, dus een map dieper dan waar deze r
     **BLOK6**
       "name": "HIER DE (lange) TITEL DIE JE DE APP WILT GEVEN",
       "short_name": "HIER DE (korte) TITEL",
-      "theme_color": "#ed217c",
+      "theme_color": "#003e5b",
       "background_color": "#ffffff",
     ```
 

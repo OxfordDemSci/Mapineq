@@ -12,7 +12,8 @@
         <mat-icon>home</mat-icon>
         Home
     </button>
-</mat-menu><router-outlet></router-outlet>
+</mat-menu>
+<router-outlet (window:resize)="onAppResize()"></router-outlet>
 <!--
 <app-messages></app-messages>
 -->

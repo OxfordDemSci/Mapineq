@@ -10,11 +10,15 @@ import {MatMenuModule} from "@angular/material/menu";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import {MatCardModule} from "@angular/material/card";
+import { SelectionCellComponent } from './selection-cell/selection-cell.component';
+// import {MatGridListModule} from "@angular/material/grid-list";
 
 @NgModule({
     declarations: [
         AppComponent,
-        DashboardComponent
+        DashboardComponent,
+        SelectionCellComponent
     ],
     imports: [
         BrowserModule,
@@ -22,7 +26,9 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
         MatToolbarModule,
         MatMenuModule,
         MatIconModule,
+        MatCardModule,
         MatButtonModule,
+        // MatGridListModule,
         ServiceWorkerModule.register('ngsw-worker.js', {
             enabled: !isDevMode(),
             // Register the ServiceWorker as soon as the application is stable
