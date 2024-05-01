@@ -128,20 +128,20 @@ _NB volgende stappen vanuit directory `app/`, dus een map dieper dan waar deze r
   // https://maketintsandshades.com/#003e5b
 
   $mat-cust: (
-    50: #e6f9ff,
-    100: #ccf2ff,
-    200: #b3ecff,
-    300: #99e6ff,
-    400: #80e0ff,
-    500: #66d9ff,
-    600: #4dd3ff,
-    700: #33cdff,
-    800: #1ac6ff,
-    900: #00c0ff,
-    A100: #e6f9ff, // 50
-    A200: #99e6ff, // 300
-    A400: #4dd3ff, // 600
-    A700: #00c0ff, // 900
+    50: #e6ecef,
+    100: #ccd8de,
+    200: #b3c5ce,
+    300: #99b2bd,
+    400: #809fad,
+    500: #668b9d,
+    600: #4d788c,
+    700: #33657c,
+    800: #1a516b,
+    900: #003e5b,
+    A100: #e6ecef, // 50
+    A200: #99b2bd, // 300
+    A400: #4d788c, // 600
+    A700: #003e5b, // 900
     WARN: #DD2222,
     contrast: (
       50: black,

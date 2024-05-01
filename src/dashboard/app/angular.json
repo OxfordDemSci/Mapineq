@@ -37,6 +37,8 @@
             ],
             "styles": [
               "src/custom-theme.scss",
+              "node_modules/material-icons/iconfont/material-icons.css",
+              "node_modules/roboto-fontface/css/roboto/roboto-fontface.css",
               "src/styles.css"
             ],
             "scripts": [],
@@ -51,8 +53,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
