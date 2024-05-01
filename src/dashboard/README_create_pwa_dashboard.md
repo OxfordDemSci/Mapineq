@@ -371,9 +371,9 @@ SCANNEN NOG NIET GEIMPLEMENTEERD (Sjoerd)
 
 
 * ***overige (Leaflet)***
-  * Mogelijk geeft eerste optie hieronder foutmelding, dan tweede proberen: 
-    * `@import "~leaflet/dist/leaflet.css";` toevoegen aan styles.css
-    * in `angular.json` aan styles toevoegen? tussen `"node_modules/roboto-fontface/css/roboto/roboto-fontface.css",` en `"src/styles.css"`
+  * Mogelijk geeft eerste optie hieronder foutmelding, dan tweede (b.) proberen: 
+    1. `@import "~leaflet/dist/leaflet.css";` toevoegen aan styles.css
+    2. in `angular.json` aan styles toevoegen? tussen `"node_modules/roboto-fontface/css/roboto/roboto-fontface.css",` en `"src/styles.css"`
 
       ``` 
         "node_modules/leaflet/dist/leaflet.css",
