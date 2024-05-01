@@ -14,7 +14,7 @@ en dan:
 `Which stylesheet format would you like to use? (Use arrow keys)` **CSS**
 
 (nieuw:)<br>
-`Do you want to enable Server-Side Rendering (SSR) and Static Site Generation (SSG/Prerendering)? (y/N)` **Y**
+`Do you want to enable Server-Side Rendering (SSR) and Static Site Generation (SSG/Prerendering)? (y/N)` **N**  ---  _DIT WILLEN WE **NIET**!!!_
 
 daarna:
 
@@ -59,7 +59,7 @@ _NB volgende stappen vanuit directory `app/`, dus een map dieper dan waar deze r
 
 * `ng add @angular/material` // kies _custom_, _y_ en bij vraag Include the Angular animations module? kies je _'Include and enable animations'_ (bovenste keuze), pas vervolgens custom-theme.scss aan zie **BLOK4** hieronder
 
-* `ng generate component home`
+* `ng generate component dashboard`
 
 
 
@@ -68,12 +68,12 @@ _NB volgende stappen vanuit directory `app/`, dus een map dieper dan waar deze r
   **BLOK1**
   import { NgModule } from '@angular/core';
   import { RouterModule, Routes } from '@angular/router';
-  import { HomeComponent } from './home/home.component';
+  import { DashboardComponent } from './dashboard/dashboard.component';
 
   const routes: Routes = [
-    { path: '', component: HomeComponent },
+    { path: '', component: DashboardComponent },
     // { path: 'map', component: MapComponent }
-    { path: '**', component: HomeComponent }
+    { path: '**', component: DashboardComponent }
   ];
   
   @NgModule({
