@@ -45,7 +45,7 @@ daarna:
   "build-prod ROOT": "node update_app_version_and_build.js  &&  ng build --configuration production",
   "build-prod + base=href": "node update_app_version_and_build.js  &&  ng build --configuration production --base-href /dashboard/",
   ````
-_NB volgende stappen vanuit directory waar deze readme staat._
+_NB volgende stappen vanuit directory `app/`, dus een map dieper dan waar deze readme staat._
 
 * `npm install --save @angular/material @angular/cdk @angular/animations`
 
@@ -125,6 +125,7 @@ _NB volgende stappen vanuit directory waar deze readme staat._
 
   // NA @include mat-core(); de onderstaande code tot aan '(...)'
   // https://maketintsandshades.com/#00c0ff
+  // https://maketintsandshades.com/#003e5b
 
   $mat-cust: (
     50: #e6f9ff,
