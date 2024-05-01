@@ -33,12 +33,18 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/leaflet/dist/images/",
+                "output": "./assets"
+              },
               "src/manifest.webmanifest"
             ],
             "styles": [
               "src/custom-theme.scss",
               "node_modules/material-icons/iconfont/material-icons.css",
               "node_modules/roboto-fontface/css/roboto/roboto-fontface.css",
+              "node_modules/leaflet/dist/leaflet.css",
               "src/styles.css"
             ],
             "scripts": []

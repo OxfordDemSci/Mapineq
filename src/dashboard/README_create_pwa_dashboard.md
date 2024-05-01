@@ -377,8 +377,6 @@ SCANNEN NOG NIET GEIMPLEMENTEERD (Sjoerd)
 
       ``` 
         "node_modules/leaflet/dist/leaflet.css",
-        "node_modules/material-icons/iconfont/material-icons.css",
-        "node_modules/roboto-fontface/css/roboto/roboto-fontface.css",
       ```  
   * toevoegen aan `angular.json` tussen "src/assets", en "src/manifest.webmanifest":
     ```

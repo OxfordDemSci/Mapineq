@@ -18,7 +18,8 @@ export class DashboardComponent {
     this.tableSelections = [
       {title: 'Aaa', descr: 'Description A', content: 'Content A'},
       {title: 'Bbb', descr: 'Description B', content: 'Content B'} /* /,
-      {title: 'Ccc', descr: 'Description C', content: 'Content C'} /* */
+      {title: 'Ccc', descr: 'Description C', content: 'Content C'} ,
+      {title: 'Ddd', descr: 'Description D', content: 'Content D'} /* */
     ];
 
 

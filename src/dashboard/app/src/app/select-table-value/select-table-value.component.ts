@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 
-// import * as L from 'leaflet';
+import * as L from 'leaflet';
 
 
 @Component({
@@ -19,7 +19,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   tableId: number;
   tableSelection: any;
 
-  // private map;
+  private map;
   layerMapOSM: any;
 
   constructor() {} // END CONSTRUCTOR
@@ -30,7 +30,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       const change = changes[propName];
       const valueCurrent  = change.currentValue;
       // const valuePrevious = change.previousValue;
-      if (propName === 'inputLocationFrom' && valueCurrent) {
+      if (propName === 'inputTableSelection' && valueCurrent) {
         // console.log('setFrom() activated by ngOnChanges', valueCurrent);
       }
     }
@@ -45,43 +45,41 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   ngAfterViewInit() {
     console.log('ngAfterViewInit() ...', this.tableId, this.tableSelection);
 
-    setTimeout( () => {
-      console.log('timeOut', this.tableId);
-      //this.initMap();
-    }, 500);
+    this.initMap();
+
   } // END FUNCTION ngAfterViewInit
 
   initMap() {
     let mapId = 'map_' + this.tableId.toString();
-
     console.log('initMap CALLED ... ', mapId);
-
 
     let test = document.getElementById(mapId);
     console.log('map element:', test);
 
-    /* /
     this.layerMapOSM = L.tileLayer(
         'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         {
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors>',
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
           minZoom: 0,
           maxZoom: 21
         });
 
-    /* /
     this.map = L.map(mapId);
 
     this.map.addLayer(this.layerMapOSM);
 
-    this.map.fitBounds(L.latLng(52.038, 5.314).toBounds(300000));
-    /* */
-
+    this.map.fitBounds(L.latLng(53.238, 6.536).toBounds(3000000));
 
 
 
   } // END FUNCTION initMap
 
+  getTables() {
 
+  } // END FUNCTION getTables
 
-}
+  getTableOptions() {
+
+  } // END FUNCTION getTableOptions
+
+} // END CLASS SelectTableValueComponent
