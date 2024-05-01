@@ -3,8 +3,9 @@
 </div>
 
 
+<!--
 <div class="selection-table">
-    <div class="selection-cell" *ngFor="let cell of cells; let mapNr = index;">
+    <div class="selection-cell" *ngFor="let cell of tableSelections; let mapNr = index;">
         <mat-card class="example-card">
             <mat-card-header>
                 <div mat-card-avatar class="selection-cell-header-image"></div>
@@ -24,4 +25,9 @@
 
         </mat-card>
     </div>
+</div>
+-->
+
+<div class="selection-table">
+    <app-selection-cell *ngFor="let tableSelection of tableSelections; let tableId = index;" [inputTableSelection]="tableSelection" [inputTableId]="tableId"></app-selection-cell>
 </div>

@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 })
 export class DashboardComponent {
 
-  cells: any[];
+  tableSelections: any[];
 
 
   constructor() {
@@ -15,14 +15,14 @@ export class DashboardComponent {
 
   ngOnInit(): void {
 
-    this.cells = [
+    this.tableSelections = [
       {title: 'Aaa', descr: 'Description A', content: 'Content A'},
       {title: 'Bbb', descr: 'Description B', content: 'Content B'} /* /,
       {title: 'Ccc', descr: 'Description C', content: 'Content C'} /* */
     ];
 
 
-    document.documentElement.style.setProperty('--select-cell-width', 'calc(100% / ' + this.cells.length.toString() + ')');
+    document.documentElement.style.setProperty('--select-cell-width', 'calc(100% / ' + this.tableSelections.length.toString() + ')');
 
   } // END FUNCTION ngOnInit
 

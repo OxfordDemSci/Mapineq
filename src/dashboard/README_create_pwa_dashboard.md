@@ -346,6 +346,8 @@ _NB volgende stappen vanuit directory `app/`, dus een map dieper dan waar deze r
 ---
 
 ---
+
+<!--
 SCANNEN NOG NIET GEIMPLEMENTEERD (Sjoerd)
 * ***Scan***
 
@@ -359,9 +361,9 @@ SCANNEN NOG NIET GEIMPLEMENTEERD (Sjoerd)
 
 
 --
+-->
 
-
-<!-- --
+<!-- -->
 * ***Leaflet***
 
   * `npm install leaflet`
@@ -378,6 +380,9 @@ SCANNEN NOG NIET GEIMPLEMENTEERD (Sjoerd)
                 "output": "./assets"
               },
     ```
+
+
+<!--
 
 * ***Proj4 / Proj4Leaflet***
   * `npm install proj4` // http://proj4js.org/
