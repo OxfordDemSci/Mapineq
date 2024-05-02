@@ -81,8 +81,20 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
     });
     this.mouseclick();
     this.mouseOver();
-    //this.addGraph();
+
+    this.addData();
+
   } // END ngAfterViewInit
+
+
+  addData(): void {
+
+    this.featureService.getFeaturesByYear(this.selectedYear,'peopledensity').subscribe((returnedData:any) => {
+      console.log(returnedData);
+
+    });
+
+  }
 
 
   changeLegend() {
@@ -173,13 +185,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
     ]
   }
 
-
-
-
-
-
   selectTable() {
-
     // @ts-ignore
     this.birthsLayer.changeTable('pgtileserv.' + this.selectedTable?.table, this.selectedYear.toString(), this.selectedTable.maxvalue);
     this.birthsLayer.changeStyle();

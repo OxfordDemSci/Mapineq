@@ -54,7 +54,7 @@ export class GraphComponent implements OnChanges  {
   private updateGraph() {
     //let years = Array();
     // @ts-ignore
-    this.featureService.getFeatures(this.areas, this.selectedTable.table).subscribe((data) => {
+    this.featureService.getFeaturesByArea(this.areas, this.selectedTable.table).subscribe((data) => {
       let {years, datasets} = this.extracted(data);
       const ctx = document.getElementById('myChart');
       // @ts-ignore

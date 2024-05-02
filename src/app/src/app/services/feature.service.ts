@@ -12,10 +12,10 @@ export class FeatureService {
 
   constructor(private httpClient: HttpClient) {
     //this.baseUrl = 'https://mapineqfeatures.web.rug.nl/collections/pgtileserv.nrbirths/items.json';
-    this.baseUrl = 'https://mapineqfeatures.web.rug.nl/collections/pgtileserv.';
+    this.baseUrl = 'https://mapineqfeatures.web.rug.nl/';
   }
 
-  public getFeatures(areas:any, table: string): Observable<any> {
+  public getFeaturesByArea(areas:any, table: string): Observable<any> {
     //areas.sort(())
     let nuts_ids = areas.map((xx: any) => {
       return "'" + xx['nuts_id'] + "'";
@@ -23,12 +23,24 @@ export class FeatureService {
     nuts_ids.sort();
     let nutsstring  = nuts_ids.join(',');
     console.log('nutsstring',nutsstring)
-    return this.httpClient.get<string>(`${this.baseUrl}${table}/items.json?filter=nuts_id in (${nutsstring})&limit=500`).pipe(
+    return this.httpClient.get<string>(`${this.baseUrl}collections/pgtileserv.${table}/items.json?filter=nuts_id in (${nutsstring})&limit=500`).pipe(
       tap((result) => {
         //console.log(result);
       }),
       catchError(this.handleError('search', 'ERROR')))
   }
+
+  public getFeaturesByYear(year:number, table: string): Observable<any> {
+    //areas.sort(())
+
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.onlydata/items.json?_year=${year}&table1=${table}&limit=1500`).pipe(
+      tap((result) => {
+        console.log(result);
+      }),
+      catchError(this.handleError('search', 'ERROR')))
+  }
+
+
   handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
 
