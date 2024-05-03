@@ -1,6 +1,9 @@
 import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {DataSource} from "../usercontrols/usercontrols.component";
-import * as L from "leaflet";
+import L from "leaflet";
+import 'leaflet.vectorgrid/dist/Leaflet.VectorGrid.bundled.js';
+import 'leaflet/dist/leaflet.css';
+//import {vectorServer} from "../layers/base-layer";
 //import {RegionsLayer} from "../layers/regions-layer";
 
 @Component({
@@ -39,7 +42,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngOnInit(): void {
-    //this.initLayers();
+    this.initLayers();
   }
 
   ngAfterViewInit(): void {
@@ -47,7 +50,22 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   initLayers() {
-    //this.regionslayer = new RegionsLayer("pgtileserv.unemployment", this.selectedTable.maxvalue)
+    let year = 2015;
+    let nutsid = 2;
+    let nutsUrl =  "https://mapineqtiles.web.rug.nl/" + "areas.get_nuts_areas_tiles" + "/{z}/{x}/{y}.pbf" + "?year=" + year + "&intlevel=" + nutsid
+
+    let options = {
+      // @ts-ignore
+      rendererFactory: L.canvas.tile,
+      vectorTileLayerStyles: {
+        default: {
+          weight: 1,
+          color: '#da0a0a',
+        }
+      }
+    }
+    // @ts-ignore
+    this.regionslayer =  L.vectorGrid.protobuf(nutsUrl, options);
   }
 
   initMap() {
@@ -64,7 +82,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
     this.map.addLayer(this.layerMapOSM);
 
     this.map.fitBounds(L.latLng(53.238, 6.536).toBounds(3000000));
-
+    this.map.addLayer(this.regionslayer);
   }
 
   selectTable() {
@@ -82,6 +100,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
 
   selectNuts(): void {
     //this.regionslayer.setNuts(this.selectedNuts, this.selectedYear);
+    //this.regionslayer.set
   }
 
 

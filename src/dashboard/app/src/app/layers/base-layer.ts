@@ -1,7 +1,7 @@
-
+//
 //
 // export const vectorServer = "https://mapineqtiles.web.rug.nl/";
-// export class BaseLayer extends VectorTileLayer {
+// export class BaseLayer extends L.vectorGrid {
 //
 //   table: string;
 //   maxvalue: number = 0;
