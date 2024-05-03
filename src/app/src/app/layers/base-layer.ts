@@ -34,4 +34,11 @@ export class BaseLayer extends VectorTileLayer {
       url: vectorServer + this.table + "/{z}/{x}/{y}.pbf" + "?filter=year='"+ year +"'"
     }));
   }
+
+  setNuts(nutsid: number, year: string) {
+    super.setSource(new VectorSource({
+      format: new MVT(),
+      url: vectorServer + "areas.get_nuts_areas_tiles" + "/{z}/{x}/{y}.pbf" + "?year=" + year + "&intlevel=" + nutsid
+    }));
+  }
 }

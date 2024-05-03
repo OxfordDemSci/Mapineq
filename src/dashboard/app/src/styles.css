@@ -256,5 +256,16 @@ div.emptyDiv {
 }
 
 
+.title {
+  background-color: rgb(63, 81, 180);
+  color: white;
+  padding: 4px;
+  font-family: "Roboto Light", Verdana, serif;
+  border-radius: 5px 5px 0 0;
+  -moz-border-radius-topleft: 5px;
+  -moz-border-radius-topright: 5px;
+}
+
+
 
 

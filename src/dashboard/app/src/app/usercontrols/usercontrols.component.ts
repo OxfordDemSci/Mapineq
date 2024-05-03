@@ -17,13 +17,6 @@ export interface DataSource {
 
 @Component({
   selector: 'app-usercontrols',
-  standalone: true,
-  imports: [
-    MatFormFieldModule,
-    MatOptionModule,
-    MatSelectModule,
-    MapComponent
-  ],
   templateUrl: './usercontrols.component.html',
   styleUrl: './usercontrols.component.css'
 })

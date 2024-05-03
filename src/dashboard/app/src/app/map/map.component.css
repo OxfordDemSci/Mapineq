@@ -1,0 +1,4 @@
+.map-container {
+  height: var(--page-content-height);
+  z-index: 0;
+}

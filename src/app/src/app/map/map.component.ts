@@ -41,6 +41,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
 
   @Input() selectedTable?: DataSource;
 
+  @Input() selectedNuts?: any;
+
   area: string = '';
 
   newarea?: Area;
@@ -91,7 +93,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
 
     this.featureService.getFeaturesByYear(this.selectedYear,'peopledensity').subscribe((returnedData:any) => {
       console.log(returnedData);
-
+      this.birthsLayer.changeStyle(returnedData);
     });
 
   }
@@ -197,6 +199,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
     this.activateYear(this.selectedYear.toString());
   }
 
+  selectNuts(): void {
+    this.birthsLayer.setNuts(this.selectedNuts, this.selectedYear);
+  }
+
 
   ngOnChanges(changes: SimpleChanges) {
     // changes.prop contains the old and the new value...
@@ -213,6 +219,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
       }
       if (propName === 'selectedYear') {
         this.selectYear();
+      }
+      if (propName === 'selectedNuts') {
+        console.log('jooooooo nuts');
+        this.selectNuts();
       }
     }
   }
