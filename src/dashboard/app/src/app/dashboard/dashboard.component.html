@@ -9,7 +9,8 @@
 
         <mat-drawer #drawer class="container-panel" mode="side" position="start" id="drawerRight" [opened]="panelOpen" (openedChange)="resizeResultMap()">
             <div class="selection-table">
-                <app-select-table-value *ngFor="let tableSelection of tableSelections; let tableId = index;" [inputTableSelection]="tableSelection" [inputTableId]="tableId"></app-select-table-value>
+                <!-- app-select-table-value *ngFor="let tableSelection of tableSelections; let tableId = index;" [inputTableSelection]="tableSelection" [inputTableId]="tableId"></app-select-table-value -->
+                <app-select-table-value *ngFor="let tableSelection of displayObject.tableFields; let tableId = index;" [inputTableSelection]="tableSelection" [inputTableId]="tableId"></app-select-table-value>
             </div>
         </mat-drawer>
 

@@ -337,6 +337,15 @@ div.emptyDiv {
     background-image: url('assets/img/selection_cell_header_img.png');
     background-size: cover;
 }
+.selection-cell-header-image-0 {
+    background-image: url('assets/img/selection_cell_header_img0.png');
+    background-size: cover;
+}
+.selection-cell-header-image-1 {
+    background-image: url('assets/img/selection_cell_header_img1.png');
+    background-size: cover;
+}
+
 .selection-cell-map {
     background-color: rgba(128,128,128,0.25);
     height: 450px;

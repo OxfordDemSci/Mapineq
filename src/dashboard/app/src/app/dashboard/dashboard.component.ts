@@ -1,6 +1,7 @@
 import {Component, ViewChild} from '@angular/core';
 import {ResultMapComponent} from "../result-map/result-map.component";
 import {AppVersionAndBuildChecker} from "../lib/app-version-and-build-checker";
+import {DisplayObject} from "../lib/display-object";
 
 @Component({
   selector: 'app-dashboard',
@@ -15,6 +16,8 @@ export class DashboardComponent {
   @ViewChild(ResultMapComponent) childResultMap: ResultMapComponent;
 
 
+  displayObject: DisplayObject;
+
 
   tableSelections: any[];
 
@@ -22,6 +25,7 @@ export class DashboardComponent {
   panelOpen: boolean;
 
   constructor() {
+    // this.displayObject = new DisplayObject();
   } // END FUNCTION constructor
 
   ngOnInit(): void {
@@ -36,6 +40,13 @@ export class DashboardComponent {
       {title: 'Ccc', descr: 'Description C', content: 'Content C'} ,
       {title: 'Ddd', descr: 'Description D', content: 'Content D'} /* */
     ];
+
+    // this.displayObject = new DisplayObject(this.tableSelections);
+
+    this.displayObject = new DisplayObject({tableFields: [{tableName: 'test'}]});
+
+    this.displayObject.logConsole();
+
 
 
     // document.documentElement.style.setProperty('--select-cell-width', 'calc(100% / ' + this.tableSelections.length.toString() + ')');
