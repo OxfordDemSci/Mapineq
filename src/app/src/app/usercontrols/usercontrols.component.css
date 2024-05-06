@@ -1,6 +1,6 @@
 
 .filter {
-  z-index:9998;
+  z-index:9999;
   width: 220px;
 
   right:10px;
@@ -14,7 +14,7 @@
 
 .table {
   z-index:9999;
-  width: 220px;
+  width: 420px;
 
   right:10px;
   top: 72px;

@@ -41,6 +41,36 @@ export class FeatureService {
   }
 
 
+  public getSources(year:number, nutslevel: number): Observable<any> {
+
+
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_source_by_year_nuts_level/items.json?_year=${year}&_level=${nutslevel}&limit=1500`).pipe(
+      tap((result) => {
+        //console.log(result);
+      }),
+      catchError(this.handleError('search', 'ERROR')))
+  }
+
+  public getAllSources(): Observable<any> {
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_all_sources/items.json?&limit=1500`).pipe(
+      tap((result) => {
+        //console.log(result);
+      }),
+      catchError(this.handleError('search', 'ERROR')))
+  }
+
+  public getNutsAreas(nutslevel: number): Observable<any> {
+    console.log('getNutsAreas',nutslevel);
+    return this.httpClient.get<string>(`${this.baseUrl}collections/areas.nuts_2003/items.json?filter=levl_code=${nutslevel}&limit=1500`).pipe(
+      tap((result) => {
+        console.log(result);
+      }),
+      catchError(this.handleError('search', 'ERROR')))
+
+  }
+
+
+
   handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
 

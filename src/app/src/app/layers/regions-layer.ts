@@ -3,22 +3,26 @@ import {Fill, Stroke, Style, Text} from "ol/style";
 
 export class RegionsLayer extends BaseLayer {
 
+  data?:any;
+
   constructor(table: string, maxvalue: number) {
     super({
       minZoom: 4,
       zIndex: 70
     }, table, maxvalue);
-    this.changeStyle();
+    this.changeStyle(null);
     //this.setMapSource();
     this.setOpacity(0.8);
   }
 
 
-  changeStyle() {
+  changeStyle(data: any) {
+    this.data = data;
     this.setStyle(this.Style.bind(this));
   }
 
   Style(feature: any) : Style {
+    //console.log('this.data', this.data);
     let label = ' ';
     if (feature.get('NUTS_NAME') !== undefined) {
       label = feature.get('NUTS_NAME');
@@ -31,13 +35,19 @@ export class RegionsLayer extends BaseLayer {
     let transparency = 0;
     //console.log(feature.get('perc_urban'));
     let entity = 0;
-    if (feature.get('entity')  !== undefined) {
+
       //transparency =  (+feature.get('perc_urban'))/100.0;
       //console.log('feature.get(\'entity\')', feature.get('entity'));
       //label = feature.get('entity').toString();
-      entity = feature.get('entity');
+
+
+    if (this.data[feature.get('nuts_id')] !== undefined) {
+      entity = this.data[feature.get('nuts_id')].entity1;
     }
-    let polygoon_color = this.getColor(this.maxvalue, entity);
+    //console.log('this.data', this.data[feature.get('nuts_id').toString()]);
+    //entity = this.data[feature.get('nuts_id')].entity1;
+
+    let polygoon_color = this.getColor(35, entity);
     return new Style({
       stroke: new Stroke({
         width: 1,

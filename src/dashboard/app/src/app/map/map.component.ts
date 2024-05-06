@@ -3,6 +3,7 @@ import {DataSource} from "../usercontrols/usercontrols.component";
 import L from "leaflet";
 import 'leaflet.vectorgrid/dist/Leaflet.VectorGrid.bundled.js';
 import 'leaflet/dist/leaflet.css';
+import {FeatureService} from "../services/feature.service";
 //import {vectorServer} from "../layers/base-layer";
 //import {RegionsLayer} from "../layers/regions-layer";
 
@@ -21,11 +22,17 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() selectedTable?: DataSource;
   @Input() selectedNuts?: any;
 
-  ngOnChanges(changes: SimpleChanges): void {
+  constructor(private featureService: FeatureService) {
+  }
 
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.map === undefined) {
+      return;
+    }
     for (const propName in changes) {
       const chng = changes[propName];
-      const cur  = JSON.stringify(chng.currentValue);
+      const cur = JSON.stringify(chng.currentValue);
       const prev = JSON.stringify(chng.previousValue);
       console.log(`${propName}: currentValue = ${cur}, previousValue = ${prev}`);
       if (propName === 'selectedTable') {
@@ -35,24 +42,29 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
         this.selectYear();
       }
       if (propName === 'selectedNuts') {
-        console.log('jooooooo nuts');
+        //console.log('jooooooo nuts');
         this.selectNuts();
       }
     }
   }
 
   ngOnInit(): void {
-    this.initLayers();
+    //this.initLayers();
+    this.featureService.getAllSources().subscribe((data) => {
+      console.log('sources ', data);
+
+      }
+    );
   }
 
   ngAfterViewInit(): void {
     this.initMap();
   }
 
-  initLayers() {
+  initLayers(nutsid: number) {
     let year = 2015;
-    let nutsid = 2;
-    let nutsUrl =  "https://mapineqtiles.web.rug.nl/" + "areas.get_nuts_areas_tiles" + "/{z}/{x}/{y}.pbf" + "?year=" + year + "&intlevel=" + nutsid
+    //let nutsid = 3;
+    let nutsUrl = "https://mapineqtiles.web.rug.nl/" + "areas.get_nuts_areas_tiles" + "/{z}/{x}/{y}.pbf" + "?year=" + year + "&intlevel=" + nutsid
 
     let options = {
       // @ts-ignore
@@ -65,7 +77,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
       }
     }
     // @ts-ignore
-    this.regionslayer =  L.vectorGrid.protobuf(nutsUrl, options);
+    this.regionslayer = L.vectorGrid.protobuf(nutsUrl, options);
   }
 
   initMap() {
@@ -82,7 +94,16 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
     this.map.addLayer(this.layerMapOSM);
 
     this.map.fitBounds(L.latLng(53.238, 6.536).toBounds(3000000));
+    // this.featureService.getNutsAreas(2).subscribe((data) => {
+    //   L.geoJSON(data, {style: {
+    //       "color": "#ff7800",
+    //       "weight": 2,
+    //       "opacity": 0.65
+    //     }}).addTo(this.map);
+    // });
+    this.initLayers(2);
     this.map.addLayer(this.regionslayer);
+
   }
 
   selectTable() {
@@ -101,9 +122,12 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
   selectNuts(): void {
     //this.regionslayer.setNuts(this.selectedNuts, this.selectedYear);
     //this.regionslayer.set
+    this.map.removeLayer(this.regionslayer);
+    this.initLayers(this.selectedNuts);
+    this.map.addLayer(this.regionslayer);
+
+
   }
-
-
 
 
 }

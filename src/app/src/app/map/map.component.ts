@@ -34,14 +34,14 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
 
   map: Map | undefined;
 
-  nutsLayer: any;
-  birthsLayer: any;
+
+  regionsLayer: any;
 
   @Input() selectedYear = 2015;
 
   @Input() selectedTable?: DataSource;
 
-  @Input() selectedNuts?: any;
+  @Input() selectedNuts?:any;
 
   area: string = '';
 
@@ -69,10 +69,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
   } // END ngOnInit
 
   ngAfterViewInit(): void {
-
-
-
-    this.activateYear(this.selectedYear.toString());
+    console.log(this.selectedNuts)
+    //this.activateYear(this.selectedYear.toString());
+    this.regionsLayer.setNuts(this.selectedNuts.value, this.selectedYear);
     this.map = new Map({
       view: new View({
         center: transform([6.53601, 48.23808], 'EPSG:4326', 'EPSG:3857'),
@@ -83,17 +82,20 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
     });
     this.mouseclick();
     this.mouseOver();
-
     this.addData();
-
   } // END ngAfterViewInit
 
 
   addData(): void {
 
-    this.featureService.getFeaturesByYear(this.selectedYear,'peopledensity').subscribe((returnedData:any) => {
-      console.log(returnedData);
-      this.birthsLayer.changeStyle(returnedData);
+    this.featureService.getFeaturesByYear(this.selectedYear,'unemployment').subscribe((returnedData:any) => {
+
+      let result = returnedData.reduce((map: { [x: string]: any; }, obj: { id: string | number; }) => {
+        map[obj.id] = obj;
+        return map;
+      }, {})
+      console.log('ITG1', result['ITG1']);
+      this.regionsLayer.changeStyle(result);
     });
 
   }
@@ -108,7 +110,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
       if (i<6) {
         label += `-${Math.round(legendstep*(i+1))}`;
       }
-      let color = this.birthsLayer.getColor(this.selectedTable?.maxvalue, legendstep*i);
+      let color = this.regionsLayer.getColor(this.selectedTable?.maxvalue, legendstep*i);
       let legenditem = { 'label' : label, 'color' : color  }
       this.legenditems.push(legenditem);
     }
@@ -120,7 +122,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
   initLayers(): void {
     //this.nutsLayer = new NutsLayer("pgtileserv.percurban");
     // @ts-ignore
-    this.birthsLayer = new RegionsLayer("pgtileserv.unemployment", this.selectedTable.maxvalue);
+    this.regionsLayer = new RegionsLayer("pgtileserv.unemployment", this.selectedTable.maxvalue);
   }
 
   mouseclick(): void {
@@ -161,7 +163,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
         // @ts-ignore
         let coordinates = this.map?.getCoordinateFromPixel(event.pixel);
         // @ts-ignore
-        tooltipContent.innerHTML = '<p>' + feature.get('nuts_name') + ': ' + feature.get('entity') + '</p>';
+        tooltipContent.innerHTML = '<p>' + feature.get('nuts_name') + ': ' + feature.get('nuts_id') + '</p>';
         //tooltipContent.innerHTML += '<p>' + feature.get('nuts_name') + ': ' + feature.get('entity1') + '</p>';
         tooltip.setPosition(coordinates);
         return feature;
@@ -175,7 +177,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
 
 
   activateYear(year: string) {
-    this.birthsLayer.setYear(year);
+    this.regionsLayer.setYear(year);
   }
 
   private getLayers(): any[] {
@@ -183,30 +185,30 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
       new TileLayer({
         source: new OSM(),
       }),
-      this.birthsLayer,
+      this.regionsLayer,
     ]
   }
 
   selectTable() {
     // @ts-ignore
     this.birthsLayer.changeTable('pgtileserv.' + this.selectedTable?.table, this.selectedYear.toString(), this.selectedTable.maxvalue);
-    this.birthsLayer.changeStyle();
-    this.changeLegend();
+    this.regionsLayer.changeStyle();
+    //this.changeLegend();
   }
 
   selectYear(): void {
     console.log('year', this.selectedYear);
-    this.activateYear(this.selectedYear.toString());
+    //this.activateYear(this.selectedYear.toString());
   }
 
   selectNuts(): void {
-    this.birthsLayer.setNuts(this.selectedNuts, this.selectedYear);
+    this.regionsLayer.setNuts(this.selectedNuts?.value, this.selectedYear);
   }
 
 
   ngOnChanges(changes: SimpleChanges) {
     // changes.prop contains the old and the new value...
-    if (this.birthsLayer === undefined) {
+    if (this.regionsLayer === undefined) {
       return;
     }
     for (const propName in changes) {
@@ -221,7 +223,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
         this.selectYear();
       }
       if (propName === 'selectedNuts') {
-        console.log('jooooooo nuts');
         this.selectNuts();
       }
     }
