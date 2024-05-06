@@ -41,9 +41,12 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
   ngOnInit(): void {
     console.log('ngOnInit() ... ');
+
+    /*
     this.featureService.getNutsAreas(2).subscribe((data) => {
 
     });
+    */
     this.tableId = this.inputTableId;
     this.tableSelection = this.inputTableSelection;
   } // END FUNCTION ngOnInit

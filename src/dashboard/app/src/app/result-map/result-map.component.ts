@@ -30,7 +30,6 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngOnInit(): void {
     console.log('ngOnInit() ... ');
-    // this.featureService.getNutsAreas(2).subscribe((data) => {});
 
   } // END FUNCTION ngOnInit
 
@@ -50,7 +49,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         {
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
           minZoom: 0,
-          maxZoom: 21
+          maxZoom: 19 // 21
         });
 
     this.map = L.map(mapId);

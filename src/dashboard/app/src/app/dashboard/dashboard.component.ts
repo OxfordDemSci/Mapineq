@@ -1,5 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
 import {ResultMapComponent} from "../result-map/result-map.component";
+import {AppVersionAndBuildChecker} from "../lib/app-version-and-build-checker";
 
 @Component({
   selector: 'app-dashboard',
@@ -8,7 +9,11 @@ import {ResultMapComponent} from "../result-map/result-map.component";
 })
 export class DashboardComponent {
 
+  versionChecker: AppVersionAndBuildChecker;
+
+
   @ViewChild(ResultMapComponent) childResultMap: ResultMapComponent;
+
 
 
   tableSelections: any[];
@@ -20,6 +25,8 @@ export class DashboardComponent {
   } // END FUNCTION constructor
 
   ngOnInit(): void {
+
+    this.versionChecker = new AppVersionAndBuildChecker();
 
     this.panelOpen = true;
 

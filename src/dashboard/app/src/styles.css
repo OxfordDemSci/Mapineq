@@ -291,6 +291,11 @@ div.emptyDiv {
     background-size: contain;
     background-position: center;
 }
+.panelToggleContainerButtonLeft:hover,
+.panelToggleContainerButtonRight:hover {
+    background-color: rgba(255,255,255,0.85);
+}
+
 .panelToggleContainerButtonLeft {
     background-image: url("assets/img/button_toggle_left.svg");
 }
