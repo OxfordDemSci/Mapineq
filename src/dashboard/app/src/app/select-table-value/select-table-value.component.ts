@@ -57,7 +57,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
   initTableValueMap() {
     let mapId = 'map_' + this.tableId.toString();
-    console.log('initMap CALLED ... ', mapId);
+    console.log('initTableValueMap CALLED ... ', mapId);
 
     let test = document.getElementById(mapId);
     console.log('map element:', test);

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
+import {ResultMapComponent} from "../result-map/result-map.component";
 
 @Component({
   selector: 'app-dashboard',
@@ -7,13 +8,20 @@ import { Component } from '@angular/core';
 })
 export class DashboardComponent {
 
+  @ViewChild(ResultMapComponent) childResultMap: ResultMapComponent;
+
+
   tableSelections: any[];
 
+
+  panelOpen: boolean;
 
   constructor() {
   } // END FUNCTION constructor
 
   ngOnInit(): void {
+
+    this.panelOpen = true;
 
     this.tableSelections = [
       {title: 'Aaa', descr: 'Description A', content: 'Content A'},
@@ -23,9 +31,20 @@ export class DashboardComponent {
     ];
 
 
-    document.documentElement.style.setProperty('--select-cell-width', 'calc(100% / ' + this.tableSelections.length.toString() + ')');
+    // document.documentElement.style.setProperty('--select-cell-width', 'calc(100% / ' + this.tableSelections.length.toString() + ')');
 
   } // END FUNCTION ngOnInit
+
+
+  panelToggle(): void {
+    this.panelOpen = !this.panelOpen;
+
+  } // END FUNCTION panelToggle
+
+  resizeResultMap(): void {
+    this.childResultMap.resizeMap();
+  } // END FUNCTION resizeResultMap
+
 
 
 }
