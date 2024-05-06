@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "start + browser": "ng serve --open",
-    "build-prod ROOT": "node update_app_version_and_build.js  &&  ng build --configuration production",
-    "build-prod + base=href": "node update_app_version_and_build.js  &&  ng build --configuration production --base-href /dashboard/",
+    "DASHBOARD start": "ng serve",
+    "DASHBOARD start + browser": "ng serve --open",
+    "DASHBOARD build-prod ROOT": "node update_app_version_and_build.js  &&  ng build --configuration production",
+    "DASHBOARD build-prod + base=href": "node update_app_version_and_build.js  &&  ng build --configuration production --base-href /dashboard/",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
