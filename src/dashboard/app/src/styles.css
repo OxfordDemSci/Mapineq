@@ -369,3 +369,22 @@ div.emptyDiv {
 
 
 
+
+
+/* EXTRA FORM STYLES*/
+
+.optionTwoLines {
+    border-top: 1px solid black;
+}
+
+.optionTwoLines .optionLine1 {
+    font-weight: bold;
+    padding-top: 0.5em;
+}
+.optionTwoLines .optionLine2 {
+    font-weight: normal;
+    font-style: italic;
+    font-size: 90%;
+    padding-left: 0.5em;
+    padding-bottom: 0.5em;
+}
