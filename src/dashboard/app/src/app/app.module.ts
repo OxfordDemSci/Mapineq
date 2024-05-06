@@ -17,6 +17,7 @@ import { MapComponent } from './map/map.component';
 import {MatInputModule} from "@angular/material/input";
 import {MatOptionModule} from "@angular/material/core";
 import {MatSelect} from "@angular/material/select";
+import {provideHttpClient} from "@angular/common/http";
 
 
 @NgModule({
@@ -46,7 +47,7 @@ import {MatSelect} from "@angular/material/select";
     MatSelect
   ],
     providers: [
-    provideAnimationsAsync()
+    provideAnimationsAsync(), provideHttpClient()
   ],
     bootstrap: [AppComponent]
 })
