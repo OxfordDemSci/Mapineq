@@ -45,11 +45,11 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   ngAfterViewInit() {
     console.log('ngAfterViewInit() ...', this.tableId, this.tableSelection);
 
-    this.initMap();
+    // this.initTableValueMap();
 
   } // END FUNCTION ngAfterViewInit
 
-  initMap() {
+  initTableValueMap() {
     let mapId = 'map_' + this.tableId.toString();
     console.log('initMap CALLED ... ', mapId);
 
@@ -72,7 +72,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
 
-  } // END FUNCTION initMap
+  } // END FUNCTION initTableValueMap
 
   getTables() {
 
