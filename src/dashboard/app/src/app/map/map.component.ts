@@ -50,11 +50,20 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngOnInit(): void {
     //this.initLayers();
-    this.featureService.getAllSources().subscribe((data) => {
-      console.log('sources ', data);
-
-      }
-    );
+    // this.featureService.getAllSources().subscribe((data) => {
+    //   console.log('sources ', data);
+    //
+    // });
+    //"DEMO_R_D2JAN"
+    this.featureService.getInfoByReSource('BD_SIZE_R3').subscribe((data) =>{
+      console.log('info ', data);
+    });
+    this.featureService.getResourceByYear(2012).subscribe((data) =>{
+      console.log('resources by Year', data);
+    });
+    this.featureService.getSources(2014,2).subscribe((data) =>{
+      console.log('resources by year, nutslevel ', data);
+    });
   }
 
   ngAfterViewInit(): void {
