@@ -26,9 +26,9 @@
 
 .controls {
   /* Center child horizontally*/
-  display: flex;
-  justify-content: center;
-  margin-top:4px;
+  /*display: flex;*/
+  /*justify-content: center;*/
+  /*margin-top:4px;*/
 }
 
 .graphlabel {
