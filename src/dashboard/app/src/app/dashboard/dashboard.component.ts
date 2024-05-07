@@ -43,9 +43,9 @@ export class DashboardComponent {
 
     // this.displayObject = new DisplayObject(this.tableSelections);
 
-    this.displayObject = new DisplayObject({tableFields: [{tableName: 'test'}]});
+    this.displayObject = new DisplayObject({tableFields: [{tableName: ''}]});
 
-    this.displayObject.logConsole();
+    // this.displayObject.logConsole();
 
 
 

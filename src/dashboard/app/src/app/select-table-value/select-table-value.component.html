@@ -33,16 +33,16 @@
             <mat-form-field>
                 <mat-label>Select table</mat-label>
                 <input type="text"
-                       [placeholder]="'Select table' + tableSelection.tableFunction + '(' + ')'"
+                       [placeholder]="'Select table \'' + tableSelection.tableFunction + '\' (' + (tableId+1).toString() + ')'"
                        aria-label="Select table"
                        matInput
-                       [formControl]="myControl"
+                       [formControl]="tableSelectFormControl"
                        [matAutocomplete]="auto"
                        [value]="tableSelection.tableName">
                 <!--mat-hint>{{tableSelection.tableDescr}}</mat-hint-->
-                <button mat-icon-button matSuffix type="button" color="primary" (click)="clearSelectedOption(auto)" [attr.aria-label]="'Pas aan'"><mat-icon>backspace</mat-icon></button>
-                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="selectOption($event.option.value)" [displayWith]="displayOption">
-                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                <button mat-icon-button matSuffix type="button" color="primary" (click)="tableSelectClearSelectedOption(auto)" [attr.aria-label]="'Pas aan'"><mat-icon>backspace</mat-icon></button>
+                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="tableSelectOption($event.option.value)" [displayWith]="displayTableSelectOption">
+                    <mat-option *ngFor="let option of tableSelectFilteredOptions | async" [value]="option">
                         <div class="optionLine1">{{option.f_description}}</div>
                         <div class="optionLine2">{{option.f_resource}}</div>
                     </mat-option>

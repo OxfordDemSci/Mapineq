@@ -23,18 +23,18 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       const valueCurrent  = change.currentValue;
       // const valuePrevious = change.previousValue;
       if (propName === 'inputTableSelection' && valueCurrent) {
-        // console.log('setFrom() activated by ngOnChanges', valueCurrent);
+        // console.log('ngOnChanges(), "inputTableSelection":', valueCurrent);
       }
     }
   } // END FUNCTION ngOnChanges
 
   ngOnInit(): void {
-    console.log('ngOnInit() ... ');
+    // console.log('ngOnInit() ... ');
 
   } // END FUNCTION ngOnInit
 
   ngAfterViewInit() {
-    console.log('ngAfterViewInit() ...');
+    // console.log('ngAfterViewInit() ...');
 
     this.initResultMap();
 
@@ -42,7 +42,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
   initResultMap() {
     let mapId = 'resultMap';
-    console.log('initResultMap CALLED ... ', mapId);
+    // console.log('initResultMap CALLED ... ', mapId);
 
     this.layerMapOSM = L.tileLayer(
         'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',

@@ -16,7 +16,7 @@ export class DisplayObject {
 
         for (const field in jsonObject) {
             if (field === 'tableFields') {
-                console.log('tableFields: ', jsonObject[field]);
+                // console.log('tableFields: ', jsonObject[field]);
                 let tableFieldsJson = jsonObject[field];
                 tableFieldsJson.forEach(tableField => {
                     this.tableFields.push(new DisplayTableValueObject(tableField));

@@ -19,9 +19,9 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   @Output() updateTableSelectionFromCell = new EventEmitter();
 
 
-  myControl = new FormControl('');
-  options: any[];
-  filteredOptions: Observable<any[]>;
+  tableSelectFormControl = new FormControl('');
+  tableSelectOptions: any[];
+  tableSelectFilteredOptions: Observable<any[]>;
 
   tableId: number;
   tableSelection: any;
@@ -29,88 +29,16 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   private map;
   layerMapOSM: any;
 
-  tables: any;
+  // tables: any;
 
   constructor(private featureService: FeatureService) {
 
-    this.options = []; // [{f_resource: 'TST_A', f_description: 'Test table A'}];
-    this.tables = [];
+    this.tableSelectOptions = []; // [{f_resource: 'TST_A', f_description: 'Test table A'}];
+    // this.tables = [];
 
-    this.featureService.getAllSources().subscribe( (data) => {
-      this.tables = data;
-      this.options = data;
-
-      this.filteredOptions = this.myControl.valueChanges.pipe(
-          startWith(''),
-          map(value => this._filter(value || '')),
-      );
-
-    });
 
 
   } // END CONSTRUCTOR
-
-  /*
-  f_description
-  f_resource
-  */
-
-  private _filter(value: any): any[] {
-    // console.log('_filter(), value:', value, (typeof value));
-
-
-    let filterValue = value;
-    if (typeof value === 'string') {
-      filterValue = value.toLowerCase();
-    } else {
-      filterValue = value.f_resource.toLowerCase();
-    }
-
-    // return this.options.filter(option => option.f_description.toLowerCase().includes(filterValue));
-    return this.options.filter( (option) => {
-      // console.log('option:', filterValue, option.f_resource, option.f_description, option.f_description.toLowerCase().includes(filterValue));
-      return (option.f_resource.toLowerCase().includes(filterValue)  ||  option.f_description.toLowerCase().includes(filterValue)); //   ||  value.trim() === ''
-    });
-  } // END FUNCTION _filter
-
-
-  displayOption(option) {
-    // console.log('displayOption(), option:', option.id, option.properties.name);
-    if (typeof option.f_description !== 'undefined'  &&  typeof option.f_resource !== 'undefined') {
-      // return '' +  option.f_resource + ': ' +  option.f_description + ''; // option.f_description;
-      return '' +  option.f_resource + '';
-    } else {
-      return '';
-    }
-  } // END FUNCTION displayOption
-
-
-  selectOption(selectedOption): void {
-    //console.log('selectOption() ...', selectedOption, Object(this.myControl.value));
-    //console.log('this.myControl.value :', this.myControl.value);
-
-    this.tableSelection.tableName = selectedOption.f_resource;
-    this.tableSelection.tableDescr = selectedOption.f_description;
-
-
-    //this.responseVal = Object(this.myControl.value).id;
-    //this.okClick();
-  } // END FUNCTION selectOption
-
-  clearSelectedOption(autoComplete) {
-    console.log('clearSelectedOption() ...');
-
-    this.tableSelection.tableName = '';
-    this.tableSelection.tableDescr = '';
-
-    // console.log('CHECK: ', autoComplete.options);
-    autoComplete.options.forEach( option => {
-      option.deselect();
-    });
-
-    this.myControl.reset('');
-
-  } // END FUNCTION clearSelectedOption
 
 
   ngOnChanges(changes: SimpleChanges) {
@@ -120,13 +48,13 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       const valueCurrent  = change.currentValue;
       // const valuePrevious = change.previousValue;
       if (propName === 'inputTableSelection' && valueCurrent) {
-        // console.log('setFrom() activated by ngOnChanges', valueCurrent);
+        // console.log('ngOnChanges(), "inputTableSelection":', valueCurrent);
       }
     }
   } // END FUNCTION ngOnChanges
 
   ngOnInit(): void {
-    console.log('ngOnInit() ... ');
+    // console.log('ngOnInit() ... ');
 
     /*
     this.featureService.getNutsAreas(2).subscribe((data) => {
@@ -137,14 +65,20 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     this.tableId = this.inputTableId;
     this.tableSelection = this.inputTableSelection;
+
+    this.setTableSources();
+
   } // END FUNCTION ngOnInit
 
   ngAfterViewInit() {
-    console.log('ngAfterViewInit() ...', this.tableId, this.tableSelection);
+    // console.log('ngAfterViewInit() ...', this.tableId, this.tableSelection);
 
     // this.initTableValueMap();
 
   } // END FUNCTION ngAfterViewInit
+
+
+
 
   initTableValueMap() {
     let mapId = 'map_' + this.tableId.toString();
@@ -173,6 +107,106 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
 
+  setTableSources() {
+    console.log('vlak voor getSources, tableId:', this.tableId);
+
+    if (this.tableId === 0) {
+      this.featureService.getAllSources().subscribe((data) => {
+        // this.tables = data;
+        this.tableSelectOptions = data;
+
+        this.tableSelectFilteredOptions = this.tableSelectFormControl.valueChanges.pipe(
+            startWith(''),
+            map(value => this.filterTableSelectOptions(value || '')),
+        );
+      });
+    } else if (this.tableId === 1) {
+      // getSourcesByYearAndNutsLevel year nutsleven
+      console.log('getSourcesByYearAndNutsLevel(), try get values:');
+      this.featureService.getSourcesByYearAndNutsLevel(1, 0).subscribe((data) => {
+        // this.tables = data;
+        this.tableSelectOptions = data;
+
+        this.tableSelectFilteredOptions = this.tableSelectFormControl.valueChanges.pipe(
+            startWith(''),
+            map(value => this.filterTableSelectOptions(value || '')),
+        );
+      });
+    }
+
+  } // END FUNCTION setTableSources
+
+  /*
+  f_description
+  f_resource
+  */
+
+  private filterTableSelectOptions(value: any): any[] {
+    // console.log('filterTableSelectOptions(), value:', value, (typeof value));
+
+
+    let filterValue = value;
+    if (typeof value === 'string') {
+      filterValue = value.toLowerCase();
+    } else {
+      filterValue = value.f_resource.toLowerCase();
+    }
+
+    // return this.options.filter(option => option.f_description.toLowerCase().includes(filterValue));
+    return this.tableSelectOptions.filter( (option) => {
+      // console.log('option:', filterValue, option.f_resource, option.f_description, option.f_description.toLowerCase().includes(filterValue));
+      return (option.f_resource.toLowerCase().includes(filterValue)  ||  option.f_description.toLowerCase().includes(filterValue)); //   ||  value.trim() === ''
+    });
+  } // END FUNCTION filterTableSelectOptions
+
+
+  displayTableSelectOption(option) {
+    // console.log('displayTableSelectOption(), option:', option.id, option.properties.name);
+    if (typeof option.f_description !== 'undefined'  &&  typeof option.f_resource !== 'undefined') {
+      // return '' +  option.f_resource + ': ' +  option.f_description + ''; // option.f_description;
+      return '' +  option.f_resource + '';
+    } else {
+      return '';
+    }
+  } // END FUNCTION displayTableSelectOption
+
+
+  tableSelectOption(selectedOption): void {
+    //console.log('tableSelectOption() ...', selectedOption, Object(this.myControl.value));
+    //console.log('this.myControl.value :', this.myControl.value);
+
+    this.tableSelection.tableName = selectedOption.f_resource;
+    this.tableSelection.tableDescr = selectedOption.f_description;
+
+
+    this.featureService.getInfoByReSource(this.tableSelection.tableName).subscribe( data => {
+      console.log('getInfoByReSource()', this.tableSelection.tableName, data);
+    });
+
+    this.featureService.getColumnValuesBySource(this.tableSelection.tableName, 2012, 0).subscribe( data => {
+      console.log('getColumnValuesBySource()', this.tableSelection.tableName, data);
+    });
+
+    //this.responseVal = Object(this.myControl.value).id;
+    //this.okClick();
+  } // END FUNCTION tableSelectOption
+
+  tableSelectClearSelectedOption(autoComplete) {
+    console.log('tableSelectClearSelectedOption() ...');
+
+    this.tableSelection.tableName = '';
+    this.tableSelection.tableDescr = '';
+
+    // console.log('CHECK: ', autoComplete.options);
+    autoComplete.options.forEach( option => {
+      option.deselect();
+    });
+
+    this.tableSelectFormControl.reset('');
+
+  } // END FUNCTION tableSelectClearSelectedOption
+
+
 
 
 
@@ -183,5 +217,13 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   getTableOptions() {
 
   } // END FUNCTION getTableOptions
+
+
+
+
+
+
+
+
 
 } // END CLASS SelectTableValueComponent
