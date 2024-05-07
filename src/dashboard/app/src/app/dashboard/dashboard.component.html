@@ -1,35 +1,28 @@
-<div class="pageContainerDiv">
-    <div>
-        test
-    </div>
+<div class="version_update" *ngIf="versionChecker.showUpdateDiv" xmlns="http://www.w3.org/1999/html">
+    <div class="buttonsCentered version_bold" id="updateVersion">Nieuwe versie beschikbaar:<br>{{versionChecker.appVersionAndBuildLatest}}<br><button mat-raised-button color="primary" aria-label="Update naar nieuwste versie" (click)="versionChecker.updateAppVersionAndBuild()"><mat-icon>update</mat-icon> update naar nieuwste versie</button></div>
+    <div class="buttonsCentered version_small" id="currentVersion">Huidige versie: {{versionChecker.appVersionAndBuildCurrent}}</div>
+</div>
+<div class="pageContainerDivNoPadding">
+
+    <mat-drawer-container id="matDrawerContainer" class="container-main" autosize  hasBackdrop="false">
 
 
-    <!-- --
-    <div class="selection-table">
-        <div class="selection-cell" *ngFor="let cell of tableSelections; let mapNr = index;">
-            <mat-card class="example-card">
-                <mat-card-header>
-                    <div mat-card-avatar class="selection-cell-header-image"></div>
-                    <mat-card-title>{{cell.title}}</mat-card-title>
-                    <mat-card-subtitle>{{cell.descr}}</mat-card-subtitle>
+        <mat-drawer #drawer class="container-panel" mode="side" position="start" id="drawerRight" [opened]="panelOpen" (openedChange)="resizeResultMap()">
+            <div class="selection-table">
+                <!-- app-select-table-value *ngFor="let tableSelection of tableSelections; let tableId = index;" [inputTableSelection]="tableSelection" [inputTableId]="tableId"></app-select-table-value -->
+                <app-select-table-value *ngFor="let tableSelection of displayObject.tableFields; let tableId = index;" [inputTableSelection]="tableSelection" [inputTableId]="tableId"></app-select-table-value>
+            </div>
+        </mat-drawer>
 
-                </mat-card-header>
+        <mat-drawer-content id="matDrawerContent">
+            <div class="panelToggleContainerLeft">
+                <button (click)="panelToggle()" class="panelToggleContainerButtonLeft"  *ngIf="panelOpen"></button>
+                <button (click)="panelToggle()" class="panelToggleContainerButtonRight" *ngIf="!panelOpen"></button>
+            </div>
+            <div class="drawerContentMapContainer"><app-result-map></app-result-map></div>
+        </mat-drawer-content>
 
-                <mat-card-content>
-                    <div>
-                        {{cell.content}}
-                    </div>
 
-                </mat-card-content>
+    </mat-drawer-container>
 
-                <div class="selection-cell-map"><div class="selection-cell-map-container" [id]="('map_' + mapNr.toString())"></div></div>
-
-            </mat-card>
-        </div>
-    </div>
-    -->
-
-    <div class="selection-table">
-        <app-select-table-value *ngFor="let tableSelection of tableSelections; let tableId = index;" [inputTableSelection]="tableSelection" [inputTableId]="tableId"></app-select-table-value>
-    </div>
 </div>

@@ -23,6 +23,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   private map;
   layerMapOSM: any;
 
+  tables: any;
+
   constructor(private featureService: FeatureService) {
 
   } // END CONSTRUCTOR
@@ -41,9 +43,17 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
   ngOnInit(): void {
     console.log('ngOnInit() ... ');
+
+    /*
     this.featureService.getNutsAreas(2).subscribe((data) => {
 
     });
+    */
+
+    this.featureService.getAllSources().subscribe( (data) => {
+      this.tables = data;
+    });
+
     this.tableId = this.inputTableId;
     this.tableSelection = this.inputTableSelection;
   } // END FUNCTION ngOnInit
@@ -57,7 +67,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
   initTableValueMap() {
     let mapId = 'map_' + this.tableId.toString();
-    console.log('initMap CALLED ... ', mapId);
+    console.log('initTableValueMap CALLED ... ', mapId);
 
     let test = document.getElementById(mapId);
     console.log('map element:', test);

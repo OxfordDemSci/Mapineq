@@ -1,9 +1,9 @@
 <div class="selection-cell">
     <mat-card class="example-card">
         <mat-card-header>
-            <div mat-card-avatar class="selection-cell-header-image"></div>
-            <mat-card-title>{{tableSelection.title}}</mat-card-title>
-            <mat-card-subtitle>{{tableSelection.descr}}</mat-card-subtitle>
+            <div mat-card-avatar [class]="'selection-cell-header-image-'+tableId.toString()"></div>
+            <mat-card-title>{{tableSelection.tableName}}</mat-card-title>
+            <mat-card-subtitle>{{tableSelection.tableFunction}} ({{(tableId+1)}})</mat-card-subtitle>
 
         </mat-card-header>
 
@@ -11,6 +11,24 @@
             <div>
                 {{tableSelection.content}}
             </div>
+
+
+            <!--
+            <div>{{tables | json}}</div>
+
+            f_description
+            f_resource
+
+             <mat-select [(value)]="selected">
+            -->
+            <mat-form-field>
+                <mat-label>Table</mat-label>
+                <mat-select [(value)]="tableSelection.tableName">
+                    <mat-option>First option</mat-option>
+                    <mat-option [value]="table.f_resource" *ngFor="let table of tables" class="optionTwoLines"><div class="optionLine1">{{table.f_resource}}: </div><div class="optionLine2">{{table.f_description}}</div></mat-option>
+                </mat-select>
+            </mat-form-field>
+
 
         </mat-card-content>
 

@@ -225,6 +225,97 @@ div.emptyDiv {
 }
 
 
+/* SIDE NAVE STYLING */
+
+/* /
+.container-main {
+    position: absolute !important;
+    top: 64px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0px;
+}
+
+@media only screen and (max-width: 599px) {
+    .container-main {
+        position: absolute !important;
+        top: 56px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: 0px;
+    }
+}
+/* */
+
+.container-main {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.container-panel {
+    /* *
+    padding: 10px;
+    /* */
+    width: calc(min(50%, 600px)) !important;
+    /* /
+    max-width: calc(min(50%, 600px)) !important;
+    /* */
+}
+
+#matDrawerContent {
+    overflow: hidden !important;
+}
+
+.panelToggleContainerLeft {
+    position: absolute;
+    top: calc(50% - 20px);
+    left: 5px;
+
+    z-index: 9999;
+}
+.panelToggleContainerButtonLeft,
+.panelToggleContainerButtonRight {
+    color: rgba(0,0,0,1);
+    background-color: rgba(255,255,255,0.5);
+    width: 25px;
+    height: 40px;
+    border: 0 !important;
+    border-radius: 5px;
+    padding: 0 !important;
+    cursor: pointer;
+    background-image: url("assets/img/button_toggle_right.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+.panelToggleContainerButtonLeft:hover,
+.panelToggleContainerButtonRight:hover {
+    background-color: rgba(255,255,255,0.85);
+}
+
+.panelToggleContainerButtonLeft {
+    background-image: url("assets/img/button_toggle_left.svg");
+}
+.panelToggleContainerButtonRight {
+    background-image: url("assets/img/button_toggle_right.svg");
+}
+
+
+/* RESULT MAP */
+
+.drawerContentMapContainer {
+    height: 100%;
+    width: 100%;
+}
+
+#resultMap {
+    height: 100%;
+    width: 100%;
+}
+
 
 
 
@@ -246,6 +337,15 @@ div.emptyDiv {
     background-image: url('assets/img/selection_cell_header_img.png');
     background-size: cover;
 }
+.selection-cell-header-image-0 {
+    background-image: url('assets/img/selection_cell_header_img0.png');
+    background-size: cover;
+}
+.selection-cell-header-image-1 {
+    background-image: url('assets/img/selection_cell_header_img1.png');
+    background-size: cover;
+}
+
 .selection-cell-map {
     background-color: rgba(128,128,128,0.25);
     height: 450px;
@@ -269,3 +369,22 @@ div.emptyDiv {
 
 
 
+
+
+/* EXTRA FORM STYLES*/
+
+.optionTwoLines {
+    border-top: 1px solid black;
+}
+
+.optionTwoLines .optionLine1 {
+    font-weight: bold;
+    padding-top: 0.5em;
+}
+.optionTwoLines .optionLine2 {
+    font-weight: normal;
+    font-style: italic;
+    font-size: 90%;
+    padding-left: 0.5em;
+    padding-bottom: 0.5em;
+}

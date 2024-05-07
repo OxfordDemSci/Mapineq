@@ -18,6 +18,8 @@ import {MatInputModule} from "@angular/material/input";
 import {MatOptionModule} from "@angular/material/core";
 import {MatSelect} from "@angular/material/select";
 import {provideHttpClient} from "@angular/common/http";
+import {MatSidenavModule} from "@angular/material/sidenav";
+import { ResultMapComponent } from './result-map/result-map.component';
 
 
 @NgModule({
@@ -26,26 +28,28 @@ import {provideHttpClient} from "@angular/common/http";
         DashboardComponent,
         SelectTableValueComponent,
         UsercontrolsComponent,
-        MapComponent
+        MapComponent,
+        ResultMapComponent
     ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    MatToolbarModule,
-    MatMenuModule,
-    MatIconModule,
-    MatButtonModule,
-    MatCardModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: !isDevMode(),
-      // Register the ServiceWorker as soon as the application is stable
-      // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
-    }),
-    MatInputModule,
-    MatOptionModule,
-    MatSelect
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        MatToolbarModule,
+        MatMenuModule,
+        MatIconModule,
+        MatButtonModule,
+        MatCardModule,
+        MatSidenavModule,
+        ServiceWorkerModule.register('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            // Register the ServiceWorker as soon as the application is stable
+            // or after 30 seconds (whichever comes first).
+            registrationStrategy: 'registerWhenStable:30000'
+        }),
+        MatInputModule,
+        MatOptionModule,
+        MatSelect
+    ],
     providers: [
     provideAnimationsAsync(), provideHttpClient()
   ],
