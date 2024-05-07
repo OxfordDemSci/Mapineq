@@ -6,14 +6,20 @@
 
     <mat-drawer-container id="matDrawerContainer" class="container-main" autosize  hasBackdrop="false">
 
-
-        <mat-drawer #drawer class="container-panel" mode="side" position="start" id="drawerRight" [opened]="panelOpen" (openedChange)="resizeResultMap()">
+        <!-- PANEL PART -->
+        <mat-drawer #drawer class="container-panel" mode="side" position="start" id="drawerRight" [(opened)]="panelOpen" (openedChange)="resizeResultMap()">
             <div class="selection-table">
                 <!-- app-select-table-value *ngFor="let tableSelection of tableSelections; let tableId = index;" [inputTableSelection]="tableSelection" [inputTableId]="tableId"></app-select-table-value -->
                 <app-select-table-value *ngFor="let tableSelection of displayObject.tableFields; let tableId = index;" [inputTableSelection]="tableSelection" [inputTableId]="tableId"></app-select-table-value>
             </div>
+
+            <div class="json_preview">
+                <pre>{{displayObject | json}}</pre>
+            </div>
+
         </mat-drawer>
 
+        <!-- OUTSIDE PANEL PART -->
         <mat-drawer-content id="matDrawerContent">
             <div class="panelToggleContainerLeft">
                 <button (click)="panelToggle()" class="panelToggleContainerButtonLeft"  *ngIf="panelOpen"></button>

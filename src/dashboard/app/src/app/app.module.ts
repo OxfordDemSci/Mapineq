@@ -16,10 +16,13 @@ import { UsercontrolsComponent } from './usercontrols/usercontrols.component';
 import { MapComponent } from './map/map.component';
 import {MatInputModule} from "@angular/material/input";
 import {MatOptionModule} from "@angular/material/core";
-import {MatSelect} from "@angular/material/select";
+import {MatSelectModule} from "@angular/material/select";
 import {provideHttpClient} from "@angular/common/http";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import { ResultMapComponent } from './result-map/result-map.component';
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {MatFormFieldModule} from "@angular/material/form-field";
 
 
 @NgModule({
@@ -48,7 +51,11 @@ import { ResultMapComponent } from './result-map/result-map.component';
         }),
         MatInputModule,
         MatOptionModule,
-        MatSelect
+        MatSelectModule,
+        MatAutocompleteModule,
+        MatFormFieldModule,
+        ReactiveFormsModule,
+        FormsModule
     ],
     providers: [
     provideAnimationsAsync(), provideHttpClient()

@@ -9,8 +9,10 @@
 
         <mat-card-content>
             <div>
-                {{tableSelection.content}}
+                {{tableSelection.tableDescr}}
             </div>
+
+            <div class="divWhiteSpace"></div>
 
 
             <!--
@@ -19,8 +21,6 @@
             f_description
             f_resource
 
-             <mat-select [(value)]="selected">
-            -->
             <mat-form-field>
                 <mat-label>Table</mat-label>
                 <mat-select [(value)]="tableSelection.tableName">
@@ -28,6 +28,27 @@
                     <mat-option [value]="table.f_resource" *ngFor="let table of tables" class="optionTwoLines"><div class="optionLine1">{{table.f_resource}}: </div><div class="optionLine2">{{table.f_description}}</div></mat-option>
                 </mat-select>
             </mat-form-field>
+            -->
+
+            <mat-form-field>
+                <mat-label>Select table</mat-label>
+                <input type="text"
+                       [placeholder]="'Select table' + tableSelection.tableFunction + '(' + ')'"
+                       aria-label="Select table"
+                       matInput
+                       [formControl]="myControl"
+                       [matAutocomplete]="auto"
+                       [value]="tableSelection.tableName">
+                <!--mat-hint>{{tableSelection.tableDescr}}</mat-hint-->
+                <button mat-icon-button matSuffix type="button" color="primary" (click)="clearSelectedOption(auto)" [attr.aria-label]="'Pas aan'"><mat-icon>backspace</mat-icon></button>
+                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="selectOption($event.option.value)" [displayWith]="displayOption">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                        <div class="optionLine1">{{option.f_description}}</div>
+                        <div class="optionLine2">{{option.f_resource}}</div>
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+
 
 
         </mat-card-content>
