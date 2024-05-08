@@ -28,6 +28,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     --page-with-footer-content-height: calc(var(--app-height) - var(--toolbar-top-height) - var(--toolbar-top-height));
 
     --select-cell-width: 100%;
+
+    --app-panel-left-one-select-width: 500px;
+    --app-panel-left-number-selects: 1;
+    --app-panel-left-width: calc(var(--app-panel-left-number-selects) * var(--app-panel-left-one-select-width));
 }
 
 @media only screen and (max-width: 599px) {
@@ -268,8 +272,9 @@ div.emptyDiv {
 .container-panel {
     /* *
     padding: 10px;
+    width: calc(min(80%, 500px)) !important;
     /* */
-    width: calc(min(50%, 600px)) !important;
+    width: calc(min(80%, var(--app-panel-left-width))) !important;
     /* /
     max-width: calc(min(50%, 600px)) !important;
     /* */

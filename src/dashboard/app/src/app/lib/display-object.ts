@@ -10,12 +10,21 @@ export class DisplayObject {
 
 
     constructor(jsonObject = {}) {
-        this.displayType = 'bivariate';
-        this.numberTableFields = 2;
+        this.displayType = 'choropleth';
+        this.numberTableFields = 1;
         this.tableFields = [];
 
         for (const field in jsonObject) {
-            if (field === 'tableFields') {
+            if (field === 'displayType') {
+                switch(jsonObject[field]) {
+                    case 'bivariate':
+                        this.numberTableFields = 2;
+                        break;
+                    default:
+                        this.numberTableFields = 1;
+                        break;
+                }
+            } else if (field === 'tableFields') {
                 // console.log('tableFields: ', jsonObject[field]);
                 let tableFieldsJson = jsonObject[field];
                 tableFieldsJson.forEach(tableField => {

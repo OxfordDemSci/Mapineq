@@ -19,7 +19,7 @@ export class DashboardComponent {
   displayObject: DisplayObject;
 
 
-  tableSelections: any[];
+  // tableSelections: any[];
 
 
   panelOpen: boolean;
@@ -34,22 +34,26 @@ export class DashboardComponent {
 
     this.panelOpen = true;
 
+    /*
     this.tableSelections = [
       {title: 'Aaa', descr: 'Description A', content: 'Content A'},
-      {title: 'Bbb', descr: 'Description B', content: 'Content B'} /* /,
-      {title: 'Ccc', descr: 'Description C', content: 'Content C'} ,
-      {title: 'Ddd', descr: 'Description D', content: 'Content D'} /* */
+      {title: 'Bbb', descr: 'Description B', content: 'Content B'} //,
+      // {title: 'Ccc', descr: 'Description C', content: 'Content C'} ,
+      // {title: 'Ddd', descr: 'Description D', content: 'Content D'}
     ];
+    this.displayObject = new DisplayObject(this.tableSelections);
+    document.documentElement.style.setProperty('--select-cell-width', 'calc(100% / ' + this.tableSelections.length.toString() + ')');
+    */
 
-    // this.displayObject = new DisplayObject(this.tableSelections);
 
-    this.displayObject = new DisplayObject({tableFields: [{tableName: ''}]});
+    this.displayObject = new DisplayObject({displayType: 'bivariate', tableFields: [{}, {}]});
+    // this.displayObject = new DisplayObject({displayType: 'choropleth', tableFields: [{}, {}]});
 
     // this.displayObject.logConsole();
 
-
-
-    // document.documentElement.style.setProperty('--select-cell-width', 'calc(100% / ' + this.tableSelections.length.toString() + ')');
+    document.documentElement.style.setProperty('--select-cell-width', 'calc(100% / ' + this.displayObject.tableFields.length.toString() + ')');
+    // document.documentElement.style.setProperty('--app-panel-left-width', (500 * this.displayObject.tableFields.length).toString() + 'px');
+    document.documentElement.style.setProperty('--app-panel-left-number-selects', this.displayObject.tableFields.length.toString() );
 
   } // END FUNCTION ngOnInit
 
