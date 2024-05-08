@@ -16,6 +16,7 @@ export class DisplayObject {
 
         for (const field in jsonObject) {
             if (field === 'displayType') {
+                this.displayType = jsonObject[field];
                 switch(jsonObject[field]) {
                     case 'bivariate':
                         this.numberTableFields = 2;
@@ -27,8 +28,8 @@ export class DisplayObject {
             } else if (field === 'tableFields') {
                 // console.log('tableFields: ', jsonObject[field]);
                 let tableFieldsJson = jsonObject[field];
-                tableFieldsJson.forEach(tableField => {
-                    this.tableFields.push(new DisplayTableValueObject(tableField));
+                tableFieldsJson.forEach( (tableField, index) => {
+                    this.tableFields.push(new DisplayTableValueObject(tableField, index));
                 });
             } else {
                 this[field] = jsonObject[field];

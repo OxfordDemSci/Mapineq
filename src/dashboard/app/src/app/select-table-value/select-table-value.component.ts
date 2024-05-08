@@ -4,6 +4,7 @@ import * as L from 'leaflet';
 import {FeatureService} from "../services/feature.service";
 import {FormControl} from "@angular/forms";
 import {Observable, startWith, map} from "rxjs";
+import {DisplayTableValueObject} from "../lib/display-table-value-object";
 
 
 @Component({
@@ -15,8 +16,9 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
   @Input() inputTableId!: any;
   @Input() inputTableSelection!: any;
+  @Input() inputOtherTableSelection: any;
 
-  @Output() updateTableSelectionFromCell = new EventEmitter();
+  @Output() updateTableValueFromSelect = new EventEmitter();
 
 
   tableSelectFormControl = new FormControl('');
@@ -24,7 +26,18 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   tableSelectFilteredOptions: Observable<any[]>;
 
   tableId: number;
-  tableSelection: any;
+  tableSelection: DisplayTableValueObject;
+  otherTableSelection: DisplayTableValueObject;
+
+  availableYearsAndRegionLevels: any[];
+  availableYears: string[];
+  availableRegionLevels: string[];
+
+
+  availableColumnValues: any[];
+  selectedColumnValues: string[];
+
+
 
   private map;
   layerMapOSM: any;
@@ -36,19 +49,33 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.tableSelectOptions = []; // [{f_resource: 'TST_A', f_description: 'Test table A'}];
     // this.tables = [];
 
+    this.availableYearsAndRegionLevels = [];
+    this.availableYears = [];
+    this.availableRegionLevels = [];
 
+    this.availableColumnValues = [];
+    this.selectedColumnValues = [];
 
   } // END CONSTRUCTOR
 
 
   ngOnChanges(changes: SimpleChanges) {
     for (const propName in changes) {
-      // console.log('!!!!! !!!!! !!!!! !!!!! change in', propName, changes[propName].currentValue);
+      console.log('!!!!! !!!!! !!!!! !!!!! change in', propName, changes[propName].currentValue);
       const change = changes[propName];
       const valueCurrent  = change.currentValue;
       // const valuePrevious = change.previousValue;
+      /*
       if (propName === 'inputTableSelection' && valueCurrent) {
         // console.log('ngOnChanges(), "inputTableSelection":', valueCurrent);
+      }
+      */
+      if (propName === 'inputOtherTableSelection' && valueCurrent) {
+        // console.log('ngOnChanges(), "inputOtherTableSelection":', valueCurrent);
+
+        this.otherTableSelection = this.inputOtherTableSelection;
+
+        this.setTableSources();
       }
     }
   } // END FUNCTION ngOnChanges
@@ -65,6 +92,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     this.tableId = this.inputTableId;
     this.tableSelection = this.inputTableSelection;
+    this.otherTableSelection = this.inputOtherTableSelection;
 
     this.setTableSources();
 
@@ -121,9 +149,9 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
         );
       });
     } else if (this.tableId === 1) {
-      // getSourcesByYearAndNutsLevel year nutsleven
-      console.log('getSourcesByYearAndNutsLevel(), try get values:');
-      this.featureService.getSourcesByYearAndNutsLevel(1, 0).subscribe((data) => {
+      // getSourcesByYearAndNutsLevel year & nuts level
+      console.log('getSourcesByYearAndNutsLevel(), try get values:', this.otherTableSelection.tableYear, this.otherTableSelection.tableRegionLevel);
+      this.featureService.getSourcesByYearAndNutsLevel(this.otherTableSelection.tableYear, this.otherTableSelection.tableRegionLevel).subscribe((data) => {
         // this.tables = data;
         this.tableSelectOptions = data;
 
@@ -131,6 +159,10 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
             startWith(''),
             map(value => this.filterTableSelectOptions(value || '')),
         );
+
+        //this.tableSelection.tableYear = this.otherTableSelection.tableYear;
+        //this.tableSelection.tableRegionLevel = this.otherTableSelection.tableRegionLevel;
+
       });
     }
 
@@ -178,24 +210,58 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.tableSelection.tableName = selectedOption.f_resource;
     this.tableSelection.tableDescr = selectedOption.f_description;
 
+    // this.emitChangeTableValue();
+
+    if (this.tableSelection.tableId !== 1) {
+      this.tableSelection.tableYear = '';
+      this.tableSelection.tableRegionLevel = '';
+    } else {
+      this.tableSelection.tableYear = this.otherTableSelection.tableYear;
+      this.tableSelection.tableRegionLevel = this.otherTableSelection.tableRegionLevel;
+    }
+
+    this.availableYearsAndRegionLevels = [];
+    this.availableYears = [];
+    this.availableRegionLevels = [];
 
     this.featureService.getInfoByReSource(this.tableSelection.tableName).subscribe( data => {
-      console.log('getInfoByReSource()', this.tableSelection.tableName, data);
+      this.availableYearsAndRegionLevels = data;
+      this.setAvailableYears();
+      if (this.tableSelection.tableId === 1) {
+        this.setAvailableRegionLevelsForYear();
+      }
     });
 
+    /*
     this.featureService.getColumnValuesBySource(this.tableSelection.tableName, 2012, 0).subscribe( data => {
       console.log('getColumnValuesBySource()', this.tableSelection.tableName, data);
     });
+    */
 
     //this.responseVal = Object(this.myControl.value).id;
     //this.okClick();
   } // END FUNCTION tableSelectOption
+
+
+
+
 
   tableSelectClearSelectedOption(autoComplete) {
     console.log('tableSelectClearSelectedOption() ...');
 
     this.tableSelection.tableName = '';
     this.tableSelection.tableDescr = '';
+    this.tableSelection.tableYear = '-1';
+    this.tableSelection.tableRegionLevel = '-1';
+    this.tableSelection.tableFieldName = '';
+
+    this.availableYearsAndRegionLevels = [];
+    this.availableYears = [];
+    this.availableRegionLevels = [];
+
+    this.availableColumnValues = [];
+    this.selectedColumnValues = [];
+
 
     // console.log('CHECK: ', autoComplete.options);
     autoComplete.options.forEach( option => {
@@ -204,10 +270,81 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     this.tableSelectFormControl.reset('');
 
+
+
+    // this.emitChangeTableValue();
   } // END FUNCTION tableSelectClearSelectedOption
 
 
+  emitChangeTableValue() {
+    this.updateTableValueFromSelect.emit(this.tableSelection);
+  }
 
+
+
+  setAvailableYears() {
+    this.availableYears = [];
+
+    this.availableYearsAndRegionLevels.forEach( row => {
+      if (!this.availableYears.includes(row.f_year)) {
+        this.availableYears.push(row.f_year);
+      }
+      // console.log('- ', row.f_year, row.f_level);
+    })
+
+    this.availableYears.sort();
+    this.availableYears.reverse();
+
+    // console.log('availableYears: ', this.availableYears);
+  } // END FUNCTION setAvailableYears
+
+  setAvailableRegionLevelsForYear() {
+    // console.log('setAvailableRegionLevelsForYear(), year:', this.tableSelection.tableYear);
+
+    this.availableRegionLevels = [];
+
+    this.availableYearsAndRegionLevels.forEach( row => {
+      if (row.f_year === this.tableSelection.tableYear  &&  !this.availableRegionLevels.includes(row.f_level)) {
+        this.availableRegionLevels.push(row.f_level);
+      }
+      // console.log('- ', row.f_year, row.f_level);
+    })
+
+    this.availableRegionLevels.sort();
+    this.availableRegionLevels.reverse();
+
+    if (this.tableSelection.tableId === 1) {
+      this.getFieldsForTableForYearAndRegionLevel();
+    }
+
+    // console.log('availableRegionLevels: ', this.availableRegionLevels);
+  } // END FUNCTION setAvailableRegionLevelsForYear
+
+
+  getFieldsForTableForYearAndRegionLevel() {
+    // console.log('getFieldsForTableForYearAndRegionLevel(), year, regionLevel', this.tableSelection.tableYear, this.tableSelection.tableRegionLevel);
+    this.availableColumnValues = [];
+    this.selectedColumnValues = [];
+
+    this.emitChangeTableValue();
+
+    this.featureService.getColumnValuesBySource(this.tableSelection.tableName, this.tableSelection.tableYear, this.tableSelection.tableRegionLevel).subscribe( data => {
+      // console.log('getColumnValuesBySource()', this.tableSelection.tableName, this.tableSelection.tableYear, this.tableSelection.tableRegionLevel, data);
+      this.availableColumnValues = [];
+      this.selectedColumnValues = new Array(data.length).fill('');
+      data.forEach( row => {
+        let jsonToPush = row;
+        jsonToPush.field_values = JSON.parse(jsonToPush.field_values);
+
+        this.availableColumnValues.push(jsonToPush);
+
+      });
+
+    });
+
+
+
+  } // END FUNCTION getFieldsForTableForYearAndRegionLevel
 
 
   getTables() {
@@ -220,6 +357,10 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
 
+  checkByClick() {
+    console.log('C H E C K  -  checkByClick()', this.otherTableSelection, this.inputOtherTableSelection);
+
+  } // END FUNCTION checkByClick
 
 
 
@@ -227,3 +368,4 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
 } // END CLASS SelectTableValueComponent
+

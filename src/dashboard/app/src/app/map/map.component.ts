@@ -64,10 +64,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnChanges {
     // this.featureService.getResourceByYear(2012).subscribe((data) =>{
     //   console.log('resources by Year', data);
     // });
-    this.featureService.getSourcesByYearAndNutsLevel(2014,2).subscribe((data) =>{
+    this.featureService.getSourcesByYearAndNutsLevel('2014', '2').subscribe((data) =>{
       console.log('resources by year, nutslevel ', data);
     });
-    this.featureService.getColumnValuesBySource('BD_SIZE_R3',2014,2).subscribe((data) =>{
+    this.featureService.getColumnValuesBySource('BD_SIZE_R3', '2014', '2').subscribe((data) =>{
       console.log('ColumnValuesBySource ', data);
     });
   }

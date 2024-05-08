@@ -41,7 +41,7 @@ export class FeatureService {
   }
 
 
-  public getSourcesByYearAndNutsLevel(year:number, nutslevel: number): Observable<any> {
+  public getSourcesByYearAndNutsLevel(year: string, nutslevel: string): Observable<any> {
     //areas.sort(())
 
     return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_source_by_year_nuts_level/items.json?_year=${year}&_level=${nutslevel}&limit=1500`).pipe(
@@ -51,7 +51,7 @@ export class FeatureService {
       catchError(this.handleError('search', 'ERROR')))
   }
 
-  public getColumnValuesBySource(resource: string, year:number, nutslevel: number): Observable<any> {
+  public getColumnValuesBySource(resource: string, year: string, nutslevel: string): Observable<any> {
     //areas.sort(())
 
     return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_column_values_source/items.json?_resource=${resource}&_year=${year}&_level=${nutslevel}&limit=1500`).pipe(

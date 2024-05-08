@@ -1,17 +1,19 @@
 export class DisplayTableValueObject {
+    tableId: number;
     tableName: string;
     tableDescr: string;
     tableFunction: string;
-    tableYear: number;
-    tableAreaLevel: number;
+    tableYear: string;
+    tableRegionLevel: string;
     tableFieldName: string;
 
-    constructor(jsonObject = {}) {
+    constructor(jsonObject = {}, index = 0) {
+        this.tableId = index;
         this.tableName = '';
         this.tableDescr = '';
         this.tableFunction = '';
-        this.tableYear = -1;
-        this.tableAreaLevel = -1;
+        this.tableYear = '-1';
+        this.tableRegionLevel = '-1';
         this.tableFieldName = '';
 
         for (const field in jsonObject) {

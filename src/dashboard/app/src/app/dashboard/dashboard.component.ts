@@ -2,6 +2,7 @@ import {Component, ViewChild} from '@angular/core';
 import {ResultMapComponent} from "../result-map/result-map.component";
 import {AppVersionAndBuildChecker} from "../lib/app-version-and-build-checker";
 import {DisplayObject} from "../lib/display-object";
+import {DisplayTableValueObject} from "../lib/display-table-value-object";
 
 @Component({
   selector: 'app-dashboard',
@@ -66,6 +67,17 @@ export class DashboardComponent {
   resizeResultMap(): void {
     this.childResultMap.resizeMap();
   } // END FUNCTION resizeResultMap
+
+
+  updateTableFieldFromSelect(tableField: DisplayTableValueObject) {
+    let tableId = tableField.tableId;
+
+    console.log('=== UPDATE === updateTableFieldFromSelect()', tableId, tableField);
+
+
+    this.displayObject.tableFields[tableId] = new DisplayTableValueObject(tableField);
+
+  } // END FUNCTION updateTableFieldFromSelect
 
 
 

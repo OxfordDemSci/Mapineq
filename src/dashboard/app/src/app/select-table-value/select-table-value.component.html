@@ -14,6 +14,12 @@
 
             <div class="divWhiteSpace"></div>
 
+            <!--div>
+                <button mat-stroked-button (click)="checkByClick()"> huidige waarde 'otherTableSelection' (in console)</button>
+            </div-->
+
+            <div>aantal opties: {{tableSelectOptions.length}}</div>
+            <div class="divWhiteSpace"></div>
 
             <!--
             <div>{{tables | json}}</div>
@@ -38,7 +44,9 @@
                        matInput
                        [formControl]="tableSelectFormControl"
                        [matAutocomplete]="auto"
-                       [value]="tableSelection.tableName">
+                       [value]="tableSelection.tableName"
+                       [disabled]="tableSelectOptions.length === 0"
+                >
                 <!--mat-hint>{{tableSelection.tableDescr}}</mat-hint-->
                 <button mat-icon-button matSuffix type="button" color="primary" (click)="tableSelectClearSelectedOption(auto)" [attr.aria-label]="'Pas aan'"><mat-icon>backspace</mat-icon></button>
                 <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="tableSelectOption($event.option.value)" [displayWith]="displayTableSelectOption">
@@ -50,6 +58,42 @@
             </mat-form-field>
 
 
+            <mat-form-field *ngIf="availableYears.length > 0">
+                <mat-label>Select Year</mat-label>
+                <mat-select [(value)]="tableSelection.tableYear" (valueChange)="setAvailableRegionLevelsForYear()" [disabled]="tableSelection.tableId === 1"> <!--  [disabled]="tableSelection.tableId === 1" -->
+                    <!--mat-option value="-1">--clear--</mat-option-->
+                    <mat-option [value]="year" *ngFor="let year of availableYears">{{year}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="availableRegionLevels.length > 0  &&  tableSelection.tableYear != '-1'">
+                <mat-label>Select Region Level</mat-label>
+                <mat-select [(value)]="tableSelection.tableRegionLevel" (valueChange)="getFieldsForTableForYearAndRegionLevel()" [disabled]="tableSelection.tableId === 1">
+                    <!--mat-option value="-1">--clear--</mat-option-->
+                    <mat-option [value]="regionLevel" *ngFor="let regionLevel of availableRegionLevels">{{regionLevel}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+
+            <mat-form-field *ngFor="let fieldPart of availableColumnValues; let partId = index;">
+                <mat-label>Select {{fieldPart.field_label}}</mat-label>
+                <mat-select [(value)]="selectedColumnValues[partId]">
+                    <mat-option [value]="fieldPart.field+':'+partValue.value" *ngFor="let partValue of fieldPart.field_values">{{partValue.label}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+
+
+            <div class="json_preview">
+                <pre>{{selectedColumnValues | json}}</pre>
+            </div>
+
+
+            <div>alle waarden geselecteerd? <b>{{( (selectedColumnValues.length === availableColumnValues.length  &&  !selectedColumnValues.includes('')   &&  selectedColumnValues.length > 0 ) ? 'JA: ' + selectedColumnValues.join(', ') : 'NEE')}}</b></div>
+
+            <!--div class="json_preview">
+                <pre>{{availableColumnValues | json}}</pre>
+            </div-->
 
         </mat-card-content>
 
