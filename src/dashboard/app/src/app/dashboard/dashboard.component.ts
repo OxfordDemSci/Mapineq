@@ -72,7 +72,7 @@ export class DashboardComponent {
   updateTableFieldFromSelect(tableField: DisplayTableValueObject) {
     let tableId = tableField.tableId;
 
-    console.log('=== UPDATE === updateTableFieldFromSelect()', tableId, tableField);
+    // console.log('=== UPDATE === updateTableFieldFromSelect()', tableId, tableField);
 
 
     this.displayObject.tableFields[tableId] = new DisplayTableValueObject(tableField);

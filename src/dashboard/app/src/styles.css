@@ -189,6 +189,11 @@ h2 {
     height: 1em;
 }
 
+.textSmaller {
+    font-size: 80%;
+}
+
+
 
 .map-container {
     height: var(--page-content-height);

@@ -61,7 +61,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
   ngOnChanges(changes: SimpleChanges) {
     for (const propName in changes) {
-      console.log('!!!!! !!!!! !!!!! !!!!! change in', propName, changes[propName].currentValue);
+      // console.log('!!!!! !!!!! !!!!! !!!!! change in', propName, changes[propName].currentValue);
       const change = changes[propName];
       const valueCurrent  = change.currentValue;
       // const valuePrevious = change.previousValue;
@@ -136,7 +136,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
   setTableSources() {
-    console.log('vlak voor getSources, tableId:', this.tableId);
+    // console.log('vlak voor getSources, tableId:', this.tableId);
 
     if (this.tableId === 0) {
       // this.featureService.getAllSources().subscribe((data) => {
@@ -151,7 +151,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       });
     } else if (this.tableId === 1) {
       // getSourcesByYearAndNutsLevel year & nuts level
-      console.log('getSourcesByYearAndNutsLevel(), try get values:', this.otherTableSelection.tableYear, this.otherTableSelection.tableRegionLevel);
+      // console.log('getSourcesByYearAndNutsLevel(), try get values:', this.otherTableSelection.tableYear, this.otherTableSelection.tableRegionLevel);
       this.featureService.getSourcesByYearAndNutsLevel(this.otherTableSelection.tableYear, this.otherTableSelection.tableRegionLevel).subscribe((data) => {
         // this.tables = data;
         this.tableSelectOptions = data;
@@ -313,7 +313,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.availableYears = [];
 
     this.availableYearsAndRegionLevels.forEach( row => {
-      if (!this.availableYears.includes(row.f_year)) {
+      // only add years with correct (chosen) level
+      if (row.f_level === this.tableSelection.tableRegionLevel  &&  !this.availableYears.includes(row.f_year)) {
         this.availableYears.push(row.f_year);
       }
       // console.log('- ', row.f_year, row.f_level);
@@ -349,7 +350,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
   getFieldsForTableForYearAndRegionLevel() {
-    console.log(' >>> >>>  getFieldsForTableForYearAndRegionLevel(), tableId', this.tableSelection.tableId);
+    // console.log(' >>> >>>  getFieldsForTableForYearAndRegionLevel(), tableId', this.tableSelection.tableId);
     //console.log('getFieldsForTableForYearAndRegionLevel(), year, regionLevel', this.tableSelection.tableYear, this.tableSelection.tableRegionLevel);
     this.availableColumnValues = [];
     // this.selectedColumnValues = {};
@@ -365,7 +366,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
         let jsonToPush = row;
         jsonToPush.field_values = JSON.parse(jsonToPush.field_values);
 
-        console.log('jsonToPush:' ,jsonToPush);
+        // console.log('jsonToPush:' ,jsonToPush);
         // this.selectedColumnValues[jsonToPush.field] = '';
 
         if (jsonToPush.field_values.length === 1) {

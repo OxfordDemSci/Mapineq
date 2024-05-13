@@ -18,10 +18,10 @@
                 <button mat-stroked-button (click)="checkByClick()"> huidige waarde 'otherTableSelection' (in console)</button>
             </div-->
 
+            <!--
             <div>aantal opties: {{tableSelectOptions.length}}</div>
             <div class="divWhiteSpace"></div>
 
-            <!--
             <div>{{tables | json}}</div>
 
             f_description
@@ -50,8 +50,8 @@
 
 
 
-            <mat-form-field>
-                <mat-label>Select table</mat-label>
+            <mat-form-field *ngIf="tableSelection.tableRegionLevel !== '-1'">
+                <mat-label>Select table ({{tableSelectOptions.length}} options)</mat-label>
                 <input type="text"
                        [placeholder]="'Select table \'' + tableSelection.tableFunction + '\' (' + (tableId+1).toString() + ')'"
                        aria-label="Select table"
@@ -62,7 +62,7 @@
                        [disabled]="tableSelectOptions.length === 0"
                 >
                 <!--mat-hint>{{tableSelection.tableDescr}}</mat-hint-->
-                <button mat-icon-button matSuffix type="button" color="primary" (click)="tableSelectClearSelectedOption(auto)" [attr.aria-label]="'Pas aan'"><mat-icon>backspace</mat-icon></button>
+                <button mat-icon-button matSuffix type="button" [disabled]="this.tableSelection.tableName === ''" color="primary" (click)="tableSelectClearSelectedOption(auto)" [attr.aria-label]="'Pas aan'"><mat-icon>backspace</mat-icon></button>
                 <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="tableSelectOption($event.option.value)" [displayWith]="displayTableSelectOption">
                     <mat-option *ngFor="let option of tableSelectFilteredOptions | async" [value]="option">
                         <div class="optionLine1">{{option.f_description}}</div>
@@ -81,6 +81,8 @@
                     <mat-option [value]="year" *ngFor="let year of availableYears">{{year}}</mat-option>
                 </mat-select>
             </mat-form-field>
+            <div *ngIf="availableYears.length > 0"><div class="textSmaller">Available years: <i>{{availableYears.join(', ')}}</i></div><div class="divWhiteSpace"></div></div>
+
 
             <!--
             <mat-form-field *ngIf="availableRegionLevels.length > 0  &&  tableSelection.tableYear != '-1'">
