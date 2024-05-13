@@ -36,6 +36,20 @@
             </mat-form-field>
             -->
 
+
+            <!--
+            <mat-form-field *ngIf="availableRegionLevels.length > 0  &&  tableSelection.tableYear != '-1'">
+            -->
+            <mat-form-field>
+                <mat-label>Select Region Level</mat-label>
+                <mat-select [(value)]="tableSelection.tableRegionLevel" (valueChange)="setTableSources()" [disabled]="tableSelection.tableId === 1  ||  tableSelection.tableName !== ''">
+                    <!--mat-option value="-1">--clear--</mat-option-->
+                    <mat-option [value]="regionLevel" *ngFor="let regionLevel of availableRegionLevels">{{regionLevel}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+
+
             <mat-form-field>
                 <mat-label>Select table</mat-label>
                 <input type="text"
@@ -60,20 +74,22 @@
 
             <mat-form-field *ngIf="availableYears.length > 0">
                 <mat-label>Select Year</mat-label>
-                <mat-select [(value)]="tableSelection.tableYear" (valueChange)="setAvailableRegionLevelsForYear()" [disabled]="tableSelection.tableId === 1"> <!--  [disabled]="tableSelection.tableId === 1" -->
+                <!--
+                <mat-select [(value)]="tableSelection.tableYear" (valueChange)="setAvailableRegionLevelsForYear()" [disabled]="tableSelection.tableId === 1"> --><!--  [disabled]="tableSelection.tableId === 1" -->
+                <mat-select [(value)]="tableSelection.tableYear" (valueChange)="getFieldsForTableForYearAndRegionLevel()" [disabled]="tableSelection.tableId === 1"> <!--  [disabled]="tableSelection.tableId === 1" -->
                     <!--mat-option value="-1">--clear--</mat-option-->
                     <mat-option [value]="year" *ngFor="let year of availableYears">{{year}}</mat-option>
                 </mat-select>
             </mat-form-field>
 
+            <!--
             <mat-form-field *ngIf="availableRegionLevels.length > 0  &&  tableSelection.tableYear != '-1'">
                 <mat-label>Select Region Level</mat-label>
                 <mat-select [(value)]="tableSelection.tableRegionLevel" (valueChange)="getFieldsForTableForYearAndRegionLevel()" [disabled]="tableSelection.tableId === 1">
-                    <!--mat-option value="-1">--clear--</mat-option-->
                     <mat-option [value]="regionLevel" *ngFor="let regionLevel of availableRegionLevels">{{regionLevel}}</mat-option>
                 </mat-select>
             </mat-form-field>
-
+            -->
 
             <mat-form-field *ngFor="let columnValue of availableColumnValues; let partId = index;">
                 <mat-label>Select {{columnValue.field_label}}</mat-label>

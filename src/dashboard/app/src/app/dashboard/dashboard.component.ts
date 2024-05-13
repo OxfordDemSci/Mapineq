@@ -77,6 +77,15 @@ export class DashboardComponent {
 
     this.displayObject.tableFields[tableId] = new DisplayTableValueObject(tableField);
 
+    if (tableField.tableId === 0  &&  this.displayObject.displayType === 'bivariate') {
+      this.displayObject.tableFields[1].tableRegionLevel = this.displayObject.tableFields[0].tableRegionLevel;
+      this.displayObject.tableFields[1].tableYear = this.displayObject.tableFields[0].tableYear;
+      if (this.displayObject.tableFields[0].tableName === '') {
+        this.displayObject.tableFields[1].tableName = '';
+      }
+    }
+
+
   } // END FUNCTION updateTableFieldFromSelect
 
 
