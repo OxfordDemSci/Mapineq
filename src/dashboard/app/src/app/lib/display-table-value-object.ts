@@ -6,6 +6,7 @@ export class DisplayTableValueObject {
     tableYear: string;
     tableRegionLevel: string;
     tableColumnValues: any;
+    tableSelectionComplete: boolean;
 
     constructor(jsonObject = {}, index = 0) {
         this.tableId = index;
@@ -15,6 +16,7 @@ export class DisplayTableValueObject {
         this.tableYear = '-1';
         this.tableRegionLevel = '-1';
         this.tableColumnValues = {};
+        this.tableSelectionComplete = false;
 
         for (const field in jsonObject) {
             if(Object.getOwnPropertyNames(this).includes(field)) {
@@ -24,5 +26,32 @@ export class DisplayTableValueObject {
             }
         }
     }
+
+    checkSelectionComplete() {
+        console.log('checkSelectionComplete()', this);
+        let selectionComplete = true;
+        if (this.tableRegionLevel === '-1') {
+            selectionComplete = false;
+        }
+        if (this.tableName === '') {
+            selectionComplete = false;
+        }
+        if (this.tableDescr === '') {
+            selectionComplete = false;
+        }
+        if (this.tableYear === '-1') {
+            selectionComplete = false;
+        }
+        if (Object.values(this.tableColumnValues).length === 0) {
+            selectionComplete = false;
+        } else {
+            Object.values(this.tableColumnValues).forEach( columnValue => {
+                if (columnValue === '') {
+                    selectionComplete = false;
+                }
+            });
+        }
+        this.tableSelectionComplete = selectionComplete;
+    } // END FUNCTION checkSelectionComplete();
 
 } // END CLASS DisplayTableValueObject

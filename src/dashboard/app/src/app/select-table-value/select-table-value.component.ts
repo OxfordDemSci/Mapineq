@@ -297,6 +297,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     this.tableSelectFormControl.reset('');
 
+    this.checkTableValueSelectionComplete();
 
 
     this.emitChangeTableValue();
@@ -382,17 +383,17 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     });
 
 
+    this.checkTableValueSelectionComplete();
 
   } // END FUNCTION getFieldsForTableForYearAndRegionLevel
 
 
-  getTables() {
+  checkTableValueSelectionComplete() {
+    console.log('checkTableValueSelectionComplete() ...');
 
-  } // END FUNCTION getTables
-
-  getTableOptions() {
-
-  } // END FUNCTION getTableOptions
+    this.tableSelection.checkSelectionComplete();
+    this.emitChangeTableValue();
+  } // END FUNCTION checkTableValueSelectionComplete
 
 
 
@@ -402,6 +403,10 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   } // END FUNCTION checkByClick
 
 
+  // dit hieronder kan waarschijnlijk weer weg als Object.values() niet in html wordt gebruikt ...
+  /*
   protected readonly Object = Object;
+  */
+
 } // END CLASS SelectTableValueComponent
 

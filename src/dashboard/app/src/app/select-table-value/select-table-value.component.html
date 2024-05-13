@@ -96,19 +96,20 @@
             <mat-form-field *ngFor="let columnValue of availableColumnValues; let partId = index;">
                 <mat-label>Select {{columnValue.field_label}}</mat-label>
                 <!-- mat-select [(value)]="selectedColumnValues[columnValue.field]" -->
-                <mat-select [(value)]="tableSelection.tableColumnValues[columnValue.field]">
+                <mat-select [(value)]="tableSelection.tableColumnValues[columnValue.field]" (valueChange)="checkTableValueSelectionComplete()">
                     <mat-option [value]="partValue.value" *ngFor="let partValue of columnValue.field_values">{{partValue.label}}</mat-option>
                 </mat-select>
             </mat-form-field>
 
 
 
-            <div class="json_preview">
+            <!-- div class="json_preview">
                 <pre>{{tableSelection.tableColumnValues | json}}</pre>
-            </div>
+            </div -->
 
 
-            <div>alle waarden geselecteerd? <b>{{( (Object.values(tableSelection.tableColumnValues).length === availableColumnValues.length  &&  !(Object.values(tableSelection.tableColumnValues).includes(""))   &&  Object.values(tableSelection.tableColumnValues).length > 0 ) ? 'JA': 'NEE')}}</b></div>
+            <!-- div>alle waarden geselecteerd? <b>{{( (Object.values(tableSelection.tableColumnValues).length === availableColumnValues.length  &&  !(Object.values(tableSelection.tableColumnValues).includes(""))   &&  Object.values(tableSelection.tableColumnValues).length > 0 ) ? 'JA': 'NEE')}}</b></div -->
+            <div>Selection complete? <b>{{ (tableSelection.tableSelectionComplete ? 'YES' : 'no') }}</b></div>
 
             <!--div class="json_preview">
                 <pre>{{availableColumnValues | json}}</pre>
