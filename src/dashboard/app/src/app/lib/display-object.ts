@@ -6,13 +6,14 @@ export class DisplayObject {
     numberTableFields: number;
     tableFields: DisplayTableValueObject[];
     colors: string[];
-
+    displayData: any[];
 
 
     constructor(jsonObject = {}) {
         this.displayType = 'choropleth';
         this.numberTableFields = 1;
         this.tableFields = [];
+        this.displayData = [];
 
         for (const field in jsonObject) {
             if (field === 'displayType') {
