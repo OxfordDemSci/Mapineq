@@ -5,7 +5,7 @@ export class DisplayTableValueObject {
     tableFunction: string;
     tableYear: string;
     tableRegionLevel: string;
-    tableFieldName: any;
+    tableColumnValues: any;
 
     constructor(jsonObject = {}, index = 0) {
         this.tableId = index;
@@ -14,7 +14,7 @@ export class DisplayTableValueObject {
         this.tableFunction = '';
         this.tableYear = '-1';
         this.tableRegionLevel = '-1';
-        this.tableFieldName = {};
+        this.tableColumnValues = {};
 
         for (const field in jsonObject) {
             if(Object.getOwnPropertyNames(this).includes(field)) {

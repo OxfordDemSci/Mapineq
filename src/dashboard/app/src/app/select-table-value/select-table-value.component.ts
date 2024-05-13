@@ -35,7 +35,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
   availableColumnValues: any[];
-  selectedColumnValues: string[];
+  selectedColumnValues: any;
 
 
 
@@ -54,7 +54,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.availableRegionLevels = [];
 
     this.availableColumnValues = [];
-    this.selectedColumnValues = [];
+    this.selectedColumnValues = {};
 
   } // END CONSTRUCTOR
 
@@ -253,14 +253,14 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.tableSelection.tableDescr = '';
     this.tableSelection.tableYear = '-1';
     this.tableSelection.tableRegionLevel = '-1';
-    this.tableSelection.tableFieldName = '';
+    this.tableSelection.tableColumnValues = {};
 
     this.availableYearsAndRegionLevels = [];
     this.availableYears = [];
     this.availableRegionLevels = [];
 
     this.availableColumnValues = [];
-    this.selectedColumnValues = [];
+    this.selectedColumnValues = {};
 
 
     // console.log('CHECK: ', autoComplete.options);
@@ -324,17 +324,22 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   getFieldsForTableForYearAndRegionLevel() {
     // console.log('getFieldsForTableForYearAndRegionLevel(), year, regionLevel', this.tableSelection.tableYear, this.tableSelection.tableRegionLevel);
     this.availableColumnValues = [];
-    this.selectedColumnValues = [];
+    this.selectedColumnValues = {};
+    this.tableSelection.tableColumnValues = {};
 
     this.emitChangeTableValue();
 
     this.featureService.getColumnValuesBySource(this.tableSelection.tableName, this.tableSelection.tableYear, this.tableSelection.tableRegionLevel).subscribe( data => {
       // console.log('getColumnValuesBySource()', this.tableSelection.tableName, this.tableSelection.tableYear, this.tableSelection.tableRegionLevel, data);
       this.availableColumnValues = [];
-      this.selectedColumnValues = new Array(data.length).fill('');
+      // this.selectedColumnValues = new Array(data.length).fill('');
       data.forEach( row => {
         let jsonToPush = row;
         jsonToPush.field_values = JSON.parse(jsonToPush.field_values);
+
+        console.log('jsonToPush:' ,jsonToPush);
+        this.selectedColumnValues[jsonToPush.field] = '';
+        this.tableSelection.tableColumnValues[jsonToPush.field] = '';
 
         this.availableColumnValues.push(jsonToPush);
 
@@ -363,9 +368,6 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   } // END FUNCTION checkByClick
 
 
-
-
-
-
+  protected readonly Object = Object;
 } // END CLASS SelectTableValueComponent
 

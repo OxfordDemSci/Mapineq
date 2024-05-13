@@ -75,10 +75,11 @@
             </mat-form-field>
 
 
-            <mat-form-field *ngFor="let fieldPart of availableColumnValues; let partId = index;">
-                <mat-label>Select {{fieldPart.field_label}}</mat-label>
-                <mat-select [(value)]="selectedColumnValues[partId]">
-                    <mat-option [value]="fieldPart.field+':'+partValue.value" *ngFor="let partValue of fieldPart.field_values">{{partValue.label}}</mat-option>
+            <mat-form-field *ngFor="let columnValue of availableColumnValues; let partId = index;">
+                <mat-label>Select {{columnValue.field_label}}</mat-label>
+                <!-- mat-select [(value)]="selectedColumnValues[columnValue.field]" -->
+                <mat-select [(value)]="tableSelection.tableColumnValues[columnValue.field]">
+                    <mat-option [value]="partValue.value" *ngFor="let partValue of columnValue.field_values">{{partValue.label}}</mat-option>
                 </mat-select>
             </mat-form-field>
 
@@ -89,7 +90,7 @@
             </div>
 
 
-            <div>alle waarden geselecteerd? <b>{{( (selectedColumnValues.length === availableColumnValues.length  &&  !selectedColumnValues.includes('')   &&  selectedColumnValues.length > 0 ) ? 'JA: ' + selectedColumnValues.join(', ') : 'NEE')}}</b></div>
+            <div>alle waarden geselecteerd? <b>{{( (Object.values(selectedColumnValues).length === availableColumnValues.length  &&  !(Object.values(selectedColumnValues).includes(""))   &&  Object.values(selectedColumnValues).length > 0 ) ? 'JA: ' + Object.values(selectedColumnValues).join(', ') : 'NEE')}}</b></div>
 
             <!--div class="json_preview">
                 <pre>{{availableColumnValues | json}}</pre>
