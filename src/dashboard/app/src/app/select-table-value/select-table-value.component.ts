@@ -365,9 +365,14 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
         let jsonToPush = row;
         jsonToPush.field_values = JSON.parse(jsonToPush.field_values);
 
-        // console.log('jsonToPush:' ,jsonToPush);
+        console.log('jsonToPush:' ,jsonToPush);
         // this.selectedColumnValues[jsonToPush.field] = '';
-        this.tableSelection.tableColumnValues[jsonToPush.field] = '';
+
+        if (jsonToPush.field_values.length === 1) {
+          this.tableSelection.tableColumnValues[jsonToPush.field] = jsonToPush.field_values[0].value;
+        } else {
+          this.tableSelection.tableColumnValues[jsonToPush.field] = '';
+        }
 
         this.availableColumnValues.push(jsonToPush);
 
