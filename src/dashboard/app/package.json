@@ -5,6 +5,7 @@
     "ng": "ng",
     "DASHBOARD start": "ng serve",
     "DASHBOARD start + browser": "ng serve --open",
+    "DASHBOARD build-prod DEV TEST + base=href": "node update_app_version_and_build.js  &&  ng build --configuration production --base-href /mapineq_dashboard_dev/",
     "DASHBOARD build-prod ROOT": "node update_app_version_and_build.js  &&  ng build --configuration production",
     "DASHBOARD build-prod + base=href": "node update_app_version_and_build.js  &&  ng build --configuration production --base-href /dashboard/",
     "build": "ng build",
