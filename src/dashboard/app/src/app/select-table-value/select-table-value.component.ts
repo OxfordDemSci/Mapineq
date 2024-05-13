@@ -65,16 +65,17 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       const change = changes[propName];
       const valueCurrent  = change.currentValue;
       // const valuePrevious = change.previousValue;
-      /*
+
       if (propName === 'inputTableSelection' && valueCurrent) {
         // console.log('ngOnChanges(), "inputTableSelection":', valueCurrent);
+        // this.tableSelection = new DisplayTableValueObject(this.inputTableSelection);
+        this.tableSelection = this.inputTableSelection;
       }
-      */
+
       if (propName === 'inputOtherTableSelection' && valueCurrent) {
         // console.log('ngOnChanges(), "inputOtherTableSelection":', valueCurrent);
-
+        // this.otherTableSelection = new DisplayTableValueObject(this.inputOtherTableSelection);
         this.otherTableSelection = this.inputOtherTableSelection;
-
         this.setTableSources();
       }
     }
@@ -261,11 +262,13 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     //this.responseVal = Object(this.myControl.value).id;
     //this.okClick();
-    this.emitChangeTableValue();
 
     if (this.tableSelection.tableId === 1) {
+      this.checkTableValueSelectionComplete();
       this.getFieldsForTableForYearAndRegionLevel();
     }
+
+    this.emitChangeTableValue();
 
   } // END FUNCTION tableSelectOption
 
@@ -305,7 +308,12 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
   emitChangeTableValue() {
+    // console.log('emitChangeTableValue() .. id:', this.tableSelection.tableId);
+    // console.log('VOOR ' + this.tableSelection.tableId.toString(), this.tableSelection);
+    // this.tableSelection = new DisplayTableValueObject(this.tableSelection);
+    // console.log('ERNA ' + this.tableSelection.tableId.toString(), this.tableSelection);
     this.updateTableValueFromSelect.emit(this.tableSelection);
+    // this.updateTableValueFromSelect.emit(new DisplayTableValueObject(this.tableSelection));
   }
 
 
@@ -389,7 +397,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
   checkTableValueSelectionComplete() {
-    console.log('checkTableValueSelectionComplete() ...');
+    // console.log('checkTableValueSelectionComplete() ...', this.tableSelection.tableId);
 
     this.tableSelection.checkSelectionComplete();
     this.emitChangeTableValue();

@@ -25,10 +25,12 @@ export class DisplayTableValueObject {
                 console.log('Non existing property: ', field);
             }
         }
-    }
+
+        this.checkSelectionComplete();
+    } // END constructor
 
     checkSelectionComplete() {
-        console.log('checkSelectionComplete()', this);
+        // console.log('checkSelectionComplete()', this);
         let selectionComplete = true;
         if (this.tableRegionLevel === '-1') {
             selectionComplete = false;
