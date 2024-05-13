@@ -17,7 +17,11 @@ export class DisplayTableValueObject {
         this.tableFieldName = {};
 
         for (const field in jsonObject) {
-            this[field] = jsonObject[field];
+            if(Object.getOwnPropertyNames(this).includes(field)) {
+                this[field] = jsonObject[field];
+            } else {
+                console.log('Non existing property: ', field);
+            }
         }
     }
 

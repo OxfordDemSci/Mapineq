@@ -33,7 +33,11 @@ export class DisplayObject {
                     this.tableFields.push(new DisplayTableValueObject(tableField, index));
                 });
             } else {
-                this[field] = jsonObject[field];
+                if(Object.getOwnPropertyNames(this).includes(field)) {
+                    this[field] = jsonObject[field];
+                } else {
+                    console.log('Non existing property: ', field);
+                }
             }
         }
 
