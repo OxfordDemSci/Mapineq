@@ -108,6 +108,15 @@ export class FeatureService {
   }
 
 
+  public getTestXYData(): Observable<any> {
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.xydata_withtables/items.json?_year=2014&table1=unemployment&table2=public.%22DEMO_R_MLIFEXP%22&limit=500`).pipe(
+      tap((result) => {
+        //console.log(result);
+      }),
+      catchError(this.handleError('search', 'ERROR')))
+  }
+
+
 
   handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
