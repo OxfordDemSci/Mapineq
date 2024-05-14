@@ -72,13 +72,42 @@ export class DashboardComponent {
   updateTableFieldFromSelect(tableField: DisplayTableValueObject) {
     let tableId = tableField.tableId;
 
-    console.log('=== UPDATE === updateTableFieldFromSelect()', tableId, tableField);
+    // console.log('=== UPDATE === updateTableFieldFromSelect()', tableId, tableField);
 
 
     this.displayObject.tableFields[tableId] = new DisplayTableValueObject(tableField);
 
+
+    if (tableField.tableId === 0  &&  this.displayObject.displayType === 'bivariate') {
+      this.displayObject.tableFields[1].tableRegionLevel = this.displayObject.tableFields[0].tableRegionLevel;
+      this.displayObject.tableFields[1].tableYear = this.displayObject.tableFields[0].tableYear;
+      if (this.displayObject.tableFields[0].tableName === '') {
+        this.displayObject.tableFields[1].tableName = '';
+      }
+    }
+
+    let doCollectDataForSelection = true;
+    this.displayObject.tableFields.forEach( tableField => {
+      tableField.checkSelectionComplete();
+      if (!tableField.tableSelectionComplete) {
+        doCollectDataForSelection = false;
+      }
+    });
+
+    // console.log(' - - doCollectDataForSelection ???');
+    if (doCollectDataForSelection) {
+      this.collectDataForSelection();
+    }
+
   } // END FUNCTION updateTableFieldFromSelect
 
 
+  collectDataForSelection() {
+    console.log('collectDataForSelection() ... ');
 
-}
+
+  } // END FUNCTION collectDataForSelection
+
+
+
+} // END CLASS DashboardComponent

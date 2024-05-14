@@ -6,13 +6,14 @@ export class DisplayObject {
     numberTableFields: number;
     tableFields: DisplayTableValueObject[];
     colors: string[];
-
+    displayData: any[];
 
 
     constructor(jsonObject = {}) {
         this.displayType = 'choropleth';
         this.numberTableFields = 1;
         this.tableFields = [];
+        this.displayData = [];
 
         for (const field in jsonObject) {
             if (field === 'displayType') {
@@ -32,7 +33,11 @@ export class DisplayObject {
                     this.tableFields.push(new DisplayTableValueObject(tableField, index));
                 });
             } else {
-                this[field] = jsonObject[field];
+                if(Object.getOwnPropertyNames(this).includes(field)) {
+                    this[field] = jsonObject[field];
+                } else {
+                    console.log('Non existing property: ', field);
+                }
             }
         }
 

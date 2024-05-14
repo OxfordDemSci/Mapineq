@@ -35,7 +35,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
   availableColumnValues: any[];
-  selectedColumnValues: string[];
+  // selectedColumnValues: any;
 
 
 
@@ -51,30 +51,31 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     this.availableYearsAndRegionLevels = [];
     this.availableYears = [];
-    this.availableRegionLevels = [];
+    this.availableRegionLevels = ['3', '2', '1', '0'];
 
     this.availableColumnValues = [];
-    this.selectedColumnValues = [];
+    // this.selectedColumnValues = {};
 
   } // END CONSTRUCTOR
 
 
   ngOnChanges(changes: SimpleChanges) {
     for (const propName in changes) {
-      console.log('!!!!! !!!!! !!!!! !!!!! change in', propName, changes[propName].currentValue);
+      // console.log('!!!!! !!!!! !!!!! !!!!! change in', propName, changes[propName].currentValue);
       const change = changes[propName];
       const valueCurrent  = change.currentValue;
       // const valuePrevious = change.previousValue;
-      /*
+
       if (propName === 'inputTableSelection' && valueCurrent) {
         // console.log('ngOnChanges(), "inputTableSelection":', valueCurrent);
+        // this.tableSelection = new DisplayTableValueObject(this.inputTableSelection);
+        this.tableSelection = this.inputTableSelection;
       }
-      */
+
       if (propName === 'inputOtherTableSelection' && valueCurrent) {
         // console.log('ngOnChanges(), "inputOtherTableSelection":', valueCurrent);
-
+        // this.otherTableSelection = new DisplayTableValueObject(this.inputOtherTableSelection);
         this.otherTableSelection = this.inputOtherTableSelection;
-
         this.setTableSources();
       }
     }
@@ -136,10 +137,11 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
   setTableSources() {
-    console.log('vlak voor getSources, tableId:', this.tableId);
+    // console.log('vlak voor getSources, tableId:', this.tableId);
 
     if (this.tableId === 0) {
-      this.featureService.getAllSources().subscribe((data) => {
+      // this.featureService.getAllSources().subscribe((data) => {
+      this.featureService.getResourceByNutsLevel(this.tableSelection.tableRegionLevel).subscribe((data) => {
         // this.tables = data;
         this.tableSelectOptions = data;
 
@@ -150,10 +152,25 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       });
     } else if (this.tableId === 1) {
       // getSourcesByYearAndNutsLevel year & nuts level
-      console.log('getSourcesByYearAndNutsLevel(), try get values:', this.otherTableSelection.tableYear, this.otherTableSelection.tableRegionLevel);
+      // console.log('getSourcesByYearAndNutsLevel(), try get values:', this.otherTableSelection.tableYear, this.otherTableSelection.tableRegionLevel);
       this.featureService.getSourcesByYearAndNutsLevel(this.otherTableSelection.tableYear, this.otherTableSelection.tableRegionLevel).subscribe((data) => {
         // this.tables = data;
         this.tableSelectOptions = data;
+
+        // console.log('this.tableSelectOptions: ', this.tableSelectOptions);
+        let selectedTableStillAvailable = false;
+        this.tableSelectOptions.forEach( option => {
+          if (option.f_resource === this.tableSelection.tableName) {
+            selectedTableStillAvailable = true;
+          }
+        })
+        if (!selectedTableStillAvailable) {
+          this.tableSelection.tableName = '';
+          this.tableSelection.tableDescr = '';
+          this.tableSelection.tableColumnValues = {};
+          this.availableColumnValues = [];
+        }
+
 
         this.tableSelectFilteredOptions = this.tableSelectFormControl.valueChanges.pipe(
             startWith(''),
@@ -163,8 +180,13 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
         //this.tableSelection.tableYear = this.otherTableSelection.tableYear;
         //this.tableSelection.tableRegionLevel = this.otherTableSelection.tableRegionLevel;
 
+
+
+
       });
     }
+
+    this.emitChangeTableValue();
 
   } // END FUNCTION setTableSources
 
@@ -214,7 +236,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     if (this.tableSelection.tableId !== 1) {
       this.tableSelection.tableYear = '';
-      this.tableSelection.tableRegionLevel = '';
+      // this.tableSelection.tableRegionLevel = '';
     } else {
       this.tableSelection.tableYear = this.otherTableSelection.tableYear;
       this.tableSelection.tableRegionLevel = this.otherTableSelection.tableRegionLevel;
@@ -222,14 +244,14 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     this.availableYearsAndRegionLevels = [];
     this.availableYears = [];
-    this.availableRegionLevels = [];
+    // this.availableRegionLevels = [];
 
     this.featureService.getInfoByReSource(this.tableSelection.tableName).subscribe( data => {
       this.availableYearsAndRegionLevels = data;
       this.setAvailableYears();
-      if (this.tableSelection.tableId === 1) {
-        this.setAvailableRegionLevelsForYear();
-      }
+      // if (this.tableSelection.tableId === 1) {
+      //   this.setAvailableRegionLevelsForYear();
+      // }
     });
 
     /*
@@ -240,6 +262,14 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     //this.responseVal = Object(this.myControl.value).id;
     //this.okClick();
+
+    if (this.tableSelection.tableId === 1) {
+      this.checkTableValueSelectionComplete();
+      this.getFieldsForTableForYearAndRegionLevel();
+    }
+
+    this.emitChangeTableValue();
+
   } // END FUNCTION tableSelectOption
 
 
@@ -252,15 +282,15 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.tableSelection.tableName = '';
     this.tableSelection.tableDescr = '';
     this.tableSelection.tableYear = '-1';
-    this.tableSelection.tableRegionLevel = '-1';
-    this.tableSelection.tableFieldName = '';
+    // this.tableSelection.tableRegionLevel = '-1';
+    this.tableSelection.tableColumnValues = {};
 
     this.availableYearsAndRegionLevels = [];
     this.availableYears = [];
-    this.availableRegionLevels = [];
+    // this.availableRegionLevels = [];
 
     this.availableColumnValues = [];
-    this.selectedColumnValues = [];
+    // this.selectedColumnValues = {};
 
 
     // console.log('CHECK: ', autoComplete.options);
@@ -270,14 +300,20 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     this.tableSelectFormControl.reset('');
 
+    this.checkTableValueSelectionComplete();
 
 
-    // this.emitChangeTableValue();
+    this.emitChangeTableValue();
   } // END FUNCTION tableSelectClearSelectedOption
 
 
   emitChangeTableValue() {
+    // console.log('emitChangeTableValue() .. id:', this.tableSelection.tableId);
+    // console.log('VOOR ' + this.tableSelection.tableId.toString(), this.tableSelection);
+    // this.tableSelection = new DisplayTableValueObject(this.tableSelection);
+    // console.log('ERNA ' + this.tableSelection.tableId.toString(), this.tableSelection);
     this.updateTableValueFromSelect.emit(this.tableSelection);
+    // this.updateTableValueFromSelect.emit(new DisplayTableValueObject(this.tableSelection));
   }
 
 
@@ -286,7 +322,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.availableYears = [];
 
     this.availableYearsAndRegionLevels.forEach( row => {
-      if (!this.availableYears.includes(row.f_year)) {
+      // only add years with correct (chosen) level
+      if (row.f_level === this.tableSelection.tableRegionLevel  &&  !this.availableYears.includes(row.f_year)) {
         this.availableYears.push(row.f_year);
       }
       // console.log('- ', row.f_year, row.f_level);
@@ -322,19 +359,30 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
   getFieldsForTableForYearAndRegionLevel() {
-    // console.log('getFieldsForTableForYearAndRegionLevel(), year, regionLevel', this.tableSelection.tableYear, this.tableSelection.tableRegionLevel);
+    // console.log(' >>> >>>  getFieldsForTableForYearAndRegionLevel(), tableId', this.tableSelection.tableId);
+    //console.log('getFieldsForTableForYearAndRegionLevel(), year, regionLevel', this.tableSelection.tableYear, this.tableSelection.tableRegionLevel);
     this.availableColumnValues = [];
-    this.selectedColumnValues = [];
+    // this.selectedColumnValues = {};
+    this.tableSelection.tableColumnValues = {};
 
     this.emitChangeTableValue();
 
     this.featureService.getColumnValuesBySource(this.tableSelection.tableName, this.tableSelection.tableYear, this.tableSelection.tableRegionLevel).subscribe( data => {
       // console.log('getColumnValuesBySource()', this.tableSelection.tableName, this.tableSelection.tableYear, this.tableSelection.tableRegionLevel, data);
       this.availableColumnValues = [];
-      this.selectedColumnValues = new Array(data.length).fill('');
+      // this.selectedColumnValues = new Array(data.length).fill('');
       data.forEach( row => {
         let jsonToPush = row;
         jsonToPush.field_values = JSON.parse(jsonToPush.field_values);
+
+        // console.log('jsonToPush:' ,jsonToPush);
+        // this.selectedColumnValues[jsonToPush.field] = '';
+
+        if (jsonToPush.field_values.length === 1) {
+          this.tableSelection.tableColumnValues[jsonToPush.field] = jsonToPush.field_values[0].value;
+        } else {
+          this.tableSelection.tableColumnValues[jsonToPush.field] = '';
+        }
 
         this.availableColumnValues.push(jsonToPush);
 
@@ -343,17 +391,17 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     });
 
 
+    this.checkTableValueSelectionComplete();
 
   } // END FUNCTION getFieldsForTableForYearAndRegionLevel
 
 
-  getTables() {
+  checkTableValueSelectionComplete() {
+    // console.log('checkTableValueSelectionComplete() ...', this.tableSelection.tableId);
 
-  } // END FUNCTION getTables
-
-  getTableOptions() {
-
-  } // END FUNCTION getTableOptions
+    this.tableSelection.checkSelectionComplete();
+    this.emitChangeTableValue();
+  } // END FUNCTION checkTableValueSelectionComplete
 
 
 
@@ -363,9 +411,10 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   } // END FUNCTION checkByClick
 
 
-
-
-
+  // dit hieronder kan waarschijnlijk weer weg als Object.values() niet in html wordt gebruikt ...
+  /*
+  protected readonly Object = Object;
+  */
 
 } // END CLASS SelectTableValueComponent
 

@@ -80,7 +80,7 @@ export class FeatureService {
   }
 
   //postgisftw.get_source_by_nuts_level
-  public getResourceByNutsLevel(nutslevel: number): Observable<any> {
+  public getResourceByNutsLevel(nutslevel: string): Observable<any> {
     return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_source_by_nuts_level/items.json?_level=${nutslevel}&limit=1500`).pipe(
       tap((result) => {
         //console.log(result);

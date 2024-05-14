@@ -18,10 +18,10 @@
                 <button mat-stroked-button (click)="checkByClick()"> huidige waarde 'otherTableSelection' (in console)</button>
             </div-->
 
+            <!--
             <div>aantal opties: {{tableSelectOptions.length}}</div>
             <div class="divWhiteSpace"></div>
 
-            <!--
             <div>{{tables | json}}</div>
 
             f_description
@@ -36,8 +36,22 @@
             </mat-form-field>
             -->
 
+
+            <!--
+            <mat-form-field *ngIf="availableRegionLevels.length > 0  &&  tableSelection.tableYear != '-1'">
+            -->
             <mat-form-field>
-                <mat-label>Select table</mat-label>
+                <mat-label>Select Region Level</mat-label>
+                <mat-select [(value)]="tableSelection.tableRegionLevel" (valueChange)="setTableSources()" [disabled]="tableSelection.tableId === 1  ||  tableSelection.tableName !== ''">
+                    <!--mat-option value="-1">--clear--</mat-option-->
+                    <mat-option [value]="regionLevel" *ngFor="let regionLevel of availableRegionLevels">{{regionLevel}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+
+
+            <mat-form-field *ngIf="tableSelection.tableRegionLevel !== '-1'">
+                <mat-label>Select table ({{tableSelectOptions.length}} options)</mat-label>
                 <input type="text"
                        [placeholder]="'Select table \'' + tableSelection.tableFunction + '\' (' + (tableId+1).toString() + ')'"
                        aria-label="Select table"
@@ -48,7 +62,7 @@
                        [disabled]="tableSelectOptions.length === 0"
                 >
                 <!--mat-hint>{{tableSelection.tableDescr}}</mat-hint-->
-                <button mat-icon-button matSuffix type="button" color="primary" (click)="tableSelectClearSelectedOption(auto)" [attr.aria-label]="'Pas aan'"><mat-icon>backspace</mat-icon></button>
+                <button mat-icon-button matSuffix type="button" [disabled]="this.tableSelection.tableName === ''" color="primary" (click)="tableSelectClearSelectedOption(auto)" [attr.aria-label]="'Pas aan'"><mat-icon>backspace</mat-icon></button>
                 <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="tableSelectOption($event.option.value)" [displayWith]="displayTableSelectOption">
                     <mat-option *ngFor="let option of tableSelectFilteredOptions | async" [value]="option">
                         <div class="optionLine1">{{option.f_description}}</div>
@@ -60,36 +74,42 @@
 
             <mat-form-field *ngIf="availableYears.length > 0">
                 <mat-label>Select Year</mat-label>
-                <mat-select [(value)]="tableSelection.tableYear" (valueChange)="setAvailableRegionLevelsForYear()" [disabled]="tableSelection.tableId === 1"> <!--  [disabled]="tableSelection.tableId === 1" -->
+                <!--
+                <mat-select [(value)]="tableSelection.tableYear" (valueChange)="setAvailableRegionLevelsForYear()" [disabled]="tableSelection.tableId === 1"> --><!--  [disabled]="tableSelection.tableId === 1" -->
+                <mat-select [(value)]="tableSelection.tableYear" (valueChange)="getFieldsForTableForYearAndRegionLevel()" [disabled]="tableSelection.tableId === 1"> <!--  [disabled]="tableSelection.tableId === 1" -->
                     <!--mat-option value="-1">--clear--</mat-option-->
                     <mat-option [value]="year" *ngFor="let year of availableYears">{{year}}</mat-option>
                 </mat-select>
             </mat-form-field>
+            <div *ngIf="availableYears.length > 0"><div class="textSmaller">Available years: <i>{{availableYears.join(', ')}}</i></div><div class="divWhiteSpace"></div></div>
 
+
+            <!--
             <mat-form-field *ngIf="availableRegionLevels.length > 0  &&  tableSelection.tableYear != '-1'">
                 <mat-label>Select Region Level</mat-label>
                 <mat-select [(value)]="tableSelection.tableRegionLevel" (valueChange)="getFieldsForTableForYearAndRegionLevel()" [disabled]="tableSelection.tableId === 1">
-                    <!--mat-option value="-1">--clear--</mat-option-->
                     <mat-option [value]="regionLevel" *ngFor="let regionLevel of availableRegionLevels">{{regionLevel}}</mat-option>
                 </mat-select>
             </mat-form-field>
+            -->
 
-
-            <mat-form-field *ngFor="let fieldPart of availableColumnValues; let partId = index;">
-                <mat-label>Select {{fieldPart.field_label}}</mat-label>
-                <mat-select [(value)]="selectedColumnValues[partId]">
-                    <mat-option [value]="fieldPart.field+':'+partValue.value" *ngFor="let partValue of fieldPart.field_values">{{partValue.label}}</mat-option>
+            <mat-form-field *ngFor="let columnValue of availableColumnValues; let partId = index;">
+                <mat-label>Select {{columnValue.field_label}}</mat-label>
+                <!-- mat-select [(value)]="selectedColumnValues[columnValue.field]" -->
+                <mat-select [(value)]="tableSelection.tableColumnValues[columnValue.field]" (valueChange)="checkTableValueSelectionComplete()">
+                    <mat-option [value]="partValue.value" *ngFor="let partValue of columnValue.field_values">{{partValue.label}}</mat-option>
                 </mat-select>
             </mat-form-field>
 
 
 
-            <div class="json_preview">
-                <pre>{{selectedColumnValues | json}}</pre>
-            </div>
+            <!-- div class="json_preview">
+                <pre>{{tableSelection.tableColumnValues | json}}</pre>
+            </div -->
 
 
-            <div>alle waarden geselecteerd? <b>{{( (selectedColumnValues.length === availableColumnValues.length  &&  !selectedColumnValues.includes('')   &&  selectedColumnValues.length > 0 ) ? 'JA: ' + selectedColumnValues.join(', ') : 'NEE')}}</b></div>
+            <!-- div>alle waarden geselecteerd? <b>{{( (Object.values(tableSelection.tableColumnValues).length === availableColumnValues.length  &&  !(Object.values(tableSelection.tableColumnValues).includes(""))   &&  Object.values(tableSelection.tableColumnValues).length > 0 ) ? 'JA': 'NEE')}}</b></div -->
+            <div>Selection complete? <b>{{ (tableSelection.tableSelectionComplete ? 'YES' : 'no') }}</b></div>
 
             <!--div class="json_preview">
                 <pre>{{availableColumnValues | json}}</pre>
