@@ -3,7 +3,11 @@ import * as L from "leaflet";
 import {FeatureService} from "../services/feature.service";
 import {RegionsLayer} from "../layers/regions-layer";
 import {DisplayObject} from "../lib/display-object";
-import {LeafletControlLegend} from "../lib/leaflet-control-custom";
+import {
+  LeafletControlLegend,
+  LeafletControlMapButtonsLeft,
+  LeafletControlWatermark
+} from "../lib/leaflet-control-custom";
 
 @Component({
   selector: 'app-result-map',
@@ -69,7 +73,19 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
     new LeafletControlLegend({position: 'bottomright'}).addTo(this.map);
     this.mapLegendDiv = document.getElementById('map_legend_div');
-    this.mapLegendDiv.innerHTML = '... Hoi Niek, hier kan je wat neerzetten';
+    this.mapLegendDiv.innerHTML = '... legenda inhoud ...';
+
+    new LeafletControlWatermark().addTo(this.map);
+
+    let mapButtonsDivLeft = new LeafletControlMapButtonsLeft().addTo(this.map);
+    // mapButtonsDivLeft.addButton(this.testToggle.bind(this), {id: 'mbl_0', mat_icon: 'near_me_disabled', title: 'start/stop navigatie', toggle: ['near_me', 'near_me_disabled']});
+    mapButtonsDivLeft.addButton(this.zoomMapToFit.bind(this), {
+      id: 'button_zoom_fit',
+      class: 'map_button_zoom_fit',
+      title: 'Toon hele route'
+    });
+
+
 
 
     this.regionsLayer = RegionsLayer.getLayer(2, 2016);
@@ -85,6 +101,12 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     // this.layerMap.redraw();
 
   } // END FUNCTION resizeMap
+
+
+  public zoomMapToFit(): void {
+    // this.map.fitBounds(this.regionsLayer.getBounds());
+    this.map.fitBounds(L.latLng(53.238, 6.536).toBounds(3000000));
+  } // END FUNCTION zoomMapToFit
 
   plotData() {
     console.log('plot', this.xydata)
