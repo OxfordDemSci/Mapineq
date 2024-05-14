@@ -3,6 +3,7 @@ import {ResultMapComponent} from "../result-map/result-map.component";
 import {AppVersionAndBuildChecker} from "../lib/app-version-and-build-checker";
 import {DisplayObject} from "../lib/display-object";
 import {DisplayTableValueObject} from "../lib/display-table-value-object";
+import {FeatureService} from "../services/feature.service";
 
 @Component({
   selector: 'app-dashboard',
@@ -25,7 +26,7 @@ export class DashboardComponent {
 
   panelOpen: boolean;
 
-  constructor() {
+  constructor(private dashboardFeatureService: FeatureService) {
     // this.displayObject = new DisplayObject();
   } // END FUNCTION constructor
 
@@ -96,17 +97,37 @@ export class DashboardComponent {
 
     // console.log(' - - doCollectDataForSelection ???');
     if (doCollectDataForSelection) {
-      this.collectDataForSelection();
+      this.collectDataForSelection(tableId);
     }
 
   } // END FUNCTION updateTableFieldFromSelect
 
 
-  collectDataForSelection() {
-    console.log('collectDataForSelection() ... ');
+  collectDataForSelection(tableId = 0) {
+    //console.log('collectDataForSelection() ... ', tableId);
+
+    if (this.displayObject.tableFields.length > 1  &&  tableId === 0) {
+      // wait for right part ... that one always followes shortly after this ...
+      // console.log('collect wait ...', tableId);
+    } else {
+      // console.log('actually collect', tableId);
+      console.log('collectDataForSelection() ... ', tableId);
+
+      switch(this.displayObject.displayType) {
+        case 'bivariate':
+          this.dashboardFeatureService.getResourceByNutsLevel(this.displayObject.tableFields[0].tableRegionLevel).subscribe( data => {
+            this.displayObject.displayData = data;
+          });
+          break;
+        default:
+          console.log('NOT IMPLEMENTED YET');
+          break;
+      }
+
+    }
 
 
-  } // END FUNCTION collectDataForSelection
+    } // END FUNCTION collectDataForSelection
 
 
 

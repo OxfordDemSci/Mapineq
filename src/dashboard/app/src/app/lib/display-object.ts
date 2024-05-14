@@ -2,6 +2,9 @@ import {DisplayTableValueObject} from "./display-table-value-object";
 
 export class DisplayObject {
 
+    // private objectHttpClient: HttpClient;
+    // private objectFeatureService: FeatureService
+
     displayType: string;
     numberTableFields: number;
     tableFields: DisplayTableValueObject[];
@@ -14,6 +17,10 @@ export class DisplayObject {
         this.numberTableFields = 1;
         this.tableFields = [];
         this.displayData = [];
+
+        //this.objectHttpClient = new HttpClient()
+        // this.objectFeatureService = new FeatureService()
+        // this.objectFeatureService = new FeatureService(objectHttpClient);
 
         for (const field in jsonObject) {
             if (field === 'displayType') {
@@ -80,7 +87,6 @@ export class DisplayObject {
     logConsole() {
         console.log('displayObject: ', this);
     } // END FUNCTION logConsole;
-
 
 
 
