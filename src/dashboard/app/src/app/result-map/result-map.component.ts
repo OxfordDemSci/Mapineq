@@ -7,7 +7,7 @@ import {DisplayObject} from "../lib/display-object";
 const colors = {
   '31' : '#64acbe', '32' : '#627f8c', '33' : '#574249',
   '21' : '#b0d5df', '22' : '#ad9ea5', '23' : '#985356',
-  '11' : '#e8e8e8', '12' : '#e4ACAC', '13' : '#c85a5a',
+  '11' : '#e8e8e8', '12' : '#e4acac', '13' : '#c85a5a',
 }
 
 @Component({
@@ -62,14 +62,26 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
   initResultMap() {
     this.map = L.map('resultMap');
 
-    this.layerMapOSM = L.tileLayer(
-        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        {
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
-          minZoom: 0,
-          maxZoom: 19 // 21
-        });
-    this.map.addLayer(this.layerMapOSM);
+    // this.layerMapOSM = L.tileLayer(
+    //     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    //     {
+    //       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
+    //       minZoom: 0,
+    //       maxZoom: 19 // 21
+    //     });
+    // this.map.addLayer(this.layerMapOSM);
+
+    let Esri_WorldGrayCanvas = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+      maxZoom: 16
+    });
+    this.map.addLayer(Esri_WorldGrayCanvas);
+    // let CartoDB_PositronNoLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+    //   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    //   subdomains: 'abcd',
+    //   maxZoom: 20
+    // });
+    // this.map.addLayer(CartoDB_PositronNoLabels);
 
     this.regionsLayer = RegionsLayer.getLayer(2, 2016);
     this.map.addLayer(this.regionsLayer);
@@ -123,7 +135,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       //console.log('properties', properties);
       return {
         fill: true, fillColor: fillColor, fillOpacity: 1,
-        color: 'rgba(0,0,0,0.78)', opacity: 1, weight: 0.5,
+        color: 'rgba(0,0,0,0.78)', opacity: 0.4, weight: 0.5,
       };
     })
     this.regionsLayer.redraw();
@@ -181,20 +193,22 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   addLegend(): any {
-    let legend = new L.Control({position: 'bottomright'});
+    let legend = new L.Control({position: 'bottomleft'});
     legend.onAdd = function(map) {
       let div = L.DomUtil.create('div', 'info legend');
-      for (let x=1;x<=3; x++) {
-        for (let y=1;y<=3; y++) {
-          div.innerHTML += colors[x.toString() + y.toString()];
-        }
-
-      }
+      div.innerHTML = '<h4>Legend</h4>';
+      // for (let x=1;x<=3; x++) {
+      //   for (let y=1;y<=3; y++) {
+      //     div.innerHTML += colors[x.toString() + y.toString()] + '<br/>';
+      //   }
+      //
+      // }
+      div.innerHTML += '<img src="assets/img/legend.png"></img>';
       return div;
     }
 
     legend.addTo(this.map);
-
+    console.log('legend added');
   }
 
 
