@@ -113,6 +113,8 @@ export class DashboardComponent {
       // console.log('actually collect', tableId);
       console.log('collectDataForSelection() ... ', tableId);
 
+      // this.displayObject = new DisplayObject(this.displayObject);
+
       switch(this.displayObject.displayType) {
         case 'bivariate':
           this.dashboardFeatureService.getResourceByNutsLevel(this.displayObject.tableFields[0].tableRegionLevel).subscribe( data => {
