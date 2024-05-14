@@ -3,6 +3,7 @@ import * as L from "leaflet";
 import {FeatureService} from "../services/feature.service";
 import {RegionsLayer} from "../layers/regions-layer";
 import {DisplayObject} from "../lib/display-object";
+import {LeafletControlLegend} from "../lib/leaflet-control-custom";
 
 @Component({
   selector: 'app-result-map',
@@ -14,6 +15,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() inputDisplayObject!: DisplayObject;
 
 
+  mapLegendDiv: any;
 
   private map;
   layerMapOSM: any;
@@ -64,6 +66,11 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
           maxZoom: 19 // 21
         });
     this.map.addLayer(this.layerMapOSM);
+
+    new LeafletControlLegend({position: 'bottomright'}).addTo(this.map);
+    this.mapLegendDiv = document.getElementById('map_legend_div');
+    this.mapLegendDiv.innerHTML = '... Hoi Niek, hier kan je wat neerzetten';
+
 
     this.regionsLayer = RegionsLayer.getLayer(2, 2016);
     this.map.addLayer(this.regionsLayer);
