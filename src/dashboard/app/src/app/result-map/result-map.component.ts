@@ -44,14 +44,12 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       console.log('data=', data);
       this.xydata = data;
       this.plotData();
-
     })
 
   } // END FUNCTION ngAfterViewInit
 
   initResultMap() {
-    let mapId = 'resultMap';
-    // console.log('initResultMap CALLED ... ', mapId);
+    this.map = L.map('resultMap');
 
     this.layerMapOSM = L.tileLayer(
         'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -60,18 +58,12 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
           minZoom: 0,
           maxZoom: 19 // 21
         });
-
-    this.map = L.map(mapId);
-
     this.map.addLayer(this.layerMapOSM);
 
-    this.map.fitBounds(L.latLng(53.238, 6.536).toBounds(3000000));
-
-
     this.regionsLayer = RegionsLayer.getLayer(2, 2016);
-
     this.map.addLayer(this.regionsLayer);
 
+    this.map.fitBounds(L.latLng(53.238, 6.536).toBounds(3000000));
   } // END FUNCTION initResultMap
 
   resizeMap(): void {
@@ -116,12 +108,11 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
       let fillColor = this.getColor(entity1, xmax, entity2, ymax);
       //console.log('fillColor', fillColor);
-      let style = {
+      //console.log('properties', properties);
+      return {
         fill: true, fillColor: fillColor, fillOpacity: 1,
         color: 'rgba(0,0,0,0.78)', opacity: 1, weight: 0.5,
       };
-      //console.log('properties', properties);
-      return style;
     })
     this.regionsLayer.redraw();
     console.log('nuts_ids not found', unknown);
