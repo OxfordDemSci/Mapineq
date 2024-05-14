@@ -3,6 +3,12 @@ import * as L from "leaflet";
 import {FeatureService} from "../services/feature.service";
 import {RegionsLayer} from "../layers/regions-layer";
 
+const colors = {
+  '31' : '#64acbe', '32' : '#627f8c', '33' : '#574249',
+  '21' : '#b0d5df', '22' : '#ad9ea5', '23' : '#985356',
+  '11' : '#e8e8e8', '12' : '#e4ACAC', '13' : '#c85a5a',
+}
+
 @Component({
   selector: 'app-result-map',
   templateUrl: './result-map.component.html',
@@ -83,6 +89,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     console.log('AT11', result['AT11']);
     this.changeStyle(result);
     this.addMouseOver(result);
+    this.addLegend();
   }
 
   changeStyle(mapdata:any) {
@@ -124,11 +131,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
     //console.log(xvalue, xmax, yvalue, ymax);
     let ymin = 73;
-    let colors = {
-      '31' : '#64acbe', '32' : '#627f8c', '33' : '#574249',
-      '21' : '#b0d5df', '22' : '#ad9ea5', '23' : '#985356',
-      '11' : '#e8e8e8', '12' : '#e4ACAC', '13' : '#c85a5a',
-    }
+
     let index1 = Math.ceil(xvalue/(xmax/3));
     let index2 = Math.ceil((yvalue-ymin)/((ymax-ymin)/3))
     if (xvalue === 17.2) {
@@ -173,13 +176,19 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   addLegend(): any {
-    for (let x=1;x<=3; x++) {
-      for (let y=1;y<=3; y++) {
+    let legend = new L.Control({position: 'bottomright'});
+    legend.onAdd = function(map) {
+      let div = L.DomUtil.create('div', 'info legend');
+      for (let x=1;x<=3; x++) {
+        for (let y=1;y<=3; y++) {
+          div.innerHTML += colors[x.toString() + y.toString()];
+        }
 
       }
-
+      return div;
     }
 
+    legend.addTo(this.map);
 
   }
 
