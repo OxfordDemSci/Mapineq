@@ -1,7 +1,8 @@
-import {AfterViewInit, Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import * as L from "leaflet";
 import {FeatureService} from "../services/feature.service";
 import {RegionsLayer} from "../layers/regions-layer";
+import {DisplayObject} from "../lib/display-object";
 
 const colors = {
   '31' : '#64acbe', '32' : '#627f8c', '33' : '#574249',
@@ -15,6 +16,10 @@ const colors = {
   styleUrl: './result-map.component.css'
 })
 export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
+
+  @Input() inputDisplayObject!: DisplayObject;
+
+
 
   private map;
   layerMapOSM: any;
@@ -31,8 +36,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       const change = changes[propName];
       const valueCurrent  = change.currentValue;
       // const valuePrevious = change.previousValue;
-      if (propName === 'inputTableSelection' && valueCurrent) {
-        // console.log('ngOnChanges(), "inputTableSelection":', valueCurrent);
+      if (propName === 'inputDisplayObject' && valueCurrent) {
+        console.log('ngOnChanges(), "inputDisplayObject":', valueCurrent);
       }
     }
   } // END FUNCTION ngOnChanges
