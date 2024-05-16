@@ -3,6 +3,11 @@ import * as L from "leaflet";
 import {FeatureService} from "../services/feature.service";
 import {RegionsLayer} from "../layers/regions-layer";
 import {DisplayObject} from "../lib/display-object";
+import {
+  LeafletControlLegend,
+  LeafletControlMapButtonsLeft,
+  LeafletControlWatermark
+} from "../lib/leaflet-control-custom";
 import {LeafletControlLegend} from "../lib/leaflet-control-custom";
 
 const colors = {
@@ -21,6 +26,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() inputDisplayObject!: DisplayObject;
 
 
+  mapLegendDiv: any;
 
   private map;
   layerMapOSM: any;
@@ -37,7 +43,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       const change = changes[propName];
       const valueCurrent  = change.currentValue;
       // const valuePrevious = change.previousValue;
-      if (propName === 'inputDisplayObject') {
+      if (propName === 'inputDisplayObject' && valueCurrent) {
         console.log('ngOnChanges(), "inputDisplayObject":', valueCurrent);
       }
     }
@@ -84,6 +90,28 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     // });
     // this.map.addLayer(CartoDB_PositronNoLabels);
 
+    new LeafletControlLegend({position: 'bottomright'}).addTo(this.map);
+    this.mapLegendDiv = document.getElementById('map_legend_div');
+    this.mapLegendDiv.innerHTML = '... legenda inhoud ...';
+
+    new LeafletControlWatermark().addTo(this.map);
+
+    let mapButtonsDivLeft = new LeafletControlMapButtonsLeft().addTo(this.map);
+    // mapButtonsDivLeft.addButton(this.testToggle.bind(this), {id: 'mbl_0', mat_icon: 'near_me_disabled', title: 'start/stop navigatie', toggle: ['near_me', 'near_me_disabled']});
+    mapButtonsDivLeft.addButton(this.zoomMapToFit.bind(this), {
+      id: 'button_zoom_fit',
+      class: 'map_button_zoom_fit',
+      title: 'Show complete selection'
+    });
+    mapButtonsDivLeft.addButton(this.zoomMapToFit.bind(this), {
+      id: 'button_zoom_fit',
+      mat_icon: 'filter_alt',
+      title: 'Show complete selection'
+    });
+
+
+
+
     this.regionsLayer = RegionsLayer.getLayer(2, 2016);
     this.map.addLayer(this.regionsLayer);
 
@@ -98,16 +126,21 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
   } // END FUNCTION resizeMap
 
+
+  public zoomMapToFit(): void {
+    // this.map.fitBounds(this.regionsLayer.getBounds());
+    this.map.fitBounds(L.latLng(53.238, 6.536).toBounds(3000000));
+  } // END FUNCTION zoomMapToFit
+
   plotData() {
-    //console.log('plot', this.xydata)
-    let result = this.xydata.reduce((map: { [x: string]: any; }, obj: { geo: string | number; }) => {
-      map[obj.geo] = obj;
+    console.log('plot', this.xydata)
+    let result = this.xydata.reduce((map: { [x: string]: any; }, obj: { id: string | number; }) => {
+      map[obj.id] = obj;
       return map;
     }, {})
-    //console.log('AT11', result['AT11']);
+    console.log('AT11', result['AT11']);
     this.changeStyle(result);
     this.addMouseOver(result);
-    this.addLegend();
   }
 
   changeStyle(mapdata:any) {
@@ -118,10 +151,10 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     let xmax = Math.max(...xdata);
     let ymax = Math.max(...ydata);
     let ymin = Math.min(...ydata);
-    //console.log('ymin=', ymin)
+    console.log('ymin=', ymin)
     this.regionsLayer.options.vectorTileLayerStyles.default = ((properties: any) => {
-      // if (properties['nuts_id'] === 'HR03')
-      // console.log('properties', properties['nuts_id'], properties['nuts_name']);
+      if (properties['nuts_id'] === 'HR03')
+      console.log('properties', properties['nuts_id'], properties['nuts_name']);
       let entity1 = 0;
       let entity2 = 0;
       if (mapdata[properties['nuts_id']] != undefined)  {
@@ -136,7 +169,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       //console.log('properties', properties);
       return {
         fill: true, fillColor: fillColor, fillOpacity: 1,
-        color: 'rgba(0,0,0,0.78)', opacity: 0.4, weight: 0.5,
+        color: 'rgba(0,0,0,0.78)', opacity: 1, weight: 0.5,
       };
     })
     this.regionsLayer.redraw();
@@ -149,9 +182,16 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
     //console.log(xvalue, xmax, yvalue, ymax);
     let ymin = 0;
-
+    let colors = {
+      '31' : '#64acbe', '32' : '#627f8c', '33' : '#574249',
+      '21' : '#b0d5df', '22' : '#ad9ea5', '23' : '#985356',
+      '11' : '#e8e8e8', '12' : '#e4ACAC', '13' : '#c85a5a',
+    }
     let index1 = Math.ceil(xvalue/(xmax/3));
     let index2 = Math.ceil((yvalue-ymin)/((ymax-ymin)/3))
+    if (xvalue === 17.2) {
+      console.log(index1+' '+index2);
+    }
 
 
     if (xvalue === 0 && yvalue === 0) {
@@ -192,21 +232,13 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   addLegend(): any {
-    let legend = new LeafletControlLegend({position: 'bottomleft'});
-    legend.onAdd = function(map) {
-      let div = L.DomUtil.create('div', 'info legend');
-      div.innerHTML = '<h4>Legend</h4>';
-      // for (let x=1;x<=3; x++) {
-      //   for (let y=1;y<=3; y++) {
-      //     div.innerHTML += colors[x.toString() + y.toString()] + '<br/>';
-      //   }
-      //
-      // }
-      div.innerHTML += '<img src="assets/img/legend.png"></img>';
-      return div;
+    for (let x=1;x<=3; x++) {
+      for (let y=1;y<=3; y++) {
+
+      }
+
     }
 
-    legend.addTo(this.map);
 
   }
 

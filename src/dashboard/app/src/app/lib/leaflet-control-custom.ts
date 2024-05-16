@@ -5,7 +5,7 @@ export class LeafletControlWatermark extends L.Control {
 
   override onAdd(map: L.Map): any {
     const waterMark = L.DomUtil.create('img') as HTMLImageElement;
-    waterMark.src = 'assets/map/logo_hunebike_map_100.png';
+    waterMark.src = 'assets/map/watermark/map_app_icon.svg';
     waterMark.style.width = '60px';
     waterMark.style.height = '60px';
     // waterMark.style.cursor = 'pointer';
