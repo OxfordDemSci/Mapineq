@@ -82,7 +82,12 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     mapButtonsDivLeft.addButton(this.zoomMapToFit.bind(this), {
       id: 'button_zoom_fit',
       class: 'map_button_zoom_fit',
-      title: 'Toon hele route'
+      title: 'Show complete selection'
+    });
+    mapButtonsDivLeft.addButton(this.zoomMapToFit.bind(this), {
+      id: 'button_zoom_fit',
+      mat_icon: 'filter_alt',
+      title: 'Show complete selection'
     });
 
 

@@ -410,3 +410,12 @@ div.emptyDiv {
     padding-left: 0.5em;
     padding-bottom: 0.5em;
 }
+
+
+
+
+/* MAP BUTTONS */
+
+.map_button_zoom_fit {
+    background-image: url("assets/map/buttons/map_button_zoom_fit.svg");
+}
