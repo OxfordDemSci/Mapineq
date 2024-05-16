@@ -119,11 +119,19 @@ export class FeatureService {
   //https://mapineqfeatures.web.rug.nl/functions/postgisftw.get_xy_data/items.json?_level=2&_year=2016&X_JSON=%20{%20%22source%22:%20%22DEMO_R_MAGEC%22,%20%22conditions%22:%20[%20{%22field%22:%22unit%22,%22value%22:%22NR%22},%20{%22field%22:%22sex%22,%22value%22:%22M%22},%20{%22field%22:%22freq%22,%22value%22:%22A%22},%20{%22field%22:%22age%22,%22value%22:%22TOTAL%22}%20]%20}&Y_JSON=%20{%22source%22:%20%22DEMO_R_FIND2%22,%20%22conditions%22:%20[%20{%22field%22%20:%20%22unit%22,%20%22value%22%20:%20%22NR%22},%20{%22field%22%20:%20%22freq%22,%20%22value%22%20:%20%22A%22},%20{%22field%22%20:%20%22indic_de%22,%20%22value%22%20:%20%22TOTFERRT%22}%20]%20}&limit=1500
   public getRealXYData(): Observable<any> {
     return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_xy_data/items.json?_level=2&_year=2016&X_JSON=%20{%20%22source%22:%20%22DEMO_R_MAGEC%22,%20%22conditions%22:%20[%20{%22field%22:%22unit%22,%22value%22:%22NR%22},%20{%22field%22:%22sex%22,%22value%22:%22M%22},%20{%22field%22:%22freq%22,%22value%22:%22A%22},%20{%22field%22:%22age%22,%22value%22:%22TOTAL%22}%20]%20}&Y_JSON=%20{%22source%22:%20%22DEMO_R_FIND2%22,%20%22conditions%22:%20[%20{%22field%22%20:%20%22unit%22,%20%22value%22%20:%20%22NR%22},%20{%22field%22%20:%20%22freq%22,%20%22value%22%20:%20%22A%22},%20{%22field%22%20:%20%22indic_de%22,%20%22value%22%20:%20%22TOTFERRT%22}%20]%20}&limit=1500`).pipe(
-      tap((result) => {
-        //console.log(result);
-      }),
-      catchError(this.handleError('search', 'ERROR')))
+        tap((result) => {
+          //console.log(result);
+        }),
+        catchError(this.handleError('search', 'ERROR')))
   }
+
+  public getXYData(regionLevel: string, year: string, selectionJsonX: string, selectionJsonY: string): Observable<any> {
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_xy_data/items.json?_level=${regionLevel}&_year=${year}&X_JSON=${selectionJsonX}&Y_JSON=${selectionJsonY}&limit=1500`).pipe(
+        tap((result) => {
+          //console.log(result);
+        }),
+        catchError(this.handleError('search', 'ERROR')))
+  } // END FUNCTION getXYData
 
 
   handleError<T>(operation = 'operation', result?: T) {

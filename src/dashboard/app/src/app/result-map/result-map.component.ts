@@ -23,6 +23,7 @@ const colors = {
 export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
   @Input() inputDisplayObject!: DisplayObject;
+  @Input() inputDisplayDataUpdated!: boolean;
 
 
   mapLegendDiv: any;
@@ -45,6 +46,13 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       if (propName === 'inputDisplayObject' && valueCurrent) {
         console.log('ngOnChanges(), "inputDisplayObject":', valueCurrent);
       }
+      if (propName === 'inputDisplayDataUpdated') { //  && valueCurrent
+        console.log('ngOnChanges(), "inputDisplayDataUpdated":', valueCurrent);
+
+        this.xydata = this.inputDisplayObject.displayData;
+        this.plotData();
+
+      }
     }
   } // END FUNCTION ngOnChanges
 
@@ -59,8 +67,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     this.initResultMap();
     this.featureService.getRealXYData().subscribe((data) => {
       //console.log('data=', data);
-      this.xydata = data;
-      this.plotData();
+      // this.xydata = data;
+      // this.plotData();
     })
 
   } // END FUNCTION ngAfterViewInit
@@ -102,10 +110,10 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       class: 'map_button_zoom_fit',
       title: 'Show complete selection'
     });
-    mapButtonsDivLeft.addButton(this.zoomMapToFit.bind(this), {
+    mapButtonsDivLeft.addButton(this.consoleLogData.bind(this), {
       id: 'button_zoom_fit',
-      mat_icon: 'filter_alt',
-      title: 'Show complete selection'
+      mat_icon: 'terminal',
+      title: 'Log data in console ...'
     });
 
 
@@ -130,6 +138,13 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     // this.map.fitBounds(this.regionsLayer.getBounds());
     this.map.fitBounds(L.latLng(53.238, 6.536).toBounds(3000000));
   } // END FUNCTION zoomMapToFit
+
+
+  public consoleLogData() {
+    console.log('Current inputDisplayObject.displayData:', this.inputDisplayObject.displayData)
+  } // END FUNCTION consoleLogData
+
+
 
   plotData() {
     console.log('plot', this.xydata)

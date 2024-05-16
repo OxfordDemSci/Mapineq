@@ -20,6 +20,8 @@ export class DashboardComponent {
 
   displayObject: DisplayObject;
 
+  displayDataUpdated: boolean;
+
 
   // tableSelections: any[];
 
@@ -28,6 +30,7 @@ export class DashboardComponent {
 
   constructor(private dashboardFeatureService: FeatureService) {
     // this.displayObject = new DisplayObject();
+    this.displayDataUpdated = false;
   } // END FUNCTION constructor
 
   ngOnInit(): void {
@@ -117,8 +120,28 @@ export class DashboardComponent {
 
       switch(this.displayObject.displayType) {
         case 'bivariate':
-          this.dashboardFeatureService.getResourceByNutsLevel(this.displayObject.tableFields[0].tableRegionLevel).subscribe( data => {
-            this.displayObject.displayData = data;
+
+          let x_json = {};
+          let y_json = {};
+
+          x_json['source'] = this.displayObject.tableFields[0].tableName;
+          let x_conditions = [];
+          for (const fieldName in this.displayObject.tableFields[0].tableColumnValues) {
+            x_conditions.push( {field: fieldName, value: this.displayObject.tableFields[0].tableColumnValues[fieldName]} );
+          }
+          x_json['conditions'] = x_conditions;
+
+          y_json['source'] = this.displayObject.tableFields[1].tableName;
+          let y_conditions = [];
+          for (const fieldName in this.displayObject.tableFields[1].tableColumnValues) {
+            y_conditions.push( {field: fieldName, value: this.displayObject.tableFields[1].tableColumnValues[fieldName]} );
+          }
+          y_json['conditions'] = y_conditions;
+
+          this.dashboardFeatureService.getXYData(this.displayObject.tableFields[0].tableRegionLevel, this.displayObject.tableFields[0].tableYear, JSON.stringify(x_json), JSON.stringify(y_json)).subscribe( data => {
+            console.log('DISPLAY DATA COLLECTED!', data);
+            this.displayObject['displayData'] = data;
+            this.displayDataUpdated = !this.displayDataUpdated;
           });
           break;
         default:
