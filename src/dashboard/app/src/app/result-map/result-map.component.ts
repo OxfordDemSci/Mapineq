@@ -91,7 +91,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
     new LeafletControlLegend({position: 'bottomright'}).addTo(this.map);
     this.mapLegendDiv = document.getElementById('map_legend_div');
-    this.mapLegendDiv.innerHTML = '... legenda inhoud ...';
+    this.mapLegendDiv.innerHTML = '<h4>Legend</h4>';
+    this.mapLegendDiv.innerHTML += '<img src="assets/img/legend2.png"></img>';
 
     new LeafletControlWatermark().addTo(this.map);
 
@@ -209,11 +210,11 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         let content = `<h3>${properties.nuts_name || 'Unknown'}</h3>`;  // Assume that your data might contain a "name" field
         content += '<div>' + JSON.stringify(properties) + '</div>';
         let entity1 = 'no data';
-        if (popupdata[properties['nuts_id']] != undefined)  {
+        if (popupdata[properties['nuts_id']] != 'null')  {
           entity1 = popupdata[properties['nuts_id']].x;
         }
         let entity2 = 'no data';
-        if (popupdata[properties['nuts_id']] != undefined)  {
+        if (popupdata[properties['nuts_id']] != 'null')  {
           entity2 =popupdata[properties['nuts_id']].y;
         }
         content += '<div>' + entity1 + '</div>';
