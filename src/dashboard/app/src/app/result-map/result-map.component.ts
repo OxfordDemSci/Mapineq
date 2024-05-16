@@ -48,10 +48,12 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       }
       if (propName === 'inputDisplayDataUpdated') { //  && valueCurrent
         console.log('ngOnChanges(), "inputDisplayDataUpdated":', valueCurrent);
-
+        console.log(this.inputDisplayObject.tableFields[0].tableYear + ' ' + this.inputDisplayObject.tableFields[0].tableRegionLevel);
         this.xydata = this.inputDisplayObject.displayData;
+        this.regionsLayer = RegionsLayer.getLayer(this.inputDisplayObject.tableFields[0].tableRegionLevel, this.inputDisplayObject.tableFields[0].tableYear);
+        this.map.addLayer(this.regionsLayer);
         this.plotData();
-
+        this.addLegend({'xlabel' : this.inputDisplayObject.tableFields[0].tableDescr, 'ylabel' : this.inputDisplayObject.tableFields[1].tableDescr});
       }
     }
   } // END FUNCTION ngOnChanges
@@ -102,7 +104,11 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     new LeafletControlLegend({position: 'bottomright'}).addTo(this.map);
     this.mapLegendDiv = document.getElementById('map_legend_div');
     this.mapLegendDiv.innerHTML = '<h4>Legend</h4>';
-    this.mapLegendDiv.innerHTML += '<img src="assets/img/legend2.png"></img>';
+    this.mapLegendDiv.innerHTML += '<img id ="scream" alt="legenda"  style="display:none" src="assets/img/legend.png"></img>';
+    this.mapLegendDiv.innerHTML += '<canvas id="myCanvas" width="200" height="200" ></canvas>';
+
+
+
 
     new LeafletControlWatermark().addTo(this.map);
 
@@ -118,12 +124,6 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       mat_icon: 'terminal',
       title: 'Log data in console ...'
     });
-
-
-
-
-    this.regionsLayer = RegionsLayer.getLayer(2, 2016);
-    this.map.addLayer(this.regionsLayer);
 
     this.map.fitBounds(L.latLng(53.238, 6.536).toBounds(3000000));
   } // END FUNCTION initResultMap
@@ -150,7 +150,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
 
   plotData() {
-    console.log('plot', this.xydata)
+    //console.log('plot', this.xydata)
     let result = this.xydata.reduce((map: { [x: string]: any; }, obj: { geo: string | number; }) => {
       map[obj.geo] = obj;
       return map;
@@ -187,7 +187,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       //console.log('properties', properties);
       return {
         fill: true, fillColor: fillColor, fillOpacity: 1,
-        color: 'rgba(0,0,0,0.78)', opacity: 1, weight: 0.5,
+        color: 'rgba(255,255,255,0.77)', opacity: 1, weight: 0.5,
       };
     })
     this.regionsLayer.redraw();
@@ -200,8 +200,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
     //console.log(xvalue, xmin, xmax, yvalue, ymin, ymax);
 
-    let index1 = Math.ceil((xvalue-xmin)/((xmax - xmin)/3));
-    let index2 = Math.ceil((yvalue-ymin)/((ymax-ymin)/3))
+    let index1 = Math.ceil((xvalue - xmin)/((xmax - xmin)/3));
+    let index2 = Math.ceil((yvalue - ymin)/((ymax - ymin)/3))
     if (xvalue === 17.2) {
       console.log(index1+' '+index2);
     }
@@ -244,13 +244,26 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     }));
   }
 
-  addLegend(): any {
+  addLegend(info) : any {
     for (let x=1;x<=3; x++) {
       for (let y=1;y<=3; y++) {
 
       }
 
     }
+    const canvas = document.getElementById("myCanvas") as (HTMLCanvasElement) ;
+    const ctx = canvas.getContext("2d");
+    ctx.font = "11px Verdana";
+    let textparts= info.xlabel.split(" ");
+    ctx.fillText(textparts[0] + ' ' + textparts[1], 5, 195);
+    const img = document.getElementById("scream") as HTMLImageElement;
+    ctx.drawImage(img, 15, 0, 180, 180);
+    ctx.save();
+    ctx.rotate(-90 * Math.PI / 180);
+    ctx.translate(-200,0)
+    textparts= info.ylabel.split(" ");
+    ctx.fillText(textparts[0] + ' ' + textparts[1], 20, 10);
+    ctx.restore();
 
 
   }

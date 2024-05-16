@@ -10,7 +10,7 @@ export class RegionsLayer extends BaseLayer  {
   }
 
 
-  public static getLayer(nutslevel: number, year: number): any {
+  public static getLayer(nutslevel: string, year: string): any {
 
     //let nutsid = 3;
     let nutsUrl = vectorServer + "areas.get_nuts_areas_tiles" + "/{z}/{x}/{y}.pbf" + "?year=" + year + "&intlevel=" + nutslevel;
