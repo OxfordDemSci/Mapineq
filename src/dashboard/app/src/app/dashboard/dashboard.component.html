@@ -28,7 +28,9 @@
                 <button (click)="panelToggle()" class="panelToggleContainerButtonLeft"  *ngIf="panelOpen"></button>
                 <button (click)="panelToggle()" class="panelToggleContainerButtonRight" *ngIf="!panelOpen"></button>
             </div>
-            <div class="drawerContentMapContainer"><app-result-map [inputDisplayObject]="displayObject"></app-result-map></div>
+            <div class="drawerContentMapContainer">
+              <app-result-map [inputDisplayObject]="displayObject"></app-result-map>
+            </div>
         </mat-drawer-content>
 
 

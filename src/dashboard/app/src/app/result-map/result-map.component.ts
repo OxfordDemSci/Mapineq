@@ -3,6 +3,7 @@ import * as L from "leaflet";
 import {FeatureService} from "../services/feature.service";
 import {RegionsLayer} from "../layers/regions-layer";
 import {DisplayObject} from "../lib/display-object";
+import {LeafletControlLegend} from "../lib/leaflet-control-custom";
 
 const colors = {
   '31' : '#64acbe', '32' : '#627f8c', '33' : '#574249',
@@ -36,7 +37,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       const change = changes[propName];
       const valueCurrent  = change.currentValue;
       // const valuePrevious = change.previousValue;
-      if (propName === 'inputDisplayObject' && valueCurrent) {
+      if (propName === 'inputDisplayObject') {
         console.log('ngOnChanges(), "inputDisplayObject":', valueCurrent);
       }
     }
@@ -51,8 +52,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     // console.log('ngAfterViewInit() ...');
 
     this.initResultMap();
-    this.featureService.getTestXYData().subscribe((data) => {
-      console.log('data=', data);
+    this.featureService.getRealXYData().subscribe((data) => {
+      //console.log('data=', data);
       this.xydata = data;
       this.plotData();
     })
@@ -98,12 +99,12 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
   } // END FUNCTION resizeMap
 
   plotData() {
-    console.log('plot', this.xydata)
-    let result = this.xydata.reduce((map: { [x: string]: any; }, obj: { id: string | number; }) => {
-      map[obj.id] = obj;
+    //console.log('plot', this.xydata)
+    let result = this.xydata.reduce((map: { [x: string]: any; }, obj: { geo: string | number; }) => {
+      map[obj.geo] = obj;
       return map;
     }, {})
-    console.log('AT11', result['AT11']);
+    //console.log('AT11', result['AT11']);
     this.changeStyle(result);
     this.addMouseOver(result);
     this.addLegend();
@@ -117,10 +118,10 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     let xmax = Math.max(...xdata);
     let ymax = Math.max(...ydata);
     let ymin = Math.min(...ydata);
-    console.log('ymin=', ymin)
+    //console.log('ymin=', ymin)
     this.regionsLayer.options.vectorTileLayerStyles.default = ((properties: any) => {
-      if (properties['nuts_id'] === 'HR03')
-      console.log('properties', properties['nuts_id'], properties['nuts_name']);
+      // if (properties['nuts_id'] === 'HR03')
+      // console.log('properties', properties['nuts_id'], properties['nuts_name']);
       let entity1 = 0;
       let entity2 = 0;
       if (mapdata[properties['nuts_id']] != undefined)  {
@@ -147,15 +148,13 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
   getColor(xvalue: number, xmax: number, yvalue: number, ymax: number): any {
 
     //console.log(xvalue, xmax, yvalue, ymax);
-    let ymin = 73;
+    let ymin = 0;
 
     let index1 = Math.ceil(xvalue/(xmax/3));
     let index2 = Math.ceil((yvalue-ymin)/((ymax-ymin)/3))
-    if (xvalue === 17.2) {
-      console.log(index1+' '+index2);
-    }
 
-    if (index1 === 0 && index2 === 0) {
+
+    if (xvalue === 0 && yvalue === 0) {
       return '#FFFFFF';
     }
     return colors[index2.toString() + index1.toString()];
@@ -172,11 +171,11 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         content += '<div>' + JSON.stringify(properties) + '</div>';
         let entity1 = 'no data';
         if (popupdata[properties['nuts_id']] != undefined)  {
-          entity1 = popupdata[properties['nuts_id']].entity1;
+          entity1 = popupdata[properties['nuts_id']].x;
         }
         let entity2 = 'no data';
         if (popupdata[properties['nuts_id']] != undefined)  {
-          entity2 =popupdata[properties['nuts_id']].entity2;
+          entity2 =popupdata[properties['nuts_id']].y;
         }
         content += '<div>' + entity1 + '</div>';
         content += '<div>' + entity2 + '</div>';
@@ -193,7 +192,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   addLegend(): any {
-    let legend = new L.Control({position: 'bottomleft'});
+    let legend = new LeafletControlLegend({position: 'bottomleft'});
     legend.onAdd = function(map) {
       let div = L.DomUtil.create('div', 'info legend');
       div.innerHTML = '<h4>Legend</h4>';
@@ -208,7 +207,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     legend.addTo(this.map);
-    console.log('legend added');
+
   }
 
 
