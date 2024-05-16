@@ -65,11 +65,13 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     // console.log('ngAfterViewInit() ...');
 
     this.initResultMap();
+    /*
     this.featureService.getRealXYData().subscribe((data) => {
       //console.log('data=', data);
-      // this.xydata = data;
-      // this.plotData();
-    })
+      this.xydata = data;
+      this.plotData();
+    });
+    */
 
   } // END FUNCTION ngAfterViewInit
 
