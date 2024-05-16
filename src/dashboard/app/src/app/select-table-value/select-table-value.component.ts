@@ -469,6 +469,11 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
   } // END FUNCTION getFilteredFieldsForTableForYearAndRegionLevel
 
+  tableSelectClearChosenColumnValue(columnValueName: string) {
+    this.tableSelection.tableColumnValues[columnValueName] = '';
+    this.getFilteredFieldsForTableForYearAndRegionLevel();
+  } // END FUNCTION tableSelectClearChosenColumnValue
+
 
   changedColumnValue() {
     this.getFilteredFieldsForTableForYearAndRegionLevel();
