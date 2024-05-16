@@ -168,6 +168,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     let xmax = Math.max(...xdata);
     let ymax = Math.max(...ydata);
     let ymin = Math.min(...ydata);
+    let xmin = Math.min(...xdata);
     console.log('ymin=', ymin)
     this.regionsLayer.options.vectorTileLayerStyles.default = ((properties: any) => {
       if (properties['nuts_id'] === 'HR03')
@@ -181,7 +182,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         unknown.push(properties['nuts_id']);
       }
 
-      let fillColor = this.getColor(entity1, xmax, entity2, ymax);
+      let fillColor = this.getColor(entity1, xmin, xmax, entity2, ymin, ymax);
       //console.log('fillColor', fillColor);
       //console.log('properties', properties);
       return {
@@ -195,16 +196,11 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
 
 
-  getColor(xvalue: number, xmax: number, yvalue: number, ymax: number): any {
+  getColor(xvalue: number, xmin:number, xmax: number, yvalue: number, ymin : number, ymax: number): any {
 
-    //console.log(xvalue, xmax, yvalue, ymax);
-    let ymin = 0;
-    let colors = {
-      '31' : '#64acbe', '32' : '#627f8c', '33' : '#574249',
-      '21' : '#b0d5df', '22' : '#ad9ea5', '23' : '#985356',
-      '11' : '#e8e8e8', '12' : '#e4ACAC', '13' : '#c85a5a',
-    }
-    let index1 = Math.ceil(xvalue/(xmax/3));
+    //console.log(xvalue, xmin, xmax, yvalue, ymin, ymax);
+
+    let index1 = Math.ceil((xvalue-xmin)/((xmax - xmin)/3));
     let index2 = Math.ceil((yvalue-ymin)/((ymax-ymin)/3))
     if (xvalue === 17.2) {
       console.log(index1+' '+index2);
