@@ -93,10 +93,19 @@
             </mat-form-field>
             -->
 
+            <div *ngIf="availableColumnValues.length > 0">
+                <b>Value filters</b>
+                &nbsp;
+                <button mat-stroked-button (click)="tableSelectClearChosenColumnValues()"><mat-icon>filter_alt_off</mat-icon> clear value filters</button>
+            </div>
+            <div class="divWhiteSpace"></div>
+
+
             <mat-form-field *ngFor="let columnValue of availableColumnValues; let partId = index;">
                 <mat-label>Select {{columnValue.field_label}}</mat-label>
                 <!-- mat-select [(value)]="selectedColumnValues[columnValue.field]" -->
-                <mat-select [(value)]="tableSelection.tableColumnValues[columnValue.field]" (valueChange)="checkTableValueSelectionComplete()">
+                <!-- mat-select [(value)]="tableSelection.tableColumnValues[columnValue.field]" (valueChange)="checkTableValueSelectionComplete()" -->
+                <mat-select [(value)]="tableSelection.tableColumnValues[columnValue.field]" (valueChange)="changedColumnValue()">
                     <mat-option [value]="partValue.value" *ngFor="let partValue of columnValue.field_values">{{partValue.label}}</mat-option>
                 </mat-select>
             </mat-form-field>

@@ -55,11 +55,21 @@ export class FeatureService {
     //areas.sort(())
 
     return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_column_values_source/items.json?_resource=${resource}&_year=${year}&_level=${nutslevel}&limit=1500`).pipe(
-      tap((result) => {
-        //console.log(result);
-      }),
-      catchError(this.handleError('search', 'ERROR')))
+        tap((result) => {
+          //console.log(result);
+        }),
+        catchError(this.handleError('search', 'ERROR')))
   }
+
+  public getColumnValuesBySourceJson(resource: string, selectionJson: string,): Observable<any> {
+    //areas.sort(())
+
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_column_values_source_json/items.json?_resource=${resource}&source_selections=${selectionJson}&limit=1500`).pipe(
+        tap((result) => {
+          //console.log(result);
+        }),
+        catchError(this.handleError('search', 'ERROR')))
+  } // END FUNCTION getColumnValuesBySourceJson
 
   public getAllSources(): Observable<any> {
     return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_all_sources/items.json?&limit=1500`).pipe(
