@@ -8,7 +8,6 @@ import {
   LeafletControlMapButtonsLeft,
   LeafletControlWatermark
 } from "../lib/leaflet-control-custom";
-import {LeafletControlLegend} from "../lib/leaflet-control-custom";
 
 const colors = {
   '31' : '#64acbe', '32' : '#627f8c', '33' : '#574249',
@@ -134,8 +133,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
   plotData() {
     console.log('plot', this.xydata)
-    let result = this.xydata.reduce((map: { [x: string]: any; }, obj: { id: string | number; }) => {
-      map[obj.id] = obj;
+    let result = this.xydata.reduce((map: { [x: string]: any; }, obj: { geo: string | number; }) => {
+      map[obj.geo] = obj;
       return map;
     }, {})
     console.log('AT11', result['AT11']);
@@ -145,8 +144,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
   changeStyle(mapdata:any) {
     let unknown = [];
-    let xdata = this.xydata.map((item: any) => Number(item.entity1));
-    let ydata = this.xydata.map((item: any) => item.entity2);
+    let xdata = this.xydata.map((item: any) => Number(item.x));
+    let ydata = this.xydata.map((item: any) => item.y);
     //console.log(xdata);
     let xmax = Math.max(...xdata);
     let ymax = Math.max(...ydata);
@@ -158,8 +157,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       let entity1 = 0;
       let entity2 = 0;
       if (mapdata[properties['nuts_id']] != undefined)  {
-        entity1 = +mapdata[properties['nuts_id']].entity1;
-        entity2 = +mapdata[properties['nuts_id']].entity2;
+        entity1 = +mapdata[properties['nuts_id']].x;
+        entity2 = +mapdata[properties['nuts_id']].y;
       } else {
         unknown.push(properties['nuts_id']);
       }
