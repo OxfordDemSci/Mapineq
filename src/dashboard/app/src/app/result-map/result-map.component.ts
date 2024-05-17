@@ -50,6 +50,9 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         console.log('ngOnChanges(), "inputDisplayDataUpdated":', valueCurrent);
         console.log(this.inputDisplayObject.tableFields[0].tableYear + ' ' + this.inputDisplayObject.tableFields[0].tableRegionLevel);
         this.xydata = this.inputDisplayObject.displayData;
+        if (this.regionsLayer !== undefined) {
+          this.map.removeLayer(this.regionsLayer);
+        }
         this.regionsLayer = RegionsLayer.getLayer(this.inputDisplayObject.tableFields[0].tableRegionLevel, this.inputDisplayObject.tableFields[0].tableYear);
         this.map.addLayer(this.regionsLayer);
         this.plotData();
