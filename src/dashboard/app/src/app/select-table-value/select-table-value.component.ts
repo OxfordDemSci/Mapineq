@@ -307,7 +307,14 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   } // END FUNCTION tableSelectClearSelectedOption
 
 
-  emitChangeTableValue() {
+  tableSelectClearChosenColumnValues() {
+    this.getFieldsForTableForYearAndRegionLevel();
+  } // END FUNCTION tableSelectClearChosenColumnValues
+
+
+
+
+    emitChangeTableValue() {
     // console.log('emitChangeTableValue() .. id:', this.tableSelection.tableId);
     // console.log('VOOR ' + this.tableSelection.tableId.toString(), this.tableSelection);
     // this.tableSelection = new DisplayTableValueObject(this.tableSelection);
@@ -388,12 +395,92 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
       });
 
+
+      this.checkTableValueSelectionComplete();
+
     });
 
 
-    this.checkTableValueSelectionComplete();
 
   } // END FUNCTION getFieldsForTableForYearAndRegionLevel
+
+
+  getFilteredFieldsForTableForYearAndRegionLevel() {
+    // console.log(' >>> >>>  getFilteredFieldsForTableForYearAndRegionLevel(), tableId', this.tableSelection.tableId);
+    //console.log('getFilteredFieldsForTableForYearAndRegionLevel(), year, regionLevel', this.tableSelection.tableYear, this.tableSelection.tableRegionLevel);
+
+    // this.availableColumnValues = [];
+    // this.tableSelection.tableColumnValues = {};
+    // this.emitChangeTableValue();
+
+    let sourceSelectionJson = {};
+    sourceSelectionJson['year'] = this.tableSelection.tableYear;
+    sourceSelectionJson['level'] = this.tableSelection.tableRegionLevel;
+
+    let selectedJson = []
+    for (const fieldName in this.tableSelection.tableColumnValues) {
+      // console.log('- ', fieldName, this.tableSelection.tableColumnValues[fieldName]);
+      if (this.tableSelection.tableColumnValues[fieldName].trim() !== '') {
+        selectedJson.push({field: fieldName, value: this.tableSelection.tableColumnValues[fieldName]});
+      }
+    }
+    sourceSelectionJson['selected'] = selectedJson;
+
+    this.featureService.getColumnValuesBySourceJson(this.tableSelection.tableName, JSON.stringify(sourceSelectionJson)).subscribe( data => {
+      console.log('getColumnValuesBySourceJson()', data);
+
+      this.availableColumnValues = [];
+
+      data.forEach( row => {
+        let jsonToPush = row;
+        jsonToPush.field_values = JSON.parse(jsonToPush.field_values);
+
+        if (jsonToPush.field_values.length === 1) {
+          this.tableSelection.tableColumnValues[jsonToPush.field] = jsonToPush.field_values[0].value;
+        }
+
+        this.availableColumnValues.push(jsonToPush);
+      });
+
+
+      this.checkTableValueSelectionComplete();
+
+      /*
+      this.availableColumnValues = [];
+      // this.selectedColumnValues = new Array(data.length).fill('');
+      data.forEach( row => {
+        let jsonToPush = row;
+        jsonToPush.field_values = JSON.parse(jsonToPush.field_values);
+
+        // console.log('jsonToPush:' ,jsonToPush);
+        // this.selectedColumnValues[jsonToPush.field] = '';
+
+        if (jsonToPush.field_values.length === 1) {
+          this.tableSelection.tableColumnValues[jsonToPush.field] = jsonToPush.field_values[0].value;
+        } else {
+          this.tableSelection.tableColumnValues[jsonToPush.field] = '';
+        }
+
+        this.availableColumnValues.push(jsonToPush);
+
+      });
+      */
+    });
+
+  } // END FUNCTION getFilteredFieldsForTableForYearAndRegionLevel
+
+  tableSelectClearChosenColumnValue(columnValueName: string) {
+    this.tableSelection.tableColumnValues[columnValueName] = '';
+    this.getFilteredFieldsForTableForYearAndRegionLevel();
+  } // END FUNCTION tableSelectClearChosenColumnValue
+
+
+  changedColumnValue() {
+    this.getFilteredFieldsForTableForYearAndRegionLevel();
+
+    this.checkTableValueSelectionComplete();
+  } // END FUNCTION changedColumnValue
+
 
 
   checkTableValueSelectionComplete() {

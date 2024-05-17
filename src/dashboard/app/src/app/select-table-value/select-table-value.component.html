@@ -62,7 +62,7 @@
                        [disabled]="tableSelectOptions.length === 0"
                 >
                 <!--mat-hint>{{tableSelection.tableDescr}}</mat-hint-->
-                <button mat-icon-button matSuffix type="button" [disabled]="this.tableSelection.tableName === ''" color="primary" (click)="tableSelectClearSelectedOption(auto)" [attr.aria-label]="'Pas aan'"><mat-icon>backspace</mat-icon></button>
+                <button mat-icon-button matSuffix type="button" [disabled]="this.tableSelection.tableName === ''" color="primary" (click)="tableSelectClearSelectedOption(auto)" [attr.aria-label]="'Clear'"><mat-icon>backspace</mat-icon></button>
                 <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="tableSelectOption($event.option.value)" [displayWith]="displayTableSelectOption">
                     <mat-option *ngFor="let option of tableSelectFilteredOptions | async" [value]="option">
                         <div class="optionLine1">{{option.f_description}}</div>
@@ -93,12 +93,22 @@
             </mat-form-field>
             -->
 
+            <div *ngIf="availableColumnValues.length > 0">
+                <b>Value filters</b>
+                &nbsp;
+                <button mat-stroked-button (click)="tableSelectClearChosenColumnValues()"><mat-icon>filter_alt_off</mat-icon> clear value filters</button>
+            </div>
+            <div class="divWhiteSpace"></div>
+
+
             <mat-form-field *ngFor="let columnValue of availableColumnValues; let partId = index;">
                 <mat-label>Select {{columnValue.field_label}}</mat-label>
                 <!-- mat-select [(value)]="selectedColumnValues[columnValue.field]" -->
-                <mat-select [(value)]="tableSelection.tableColumnValues[columnValue.field]" (valueChange)="checkTableValueSelectionComplete()">
+                <!-- mat-select [(value)]="tableSelection.tableColumnValues[columnValue.field]" (valueChange)="checkTableValueSelectionComplete()" -->
+                <mat-select [(value)]="tableSelection.tableColumnValues[columnValue.field]" (valueChange)="changedColumnValue()">
                     <mat-option [value]="partValue.value" *ngFor="let partValue of columnValue.field_values">{{partValue.label}}</mat-option>
                 </mat-select>
+                <button mat-icon-button matSuffix type="button" color="primary" (click)="tableSelectClearChosenColumnValue(columnValue.field)" [attr.aria-label]="'Refresh/Clear'"><mat-icon>refresh</mat-icon></button>
             </mat-form-field>
 
 
