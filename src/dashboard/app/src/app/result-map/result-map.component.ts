@@ -106,9 +106,9 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
     new LeafletControlLegend({position: 'bottomright'}).addTo(this.map);
     this.mapLegendDiv = document.getElementById('map_legend_div');
-    this.mapLegendDiv.innerHTML = '<h4>Legend</h4>';
+    this.mapLegendDiv.innerHTML = '<h4>Legenda</h4>';
     this.mapLegendDiv.innerHTML += '<img id ="scream" alt="legenda"  style="display:none" src="assets/img/legend.png"></img>';
-    this.mapLegendDiv.innerHTML += '<canvas id="myCanvas" width="200" height="200" ></canvas>';
+    this.mapLegendDiv.innerHTML += '<canvas id="myCanvas" width="190" height="180" ></canvas>';
 
 
 
@@ -248,23 +248,27 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   addLegend(info) : any {
-    for (let x=1;x<=3; x++) {
-      for (let y=1;y<=3; y++) {
-
-      }
-
-    }
+    const boxsize = 50;
     const canvas = document.getElementById("myCanvas") as (HTMLCanvasElement) ;
     const context = canvas.getContext("2d");
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.font = "11px Verdana";
     let textparts= info.xlabel.split(" ");
-    context.fillText(textparts[0] + ' ' + textparts[1], 10, 195);
+    context.fillText(textparts[0] + ' ' + textparts[1], 25, 180);
     const img = document.getElementById("scream") as HTMLImageElement;
-    context.drawImage(img, 15, 0, 180, 180);
+    //context.drawImage(img, 15, 0, 180, 180);
+    for (let x=1;x<=3; x++) {
+      for (let y=1;y<=3; y++) {
+        context.beginPath();
+        context.fillStyle = colors[x.toString() + y.toString()];
+        context.fillRect(25 + (x-1) * boxsize , 110 - ((y-1) * boxsize), boxsize, boxsize);
+        context.stroke();
+      }
+
+    }
     context.save();
     context.rotate(-90 * Math.PI / 180);
-    context.translate(-200,0)
+    context.translate(-180,0)
     textparts= info.ylabel.split(" ");
     context.fillText(textparts[0] + ' ' + textparts[1], 20, 10);
     context.restore();
