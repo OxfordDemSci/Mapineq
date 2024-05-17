@@ -169,7 +169,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     let ymax = Math.max(...ydata);
     let ymin = Math.min(...ydata);
     let xmin = Math.min(...xdata);
-    console.log('ymin=', ymin)
+    console.log(xmin, xmax, ymin, ymax);
     this.regionsLayer.options.vectorTileLayerStyles.default = ((properties: any) => {
       if (properties['nuts_id'] === 'HR03')
       console.log('properties', properties['nuts_id'], properties['nuts_name']);
@@ -252,18 +252,19 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
     }
     const canvas = document.getElementById("myCanvas") as (HTMLCanvasElement) ;
-    const ctx = canvas.getContext("2d");
-    ctx.font = "11px Verdana";
+    const context = canvas.getContext("2d");
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.font = "11px Verdana";
     let textparts= info.xlabel.split(" ");
-    ctx.fillText(textparts[0] + ' ' + textparts[1], 5, 195);
+    context.fillText(textparts[0] + ' ' + textparts[1], 10, 195);
     const img = document.getElementById("scream") as HTMLImageElement;
-    ctx.drawImage(img, 15, 0, 180, 180);
-    ctx.save();
-    ctx.rotate(-90 * Math.PI / 180);
-    ctx.translate(-200,0)
+    context.drawImage(img, 15, 0, 180, 180);
+    context.save();
+    context.rotate(-90 * Math.PI / 180);
+    context.translate(-200,0)
     textparts= info.ylabel.split(" ");
-    ctx.fillText(textparts[0] + ' ' + textparts[1], 20, 10);
-    ctx.restore();
+    context.fillText(textparts[0] + ' ' + textparts[1], 20, 10);
+    context.restore();
 
 
   }
