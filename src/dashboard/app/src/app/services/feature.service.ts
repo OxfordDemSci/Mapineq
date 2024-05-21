@@ -144,6 +144,17 @@ export class FeatureService {
   } // END FUNCTION getXYData
 
 
+  public getXData(regionLevel: string, year: string, selectionJsonX: string): Observable<any> {
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_x_data/items.json?_level=${regionLevel}&_year=${year}&X_JSON=${selectionJsonX}&limit=1500`).pipe(
+        tap((result) => {
+          //console.log(result);
+        }),
+        catchError(this.handleError('search', 'ERROR')))
+  } // END FUNCTION getXData
+
+
+
+
   handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
 

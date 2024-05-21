@@ -19,7 +19,7 @@ export class DisplayObject {
         this.numberTableFields = 1;
         this.tableFields = [];
         this.displayType = '';
-        this.displayTableId = 0;
+        this.displayTableId = -1;
         this.displayData = [];
 
         //this.objectHttpClient = new HttpClient()

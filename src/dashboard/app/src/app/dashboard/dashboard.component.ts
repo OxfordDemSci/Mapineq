@@ -80,33 +80,38 @@ export class DashboardComponent {
 
     // console.log('=== UPDATE === updateTableFieldFromSelect()', tableId, tableField);
 
-    if (tableField.tableId === 0  &&  this.displayObject.formType === 'bivariate') {
-      this.displayObject.tableFields[1].tableRegionLevel = this.displayObject.tableFields[0].tableRegionLevel;
-      this.displayObject.tableFields[1].tableYear = this.displayObject.tableFields[0].tableYear;
-      if (this.displayObject.tableFields[0].tableName === '') {
-        this.displayObject.tableFields[1].tableName = '';
-      }
-    }
 
     if (this.displayObject.numberTableFields > 1  &&  tableField.tableShowOnlyThisTable) {
       if (tableField.tableSelectionComplete) {
         console.log('show only table ', tableField.tableId);
         showOnlyOneTableId = tableField.tableId;
+        this.displayObject.displayTableId = tableField.tableId;
       }
       tableField.tableShowOnlyThisTable = false;
-    }
 
-    this.displayObject.tableFields[tableId] = new DisplayTableValueObject(tableField);
-
-
-
-    if (showOnlyOneTableId > -1) {
       this.displayObject.displayType = 'univariate';
 
       this.collectDataForSelection(showOnlyOneTableId);
 
+
+
     } else {
+
       this.displayObject.displayType = this.displayObject.formType;
+      this.displayObject.displayTableId = -1;
+
+      if (tableField.tableId === 0 && this.displayObject.formType === 'bivariate') {
+        this.displayObject.tableFields[1].tableRegionLevel = this.displayObject.tableFields[0].tableRegionLevel;
+        this.displayObject.tableFields[1].tableYear = this.displayObject.tableFields[0].tableYear;
+        if (this.displayObject.tableFields[0].tableName === '') {
+          this.displayObject.tableFields[1].tableName = '';
+        }
+      }
+
+      this.displayObject.tableFields[tableId] = new DisplayTableValueObject(tableField);
+
+
+
 
       let doCollectDataForSelection = true;
       this.displayObject.tableFields.forEach(tableField => {
@@ -123,6 +128,8 @@ export class DashboardComponent {
         this.displayObject['displayData'] = [];
         this.displayDataUpdated = !this.displayDataUpdated;
       }
+
+
     }
 
   } // END FUNCTION updateTableFieldFromSelect
@@ -168,14 +175,30 @@ export class DashboardComponent {
             y_json['conditions'] = y_conditions;
 
             this.dashboardFeatureService.getXYData(this.displayObject.tableFields[0].tableRegionLevel, this.displayObject.tableFields[0].tableYear, JSON.stringify(x_json), JSON.stringify(y_json)).subscribe(data => {
-              console.log('DISPLAY DATA COLLECTED!', data);
+              console.log('A. DISPLAY DATA COLLECTED! (bivariate)', data);
               this.displayObject['displayData'] = data;
               this.displayDataUpdated = !this.displayDataUpdated;
             });
           } else {
             // SHOW ONLY ONE TABLE
 
-            // this.dashboardFeatureService.g
+            let x_json = {};
+
+            x_json['source'] = this.displayObject.tableFields[tableId].tableName;
+            let x_conditions = [];
+            for (const fieldName in this.displayObject.tableFields[tableId].tableColumnValues) {
+              x_conditions.push({
+                field: fieldName,
+                value: this.displayObject.tableFields[tableId].tableColumnValues[fieldName]
+              });
+            }
+            x_json['conditions'] = x_conditions;
+
+            this.dashboardFeatureService.getXData(this.displayObject.tableFields[tableId].tableRegionLevel, this.displayObject.tableFields[tableId].tableYear, JSON.stringify(x_json)).subscribe(data => {
+              console.log('B. DISPLAY DATA COLLECTED! (univariate)', data);
+              this.displayObject['displayData'] = data;
+              this.displayDataUpdated = !this.displayDataUpdated;
+            });
 
 
           }
