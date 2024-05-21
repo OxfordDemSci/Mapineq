@@ -44,7 +44,6 @@
               "src/custom-theme.scss",
               "node_modules/material-icons/iconfont/material-icons.css",
               "node_modules/roboto-fontface/css/roboto/roboto-fontface.css",
-              "node_modules/leaflet/dist/leaflet.css",
               "src/styles.css"
             ],
             "scripts": []

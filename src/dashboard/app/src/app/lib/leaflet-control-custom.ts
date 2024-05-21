@@ -10,7 +10,7 @@ export class LeafletControlWatermark extends L.Control {
     waterMark.style.height = '60px';
     // waterMark.style.cursor = 'pointer';
     waterMark.id = 'map_watermark_img';
-    waterMark.title = 'Hunebike challenge';
+    waterMark.title = 'Mapineq logo';
 
     L.DomEvent
       .addListener(waterMark, 'contextmenu', L.DomEvent.stopPropagation)
@@ -19,7 +19,7 @@ export class LeafletControlWatermark extends L.Control {
       .addListener(waterMark, 'dblclick', L.DomEvent.stopPropagation)
       /*
       .addListener(waterMark, 'click', () => {
-        window.open('https://www.digitrail.nl', '_blank');
+        window.open('https://www.mapineq.eu', '_blank');
       })*/;
 
     return waterMark;
