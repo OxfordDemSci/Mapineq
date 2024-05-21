@@ -374,8 +374,18 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     this.emitChangeTableValue();
 
-    this.featureService.getColumnValuesBySource(this.tableSelection.tableName, this.tableSelection.tableYear, this.tableSelection.tableRegionLevel).subscribe( data => {
+
+    let sourceSelectionJson = {};
+    sourceSelectionJson['year'] = this.tableSelection.tableYear;
+    sourceSelectionJson['level'] = this.tableSelection.tableRegionLevel;
+
+    let selectedJson = []
+    sourceSelectionJson['selected'] = selectedJson;
+
+    this.featureService.getColumnValuesBySourceJson(this.tableSelection.tableName, JSON.stringify(sourceSelectionJson)).subscribe( data => {
+      // this.featureService.getColumnValuesBySource(this.tableSelection.tableName, this.tableSelection.tableYear, this.tableSelection.tableRegionLevel).subscribe( data => {
       // console.log('getColumnValuesBySource()', this.tableSelection.tableName, this.tableSelection.tableYear, this.tableSelection.tableRegionLevel, data);
+
       this.availableColumnValues = [];
       // this.selectedColumnValues = new Array(data.length).fill('');
       data.forEach( row => {
