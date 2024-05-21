@@ -73,14 +73,29 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       if (propName === 'inputDisplayDataUpdated') { //  && valueCurrent
         console.log('ngOnChanges(), "inputDisplayDataUpdated":', valueCurrent);
         console.log(this.inputDisplayObject.tableFields[0].tableYear + ' ' + this.inputDisplayObject.tableFields[0].tableRegionLevel);
-        this.xydata = this.inputDisplayObject.displayData;
-        if (this.regionsLayer !== undefined) {
-          this.map.removeLayer(this.regionsLayer);
+        if (valueCurrent === true) {
+          this.xydata = this.inputDisplayObject.displayData;
+          if (this.regionsLayer !== undefined) {
+            this.map.removeLayer(this.regionsLayer);
+          }
+          this.regionsLayer = RegionsLayer.getLayer(this.inputDisplayObject.tableFields[0].tableRegionLevel, this.inputDisplayObject.tableFields[0].tableYear);
+          this.map.addLayer(this.regionsLayer);
+          this.plotData();
+          this.addLegend({'xlabel' : this.inputDisplayObject.tableFields[0].tableDescr, 'ylabel' : this.inputDisplayObject.tableFields[1].tableDescr});
+        } else {
+          // this.featureService.getRealXYData().subscribe((data) => {
+          //   //console.log('data=', data);
+          //   if (this.regionsLayer !== undefined) {
+          //     this.map.removeLayer(this.regionsLayer);
+          //   }
+          //   this.regionsLayer = RegionsLayer.getLayer('2', '2016');
+          //   this.map.addLayer(this.regionsLayer);
+          //   this.xydata = data;
+          //   this.plotData();
+          //   this.addLegend({'xlabel' : 'Deaths (Total)', 'ylabel' : 'Fertility Indicator'});
+          // });
         }
-        this.regionsLayer = RegionsLayer.getLayer(this.inputDisplayObject.tableFields[0].tableRegionLevel, this.inputDisplayObject.tableFields[0].tableYear);
-        this.map.addLayer(this.regionsLayer);
-        this.plotData();
-        this.addLegend({'xlabel' : this.inputDisplayObject.tableFields[0].tableDescr, 'ylabel' : this.inputDisplayObject.tableFields[1].tableDescr});
+
       }
     }
   } // END FUNCTION ngOnChanges
@@ -214,7 +229,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       //console.log('properties', properties);
       return {
         fill: true, fillColor: fillColor, fillOpacity: 1,
-        color: 'rgba(255,255,255,0.77)', opacity: 1, weight: 0.5,
+        color: 'rgba(185,178,178,0.8)', opacity: 1, weight: 0.5,
       };
     })
     this.regionsLayer.redraw();
