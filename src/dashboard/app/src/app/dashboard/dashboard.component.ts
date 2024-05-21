@@ -76,13 +76,11 @@ export class DashboardComponent {
   updateTableFieldFromSelect(tableField: DisplayTableValueObject) {
     let tableId = tableField.tableId;
 
+    let showOnlyOneTableId = -1;
+
     // console.log('=== UPDATE === updateTableFieldFromSelect()', tableId, tableField);
 
-
-    this.displayObject.tableFields[tableId] = new DisplayTableValueObject(tableField);
-
-
-    if (tableField.tableId === 0  &&  this.displayObject.displayType === 'bivariate') {
+    if (tableField.tableId === 0  &&  this.displayObject.formType === 'bivariate') {
       this.displayObject.tableFields[1].tableRegionLevel = this.displayObject.tableFields[0].tableRegionLevel;
       this.displayObject.tableFields[1].tableYear = this.displayObject.tableFields[0].tableYear;
       if (this.displayObject.tableFields[0].tableName === '') {
@@ -90,17 +88,41 @@ export class DashboardComponent {
       }
     }
 
-    let doCollectDataForSelection = true;
-    this.displayObject.tableFields.forEach( tableField => {
-      tableField.checkSelectionComplete();
-      if (!tableField.tableSelectionComplete) {
-        doCollectDataForSelection = false;
+    if (this.displayObject.numberTableFields > 1  &&  tableField.tableShowOnlyThisTable) {
+      if (tableField.tableSelectionComplete) {
+        console.log('show only table ', tableField.tableId);
+        showOnlyOneTableId = tableField.tableId;
       }
-    });
+      tableField.tableShowOnlyThisTable = false;
+    }
 
-    // console.log(' - - doCollectDataForSelection ???');
-    if (doCollectDataForSelection) {
-      this.collectDataForSelection(tableId);
+    this.displayObject.tableFields[tableId] = new DisplayTableValueObject(tableField);
+
+
+
+    if (showOnlyOneTableId > -1) {
+      this.displayObject.displayType = 'univariate';
+
+      this.collectDataForSelection(showOnlyOneTableId);
+
+    } else {
+      this.displayObject.displayType = this.displayObject.formType;
+
+      let doCollectDataForSelection = true;
+      this.displayObject.tableFields.forEach(tableField => {
+        tableField.checkSelectionComplete();
+        if (!tableField.tableSelectionComplete) {
+          doCollectDataForSelection = false;
+        }
+      });
+
+      // console.log(' - - doCollectDataForSelection ???');
+      if (doCollectDataForSelection) {
+        this.collectDataForSelection(tableId);
+      } else {
+        this.displayObject['displayData'] = [];
+        this.displayDataUpdated = !this.displayDataUpdated;
+      }
     }
 
   } // END FUNCTION updateTableFieldFromSelect
@@ -109,7 +131,7 @@ export class DashboardComponent {
   collectDataForSelection(tableId = 0) {
     //console.log('collectDataForSelection() ... ', tableId);
 
-    if (this.displayObject.tableFields.length > 1  &&  tableId === 0) {
+    if (this.displayObject.displayType === 'bivariate'  &&  this.displayObject.tableFields.length > 1  &&  tableId === 0) {
       // wait for right part ... that one always followes shortly after this ...
       // console.log('collect wait ...', tableId);
     } else {
@@ -118,32 +140,48 @@ export class DashboardComponent {
 
       // this.displayObject = new DisplayObject(this.displayObject);
 
-      switch(this.displayObject.displayType) {
+      switch(this.displayObject.formType) {
         case 'bivariate':
 
-          let x_json = {};
-          let y_json = {};
+          if (this.displayObject.displayType === 'bivariate') {
+            let x_json = {};
+            let y_json = {};
 
-          x_json['source'] = this.displayObject.tableFields[0].tableName;
-          let x_conditions = [];
-          for (const fieldName in this.displayObject.tableFields[0].tableColumnValues) {
-            x_conditions.push( {field: fieldName, value: this.displayObject.tableFields[0].tableColumnValues[fieldName]} );
+            x_json['source'] = this.displayObject.tableFields[0].tableName;
+            let x_conditions = [];
+            for (const fieldName in this.displayObject.tableFields[0].tableColumnValues) {
+              x_conditions.push({
+                field: fieldName,
+                value: this.displayObject.tableFields[0].tableColumnValues[fieldName]
+              });
+            }
+            x_json['conditions'] = x_conditions;
+
+            y_json['source'] = this.displayObject.tableFields[1].tableName;
+            let y_conditions = [];
+            for (const fieldName in this.displayObject.tableFields[1].tableColumnValues) {
+              y_conditions.push({
+                field: fieldName,
+                value: this.displayObject.tableFields[1].tableColumnValues[fieldName]
+              });
+            }
+            y_json['conditions'] = y_conditions;
+
+            this.dashboardFeatureService.getXYData(this.displayObject.tableFields[0].tableRegionLevel, this.displayObject.tableFields[0].tableYear, JSON.stringify(x_json), JSON.stringify(y_json)).subscribe(data => {
+              console.log('DISPLAY DATA COLLECTED!', data);
+              this.displayObject['displayData'] = data;
+              this.displayDataUpdated = !this.displayDataUpdated;
+            });
+          } else {
+            // SHOW ONLY ONE TABLE
+
+            // this.dashboardFeatureService.g
+
+
           }
-          x_json['conditions'] = x_conditions;
 
-          y_json['source'] = this.displayObject.tableFields[1].tableName;
-          let y_conditions = [];
-          for (const fieldName in this.displayObject.tableFields[1].tableColumnValues) {
-            y_conditions.push( {field: fieldName, value: this.displayObject.tableFields[1].tableColumnValues[fieldName]} );
-          }
-          y_json['conditions'] = y_conditions;
-
-          this.dashboardFeatureService.getXYData(this.displayObject.tableFields[0].tableRegionLevel, this.displayObject.tableFields[0].tableYear, JSON.stringify(x_json), JSON.stringify(y_json)).subscribe( data => {
-            console.log('DISPLAY DATA COLLECTED!', data);
-            this.displayObject['displayData'] = data;
-            this.displayDataUpdated = !this.displayDataUpdated;
-          });
           break;
+
         default:
           console.log('NOT IMPLEMENTED YET');
           break;

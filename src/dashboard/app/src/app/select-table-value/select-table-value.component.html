@@ -105,10 +105,10 @@
                 <mat-label>Select {{columnValue.field_label}}</mat-label>
                 <!-- mat-select [(value)]="selectedColumnValues[columnValue.field]" -->
                 <!-- mat-select [(value)]="tableSelection.tableColumnValues[columnValue.field]" (valueChange)="checkTableValueSelectionComplete()" -->
-                <mat-select [(value)]="tableSelection.tableColumnValues[columnValue.field]" (valueChange)="changedColumnValue()">
+                <mat-select [(value)]="tableSelection.tableColumnValues[columnValue.field]" (valueChange)="changedColumnValue(columnValue.field)">
                     <mat-option [value]="partValue.value" *ngFor="let partValue of columnValue.field_values">{{partValue.label}}</mat-option>
                 </mat-select>
-                <button mat-icon-button matSuffix type="button" color="primary" (click)="tableSelectClearChosenColumnValue(columnValue.field)" [attr.aria-label]="'Refresh/Clear'"><mat-icon>refresh</mat-icon></button>
+                <button mat-icon-button matSuffix *ngIf="!availableColumnValuesWithInitiallyOneChoice.includes(columnValue.field)" type="button" color="primary" (click)="tableSelectClearChosenColumnValue(columnValue.field)" [attr.aria-label]="'Refresh/Clear'" [disabled]="tableSelection.tableColumnValues[columnValue.field] === ''"><mat-icon>replay</mat-icon></button>
             </mat-form-field>
 
 
@@ -120,6 +120,7 @@
 
             <!-- div>alle waarden geselecteerd? <b>{{( (Object.values(tableSelection.tableColumnValues).length === availableColumnValues.length  &&  !(Object.values(tableSelection.tableColumnValues).includes(""))   &&  Object.values(tableSelection.tableColumnValues).length > 0 ) ? 'JA': 'NEE')}}</b></div -->
             <div>Selection complete? <b>{{ (tableSelection.tableSelectionComplete ? 'YES' : 'no') }}</b></div>
+            <div *ngIf="tableSelection.tableSelectionComplete"><button mat-stroked-button type="button" (click)="showOnlyThisTableOnMap()"><mat-icon>map</mat-icon> show only this table on map</button></div>
 
             <!--div class="json_preview">
                 <pre>{{availableColumnValues | json}}</pre>

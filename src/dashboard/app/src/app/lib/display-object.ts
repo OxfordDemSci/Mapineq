@@ -5,17 +5,21 @@ export class DisplayObject {
     // private objectHttpClient: HttpClient;
     // private objectFeatureService: FeatureService
 
-    displayType: string;
+    formType: string;
     numberTableFields: number;
     tableFields: DisplayTableValueObject[];
     colors: string[];
+    displayType: string;
+    displayTableId: number;
     displayData: any[];
 
 
     constructor(jsonObject = {}) {
-        this.displayType = 'choropleth';
+        this.formType = 'choropleth';
         this.numberTableFields = 1;
         this.tableFields = [];
+        this.displayType = '';
+        this.displayTableId = 0;
         this.displayData = [];
 
         //this.objectHttpClient = new HttpClient()
@@ -24,13 +28,15 @@ export class DisplayObject {
 
         for (const field in jsonObject) {
             if (field === 'displayType') {
-                this.displayType = jsonObject[field];
+                this.formType = jsonObject[field];
                 switch(jsonObject[field]) {
                     case 'bivariate':
                         this.numberTableFields = 2;
+                        this.displayType = 'bivariate';
                         break;
                     default:
                         this.numberTableFields = 1;
+                        this.displayType = 'choropleth'
                         break;
                 }
             } else if (field === 'tableFields') {
@@ -62,7 +68,7 @@ export class DisplayObject {
             } else {
                 tmpTableFields.push(new DisplayTableValueObject());
             }
-            switch(this.displayType) {
+            switch(this.formType) {
                 case 'bivariate':
                     if (i === 0) {
                         tmpTableFields[i].tableFunction = 'Predictor';

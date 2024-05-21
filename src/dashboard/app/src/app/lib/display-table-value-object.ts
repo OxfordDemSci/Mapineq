@@ -7,6 +7,7 @@ export class DisplayTableValueObject {
     tableRegionLevel: string;
     tableColumnValues: any;
     tableSelectionComplete: boolean;
+    tableShowOnlyThisTable: boolean;
 
     constructor(jsonObject = {}, index = 0) {
         this.tableId = index;
@@ -17,6 +18,7 @@ export class DisplayTableValueObject {
         this.tableRegionLevel = '-1';
         this.tableColumnValues = {};
         this.tableSelectionComplete = false;
+        this.tableShowOnlyThisTable = false;
 
         for (const field in jsonObject) {
             if(Object.getOwnPropertyNames(this).includes(field)) {
