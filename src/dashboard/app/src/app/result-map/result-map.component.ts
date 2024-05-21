@@ -1,5 +1,8 @@
 import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import * as L from "leaflet";
+
+import 'leaflet.vectorgrid/dist/Leaflet.VectorGrid.bundled.js';
+
 import {FeatureService} from "../services/feature.service";
 import {RegionsLayer} from "../layers/regions-layer";
 import {DisplayObject} from "../lib/display-object";
