@@ -9,6 +9,27 @@ import {
   LeafletControlWatermark
 } from "../lib/leaflet-control-custom";
 
+
+/*
+const iconRetinaUrl = 'assets/leaflet/marker-icon-2x.png';
+const iconUrl = 'assets/leaflet/marker-icon.png';
+const shadowUrl = 'assets/leaflet/marker-shadow.png';
+const iconDefault = L.icon({
+  iconRetinaUrl,
+  iconUrl,
+  shadowUrl,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  tooltipAnchor: [16, -28],
+  shadowSize: [41, 41]
+});
+L.Marker.prototype.options.icon = iconDefault;
+*/
+
+
+
+
 const colors = {
   '31' : '#64acbe', '32' : '#627f8c', '33' : '#574249',
   '21' : '#b0d5df', '22' : '#ad9ea5', '23' : '#985356',
