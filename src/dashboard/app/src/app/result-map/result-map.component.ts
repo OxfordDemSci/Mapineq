@@ -37,6 +37,12 @@ const colorsBivariate = {
     '11': '#e8e8e8', '12': '#e4acac', '13': '#c85a5a',
 }
 
+const titlesBivariate = {
+    '31': 'high predictor, low outcome', '32': 'high predictor, medium outcome', '33': 'high predictor and outcome',
+    '21': 'medium predictor, low outcome', '22': 'medium predictor and outcome', '23': 'medium predictor, high outcome',
+    '11': 'low predictor and outcome', '12': 'low predictor, medium outcome', '13': 'low predictor, high outcome',
+}
+
 const colorsUnivariate = ['#ccd8de', '#99b2bd', '#668b9d', '#33657c', '#003e5b'];
 
 
@@ -463,7 +469,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             case 'bivariate':
 
                 let svgWidth = 250;
-                let svgHeight = 175;
+                let svgHeight = 200;
 
                 let containerSvg = document.createElementNS(xmlns, 'svg');
                 this.mapLegendDiv.appendChild(containerSvg);
@@ -497,6 +503,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
                         blockPath.setAttributeNS(null, 'opacity', '1');
                         blockPath.setAttributeNS(null, 'fill', colorsBivariate[x.toString() + y.toString()]);
                         blockPath.setAttributeNS(null, 'd', path);
+                        blockPath.setAttributeNS(null, 'title', titlesBivariate[x.toString() + y.toString()]);
 
                         blockPath.addEventListener('mouseover', legendBlockMouseOver);
                         blockPath.addEventListener('mouseout', legendBlockMouseOut);
@@ -518,6 +525,41 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
                 blockIndicator.setAttributeNS(null, 'fill-opacity', '0');
                 blockIndicator.setAttributeNS(null, 'd', indicatorPath);
 
+
+                let textPredictor = document.createElementNS(xmlns, 'text');
+                containerSvg.appendChild(textPredictor);
+                textPredictor.setAttributeNS(null, 'x', Math.floor( 3 * svgWidth / 4).toString());
+                textPredictor.setAttributeNS(null, 'y', Math.floor( 3 * svgHeight / 4).toString());
+                textPredictor.setAttributeNS(null, 'fill', '#000000');
+                textPredictor.setAttributeNS(null, 'text-anchor', 'middle');
+                textPredictor.setAttributeNS(null, 'font-weight', 'bold');
+                textPredictor.setAttributeNS(null, 'font-size', '14px');
+                textPredictor.setAttributeNS(null, 'transform', 'rotate(-45, ' + Math.floor( 3 * svgWidth / 4).toString() + ', ' + Math.floor( 3 * svgHeight / 4).toString() + ')');
+                textPredictor.innerHTML = 'Predictor &#11166;';
+
+                let textOutcome = document.createElementNS(xmlns, 'text');
+                containerSvg.appendChild(textOutcome);
+                textOutcome.setAttributeNS(null, 'x', Math.floor( 1 * svgWidth / 4).toString());
+                textOutcome.setAttributeNS(null, 'y', Math.floor( 3 * svgHeight / 4).toString());
+                textOutcome.setAttributeNS(null, 'fill', '#000000');
+                textOutcome.setAttributeNS(null, 'text-anchor', 'middle');
+                textOutcome.setAttributeNS(null, 'font-weight', 'bold');
+                textOutcome.setAttributeNS(null, 'font-size', '14px');
+                textOutcome.setAttributeNS(null, 'transform', 'rotate(45, ' + Math.floor( 1 * svgWidth / 4).toString() + ', ' + Math.floor( 3 * svgHeight / 4).toString() + ')');
+                textOutcome.innerHTML = '&#11164; Outcome';
+
+
+                let textExplain = document.createElementNS(xmlns, 'text');
+                containerSvg.appendChild(textExplain);
+                textExplain.id = 'legendTextExplain';
+                textExplain.setAttributeNS(null, 'x', Math.floor( 1 * svgWidth / 2).toString());
+                textExplain.setAttributeNS(null, 'y', '14');
+                textExplain.setAttributeNS(null, 'fill', '#000000');
+                textExplain.setAttributeNS(null, 'text-anchor', 'middle');
+                //textExplain.setAttributeNS(null, 'font-weight', 'bold');
+                textExplain.setAttributeNS(null, 'font-style', 'italic');
+                textExplain.setAttributeNS(null, 'font-size', '14px');
+                textExplain.innerHTML = 'Select a color to see its meaning';
 
 
 
@@ -577,6 +619,8 @@ function legendBlockMouseOver(e) {
     //console.log('TEST:', document.getElementById(e.target.id).getAttributeNS(null, 'd'));
     // document.getElementById('legendBlockIndicator').setAttributeNS(null, 'd', document.getElementById(e.target.id).getAttributeNS(null, 'd') );
 
+    document.getElementById('legendTextExplain').innerHTML = document.getElementById(e.target.id).getAttributeNS(null, 'title');
+
 } // END FUNCTION legendBlockMouseOver
 
 function legendBlockMouseOut(e) {
@@ -585,5 +629,6 @@ function legendBlockMouseOut(e) {
 
     // document.getElementById('legendBlockIndicator').setAttributeNS(null, 'd', 'M -100 -100 L -125 -125 L -100 -150 L -75 -125 z' );
 
+    document.getElementById('legendTextExplain').innerHTML = '';
 
 } // END FUNCTION legendBlockMouseOut
