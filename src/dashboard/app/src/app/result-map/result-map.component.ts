@@ -402,12 +402,17 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
     setLegend(info): any {
 
+        const xmlns = 'http://www.w3.org/2000/svg';
         const legendType = info.type;
 
         console.log('setLegend()', legendType);
 
 
-        this.mapLegendDiv.innerHTML = '<h4>Legend</h4>';
+        // this.mapLegendDiv.innerHTML = '<h4>Legend</h4>';
+        let legendHeader = document.createElement('h4');
+        legendHeader.setAttribute('class', 'legendHeader');
+        legendHeader.innerHTML = 'Legend';
+        this.mapLegendDiv.appendChild(legendHeader);
 
         switch (legendType) {
 
@@ -424,20 +429,106 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
                     toFixedNumber = 1;
                     if (colorStep < 1) {
                         toFixedNumber = 2;
+                        if (colorStep < 0.1) {
+                            toFixedNumber = 3;
+                        }
                     }
                 }
 
                 colorsUnivariateReverse.forEach( (color, index) => {
                     let indexReverseFrom = colorsUnivariate.length - index - 1;
                     let indexReverseTo = colorsUnivariate.length - index;
-                    this.mapLegendDiv.innerHTML += '<div class="legendColorBlock" style="background-color: ' + color + '"></div> ' + (info.xmin + (colorStep * indexReverseFrom)).toFixed(toFixedNumber) + ' - ' + (info.xmin + (colorStep * indexReverseTo)).toFixed(toFixedNumber) + '<br>\n';
+                    // this.mapLegendDiv.innerHTML += '<div class="legendColorBlock" style="background-color: ' + color + '"></div> ' + (info.xmin + (colorStep * indexReverseFrom)).toFixed(toFixedNumber) + ' - ' + (info.xmin + (colorStep * indexReverseTo)).toFixed(toFixedNumber) + '<br>\n';
+
+                    let legendLine = document.createElement('div');
+                    legendLine.setAttribute('class', 'legendLine');
+                    this.mapLegendDiv.appendChild(legendLine);
+
+                    let legendBlock = document.createElement('div');
+                    legendBlock.setAttribute('class', 'legendColorBlock');
+                    legendBlock.style.backgroundColor = color;
+                    legendLine.appendChild(legendBlock);
+
+                    let legendText = document.createElement('div');
+                    legendText.setAttribute('class', 'legendColorText');
+                    legendText.innerHTML = (info.xmin + (colorStep * indexReverseFrom)).toFixed(toFixedNumber) + ' - ' + (info.xmin + (colorStep * indexReverseTo)).toFixed(toFixedNumber);
+                    legendLine.appendChild(legendText);
+
+
                 });
 
 
                 break;
 
             case 'bivariate':
-                this.mapLegendDiv.innerHTML += '<canvas id="myCanvas" width="190" height="180" ></canvas>';
+
+                let svgWidth = 250;
+                let svgHeight = 175;
+
+                let containerSvg = document.createElementNS(xmlns, 'svg');
+                this.mapLegendDiv.appendChild(containerSvg);
+                containerSvg.setAttributeNS(null, 'class', 'legendSvgGraph');
+                containerSvg.setAttributeNS(null, 'width', svgWidth.toString());
+                containerSvg.setAttributeNS(null, 'height', svgHeight.toString());
+                containerSvg.setAttributeNS(null, 'viewBox', '0 0 ' + svgWidth + ' ' + svgHeight);
+
+                let bg = document.createElementNS(xmlns, 'rect');
+                containerSvg.appendChild(bg);
+                bg.setAttributeNS(null, 'fill', '#ffffff');
+                bg.setAttributeNS(null, 'opacity', '0.5');
+                bg.setAttributeNS(null, 'width', svgWidth.toString());
+                bg.setAttributeNS(null, 'height', svgHeight.toString());
+                // bg.addEventListener('mouseover', legendBlockMouseOut);
+
+                for (let x = 1; x <= 3; x++) {
+                    for (let y = 1; y <= 3; y++) {
+                        // context.beginPath();
+                        // context.fillStyle = colorsBivariate[x.toString() + y.toString()];
+                        let blockPath = document.createElementNS(xmlns, 'path');
+                        containerSvg.appendChild(blockPath);
+                        let startX = Math.floor( (svgWidth / 2) + (x * 26) - (y * 26));
+                        let startY = Math.floor( svgHeight + 35 - (x * 26) - (y * 26) );
+
+                        let path = 'M ' + (startX).toString() + ' ' + (startY).toString() + ' L ' + (startX - 25).toString() + ' ' + (startY - 25).toString() + ' L ' + (startX).toString() + ' ' + (startY - 50).toString() + ' L ' + (startX + 25).toString() + ' ' + (startY - 25).toString() +' z';
+                        blockPath.id = 'legendBlock_' + x.toString() + '_' + y.toString();
+                        blockPath.setAttributeNS(null, 'stroke', '#000000');
+                        blockPath.setAttributeNS(null, 'stroke-width', '2');
+                        blockPath.setAttributeNS(null, 'stroke-opacity', '0');
+                        blockPath.setAttributeNS(null, 'opacity', '1');
+                        blockPath.setAttributeNS(null, 'fill', colorsBivariate[x.toString() + y.toString()]);
+                        blockPath.setAttributeNS(null, 'd', path);
+
+                        blockPath.addEventListener('mouseover', legendBlockMouseOver);
+                        blockPath.addEventListener('mouseout', legendBlockMouseOut);
+
+
+                    }
+                }
+
+                let blockIndicator = document.createElementNS(xmlns, 'path');
+                containerSvg.appendChild(blockIndicator);
+                // let indicatorPath = 'M ' + (-100).toString() + ' ' + (-100).toString() + ' L ' + (-100 - 25).toString() + ' ' + (-100 - 25).toString() + ' L ' + (-100).toString() + ' ' + (-100 - 50).toString() + ' L ' + (-100 + 25).toString() + ' ' + (-100 - 25).toString() +' z';
+                let indicatorPath = 'M -100 -100 L -125 -125 L -100 -150 L -75 -125 z';
+                blockIndicator.id = 'legendBlockIndicator';
+                blockIndicator.setAttributeNS(null, 'stroke', '#000000');
+                blockIndicator.setAttributeNS(null, 'stroke-width', '2');
+                blockIndicator.setAttributeNS(null, 'stroke-opacity', '1');
+                blockIndicator.setAttributeNS(null, 'opacity', '1');
+                blockIndicator.setAttributeNS(null, 'fill', '#ffffff');
+                blockIndicator.setAttributeNS(null, 'fill-opacity', '0');
+                blockIndicator.setAttributeNS(null, 'd', indicatorPath);
+
+
+
+
+                /* /
+                // this.mapLegendDiv.innerHTML += '<canvas id="myCanvas" width="190" height="180" ></canvas>';
+                let legendCanvas = document.createElement('canvas');
+                legendCanvas.id = 'myCanvas';
+                legendCanvas.width = 190;
+                legendCanvas.height = 180;
+                this.mapLegendDiv.appendChild(legendCanvas);
+
 
                 const boxsize = 50;
                 const canvas = document.getElementById("myCanvas") as (HTMLCanvasElement);
@@ -463,6 +554,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
                 textparts = info.ylabel.split(" ");
                 context.fillText(textparts[0] + ' ' + textparts[1], 20, 10);
                 context.restore();
+                /* */
+
                 break;
 
             default:
@@ -475,3 +568,22 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
 
 }
+
+function legendBlockMouseOver(e) {
+    console.log('legendBlockMouseOver(), event:', e.target.id);
+
+    document.getElementById(e.target.id).setAttributeNS(null, 'stroke-opacity', '1');
+
+    //console.log('TEST:', document.getElementById(e.target.id).getAttributeNS(null, 'd'));
+    // document.getElementById('legendBlockIndicator').setAttributeNS(null, 'd', document.getElementById(e.target.id).getAttributeNS(null, 'd') );
+
+} // END FUNCTION legendBlockMouseOver
+
+function legendBlockMouseOut(e) {
+    console.log('legendBlockMouseOut(), event:', e.target.id);
+    document.getElementById(e.target.id).setAttributeNS(null, 'stroke-opacity', '0');
+
+    // document.getElementById('legendBlockIndicator').setAttributeNS(null, 'd', 'M -100 -100 L -125 -125 L -100 -150 L -75 -125 z' );
+
+
+} // END FUNCTION legendBlockMouseOut
