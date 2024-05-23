@@ -337,6 +337,14 @@ div.emptyDiv {
 }
 
 
+/* MAP LEGEND */
+
+.legendColorBlock {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+}
+
 
 
 

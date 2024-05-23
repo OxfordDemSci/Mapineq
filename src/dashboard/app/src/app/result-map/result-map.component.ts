@@ -37,6 +37,9 @@ const colorsBivariate = {
     '11': '#e8e8e8', '12': '#e4acac', '13': '#c85a5a',
 }
 
+const colorsUnivariate = ['#ccd8de', '#99b2bd', '#668b9d', '#33657c', '#003e5b'];
+
+
 @Component({
     selector: 'app-result-map',
     templateUrl: './result-map.component.html',
@@ -170,11 +173,6 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             }
             this.plotData();
 
-            this.initLegend();
-            this.setLegend({
-                'xlabel': this.inputDisplayObject.tableFields[0].tableDescr,
-                'ylabel': this.inputDisplayObject.tableFields[1].tableDescr
-            });
         } else {
             // NO DATA NO LEGEND ...
             this.hideLegend();
@@ -229,6 +227,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         console.log('AT11', result['AT11']);
         console.log('FI1D7', result['FI1D7']);
 
+        this.initLegend();
         switch(this.displayType) {
             case 'bivariate':
                 this.changeMapStyleBivariate(result);
@@ -240,7 +239,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         }
 
         this.addMouseOver(result);
-    }
+    } // END FUNCTION plotData
 
 
     changeMapStyleUnivariate(mapdata: any) {
@@ -267,19 +266,25 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             };
         })
         this.regionsLayer.redraw();
+
+        this.setLegend({
+            'type': 'univariate',
+            'xlabel': this.inputDisplayObject.tableFields[0].tableDescr,
+            'xmin': xmin,
+            'xmax': xmax
+        });
+
         console.log('nuts_ids not found', unknown);
     } // END FUNCTION changeMapStyleUnivariate
 
     getColorUnivariate(xvalue: number, xmin: number, xmax: number): any {
+        //console.log('getColorUnivariate():', xvalue, xmin, xmax);
 
-        //console.log(xvalue, xmin, xmax, yvalue, ymin, ymax);
-
-        let index1 = Math.ceil((xvalue - xmin) / ((xmax - xmin) / 3));
-
+        let colorIndex = Math.floor((xvalue - xmin) / ((xmax - xmin) / colorsUnivariate.length));
         if (xvalue === 0) {
             return '#FFFFFF';
         }
-        return colorsBivariate['1' + index1.toString()];
+        return colorsUnivariate[colorIndex];
     } // END FUNCTION getColorUnivariate
 
 
@@ -318,6 +323,13 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             };
         })
         this.regionsLayer.redraw();
+
+        this.setLegend({
+            'type': 'bivariate',
+            'xlabel': this.inputDisplayObject.tableFields[0].tableDescr,
+            'ylabel': this.inputDisplayObject.tableFields[1].tableDescr
+        });
+
         console.log('nuts_ids not found', unknown);
     } // END FUNCTION changeMapStyleBivariate
 
@@ -379,39 +391,85 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     initLegend() {
         this.mapLegendDiv.style.display = 'block';
 
-        this.mapLegendDiv.innerHTML = '<h4>Legenda</h4>';
-        this.mapLegendDiv.innerHTML += '<img id ="scream" alt="legenda"  style="display:none" src="assets/img/legend.png"></img>';
-        this.mapLegendDiv.innerHTML += '<canvas id="myCanvas" width="190" height="180" ></canvas>';
+        this.mapLegendDiv.innerHTML = '';
+        
+        // this.mapLegendDiv.innerHTML = '<h4>Legend</h4>';
+        // this.mapLegendDiv.innerHTML += '<img id="scream" alt="legenda"  style="display:none" src="assets/img/legend.png"></img>';
+        // this.mapLegendDiv.innerHTML += '<canvas id="myCanvas" width="190" height="180" ></canvas>';
 
     } // END FUNCTION initLegend
 
 
     setLegend(info): any {
-        const boxsize = 50;
-        const canvas = document.getElementById("myCanvas") as (HTMLCanvasElement);
-        const context = canvas.getContext("2d");
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        context.font = "11px Verdana";
-        let textparts = info.xlabel.split(" ");
-        context.fillText(textparts[0] + ' ' + textparts[1], 25, 180);
-        const img = document.getElementById("scream") as HTMLImageElement;
-        //context.drawImage(img, 15, 0, 180, 180);
-        for (let x = 1; x <= 3; x++) {
-            for (let y = 1; y <= 3; y++) {
-                context.beginPath();
-                context.fillStyle = colorsBivariate[x.toString() + y.toString()];
-                context.fillRect(25 + (x - 1) * boxsize, 110 - ((y - 1) * boxsize), boxsize, boxsize);
-                context.stroke();
-            }
 
-        }
-        context.save();
-        context.rotate(-90 * Math.PI / 180);
-        context.translate(-180, 0)
-        textparts = info.ylabel.split(" ");
-        context.fillText(textparts[0] + ' ' + textparts[1], 20, 10);
-        context.restore();
+        const legendType = info.type;
 
+        console.log('setLegend()', legendType);
+
+
+        this.mapLegendDiv.innerHTML = '<h4>Legend</h4>';
+
+        switch (legendType) {
+
+            case 'univariate':
+                // <div class="col"
+
+                // let colorIndex = Math.floor((xvalue - xmin) / ((xmax - xmin) / colorsUnivariate.length));
+                let colorStep = ((info.xmax - info.xmin) / colorsUnivariate.length);
+
+                let colorsUnivariateReverse = colorsUnivariate.slice().reverse();
+
+                let toFixedNumber = 0;
+                if (colorStep < 10) {
+                    toFixedNumber = 1;
+                    if (colorStep < 1) {
+                        toFixedNumber = 2;
+                    }
+                }
+
+                colorsUnivariateReverse.forEach( (color, index) => {
+                    let indexReverseFrom = colorsUnivariate.length - index - 1;
+                    let indexReverseTo = colorsUnivariate.length - index;
+                    this.mapLegendDiv.innerHTML += '<div class="legendColorBlock" style="background-color: ' + color + '"></div> ' + (info.xmin + (colorStep * indexReverseFrom)).toFixed(toFixedNumber) + ' - ' + (info.xmin + (colorStep * indexReverseTo)).toFixed(toFixedNumber) + '<br>\n';
+                });
+
+
+                break;
+
+            case 'bivariate':
+                this.mapLegendDiv.innerHTML += '<canvas id="myCanvas" width="190" height="180" ></canvas>';
+
+                const boxsize = 50;
+                const canvas = document.getElementById("myCanvas") as (HTMLCanvasElement);
+                const context = canvas.getContext("2d");
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                context.font = "11px Verdana";
+                let textparts = info.xlabel.split(" ");
+                context.fillText(textparts[0] + ' ' + textparts[1], 25, 180);
+                const img = document.getElementById("scream") as HTMLImageElement;
+                //context.drawImage(img, 15, 0, 180, 180);
+                for (let x = 1; x <= 3; x++) {
+                    for (let y = 1; y <= 3; y++) {
+                        context.beginPath();
+                        context.fillStyle = colorsBivariate[x.toString() + y.toString()];
+                        context.fillRect(25 + (x - 1) * boxsize, 110 - ((y - 1) * boxsize), boxsize, boxsize);
+                        context.stroke();
+                    }
+
+                }
+                context.save();
+                context.rotate(-90 * Math.PI / 180);
+                context.translate(-180, 0)
+                textparts = info.ylabel.split(" ");
+                context.fillText(textparts[0] + ' ' + textparts[1], 20, 10);
+                context.restore();
+                break;
+
+            default:
+                this.mapLegendDiv.innerHTML += 'unknown legend type \'' + legendType + '\'';
+
+                break;
+        } // END SWITCH legendType
 
     } // END FUNCTION setLegend
 
