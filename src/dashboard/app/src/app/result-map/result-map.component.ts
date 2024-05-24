@@ -187,7 +187,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         this.map.addLayer(this.regionsLayer);
       }
       this.plotData();
-      this.childGraph.ScatterPlot(this.xydata);
+      this.childGraph.ScatterPlot( {'xlabel': this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr),
+        'ylabel': this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr), 'xydata' : this.xydata});
     } else {
       //testdata
       // this.featureService.getRealXYData().subscribe((data) => {
@@ -505,7 +506,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     textPredictor.setAttributeNS(null, 'fill', '#000000');
     textPredictor.setAttributeNS(null, 'text-anchor', 'middle');
     textPredictor.setAttributeNS(null, 'font-weight', 'bold');
-    textPredictor.setAttributeNS(null, 'font-size', '14px');
+    textPredictor.setAttributeNS(null, 'font-size', '12px');
     textPredictor.setAttributeNS(null, 'transform', 'rotate(-45, ' + Math.floor(3 * svgWidth / 4).toString() + ', ' + Math.floor(3 * svgHeight / 4).toString() + ')');
     textPredictor.innerHTML = this.legendLabel(info.xlabel )+ ' &#11166;';
 
@@ -516,7 +517,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     textOutcome.setAttributeNS(null, 'fill', '#000000');
     textOutcome.setAttributeNS(null, 'text-anchor', 'middle');
     textOutcome.setAttributeNS(null, 'font-weight', 'bold');
-    textOutcome.setAttributeNS(null, 'font-size', '14px');
+    textOutcome.setAttributeNS(null, 'font-size', '12px');
     textOutcome.setAttributeNS(null, 'transform', 'rotate(45, ' + Math.floor(1 * svgWidth / 4).toString() + ', ' + Math.floor(3 * svgHeight / 4).toString() + ')');
     textOutcome.innerHTML = '&#11164; ' + this.legendLabel(info.ylabel);
 
@@ -575,7 +576,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
   legendLabel(text: string): string {
     let textparts = text.split(' ');
-    return textparts[0] + ' ' + textparts[1];
+    return textparts[0] + ' ' + textparts[1].replace('by', '');
   }
 
 }

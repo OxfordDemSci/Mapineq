@@ -26,32 +26,18 @@ export class GraphComponent implements OnChanges {
     }
   }
 
-  ScatterPlot(xydata: any) {
-    console.log('plot ', xydata);
+  ScatterPlot(info: any) {
+    let xydata = info.xydata;
     const ctx = document.getElementById('myChart');
     // @ts-ignore
     if (this.chart) {
       this.chart.destroy();
     }
-    let testdata =  [{
-      x: -10,
-      y: 0
-    }, {
-      x: 0,
-      y: 10
-    }, {
-      x: 10,
-      y: 5
-    }, {
-      x: 0.5,
-      y: 5.5
-    }];
     const data = {
       datasets: [{
-        label: 'Scatter Dataset',
+        label: info.xlabel + ' & ' + info.ylabel,
         data: xydata,
         backgroundColor: '#003e5b'
-
       }],
     };
     // @ts-ignore
@@ -62,11 +48,13 @@ export class GraphComponent implements OnChanges {
         scales: {
           x: {
             type: 'linear',
-            position: 'bottom'
+            position: 'bottom',
+            title: {text: info.xlabel, display: true}
           },
           y: {
             type: 'linear',
-            position: 'bottom'
+            position: 'bottom',
+            title: {text: info.ylabel, display: true}
           }
         }
       }
