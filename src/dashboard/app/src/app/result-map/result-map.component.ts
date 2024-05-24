@@ -39,14 +39,20 @@ const colorsBivariate = {
   '11': '#e8e8e8', '12': '#e4acac', '13': '#c85a5a',
 }
 
+
 const titlesBivariate = {
-  '31': 'high predictor, low outcome', '32': 'high predictor, medium outcome', '33': 'high predictor and outcome',
-  '21': 'medium predictor, low outcome', '22': 'medium predictor and outcome', '23': 'medium predictor, high outcome',
-  '11': 'low predictor and outcome', '12': 'low predictor, medium outcome', '13': 'low predictor, high outcome',
+  '31': 'high {0}, low {1}', '32': 'high {0}, medium {1}', '33': 'high {0} and {1}',
+  '21': 'medium {0}, low {1}', '22': 'medium {0} and {1}', '23': 'medium {0}, high {1}',
+  '11': 'low {0} and {1}', '12': 'low {0}, medium {1}', '13': 'low {0}, high {1}',
 }
 
 const colorsUnivariate = ['#ccd8de', '#99b2bd', '#668b9d', '#33657c', '#003e5b'];
 
+const formatString = (template, ...args) => {
+  return template.replace(/{([0-9]+)}/g, function (match, index) {
+    return typeof args[index] === 'undefined' ? match : args[index];
+  });
+}
 
 @Component({
   selector: 'app-result-map',
@@ -136,12 +142,14 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
     new LeafletControlLegend({position: 'bottomright'}).addTo(this.map);
     this.mapLegendDiv = document.getElementById('map_legend_div');
-    this.hideLegend();
+
 
     let graph = new LeafletControlGraph({position: 'topright'}).addTo(this.map);
     console.log('id=', graph.getContainer().id);
     this.mapGraphDiv = document.getElementById(graph.getContainer().id);
-    this.mapGraphDiv.innerHTML += '<canvas id="myChart"></canvas>';
+    this.mapGraphDiv.innerHTML += '<canvas id="myChart" width="600px" height="300px"></canvas>';
+
+    this.hideLegend();
 
     new LeafletControlWatermark().addTo(this.map);
 
@@ -398,10 +406,12 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
   hideLegend() {
     this.mapLegendDiv.style.display = 'none';
+    this.mapGraphDiv.style.display = 'none';
   } // END FUNCTION hideLegend
 
   initLegend() {
     this.mapLegendDiv.style.display = 'block';
+    this.mapGraphDiv.style.display = 'block';
     this.mapLegendDiv.innerHTML = '';
   } // END FUNCTION initLegend
 
@@ -476,7 +486,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         blockPath.setAttributeNS(null, 'opacity', '1');
         blockPath.setAttributeNS(null, 'fill', colorsBivariate[y.toString() + x.toString()]);
         blockPath.setAttributeNS(null, 'd', path);
-        blockPath.setAttributeNS(null, 'title', titlesBivariate[x.toString() + y.toString()]);
+        blockPath.setAttributeNS(null, 'title',
+          formatString(titlesBivariate[x.toString() + y.toString()], this.legendLabel(info.xlabel), this.legendLabel(info.ylabel)));
 
         blockPath.addEventListener('mouseover', legendBlockMouseOver);
         blockPath.addEventListener('mouseout', legendBlockMouseOut);
@@ -531,7 +542,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     textExplain.setAttributeNS(null, 'text-anchor', 'middle');
     //textExplain.setAttributeNS(null, 'font-weight', 'bold');
     textExplain.setAttributeNS(null, 'font-style', 'italic');
-    textExplain.setAttributeNS(null, 'font-size', '14px');
+    textExplain.setAttributeNS(null, 'font-size', '12px');
+    textExplain.setAttributeNS(null, 'height', '4em');
     textExplain.innerHTML = 'Select a color to see its meaning';
   }
 
