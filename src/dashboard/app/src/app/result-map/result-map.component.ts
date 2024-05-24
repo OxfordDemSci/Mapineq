@@ -304,8 +304,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
   changeMapStyleBivariate(mapdata: any) {
     let unknown = [];
-    let xdata = this.xydata.map((item: any) => Number(item.x));
-    let ydata = this.xydata.map((item: any) => item.y);
+    let xdata = this.xydata.map((item: any) => Number(item.x)).filter(Number);
+    let ydata = this.xydata.map((item: any) => item.y).filter(Number);
     //console.log(xdata);
     //console.log('BI xdata:', xdata);
     //console.log('BI ydata:', ydata);
