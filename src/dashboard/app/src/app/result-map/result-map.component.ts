@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import * as L from "leaflet";
 
 import 'leaflet.vectorgrid/dist/Leaflet.VectorGrid.bundled.js';
@@ -7,10 +7,12 @@ import {FeatureService} from "../services/feature.service";
 import {RegionsLayer} from "../layers/regions-layer";
 import {DisplayObject} from "../lib/display-object";
 import {
-    LeafletControlLegend,
-    LeafletControlMapButtonsLeft,
-    LeafletControlWatermark
+  LeafletControlGraph,
+  LeafletControlLegend,
+  LeafletControlMapButtonsLeft,
+  LeafletControlWatermark
 } from "../lib/leaflet-control-custom";
+import {GraphComponent} from "../graph/graph.component";
 
 
 /*
@@ -56,8 +58,11 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     @Input() inputDisplayObject!: DisplayObject;
     @Input() inputDisplayDataUpdated!: boolean;
 
+    @ViewChild(GraphComponent) childGraph: GraphComponent;
+
 
     mapLegendDiv: any;
+    mapGraphDiv: any;
 
     private map;
     layerMapOSM: any;
@@ -133,6 +138,12 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         this.mapLegendDiv = document.getElementById('map_legend_div');
         this.hideLegend();
 
+        let graph = new LeafletControlGraph({position: 'topright'}).addTo(this.map);
+        console.log('id=', graph.getContainer().id);
+        this.mapGraphDiv = document.getElementById(graph.getContainer().id);
+        this.mapGraphDiv.innerHTML = 'Graph';
+        this.mapGraphDiv.innerHTML += '<canvas id="myChart"></canvas>';
+
 
         new LeafletControlWatermark().addTo(this.map);
 
@@ -178,26 +189,24 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
                 this.map.addLayer(this.regionsLayer);
             }
             this.plotData();
-
+            this.childGraph.ScatterPlot(this.xydata);
         } else {
-            // NO DATA NO LEGEND ...
-            this.hideLegend();
+          //testdata
+          // this.featureService.getRealXYData().subscribe((data) => {
+          //   //console.log('data=', data);
+          //   if (this.regionsLayer !== undefined) {
+          //     this.map.removeLayer(this.regionsLayer);
+          //   }
+          //   this.regionsLayer = RegionsLayer.getLayer('2', '2016');
+          //   this.map.addLayer(this.regionsLayer);
+          //   this.xydata = data;
+          //   this.plotData();
+          //   this.setLegend({'type': 'bivariate','xlabel' : 'Deaths (Total)', 'ylabel' : 'Fertility Indicator'});
+          //   this.childGraph.ScatterPlot(data);
+          // });
+          // NO DATA NO LEGEND ...
+          this.hideLegend();
         }
-
-
-        // } else {
-        // this.featureService.getRealXYData().subscribe((data) => {
-        //   //console.log('data=', data);
-        //   if (this.regionsLayer !== undefined) {
-        //     this.map.removeLayer(this.regionsLayer);
-        //   }
-        //   this.regionsLayer = RegionsLayer.getLayer('2', '2016');
-        //   this.map.addLayer(this.regionsLayer);
-        //   this.xydata = data;
-        //   this.plotData();
-        //   this.addLegend({'xlabel' : 'Deaths (Total)', 'ylabel' : 'Fertility Indicator'});
-        // });
-        // }
 
     } // END FUNCTION changeResultMap
 
@@ -398,7 +407,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         this.mapLegendDiv.style.display = 'block';
 
         this.mapLegendDiv.innerHTML = '';
-        
+
         // this.mapLegendDiv.innerHTML = '<h4>Legend</h4>';
         // this.mapLegendDiv.innerHTML += '<img id="scream" alt="legenda"  style="display:none" src="assets/img/legend.png"></img>';
         // this.mapLegendDiv.innerHTML += '<canvas id="myCanvas" width="190" height="180" ></canvas>';
@@ -501,7 +510,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
                         blockPath.setAttributeNS(null, 'stroke-width', '2');
                         blockPath.setAttributeNS(null, 'stroke-opacity', '0');
                         blockPath.setAttributeNS(null, 'opacity', '1');
-                        blockPath.setAttributeNS(null, 'fill', colorsBivariate[x.toString() + y.toString()]);
+                        blockPath.setAttributeNS(null, 'fill', colorsBivariate[y.toString() + x.toString()]);
                         blockPath.setAttributeNS(null, 'd', path);
                         blockPath.setAttributeNS(null, 'title', titlesBivariate[x.toString() + y.toString()]);
 
@@ -584,7 +593,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
                 for (let x = 1; x <= 3; x++) {
                     for (let y = 1; y <= 3; y++) {
                         context.beginPath();
-                        context.fillStyle = colorsBivariate[x.toString() + y.toString()];
+                        context.fillStyle = colorsBivariate[y.toString() + x.toString()];
                         context.fillRect(25 + (x - 1) * boxsize, 110 - ((y - 1) * boxsize), boxsize, boxsize);
                         context.stroke();
                     }

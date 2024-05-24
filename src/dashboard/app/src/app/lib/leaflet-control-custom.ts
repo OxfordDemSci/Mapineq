@@ -63,6 +63,33 @@ export class LeafletControlLegend extends L.Control {
   } // END FUNCTION constructor
 } // END CLASS LeafletControlLegend
 
+export class LeafletControlGraph extends L.Control {
+
+  override onAdd(map: L.Map): any {
+    const mapGraph = L.DomUtil.create('div') as HTMLImageElement;
+    mapGraph.id = 'map_graph_div';
+    mapGraph.style.width = 'auto';
+    mapGraph.style.border = '1px solid rgba(255, 255, 255, 1)';
+    mapGraph.style.cursor = 'default';
+    mapGraph.style.padding = '10px';
+    mapGraph.style.backgroundColor = 'rgba(255,255,255,0.75)';
+    mapGraph.style.borderRadius = '5px';
+
+    L.DomEvent
+      .addListener(mapGraph, 'contextmenu mousedown click dblclick', L.DomEvent.stopPropagation);
+
+    return mapGraph;
+  } // END FUNCTION onAdd
+
+  override onRemove(map: L.Map): void {
+    // Nothing to do here
+  } // END FUNCTION onRemove
+
+  constructor(options?: L.ControlOptions) {
+    super(options);
+  } // END FUNCTION constructor
+} // END CLASS LeafletControlGraph
+
 
 export class LeafletControlMapButtons extends L.Control {
 

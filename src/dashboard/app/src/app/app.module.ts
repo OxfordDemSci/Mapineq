@@ -21,6 +21,8 @@ import { ResultMapComponent } from './result-map/result-map.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
+import { GraphComponent } from './graph/graph.component';
+import {NgForOf} from "@angular/common";
 
 
 @NgModule({
@@ -28,7 +30,8 @@ import {MatFormFieldModule} from "@angular/material/form-field";
         AppComponent,
         DashboardComponent,
         SelectTableValueComponent,
-        ResultMapComponent
+        ResultMapComponent,
+        GraphComponent
     ],
     imports: [
         BrowserModule,
@@ -51,7 +54,9 @@ import {MatFormFieldModule} from "@angular/material/form-field";
         MatAutocompleteModule,
         MatFormFieldModule,
         ReactiveFormsModule,
-        FormsModule
+        FormsModule,
+        MatIconModule,
+        NgForOf
     ],
     providers: [
     provideAnimationsAsync(), provideHttpClient()
