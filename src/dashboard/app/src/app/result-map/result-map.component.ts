@@ -75,6 +75,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
   regionsLayer: any;
   xydata: any;
   displayType: string;
+  popup: any;
 
   constructor(private featureService: FeatureService) {
 
@@ -382,7 +383,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       const properties = event.layer.properties;
       //console.log('properties', properties)
       if (properties) {
-        console.log('properties', properties['nuts_id']);
+        //console.log('properties', properties['nuts_id']);
         let content = `<h3>${properties.nuts_name || 'Unknown'}</h3>`;  // Assume that your data might contain a "name" field
         content += '<div>' + JSON.stringify(properties) + '</div>';
         let entity1 = 'no data';
@@ -395,16 +396,27 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         }
         content += '<div>' + entity1 + '</div>';
         content += '<div>' + entity2 + '</div>';
+        this.childGraph.hightlightPoint([{ x: entity1, y: entity2 }])
         // You can place the popup at the event latlng or on the layer.
-        L.popup()
+        this.popup = L.popup()
           .setContent(content)
           .setLatLng(event.latlng)
           .openOn(this.map);
       } else {
-        L.popup().close();
+        // L.popup().close();
       }
 
     }));
+
+    this.regionsLayer.on('mouseout',  (event) => {
+      this.map.closePopup(this.popup);
+
+    });
+
+
+
+
+
   }
 
   addMouseClick() : any {
