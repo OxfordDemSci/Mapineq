@@ -147,9 +147,10 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     let graph = new LeafletControlGraph({position: 'topright'}).addTo(this.map);
     console.log('id=', graph.getContainer().id);
     this.mapGraphDiv = document.getElementById(graph.getContainer().id);
-    this.mapGraphDiv.innerHTML += '<canvas id="myChart" width="600px" height="300px"></canvas>';
+    this.mapGraphDiv.innerHTML += '<canvas id="myChart" width="400px" height="400px"></canvas>';
 
     this.hideLegend();
+    this.hideGraph();
 
     new LeafletControlWatermark().addTo(this.map);
 
@@ -167,7 +168,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         title: 'Log data in console ...'
     });
     */
-
+    //this.addMouseClick();
     this.map.fitBounds(L.latLng(53.238, 6.536).toBounds(3000000));
   } // END FUNCTION initResultMap
 
@@ -209,7 +210,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       //   this.xydata = data;
       //   this.plotData();
       //   this.setLegend({'type': 'bivariate','xlabel' : 'Deaths (Total)', 'ylabel' : 'Fertility Indicator'});
-      //   this.childGraph.ScatterPlot(data);
+      //   this.childGraph.ScatterPlot({'xydata': data,'xlabel' : 'Deaths (Total)', 'ylabel' : 'Fertility Indicator'});
       // });
       // NO DATA NO LEGEND ...
       this.hideLegend();
@@ -250,16 +251,18 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     console.log('FI1D7', result['FI1D7']);
 
     this.initLegend();
+
     switch (this.displayType) {
       case 'bivariate':
         this.changeMapStyleBivariate(result);
+        this.showGraph();
         break;
 
       default:
         this.changeMapStyleUnivariate(result);
         break;
     }
-
+    //this.addMouseClick();
     this.addMouseOver(result);
   } // END FUNCTION plotData
 
@@ -379,6 +382,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       const properties = event.layer.properties;
       //console.log('properties', properties)
       if (properties) {
+        console.log('properties', properties['nuts_id']);
         let content = `<h3>${properties.nuts_name || 'Unknown'}</h3>`;  // Assume that your data might contain a "name" field
         content += '<div>' + JSON.stringify(properties) + '</div>';
         let entity1 = 'no data';
@@ -403,18 +407,34 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     }));
   }
 
+  addMouseClick() : any {
+    this.regionsLayer.on('mouseclick', ((event: { layer: { properties: any; }; latlng: L.LatLngExpression; }) => {
+      const properties = event.layer.properties;
+      if (properties) {
+        console.log('clicked:' + properties['nuts_id']);
+      }
+    }));
+  }
+
 
   hideLegend() {
     this.mapLegendDiv.style.display = 'none';
-    this.mapGraphDiv.style.display = 'none';
+
   } // END FUNCTION hideLegend
 
   initLegend() {
     this.mapLegendDiv.style.display = 'block';
-    this.mapGraphDiv.style.display = 'block';
+
     this.mapLegendDiv.innerHTML = '';
   } // END FUNCTION initLegend
 
+  hideGraph() {
+    this.mapGraphDiv.style.display = 'none';
+  }
+
+  showGraph() {
+    this.mapGraphDiv.style.display = 'block';
+  }
 
   setLegend(info): any {
 
@@ -587,8 +607,12 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
 
   legendLabel(text: string): string {
+    let label = '';
     let textparts = text.split(' ');
-    return textparts[0] + ' ' + textparts[1].replace('by', '');
+    if (textparts.length > 1) {
+      label = textparts[0] + ' ' + textparts[1].replace('by', '');
+    }
+    return label;
   }
 
 }
