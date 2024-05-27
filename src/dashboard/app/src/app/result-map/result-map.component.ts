@@ -396,7 +396,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         }
         content += '<div>' + entity1 + '</div>';
         content += '<div>' + entity2 + '</div>';
-        this.childGraph.hightlightPoint([{ x: entity1, y: entity2 }])
+        this.childGraph.highlightPoint([{ x: entity1, y: entity2 }])
         // You can place the popup at the event latlng or on the layer.
         this.popup = L.popup()
           .setContent(content)
