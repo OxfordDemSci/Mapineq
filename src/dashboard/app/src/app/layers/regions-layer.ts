@@ -27,6 +27,9 @@ export class RegionsLayer extends BaseLayer  {
           fillColor: '#DA0A0AFF',
           fillOpacity: 0.1,
         }
+      },
+      getFeatureId: function(f) {
+        return f.properties["nuts_id"];
       }
     }
     // @ts-ignore

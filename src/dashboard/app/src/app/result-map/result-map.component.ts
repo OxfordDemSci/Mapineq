@@ -76,6 +76,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
   xydata: any;
   displayType: string;
   popup: any;
+  selectedArea:any;
 
   constructor(private featureService: FeatureService) {
 
@@ -265,6 +266,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     }
     //this.addMouseClick();
     this.addMouseOver(result);
+
   } // END FUNCTION plotData
 
 
@@ -384,6 +386,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       //console.log('properties', properties)
       if (properties) {
         //console.log('properties', properties['nuts_id']);
+
         let content = `<h3>${properties.nuts_name || 'Unknown'}</h3>`;  // Assume that your data might contain a "name" field
         content += '<div>' + JSON.stringify(properties) + '</div>';
         let entity1 = 'no data';
@@ -396,6 +399,14 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         }
         content += '<div>' + entity1 + '</div>';
         content += '<div>' + entity2 + '</div>';
+        this.selectedArea = properties['nuts_id'];
+        this.regionsLayer.setFeatureStyle(properties['nuts_id'], {default: {
+            weight: 3,
+            color: '#dbfd00',
+            fillOpacity: 0,
+            fill: false,
+            fillColor: '#FFFFFF'
+        }});
         this.childGraph.highlightPoint([{ x: entity1, y: entity2 }])
         // You can place the popup at the event latlng or on the layer.
         this.popup = L.popup()
@@ -410,13 +421,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
     this.regionsLayer.on('mouseout',  (event) => {
       this.map.closePopup(this.popup);
-
+      this.regionsLayer.resetFeatureStyle(this.selectedArea);
     });
-
-
-
-
-
   }
 
   addMouseClick() : any {
@@ -425,6 +431,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       if (properties) {
         console.log('clicked:' + properties['nuts_id']);
       }
+      //L.DomEvent.stop(event);
     }));
   }
 
