@@ -33,6 +33,8 @@ L.Marker.prototype.options.icon = iconDefault;
 */
 
 
+
+
 const colorsBivariate = {
   '31': '#64acbe', '32': '#627f8c', '33': '#574249',
   '21': '#b0d5df', '22': '#ad9ea5', '23': '#985356',
@@ -202,18 +204,18 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         'ylabel': this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr), 'xydata' : this.xydata});
     } else {
       //testdata
-      this.featureService.getRealXYData().subscribe((data) => {
-        //console.log('data=', data);
-        if (this.regionsLayer !== undefined) {
-          this.map.removeLayer(this.regionsLayer);
-        }
-        this.regionsLayer = RegionsLayer.getLayer('2', '2016');
-        this.map.addLayer(this.regionsLayer);
-        this.xydata = data;
-        this.plotData();
-        this.setLegend({'type': 'bivariate','xlabel' : 'Deaths (Total)', 'ylabel' : 'Fertility Indicator'});
-        this.childGraph.ScatterPlot({'xydata': data,'xlabel' : 'Deaths (Total)', 'ylabel' : 'Fertility Indicator'});
-      });
+      // this.featureService.getRealXYData().subscribe((data) => {
+      //   //console.log('data=', data);
+      //   if (this.regionsLayer !== undefined) {
+      //     this.map.removeLayer(this.regionsLayer);
+      //   }
+      //   this.regionsLayer = RegionsLayer.getLayer('2', '2016');
+      //   this.map.addLayer(this.regionsLayer);
+      //   this.xydata = data;
+      //   this.plotData();
+      //   this.setLegend({'type': 'bivariate','xlabel' : 'Deaths (Total)', 'ylabel' : 'Fertility Indicator'});
+      //   this.childGraph.ScatterPlot({'xydata': data,'xlabel' : 'Deaths (Total)', 'ylabel' : 'Fertility Indicator'});
+      // });
       // NO DATA NO LEGEND ...
       this.hideLegend();
     }
@@ -242,15 +244,10 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
 
   plotData() {
-    console.log('plotData() ...', this.displayType);
-
-
     let result = this.xydata.reduce((map: { [x: string]: any; }, obj: { geo: string | number; }) => {
       map[obj.geo] = obj;
       return map;
     }, {})
-    console.log('AT11', result['AT11']);
-    console.log('FI1D7', result['FI1D7']);
 
     this.initLegend();
 
@@ -264,7 +261,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         this.changeMapStyleUnivariate(result);
         break;
     }
-    //this.addMouseClick();
+    this.addMouseClick();
     this.addMouseOver(result);
 
   } // END FUNCTION plotData
@@ -272,11 +269,11 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
   changeMapStyleUnivariate(mapdata: any) {
     let unknown = [];
-    let xdata = this.xydata.map((item: any) => Number(item.x));
+    let xdata = this.xydata.map((item: any) => Number(item.x)).filter(Number);
     // console.log('UNI xdata:', xdata);
     let xmax = Math.max(...xdata);
     let xmin = Math.min(...xdata);
-    // console.log(xmin, xmax);
+    console.log(xmin, xmax);
     this.regionsLayer.options.vectorTileLayerStyles.default = ((properties: any) => {
       let entity1 = 0;
       if (mapdata[properties['nuts_id']] != undefined) {
@@ -286,8 +283,6 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       }
 
       let fillColor = this.getColorUnivariate(entity1, xmin, xmax);
-      //console.log('fillColor', fillColor);
-      //console.log('properties', properties);
       return {
         fill: true, fillColor: fillColor, fillOpacity: 1,
         color: 'rgba(185,178,178,0.8)', opacity: 1, weight: 0.5,
@@ -423,12 +418,14 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   addMouseClick() : any {
-    this.regionsLayer.on('mouseclick', ((event: { layer: { properties: any; }; latlng: L.LatLngExpression; }) => {
+    this.regionsLayer.on('click', ((event: { layer: { properties: any; }; latlng: L.LatLngExpression; }) => {
+
       const properties = event.layer.properties;
       if (properties) {
         console.log('clicked:' + properties['nuts_id']);
       }
       //L.DomEvent.stop(event);
+
     }));
   }
 
@@ -635,7 +632,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
 
 function legendBlockMouseOver(e) {
-  console.log('legendBlockMouseOver(), event:', e.target.id);
+  //console.log('legendBlockMouseOver(), event:', e.target.id);
 
   document.getElementById(e.target.id).setAttributeNS(null, 'stroke-opacity', '1');
 
@@ -647,7 +644,7 @@ function legendBlockMouseOver(e) {
 } // END FUNCTION legendBlockMouseOver
 
 function legendBlockMouseOut(e) {
-  console.log('legendBlockMouseOut(), event:', e.target.id);
+  //console.log('legendBlockMouseOut(), event:', e.target.id);
   document.getElementById(e.target.id).setAttributeNS(null, 'stroke-opacity', '0');
 
   // document.getElementById('legendBlockIndicator').setAttributeNS(null, 'd', 'M -100 -100 L -125 -125 L -100 -150 L -75 -125 z' );
