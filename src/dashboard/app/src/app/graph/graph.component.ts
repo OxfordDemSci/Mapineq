@@ -34,7 +34,7 @@ export class GraphComponent implements OnChanges {
     let highlight = {
       label: 'Joo',
       backgroundColor: 'rgb(255,255,255)',
-      borderColor: 'rgb(219,253,0)',
+      borderColor: '#c85a5a',
       borderWidth: 10,
       data: selectedPoint
     };

@@ -202,18 +202,18 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         'ylabel': this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr), 'xydata' : this.xydata});
     } else {
       //testdata
-      // this.featureService.getRealXYData().subscribe((data) => {
-      //   //console.log('data=', data);
-      //   if (this.regionsLayer !== undefined) {
-      //     this.map.removeLayer(this.regionsLayer);
-      //   }
-      //   this.regionsLayer = RegionsLayer.getLayer('2', '2016');
-      //   this.map.addLayer(this.regionsLayer);
-      //   this.xydata = data;
-      //   this.plotData();
-      //   this.setLegend({'type': 'bivariate','xlabel' : 'Deaths (Total)', 'ylabel' : 'Fertility Indicator'});
-      //   this.childGraph.ScatterPlot({'xydata': data,'xlabel' : 'Deaths (Total)', 'ylabel' : 'Fertility Indicator'});
-      // });
+      this.featureService.getRealXYData().subscribe((data) => {
+        //console.log('data=', data);
+        if (this.regionsLayer !== undefined) {
+          this.map.removeLayer(this.regionsLayer);
+        }
+        this.regionsLayer = RegionsLayer.getLayer('2', '2016');
+        this.map.addLayer(this.regionsLayer);
+        this.xydata = data;
+        this.plotData();
+        this.setLegend({'type': 'bivariate','xlabel' : 'Deaths (Total)', 'ylabel' : 'Fertility Indicator'});
+        this.childGraph.ScatterPlot({'xydata': data,'xlabel' : 'Deaths (Total)', 'ylabel' : 'Fertility Indicator'});
+      });
       // NO DATA NO LEGEND ...
       this.hideLegend();
     }
@@ -401,11 +401,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         content += '<div>' + entity2 + '</div>';
         this.selectedArea = properties['nuts_id'];
         this.regionsLayer.setFeatureStyle(properties['nuts_id'], {default: {
-            weight: 3,
-            color: '#dbfd00',
-            fillOpacity: 0,
-            fill: false,
-            fillColor: '#FFFFFF'
+            weight: 4,
+            color: 'rgba(185,178,178,0.8)'
         }});
         this.childGraph.highlightPoint([{ x: entity1, y: entity2 }])
         // You can place the popup at the event latlng or on the layer.
