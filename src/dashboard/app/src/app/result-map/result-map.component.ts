@@ -209,14 +209,17 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       //   if (this.regionsLayer !== undefined) {
       //     this.map.removeLayer(this.regionsLayer);
       //   }
-      //   this.regionsLayer = RegionsLayer.getLayer('2', '2016');
+      //   this.regionsLayer = RegionsLayer.getLayer('2', '2018');
       //   this.map.addLayer(this.regionsLayer);
       //   this.xydata = data;
+      //
+      //   //this.setLegend({'type': 'bivariate','xlabel' : 'Deaths (Total)', 'ylabel' : 'Fertility Indicator'});
+      //   this.inputDisplayObject.tableFields[0].tableDescr = 'Unemployment Rate';
+      //   this.inputDisplayObject.tableFields[1].tableDescr = 'Life Expectancy';
       //   this.plotData();
-      //   this.setLegend({'type': 'bivariate','xlabel' : 'Deaths (Total)', 'ylabel' : 'Fertility Indicator'});
-      //   this.childGraph.ScatterPlot({'xydata': data,'xlabel' : 'Deaths (Total)', 'ylabel' : 'Fertility Indicator'});
+      //   this.childGraph.ScatterPlot({'xydata': data,'xlabel' : this.inputDisplayObject.tableFields[0].tableDescr, 'ylabel' : this.inputDisplayObject.tableFields[1].tableDescr});
       // });
-      // NO DATA NO LEGEND ...
+      // // NO DATA NO LEGEND ...
       this.hideLegend();
     }
 
@@ -261,7 +264,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         this.changeMapStyleUnivariate(result);
         break;
     }
-    this.addMouseClick();
+    this.addMouseClick(result);
     this.addMouseOver(result);
 
   } // END FUNCTION plotData
@@ -322,11 +325,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     let ymax = Math.max(...ydata);
     let ymin = Math.min(...ydata);
     let xmin = Math.min(...xdata);
-    console.log(xmin, xmax, ymin, ymax);
+    //console.log(xmin, xmax, ymin, ymax);
     this.regionsLayer.options.vectorTileLayerStyles.default = ((properties: any) => {
-      if (properties['nuts_id'] === 'HR03') {
-        console.log('properties', properties['nuts_id'], properties['nuts_name']);
-      }
       let entity1 = 0;
       let entity2 = 0;
       if (mapdata[properties['nuts_id']] != undefined) {
@@ -380,10 +380,9 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       const properties = event.layer.properties;
       //console.log('properties', properties)
       if (properties) {
+        this.selectedArea = properties['nuts_id'];
         //console.log('properties', properties['nuts_id']);
-
-        let content = `<h3>${properties.nuts_name || 'Unknown'}</h3>`;  // Assume that your data might contain a "name" field
-        content += '<div>' + JSON.stringify(properties) + '</div>';
+        let content = `<h3>${properties.nuts_name || 'Unknown'} (${properties.nuts_id})</h3>`;  // Assume that your data might contain a "name" field
         let entity1 = 'no data';
         if (popupdata[properties['nuts_id']] != 'null') {
           entity1 = popupdata[properties['nuts_id']].x;
@@ -392,14 +391,14 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         if (popupdata[properties['nuts_id']] != 'null') {
           entity2 = popupdata[properties['nuts_id']].y;
         }
-        content += '<div>' + entity1 + '</div>';
-        content += '<div>' + entity2 + '</div>';
-        this.selectedArea = properties['nuts_id'];
+        content += '<div>' + this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr) + ':'  + entity1 + '</div>';
+        content += '<div>' + this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr) + ':'  + entity2 + '</div>';
         this.regionsLayer.setFeatureStyle(properties['nuts_id'], {default: {
-            weight: 4,
-            color: 'rgba(185,178,178,0.8)'
-        }});
-        this.childGraph.highlightPoint([{ x: entity1, y: entity2 }])
+            weight: 3,
+            color: 'rgba(185,178,178,0.8)',
+            fillOpacity: 0
+          }});
+        this.childGraph.highlightPoint([{ x: entity1, y: entity2 }]);
         // You can place the popup at the event latlng or on the layer.
         this.popup = L.popup()
           .setContent(content)
@@ -417,16 +416,26 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     });
   }
 
-  addMouseClick() : any {
-    this.regionsLayer.on('click', ((event: { layer: { properties: any; }; latlng: L.LatLngExpression; }) => {
+  addMouseClick(popupdata) : any {
+    this.regionsLayer.on('click', (event) => {
 
       const properties = event.layer.properties;
       if (properties) {
         console.log('clicked:' + properties['nuts_id']);
+        let entity1, entity2 = 'no data';
+        if (popupdata[properties['nuts_id']] != 'null') {
+          entity1 = popupdata[properties['nuts_id']].x;
+        }
+
+        if (popupdata[properties['nuts_id']] != 'null') {
+          entity2 = popupdata[properties['nuts_id']].y;
+        }
+        this.selectedArea = properties['nuts_id'];
+
       }
       //L.DomEvent.stop(event);
 
-    }));
+    });
   }
 
 

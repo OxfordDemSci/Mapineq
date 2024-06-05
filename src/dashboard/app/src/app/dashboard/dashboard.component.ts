@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ResultMapComponent} from "../result-map/result-map.component";
 import {AppVersionAndBuildChecker} from "../lib/app-version-and-build-checker";
 import {DisplayObject} from "../lib/display-object";
