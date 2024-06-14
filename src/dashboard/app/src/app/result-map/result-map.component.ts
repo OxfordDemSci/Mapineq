@@ -262,6 +262,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
       default:
         this.changeMapStyleUnivariate(result);
+        this.hideGraph();
         break;
     }
     this.addMouseClick(result);
