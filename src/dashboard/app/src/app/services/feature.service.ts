@@ -44,7 +44,7 @@ export class FeatureService {
   public getSourcesByYearAndNutsLevel(year: string, nutslevel: string): Observable<any> {
     //areas.sort(())
 
-    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_source_by_year_nuts_level/items.json?_year=${year}&_level=${nutslevel}&limit=50`).pipe(
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_source_by_year_nuts_level/items.json?_year=${year}&_level=${nutslevel}&limit=500`).pipe(
       tap((result) => {
         //console.log(result);
       }),
@@ -82,7 +82,7 @@ export class FeatureService {
   //postgisftw.get_year_nuts_level_from_source
 
   public getInfoByReSource(resource: string): Observable<any> {
-    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_year_nuts_level_from_source/items.json?_resource=${resource}&limit=50`).pipe(
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_year_nuts_level_from_source/items.json?_resource=${resource}&limit=500`).pipe(
       tap((result) => {
         //console.log(result);
       }),
@@ -91,7 +91,7 @@ export class FeatureService {
 
   //postgisftw.get_source_by_nuts_level
   public getResourceByNutsLevel(nutslevel: string): Observable<any> {
-    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_source_by_nuts_level/items.json?_level=${nutslevel}&limit=60`).pipe(
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_source_by_nuts_level/items.json?_level=${nutslevel}&limit=500`).pipe(
       tap((result) => {
         //console.log(result);
       }),
