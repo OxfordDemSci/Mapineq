@@ -531,5 +531,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   protected readonly Object = Object;
   */
 
+  showBivariateMap() {
+    this.emitChangeTableValue();
+  }
 } // END CLASS SelectTableValueComponent
 

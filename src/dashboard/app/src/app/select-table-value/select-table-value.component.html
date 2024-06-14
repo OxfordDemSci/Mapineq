@@ -120,8 +120,18 @@
 
             <!-- div>alle waarden geselecteerd? <b>{{( (Object.values(tableSelection.tableColumnValues).length === availableColumnValues.length  &&  !(Object.values(tableSelection.tableColumnValues).includes(""))   &&  Object.values(tableSelection.tableColumnValues).length > 0 ) ? 'JA': 'NEE')}}</b></div -->
             <div>Selection complete? <b>{{ (tableSelection.tableSelectionComplete ? 'YES' : 'no') }}</b></div>
-            <div *ngIf="tableSelection.tableSelectionComplete"><button mat-stroked-button type="button" (click)="showOnlyThisTableOnMap()"><mat-icon>map</mat-icon> show only this table on map</button></div>
+            <div *ngIf="tableSelection.tableSelectionComplete">
+              <button mat-stroked-button type="button" (click)="showOnlyThisTableOnMap()">
+                <mat-icon>map</mat-icon> show only this table on map
+              </button>
 
+            </div>
+            <br/>
+            <div  *ngIf="tableSelection.tableSelectionComplete && tableId===1">
+              <button mat-raised-button type="button" (click)="showBivariateMap()" color="primary">
+                <mat-icon>scatter_plot</mat-icon>Bivariate map
+              </button>
+            </div>
             <!--div class="json_preview">
                 <pre>{{availableColumnValues | json}}</pre>
             </div-->
