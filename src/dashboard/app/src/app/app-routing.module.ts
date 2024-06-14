@@ -4,7 +4,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
-  // { path: 'map', component: MapComponent }
+  { path: 'case/:id', component: DashboardComponent },
   { path: '**', component: DashboardComponent },
 
 ];
