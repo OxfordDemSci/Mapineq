@@ -40,15 +40,17 @@ export class DashboardComponent {
         this.route.paramMap.subscribe(params => {
             if (params.get('id') === null) {
                 this.panelOpen = true;
-                document.documentElement.style.setProperty('--select-cell-width', 'calc(100% / ' + this.displayObject.tableFields.length.toString() + ')');
-                // document.documentElement.style.setProperty('--app-panel-left-width', (500 * this.displayObject.tableFields.length).toString() + 'px');
-                document.documentElement.style.setProperty('--app-panel-left-number-selects', this.displayObject.tableFields.length.toString() );
+
             } else {
                 console.log('case', params.get('id'));
                 //load data
             }
         })
         this.displayObject = new DisplayObject({displayType: 'bivariate', tableFields: [{}, {}]});
+        document.documentElement.style.setProperty('--select-cell-width', 'calc(100% / ' + this.displayObject.tableFields.length.toString() + ')');
+        // document.documentElement.style.setProperty('--app-panel-left-width', (500 * this.displayObject.tableFields.length).toString() + 'px');
+        document.documentElement.style.setProperty('--app-panel-left-number-selects', this.displayObject.tableFields.length.toString() );
+
     } // END FUNCTION ngOnInit
 
 
