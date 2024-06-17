@@ -190,7 +190,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     if (this.regionsLayer !== undefined) {
       console.log('REMOVE regionsLayer');
       this.map.removeLayer(this.regionsLayer);
-
+      this.hideGraph();
     }
 
     if (this.inputDisplayObject.displayData.length > 0) {
