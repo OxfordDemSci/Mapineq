@@ -40,7 +40,7 @@ export class DisplayObject {
                         break;
                 }
             } else if (field === 'tableFields') {
-                // console.log('tableFields: ', jsonObject[field]);
+                console.log('tableFields: ', jsonObject[field]);
                 let tableFieldsJson = jsonObject[field];
                 tableFieldsJson.forEach( (tableField, index) => {
                     this.tableFields.push(new DisplayTableValueObject(tableField, index));

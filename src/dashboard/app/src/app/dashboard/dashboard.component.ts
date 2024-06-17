@@ -11,7 +11,7 @@ import {ActivatedRoute} from "@angular/router";
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit{
 
     versionChecker: AppVersionAndBuildChecker;
 
@@ -37,22 +37,34 @@ export class DashboardComponent {
     ngOnInit(): void {
 
         this.versionChecker = new AppVersionAndBuildChecker();
+        this.displayObject = new DisplayObject({displayType: 'bivariate', tableFields: [{}, {}]});
         this.route.paramMap.subscribe(params => {
             if (params.get('id') === null) {
                 this.panelOpen = true;
 
             } else {
                 console.log('case', params.get('id'));
-                //load data
+                this.showUseCase(params.get('id'));
             }
         })
-        this.displayObject = new DisplayObject({displayType: 'bivariate', tableFields: [{}, {}]});
+
         document.documentElement.style.setProperty('--select-cell-width', 'calc(100% / ' + this.displayObject.tableFields.length.toString() + ')');
         // document.documentElement.style.setProperty('--app-panel-left-width', (500 * this.displayObject.tableFields.length).toString() + 'px');
         document.documentElement.style.setProperty('--app-panel-left-number-selects', this.displayObject.tableFields.length.toString() );
 
     } // END FUNCTION ngOnInit
 
+    showUseCase(id: string): void {
+        this.dashboardFeatureService.getUseCase(id).subscribe((data) => {
+            console.log('data[0].f_parameters=', JSON.parse(data[0].f_parameters));
+            //this.displayObject.tableFields = JSON.parse(data[0].f_parameters);
+            //this.displayObject = new DisplayObject({displayType: 'bivariate', formType: "bivariate",
+            //    numberTableFields: 2,tableFields:JSON.parse(data[0].f_parameters)});
+            this.updateTableFieldFromSelect(JSON.parse(data[0].f_parameters)[0])
+            this.displayObject.displayTableId = 0;
+            this.updateTableFieldFromSelect(JSON.parse(data[0].f_parameters)[1])
+        });
+    }
 
     panelToggle(): void {
         this.panelOpen = !this.panelOpen;
