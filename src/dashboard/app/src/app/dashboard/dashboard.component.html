@@ -12,6 +12,14 @@
                 <!--
                 <app-select-table-value *ngFor="let tableSelection of displayObject.tableFields; let tableId = index;" [inputTableSelection]="tableSelection" [inputTableId]="tableId"></app-select-table-value>
                 -->
+                <div *ngIf="useCase > -1" class="useCaseInfo">
+                    <div>
+                        Use case {{useCase}}: "<b>{{useCaseDescr}}</b>" (variant {{useCaseVariant}})
+                    </div>
+                    <div [innerHTML]="useCaseDescrLong"></div>
+                </div>
+
+
                 <app-select-table-value [inputTableSelection]="displayObject.tableFields[0]" [inputTableId]="0"
                                         (updateTableValueFromSelect)="updateTableFieldFromSelect($event)">
                 </app-select-table-value>
