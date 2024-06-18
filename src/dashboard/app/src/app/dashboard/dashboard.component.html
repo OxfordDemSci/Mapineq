@@ -20,11 +20,15 @@
                 </div>
 
 
-                <app-select-table-value [inputTableSelection]="displayObject.tableFields[0]" [inputTableId]="0"
+                <app-select-table-value [inputTableSelection]="displayObject.tableFields[0]"
+                                        [inputTableId]="0"
+                                        [inputUseCase]="useCase" [inputUseCaseData]="useCaseData"
                                         (updateTableValueFromSelect)="updateTableFieldFromSelect($event)">
                 </app-select-table-value>
                 <app-select-table-value *ngIf="displayObject.tableFields.length > 1" [inputTableSelection]="displayObject.tableFields[1]"
-                                        [inputTableId]="1" [inputOtherTableSelection]="displayObject.tableFields[0]"
+                                        [inputTableId]="1"
+                                        [inputUseCase]="useCase" [inputUseCaseData]="useCaseData"
+                                        [inputOtherTableSelection]="displayObject.tableFields[0]"
                                         (updateTableValueFromSelect)="updateTableFieldFromSelect($event)">
                 </app-select-table-value>
             </div>

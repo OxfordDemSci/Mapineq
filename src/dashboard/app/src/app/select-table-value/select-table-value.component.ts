@@ -18,6 +18,11 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   @Input() inputTableSelection!: any;
   @Input() inputOtherTableSelection: any;
 
+  @Input() inputUseCase: number;
+  @Input() inputUseCaseData: any;
+
+
+
   @Output() updateTableValueFromSelect = new EventEmitter();
 
 
@@ -48,12 +53,16 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
   constructor(private featureService: FeatureService) {
 
+    this.inputUseCase = -1;
+    this.inputUseCaseData = [];
+
+
     this.tableSelectOptions = []; // [{f_resource: 'TST_A', f_description: 'Test table A'}];
     // this.tables = [];
 
     this.availableYearsAndRegionLevels = [];
     this.availableYears = [];
-    this.availableRegionLevels = ['3', '2', '1', '0'];
+    this.availableRegionLevels = [];
 
     this.availableColumnValues = [];
     this.availableColumnValuesWithInitiallyOneChoice = [];
@@ -70,10 +79,13 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       const valueCurrent  = change.currentValue;
       // const valuePrevious = change.previousValue;
 
-      if (propName === 'inputTableSelection' && valueCurrent) {
+      if (propName === 'inputUseCaseData' && valueCurrent) {
         // console.log('ngOnChanges(), "inputTableSelection":', valueCurrent);
-        // this.tableSelection = new DisplayTableValueObject(this.inputTableSelection);
-        this.tableSelection = this.inputTableSelection;
+
+      }
+
+      if (propName === 'inputTableSelection' && valueCurrent) {
+
       }
 
       if (propName === 'inputOtherTableSelection' && valueCurrent) {
@@ -99,7 +111,10 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.tableSelection = this.inputTableSelection;
     this.otherTableSelection = this.inputOtherTableSelection;
 
-    this.setTableSources();
+    this.setAvailableRegionLevels();
+
+
+    // this.setTableSources(); // KAN UIT?
 
   } // END FUNCTION ngOnInit
 
@@ -138,6 +153,21 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
   } // END FUNCTION initTableValueMap
 
+  setAvailableRegionLevels() {
+
+    this.featureService.getNutsLevels('-1').subscribe( data => {
+      console.log('setRegionLevels(), data:', data);
+    });
+
+    this.availableRegionLevels = ['0', '1', '2', '3'].slice().reverse();
+
+    //if ()
+
+    this.tableSelection.tableRegionLevel = '2';
+
+    this.setTableSources();
+
+  } // END FUNCTION setAvailableRegionLevels
 
 
   setTableSources() {
