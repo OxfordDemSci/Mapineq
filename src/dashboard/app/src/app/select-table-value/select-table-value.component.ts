@@ -62,7 +62,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     this.availableYearsAndRegionLevels = [];
     this.availableYears = [];
-    this.availableRegionLevels = ['3', '2', '1', '0'];
+    //this.availableRegionLevels = ['3', '2', '1', '0'];
 
     this.availableColumnValues = [];
     this.availableColumnValuesWithInitiallyOneChoice = [];
@@ -80,8 +80,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       // const valuePrevious = change.previousValue;
 
       if (propName === 'inputUseCaseData' && valueCurrent) {
-        // console.log('ngOnChanges(), "inputTableSelection":', valueCurrent);
-
+        console.log('ngOnChanges(), "inputUseCaseData":', valueCurrent);
+        this.setAvailableRegionLevels();
       }
 
       if (propName === 'inputTableSelection' && valueCurrent) {
@@ -155,17 +155,38 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
   setAvailableRegionLevels() {
 
-    this.featureService.getNutsLevels(-1).subscribe( data => {
-      console.log('setRegionLevels(), data:', data);
+    this.featureService.getNutsLevels(this.inputUseCase).subscribe( data => {
+      console.log('A setAvailableRegionLevels(), usecase/data:', this.inputUseCase, data);
+      // this.availableRegionLevels = data;
+      this.availableRegionLevels = data.map((item) => {return item.f_year;});
+      /*
+      data.forEach( dataObject => {
+        if (typeof dataObject.f_year !== 'undefined') {
+          this.availableRegionLevels.push(dataObject.f_year);
+        }
+      })
+      */
+      // this.availableRegionLevels = ['0', '1', '2', '3'].slice().reverse();
+
+      if (this.inputUseCase > -1  &&  this.inputUseCaseData.length > 0) {
+        console.log('B setAvailableRegionLevels(), ', this.inputTableId, this.inputUseCaseData[this.inputTableId].tableRegionLevel, this.availableRegionLevels);
+
+        if ( this.availableRegionLevels.includes(this.inputUseCaseData[this.inputTableId].tableRegionLevel) ) {
+          this.tableSelection.tableRegionLevel = this.inputUseCaseData[this.inputTableId].tableRegionLevel;
+
+          // this.tableSelection.tableRegionLevel = '2';
+          this.setTableSources();
+        }
+
+
+      }
+
+
     });
 
-    this.availableRegionLevels = ['0', '1', '2', '3'].slice().reverse();
 
-    //if ()
 
-    this.tableSelection.tableRegionLevel = '2';
 
-    this.setTableSources();
 
   } // END FUNCTION setAvailableRegionLevels
 

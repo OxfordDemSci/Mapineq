@@ -89,12 +89,20 @@ export class FeatureService {
       catchError(this.handleError('search', 'ERROR')))
   }
 
-  public getNutsLevels(use_case: number): Observable<any> {
-    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_year_use_case/items.json?_use_case=${use_case}&limit=500`).pipe(
-        tap((result) => {
-          //console.log(result);
-        }),
-        catchError(this.handleError('search', 'ERROR')))
+  public getNutsLevels(use_case: number = -1): Observable<any> {
+    if (use_case > -1) {
+      return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_year_use_case/items.json?_use_case=${use_case}&limit=500`).pipe(
+          tap((result) => {
+            //console.log(result);
+          }),
+          catchError(this.handleError('search', 'ERROR')))
+    } else {
+      return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_year_use_case/items.json?limit=500`).pipe(
+          tap((result) => {
+            //console.log(result);
+          }),
+          catchError(this.handleError('search', 'ERROR')))
+    }
   }
 
 
