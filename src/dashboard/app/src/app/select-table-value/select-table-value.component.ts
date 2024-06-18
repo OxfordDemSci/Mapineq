@@ -155,16 +155,19 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
   setAvailableRegionLevels() {
 
-    this.featureService.getNutsLevels('-1').subscribe( data => {
-      console.log('setRegionLevels(), data:', data);
-    });
+    if (this.inputUseCase > -1) {
+      this.featureService.getNutsLevels('-1').subscribe(data => {
+        console.log('setRegionLevels(), data:', data);
+      });
 
-    this.availableRegionLevels = ['0', '1', '2', '3'].slice().reverse();
+      this.availableRegionLevels = ['0', '1', '2', '3'];
 
-    //if ()
+      //if ()
 
-    this.tableSelection.tableRegionLevel = '2';
-
+      this.tableSelection.tableRegionLevel = '2';
+    } else {
+      this.availableRegionLevels = ['0', '1', '2', '3'].slice().reverse();
+    }
     this.setTableSources();
 
   } // END FUNCTION setAvailableRegionLevels
