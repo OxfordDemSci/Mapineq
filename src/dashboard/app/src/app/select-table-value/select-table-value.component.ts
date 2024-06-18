@@ -62,7 +62,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     this.availableYearsAndRegionLevels = [];
     this.availableYears = [];
-    this.availableRegionLevels = [];
+    this.availableRegionLevels = ['3', '2', '1', '0'];
 
     this.availableColumnValues = [];
     this.availableColumnValuesWithInitiallyOneChoice = [];
@@ -155,7 +155,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
   setAvailableRegionLevels() {
 
-    this.featureService.getNutsLevels('-1').subscribe( data => {
+    this.featureService.getNutsLevels(-1).subscribe( data => {
       console.log('setRegionLevels(), data:', data);
     });
 
@@ -175,7 +175,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     if (this.tableId === 0) {
       // this.featureService.getAllSources().subscribe((data) => {
-      this.featureService.getResourceByNutsLevel(this.tableSelection.tableRegionLevel).subscribe((data) => {
+      this.featureService.getResourceByNutsLevel(this.tableSelection.tableRegionLevel, this.inputUseCase).subscribe((data) => {
         // this.tables = data;
         this.tableSelectOptions = data;
 
@@ -187,7 +187,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     } else if (this.tableId === 1) {
       // getSourcesByYearAndNutsLevel year & nuts level
       // console.log('getSourcesByYearAndNutsLevel(), try get values:', this.otherTableSelection.tableYear, this.otherTableSelection.tableRegionLevel);
-      this.featureService.getSourcesByYearAndNutsLevel(this.otherTableSelection.tableYear, this.otherTableSelection.tableRegionLevel).subscribe((data) => {
+      this.featureService.getSourcesByYearAndNutsLevel(this.otherTableSelection.tableYear, this.otherTableSelection.tableRegionLevel, this.inputUseCase).subscribe((data) => {
         // this.tables = data;
         this.tableSelectOptions = data;
 
@@ -280,7 +280,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.availableYears = [];
     // this.availableRegionLevels = [];
 
-    this.featureService.getInfoByReSource(this.tableSelection.tableName).subscribe( data => {
+    this.featureService.getInfoByReSource(this.tableSelection.tableName, this.inputUseCase).subscribe( data => {
       this.availableYearsAndRegionLevels = data;
       this.setAvailableYears();
       // if (this.tableSelection.tableId === 1) {
@@ -422,7 +422,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     let selectedJson = []
     sourceSelectionJson['selected'] = selectedJson;
 
-    this.featureService.getColumnValuesBySourceJson(this.tableSelection.tableName, JSON.stringify(sourceSelectionJson)).subscribe( data => {
+    this.featureService.getColumnValuesBySourceJson(this.tableSelection.tableName, JSON.stringify(sourceSelectionJson), this.inputUseCase).subscribe( data => {
       // this.featureService.getColumnValuesBySource(this.tableSelection.tableName, this.tableSelection.tableYear, this.tableSelection.tableRegionLevel).subscribe( data => {
       // console.log('getColumnValuesBySource()', this.tableSelection.tableName, this.tableSelection.tableYear, this.tableSelection.tableRegionLevel, data);
 
@@ -479,7 +479,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     }
     sourceSelectionJson['selected'] = selectedJson;
 
-    this.featureService.getColumnValuesBySourceJson(this.tableSelection.tableName, JSON.stringify(sourceSelectionJson)).subscribe( data => {
+    this.featureService.getColumnValuesBySourceJson(this.tableSelection.tableName, JSON.stringify(sourceSelectionJson), this.inputUseCase).subscribe( data => {
       console.log('getColumnValuesBySourceJson()', data);
 
       this.availableColumnValues = [];

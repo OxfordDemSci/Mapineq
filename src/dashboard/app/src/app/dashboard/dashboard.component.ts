@@ -83,7 +83,7 @@ export class DashboardComponent implements OnInit{
     showUseCase(): void {
         // console.log('showUseCase(), id/variant:', this.useCase, this.useCaseVariant);
 
-        this.dashboardFeatureService.getUseCase(this.useCase.toString()).subscribe((data) => {
+        this.dashboardFeatureService.getUseCase(this.useCase).subscribe((data) => {
             console.log('showUseCase()', this.useCase, this.useCaseVariant, data);
 
             if (this.useCaseVariant >= JSON.parse(data[0].f_parameters).length) {

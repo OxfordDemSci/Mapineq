@@ -40,11 +40,10 @@ export class FeatureService {
       catchError(this.handleError('search', 'ERROR')))
   }
 
-
-  public getSourcesByYearAndNutsLevel(year: string, nutslevel: string): Observable<any> {
+  public getSourcesByYearAndNutsLevel(year: string, nutslevel: string, use_case: number): Observable<any> {
     //areas.sort(())
-
-    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_source_by_year_nuts_level/items.json?_year=${year}&_level=${nutslevel}&limit=500`).pipe(
+    let parameters = this.getParameters(`_year=${year}&_level=${nutslevel}&limit=500`, use_case);
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_source_by_year_nuts_level/items.json?${parameters}`).pipe(
       tap((result) => {
         //console.log(result);
       }),
@@ -61,10 +60,10 @@ export class FeatureService {
         catchError(this.handleError('search', 'ERROR')))
   }
 
-  public getColumnValuesBySourceJson(resource: string, selectionJson: string,): Observable<any> {
+  public getColumnValuesBySourceJson(resource: string, selectionJson: string, use_case: number): Observable<any> {
     //areas.sort(())
-
-    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_column_values_source_json/items.json?_resource=${resource}&source_selections=${selectionJson}&limit=20`).pipe(
+    let parameters = this.getParameters(`_resource=${resource}&source_selections=${selectionJson}&limit=40`, use_case);
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_column_values_source_json/items.json?${parameters}`).pipe(
         tap((result) => {
           //console.log(result);
         }),
@@ -81,17 +80,17 @@ export class FeatureService {
 
   //postgisftw.get_year_nuts_level_from_source
 
-  public getInfoByReSource(resource: string): Observable<any> {
-
-    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_year_nuts_level_from_source/items.json?_resource=${resource}&limit=500`).pipe(
+  public getInfoByReSource(resource: string, use_case: number): Observable<any> {
+    let parameters = this.getParameters(`_resource=${resource}&limit=500`, use_case)
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_year_nuts_level_from_source/items.json?${parameters}`).pipe(
       tap((result) => {
         //console.log(result);
       }),
       catchError(this.handleError('search', 'ERROR')))
   }
 
-  public getNutsLevels(use_case: string): Observable<any> {
-    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_level/items.json?_use_case=${use_case}&limit=500`).pipe(
+  public getNutsLevels(use_case: number): Observable<any> {
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_year_use_case/items.json?_use_case=${use_case}&limit=500`).pipe(
         tap((result) => {
           //console.log(result);
         }),
@@ -100,13 +99,25 @@ export class FeatureService {
 
 
   //postgisftw.get_source_by_nuts_level
-  public getResourceByNutsLevel(nutslevel: string): Observable<any> {
-    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_source_by_nuts_level/items.json?_level=${nutslevel}&limit=500`).pipe(
+  public getResourceByNutsLevel(nutslevel: string, use_case: number): Observable<any> {
+    let parameters = this.getParameters(`_level=${nutslevel}&limit=500`, use_case);
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_source_by_nuts_level/items.json?${parameters}`).pipe(
       tap((result) => {
         //console.log(result);
       }),
       catchError(this.handleError('search', 'ERROR')))
   }
+
+  private getParameters(base: string, use_case: number): string {
+    let parameters = base;
+    if (use_case > -1) {
+      parameters += `&_use_case=${use_case}`;
+    }
+    return parameters;
+
+  }
+
+
 
   public getResourceByYear(year: number): Observable<any> {
     return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_source_by_year/items.json?_year=${year}&limit=200`).pipe(
@@ -116,7 +127,7 @@ export class FeatureService {
       catchError(this.handleError('search', 'ERROR')))
   }
 
-  public getUseCase(use_case: string): Observable<any> {
+  public getUseCase(use_case: number): Observable<any> {
     return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_use_cases/items.json?_use_case=${use_case}&limit=200`).pipe(
         tap((result) => {
           //console.log(result);
