@@ -359,14 +359,10 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
   getColorBivariate(xvalue: number, xmin: number, xmax: number, yvalue: number, ymin: number, ymax: number): any {
 
-    //console.log(xvalue, xmin, xmax, yvalue, ymin, ymax);
+    //console.log('xvalue, xmin, xmax, yvalue, ymin, ymax',xvalue, xmin, xmax, yvalue, ymin, ymax);
 
     let index1 = Math.ceil((xvalue - xmin) / ((xmax - xmin) / 3));
     let index2 = Math.ceil((yvalue - ymin) / ((ymax - ymin) / 3))
-    if (xvalue === 17.2) {
-      console.log(index1 + ' ' + index2);
-    }
-
 
     if (xvalue === 0 && yvalue === 0) {
       return '#FFFFFF';
@@ -441,7 +437,10 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
 
   hideLegend() {
-    this.mapLegendDiv.style.display = 'none';
+    if (this.mapLegendDiv !== undefined) {
+      this.mapLegendDiv!.style.display = 'none';
+    }
+
 
   } // END FUNCTION hideLegend
 
@@ -585,7 +584,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     textExplain.setAttributeNS(null, 'text-anchor', 'middle');
     //textExplain.setAttributeNS(null, 'font-weight', 'bold');
     textExplain.setAttributeNS(null, 'font-style', 'italic');
-    textExplain.setAttributeNS(null, 'font-size', '12px');
+    textExplain.setAttributeNS(null, 'font-size', '11px');
     textExplain.setAttributeNS(null, 'height', '4em');
     textExplain.innerHTML = 'Select a color to see its meaning';
   }
