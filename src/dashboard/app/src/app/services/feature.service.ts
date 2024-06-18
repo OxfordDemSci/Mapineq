@@ -107,7 +107,7 @@ export class FeatureService {
   }
 
   public getUseCase(use_case: string): Observable<any> {
-    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_use_cases/items.json?use_case=${use_case}&limit=200`).pipe(
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_use_cases/items.json?_use_case=${use_case}&limit=200`).pipe(
         tap((result) => {
           //console.log(result);
         }),
