@@ -26,25 +26,51 @@ export class DashboardComponent implements OnInit{
 
     // tableSelections: any[];
 
-
     panelOpen: boolean;
+
+    useCase: number;
+    useCaseVariant: number;
+    useCaseDescr: string;
+    useCaseDescrLong: string;
+    useCaseData: any;
+
 
     constructor(private dashboardFeatureService: FeatureService, private route: ActivatedRoute) {
         // this.displayObject = new DisplayObject();
         this.displayDataUpdated = false;
+        this.panelOpen = false;
+        this.useCase = -1;
+        this.useCaseVariant = 0;
+        this.useCaseDescr = '';
+        this.useCaseDescrLong = '';
+        this.useCaseData = [];
     } // END FUNCTION constructor
 
     ngOnInit(): void {
 
         this.versionChecker = new AppVersionAndBuildChecker();
-        this.displayObject = new DisplayObject({displayType: 'bivariate', tableFields: [{}, {}]});
-        this.route.paramMap.subscribe(params => {
-            if (params.get('id') === null) {
-                this.panelOpen = true;
+        this.panelOpen = true;
 
-            } else {
-                console.log('case', params.get('id'));
-                this.showUseCase(params.get('id'));
+        // this start values for formType (& displayType) should be set according to use-case ...
+        this.displayObject = new DisplayObject({formType: 'bivariate', displayType: 'bivariate', tableFields: [{}, {}]});
+        this.route.paramMap.subscribe(params => {
+            if (params.get('id') !== null) {
+                console.log('use case:', params.get('id'));
+
+                this.useCase = Number(params.get('id'));
+
+                if (isNaN(this.useCase)) {
+                    this.useCase = -1;
+                } else {
+                    if (params.get('variant') !== null) {
+                        this.useCaseVariant = Number(params.get('variant'));
+                        if (isNaN(this.useCaseVariant)) {
+                            this.useCaseVariant = 0;
+                        }
+                    }
+                    this.showUseCase();
+                }
+
             }
         })
 
@@ -54,17 +80,34 @@ export class DashboardComponent implements OnInit{
 
     } // END FUNCTION ngOnInit
 
-    showUseCase(id: string): void {
-        this.dashboardFeatureService.getUseCase(id).subscribe((data) => {
-            console.log('data[0].f_parameters=', JSON.parse(data[0].f_parameters));
+    showUseCase(): void {
+        // console.log('showUseCase(), id/variant:', this.useCase, this.useCaseVariant);
+
+        this.dashboardFeatureService.getUseCase(this.useCase.toString()).subscribe((data) => {
+            console.log('showUseCase()', this.useCase, this.useCaseVariant, data);
+
+            this.useCaseData = JSON.parse(data[0].f_parameters)[this.useCaseVariant];
+
+            this.useCaseDescr = data[0].f_short_descr;
+            this.useCaseDescrLong = data[0].f_long_descr;
+
+            console.log('showUseCase(), useCaseData:', this.useCaseData);
+
+            // console.log('data[0].f_parameters=', JSON.parse(data[0].f_parameters));
+
             //this.displayObject.tableFields = JSON.parse(data[0].f_parameters);
             //this.displayObject = new DisplayObject({displayType: 'bivariate', formType: "bivariate",
             //    numberTableFields: 2,tableFields:JSON.parse(data[0].f_parameters)});
-            this.updateTableFieldFromSelect(JSON.parse(data[0].f_parameters)[0])
-            this.displayObject.displayTableId = 0;
-            this.updateTableFieldFromSelect(JSON.parse(data[0].f_parameters)[1])
+
+            // this.updateTableFieldFromSelect(JSON.parse(data[0].f_parameters)[0])
+            // this.displayObject.displayTableId = 0;
+            // this.updateTableFieldFromSelect(JSON.parse(data[0].f_parameters)[1])
+
+
         });
-    }
+
+
+    } // END FUNCTION showUseCase
 
     panelToggle(): void {
         this.panelOpen = !this.panelOpen;

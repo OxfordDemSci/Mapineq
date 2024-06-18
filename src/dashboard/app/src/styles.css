@@ -324,6 +324,10 @@ div.emptyDiv {
 }
 
 
+.useCaseInfo {
+    padding: 0.5em;
+}
+
 /* RESULT MAP */
 
 .drawerContentMapContainer {
