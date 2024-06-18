@@ -82,12 +82,22 @@ export class FeatureService {
   //postgisftw.get_year_nuts_level_from_source
 
   public getInfoByReSource(resource: string): Observable<any> {
+
     return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_year_nuts_level_from_source/items.json?_resource=${resource}&limit=500`).pipe(
       tap((result) => {
         //console.log(result);
       }),
       catchError(this.handleError('search', 'ERROR')))
   }
+
+  public getNutsLevels(use_case: string): Observable<any> {
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_level/items.json?_use_case=${use_case}&limit=500`).pipe(
+        tap((result) => {
+          //console.log(result);
+        }),
+        catchError(this.handleError('search', 'ERROR')))
+  }
+
 
   //postgisftw.get_source_by_nuts_level
   public getResourceByNutsLevel(nutslevel: string): Observable<any> {
