@@ -40,9 +40,10 @@ export class FeatureService {
       catchError(this.handleError('search', 'ERROR')))
   }
 
+  // IN BIVARIATE CASE: OUTCOME
   public getSourcesByYearAndNutsLevel(year: string, nutslevel: string, use_case: number): Observable<any> {
     //areas.sort(())
-    let parameters = this.getParameters(`_year=${year}&_level=${nutslevel}&limit=500`, use_case);
+    let parameters = this.getParameters(`_year=${year}&_level=${nutslevel}&limit=500`, use_case, '&_function=Outcome');
     return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_source_by_year_nuts_level/items.json?${parameters}`).pipe(
       tap((result) => {
         //console.log(result);
@@ -115,8 +116,9 @@ export class FeatureService {
 
 
   //postgisftw.get_source_by_nuts_level
+  // IN BIVARIATE CASE: PREDICTOR
   public getResourceByNutsLevel(nutslevel: string, use_case: number): Observable<any> {
-    let parameters = this.getParameters(`_level=${nutslevel}&limit=500`, use_case);
+    let parameters = this.getParameters(`_level=${nutslevel}&limit=500`, use_case, '&_function=Predictor');
     return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_source_by_nuts_level/items.json?${parameters}`).pipe(
       tap((result) => {
         //console.log(result);
@@ -124,10 +126,13 @@ export class FeatureService {
       catchError(this.handleError('search', 'ERROR')))
   }
 
-  private getParameters(base: string, use_case: number): string {
+  private getParameters(base: string, use_case: number, extraUseCaseString: string = ''): string {
     let parameters = base;
     if (use_case > -1) {
       parameters += `&_use_case=${use_case}`;
+      if (extraUseCaseString.trim() !== '') {
+        parameters += extraUseCaseString;
+      }
     }
     return parameters;
 
