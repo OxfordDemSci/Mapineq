@@ -432,7 +432,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.availableYears.sort();
     this.availableYears.reverse();
 
-    if (this.inputUseCase > -1) {
+    if (this.inputUseCase > -1  &&  this.inputTableId === 0) {
       console.log('CHECK YEAR: ', this.inputUseCaseData[this.inputTableId]);
       if (this.availableYears.includes(this.inputUseCaseData[this.inputTableId].tableYear)) {
         this.tableSelection.tableYear = this.inputUseCaseData[this.inputTableId].tableYear;
