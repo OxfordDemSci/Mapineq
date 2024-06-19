@@ -53,6 +53,17 @@ export class DashboardComponent implements OnInit{
 
         // this start values for formType (& displayType) should be set according to use-case ...
         this.displayObject = new DisplayObject({formType: 'bivariate', displayType: 'bivariate', tableFields: [{}, {}]});
+
+        this.checkForUseCaseInUrl();
+
+        document.documentElement.style.setProperty('--select-cell-width', 'calc(100% / ' + this.displayObject.tableFields.length.toString() + ')');
+        // document.documentElement.style.setProperty('--app-panel-left-width', (500 * this.displayObject.tableFields.length).toString() + 'px');
+        document.documentElement.style.setProperty('--app-panel-left-number-selects', this.displayObject.tableFields.length.toString() );
+
+    } // END FUNCTION ngOnInit
+
+    checkForUseCaseInUrl() {
+        /* */
         this.route.paramMap.subscribe(params => {
             if (params.get('id') !== null) {
                 console.log('use case:', params.get('id'));
@@ -72,13 +83,29 @@ export class DashboardComponent implements OnInit{
                 }
 
             }
-        })
+        });
+        /* */
+        /* */
+        let useCaseString = (this.route.snapshot.queryParams['case'] ?? '');
+        if (useCaseString.trim() !== ''  &&  !isNaN(Number(useCaseString.trim()))) {
+            this.useCase = Number(useCaseString.trim());
 
-        document.documentElement.style.setProperty('--select-cell-width', 'calc(100% / ' + this.displayObject.tableFields.length.toString() + ')');
-        // document.documentElement.style.setProperty('--app-panel-left-width', (500 * this.displayObject.tableFields.length).toString() + 'px');
-        document.documentElement.style.setProperty('--app-panel-left-number-selects', this.displayObject.tableFields.length.toString() );
+            let useCaseVariantString = (this.route.snapshot.queryParams['variant'] ?? '');
+            if (useCaseVariantString.trim() !== ''  &&  !isNaN(Number(useCaseVariantString.trim()))) {
+                this.useCaseVariant = Number(useCaseVariantString.trim());
+            }
 
-    } // END FUNCTION ngOnInit
+            this.showUseCase();
+        }
+
+        console.log('TEST useCase/useCaseVariant: ', this.useCase, this.useCaseVariant);
+
+        // this.urlTo = (this.route.snapshot.queryParams['to'] ?? '').trim();
+        /* */
+
+    } // END FUNCTION checkForUseCaseInUrl
+
+
 
     showUseCase(): void {
         // console.log('showUseCase(), id/variant:', this.useCase, this.useCaseVariant);
