@@ -252,6 +252,7 @@ export class DashboardComponent implements OnInit{
                         }
                         y_json['conditions'] = y_conditions;
 
+                        console.log('NET VOOR AANROEP getXYData (bivariate versie)');
                         this.dashboardFeatureService.getXYData(this.displayObject.tableFields[0].tableRegionLevel, this.displayObject.tableFields[0].tableYear, JSON.stringify(x_json), JSON.stringify(y_json)).subscribe(data => {
                             console.log('A. DISPLAY DATA COLLECTED! (bivariate)', data);
                             this.displayObject['displayData'] = data;
@@ -272,6 +273,7 @@ export class DashboardComponent implements OnInit{
                         }
                         x_json['conditions'] = x_conditions;
 
+                        console.log('NET VOOR AANROEP getXYData (UNI versie)');
                         this.dashboardFeatureService.getXData(this.displayObject.tableFields[tableId].tableRegionLevel, this.displayObject.tableFields[tableId].tableYear, JSON.stringify(x_json)).subscribe(data => {
                             console.log('B. DISPLAY DATA COLLECTED! (univariate)', data);
                             this.displayObject['displayData'] = data;
@@ -284,7 +286,7 @@ export class DashboardComponent implements OnInit{
                     break;
 
                 default:
-                    console.log('NOT IMPLEMENTED YET');
+                    console.log('NOT IMPLEMENTED YET (formtype: ' + this.displayObject.formType.toString() + ')');
                     break;
             }
 
