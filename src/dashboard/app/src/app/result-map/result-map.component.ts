@@ -177,6 +177,41 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
   } // END FUNCTION initResultMap
 
 
+  regionLayerMouseInfo(event) {
+    console.log('REGIONS LAYER, event: ', event, event.originalEvent.clientX, event.originalEvent.clientY, event.type);
+
+    // this.regionsLayer.setFeatureStyle(properties['nuts_id'], {default: {
+    this.regionsLayer.setFeatureStyle(event.layer.properties['nuts_id'], {
+      default: {
+        weight: 3,
+        color: 'rgba(255,0,0,1)',
+        fillColor: event.layer.options.fillColor,
+        fill: true,
+        fillOpacity: 1,
+      }
+    });
+
+    let layer = event.layer;
+    layer.bringToFront();
+
+    // this.childGraph.highlightPoint([{ x: entity1, y: entity2 }]);
+    //this.childGraph.highlightPoint([{ x: 0, y: 85}]);
+    if (['mouseover', 'click'].includes(event.type) ) {
+      this.childGraph.highlightPointById(event.layer.properties['nuts_id']);
+    }
+
+  } // END FUNCTION regionLayerMouseInfo
+
+  regionLayerMouseInfoClose(event) {
+    console.log('REGIONS LAYER, event (CLOSE): ', event);
+
+    this.childGraph.removehighlight();
+
+    this.regionsLayer.resetFeatureStyle(event.layer.properties['nuts_id']);
+
+  } // END FUNCTION regionLayerMouseInfoClose
+
+
   changeResultMap() {
     console.log('changeResultMap() ...');
 
@@ -199,6 +234,14 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         console.log('ADD regionsLayer');
         this.map.addLayer(this.regionsLayer);
       }
+      /*
+      this.regionsLayer.on('click', (event) => {
+        console.log('click REGIONS LAYER: ', event);
+      });
+      */
+      this.regionsLayer.on({click: this.regionLayerMouseInfo.bind(this), mouseover: this.regionLayerMouseInfo.bind(this), mousemove: this.regionLayerMouseInfo.bind(this), mouseout: this.regionLayerMouseInfoClose.bind(this)});
+
+
       this.plotData();
       this.childGraph.ScatterPlot( {'xlabel': this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr),
         'ylabel': this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr), 'xydata' : this.xydata});
@@ -265,8 +308,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         this.hideGraph();
         break;
     }
-    this.addMouseClick(result);
-    this.addMouseOver(result);
+    // this.addMouseClick(result);
+    // this.addMouseOver(result);
 
   } // END FUNCTION plotData
 

@@ -27,6 +27,8 @@ export class GraphComponent implements OnChanges {
   }
 
   highlightPoint(point: any) {
+    console.log('highlightPoint()', point, this.chart.data);
+
     if (this.chart.data.datasets.length > 1) {
       this.chart.data.datasets.splice(-1);
     }
@@ -48,6 +50,31 @@ export class GraphComponent implements OnChanges {
     }
     this.chart.update();
   }
+
+
+  highlightPointById(id: any) {
+    console.log('highlightPoint()', id, this.chart.data);
+
+    let point = this.chart.data.datasets[0].data.filter(item => {return item.geo === id;});
+
+    console.log('point:', point);
+
+    if (this.chart.data.datasets.length > 1) {
+      this.chart.data.datasets.splice(-1);
+    }
+    let selectedPoint = point;
+    let highlight = {
+      label: 'Joo',
+      backgroundColor: 'rgb(255,255,255)',
+      borderColor: '#c85a5a',
+      borderWidth: 10,
+      data: selectedPoint
+    };
+    this.chart.data.datasets.push(highlight);
+    this.chart.update();
+  }
+
+
 
   ScatterPlot(info: any) {
     let xydata = info.xydata;
