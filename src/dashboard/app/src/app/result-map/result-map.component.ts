@@ -33,6 +33,11 @@ L.Marker.prototype.options.icon = iconDefault;
 */
 
 
+// @ts-ignore
+L.DomEvent.fakeStop = function () {
+  return true;
+}
+
 
 
 const colorsBivariate = {
@@ -178,13 +183,15 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
 
   regionLayerMouseInfo(event) {
-    console.log('REGIONS LAYER, event: ', event, event.originalEvent.clientX, event.originalEvent.clientY, event.type);
+    // console.log('REGIONS LAYER, event: ', event, event.originalEvent.clientX, event.originalEvent.clientY, event.type);
+
+
 
     // this.regionsLayer.setFeatureStyle(properties['nuts_id'], {default: {
     this.regionsLayer.setFeatureStyle(event.layer.properties['nuts_id'], {
       default: {
         weight: 3,
-        color: 'rgba(255,0,0,1)',
+        color: 'rgba(255,192,0,1)',
         fillColor: event.layer.options.fillColor,
         fill: true,
         fillOpacity: 1,
@@ -196,16 +203,71 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
     // this.childGraph.highlightPoint([{ x: entity1, y: entity2 }]);
     //this.childGraph.highlightPoint([{ x: 0, y: 85}]);
-    if (['mouseover', 'click'].includes(event.type) ) {
+    if (this.inputDisplayObject.displayType === 'bivariate'  &&  ['mouseover', 'click'].includes(event.type) ) {
       this.childGraph.highlightPointById(event.layer.properties['nuts_id']);
     }
+
+
+
+    let regionValues = this.inputDisplayObject.displayData.find(item => {return item.geo === event.layer.properties['nuts_id'];});
+    // console.log('REGIONS LAYER info: ', event.layer.properties['nuts_id'], regionValues);
+
+    let dataHtml = '';
+    if (this.inputDisplayObject.displayType === 'bivariate') {
+      dataHtml += this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr) + ': ' + (regionValues.x ?? 'EMPTY').toString() + '<br>';
+      dataHtml += this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr) + ': ' + (regionValues.y ?? 'EMPTY').toString() + '<br>';
+    } else {
+      dataHtml += this.legendLabel(this.inputDisplayObject.tableFields[this.inputDisplayObject.displayTableId].tableDescr) + ': ' + (regionValues.x ?? 'EMPTY').toString() + '<br>';
+    }
+
+
+
+
+
+
+    document.getElementById('gd_map_cursor_title').innerHTML = event.layer.properties['nuts_name'] + ' (' + event.layer.properties['nuts_id'] + ')';
+    document.getElementById('gd_map_cursor_data').innerHTML = dataHtml;
+    // document.getElementById('gd_map_cursor_graph').innerHTML = 'test-graph';
+
+
+    // let mapLeft = document.getElementById('resultMap').offsetLeft;
+    let mapLeft = document.getElementById('drawerRight').offsetWidth;
+    let mapTop = document.getElementById('matDrawerContainer').offsetTop;
+    let mapWidth = document.getElementById('resultMap').offsetWidth;
+    let mapHeight = document.getElementById('resultMap').offsetHeight;
+
+    // console.log('SIZES:', mapLeft, mapTop, mapWidth, mapHeight);
+
+    let cursorX = event.originalEvent.clientX;
+    let cursorY = event.originalEvent.clientY;
+
+    let infoX = cursorX - mapLeft; // + 20;
+    let infoY = cursorY - mapTop;
+    if (infoX > mapWidth/2) {
+      infoX = Math.max(infoX - 80 - document.getElementById('gd_map_cursor_info').offsetWidth, 10);
+    } else {
+      infoX = Math.min(infoX + 80, mapWidth - 10 - document.getElementById('gd_map_cursor_info').offsetWidth);
+    }
+    if (infoY > mapHeight/2) {
+      infoY = Math.min(infoY - (document.getElementById('gd_map_cursor_info').offsetHeight / 2), mapHeight - document.getElementById('gd_map_cursor_info').offsetHeight - 10);
+    } else {
+      infoY = Math.max(10, infoY - (document.getElementById('gd_map_cursor_info').offsetHeight / 2));
+    }
+
+    document.getElementById('gd_map_cursor_info').style.left = (infoX).toString() + 'px';
+    document.getElementById('gd_map_cursor_info').style.top = (infoY).toString() + 'px';
+
+
+    document.getElementById('gd_map_cursor_info').style.display = 'block';
 
   } // END FUNCTION regionLayerMouseInfo
 
   regionLayerMouseInfoClose(event) {
-    console.log('REGIONS LAYER, event (CLOSE): ', event);
+    // console.log('REGIONS LAYER, event (CLOSE): ', event);
 
     this.childGraph.removehighlight();
+
+    document.getElementById('gd_map_cursor_info').style.display = 'none';
 
     this.regionsLayer.resetFeatureStyle(event.layer.properties['nuts_id']);
 
@@ -383,9 +445,14 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       let fillColor = this.getColorBivariate(entity1, xmin, xmax, entity2, ymin, ymax);
       //console.log('fillColor', fillColor);
       //console.log('properties', properties);
+
+      if (properties['nuts_id'] === 'PL41') {
+        console.log('CHECK WAARDEN:', properties['nuts_id'], fillColor, mapdata[properties['nuts_id']].x, mapdata[properties['nuts_id']].y, xmin, xmax, ymin, ymax);
+      }
       return {
         fill: true, fillColor: fillColor, fillOpacity: 1,
-        color: 'rgba(185,178,178,0.8)', opacity: 1, weight: 0.5,
+        // color: 'rgba(185,178,178,0.8)', opacity: 1, weight: 0.5,
+        color: 'rgb(185,178,178)', opacity: 1, weight: 0.5,
       };
     })
     this.regionsLayer.redraw();
@@ -401,15 +468,15 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
 
   getColorBivariate(xvalue: number, xmin: number, xmax: number, yvalue: number, ymin: number, ymax: number): any {
-
     //console.log('xvalue, xmin, xmax, yvalue, ymin, ymax',xvalue, xmin, xmax, yvalue, ymin, ymax);
 
-    let index1 = Math.ceil((xvalue - xmin) / ((xmax - xmin) / 3));
-    let index2 = Math.ceil((yvalue - ymin) / ((ymax - ymin) / 3))
-
-    if (xvalue === 0 && yvalue === 0) {
+    if (xvalue === undefined  ||  yvalue === undefined  ||  typeof xvalue === 'undefined'  ||  typeof yvalue === 'undefined'  ||  xvalue === 0 || yvalue === 0  ||  xvalue === null || yvalue === null) {
       return '#FFFFFF';
     }
+
+    let index1 = Math.max(Math.ceil((xvalue - xmin) / ((xmax - xmin) / 3)), 1);
+    let index2 = Math.max(Math.ceil((yvalue - ymin) / ((ymax - ymin) / 3)), 1);
+
     return colorsBivariate[index2.toString() + index1.toString()];
   } // END FUNCTION getColorBivariate
 
