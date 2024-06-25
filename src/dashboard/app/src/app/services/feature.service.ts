@@ -72,7 +72,7 @@ export class FeatureService {
   } // END FUNCTION getColumnValuesBySourceJson
 
   public getAllSources(): Observable<any> {
-    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_all_sources/items.json?&limit=100`).pipe(
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_all_sources/items.json?&limit=1500`).pipe(
       tap((result) => {
         //console.log(result);
       }),
@@ -91,7 +91,8 @@ export class FeatureService {
   }
 
   public getNutsLevels(use_case: number = -1): Observable<any> {
-    return this.httpClient.get<string>(this.baseUrl + 'functions/postgisftw.get_levels/items.json?' + ( use_case > -1 ? '_use_case=' + use_case.toString() : '' ) + '&limit=500').pipe(
+    let parameters = this.getParameters(`limit=500`, use_case)
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_levels/items.json?${parameters}`).pipe(
         tap((result) => {
           //console.log(result);
         }),
