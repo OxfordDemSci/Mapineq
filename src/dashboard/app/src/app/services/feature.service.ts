@@ -91,7 +91,7 @@ export class FeatureService {
   }
 
   public getNutsLevels(use_case: number = -1): Observable<any> {
-    return this.httpClient.get<string>(this.baseUrl + 'functions/postgisftw.get_year_use_case/items.json?' + ( use_case > -1 ? '_use_case=' + use_case.toString() : '' ) + '&limit=500').pipe(
+    return this.httpClient.get<string>(this.baseUrl + 'functions/postgisftw.get_levels/items.json?' + ( use_case > -1 ? '_use_case=' + use_case.toString() : '' ) + '&limit=500').pipe(
         tap((result) => {
           //console.log(result);
         }),

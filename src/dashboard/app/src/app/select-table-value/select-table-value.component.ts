@@ -160,7 +160,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.featureService.getNutsLevels(this.inputUseCase).subscribe( data => {
       // console.log('A setAvailableRegionLevels(), usecase/data:', this.inputUseCase, data);
       // this.availableRegionLevels = data;
-      this.availableRegionLevels = data.map((item) => {return item.f_year;});
+      // this.availableRegionLevels = data.map((item) => {return item.f_year;});
+      this.availableRegionLevels = data.map((item) => {return item.f_level;});
       /*
       data.forEach( dataObject => {
         if (typeof dataObject.f_year !== 'undefined') {
