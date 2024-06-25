@@ -24,15 +24,17 @@ export class RegionsLayer extends BaseLayer  {
         default: {
           weight: 1,
           color: '#da0a0a',
-          fill: false,
-          fillColor: '#DA0A0AFF',
-          fillOpacity: 0.1,
+          fill: true,
+          fillColor: '#DA0A0A',
+          fillOpacity: 1,
         }
       },
       getFeatureId: function(f) {
         return f.properties["nuts_id"];
       }
     }
+
+    /* /
     //From https://gis.stackexchange.com/questions/474627/get-events-fired-for-all-objects-in-a-protobuf-layer-when-clicked-on-in-leaflet
     //@ts-ignore
     L.Canvas.Tile.include({
@@ -55,10 +57,10 @@ export class RegionsLayer extends BaseLayer  {
         }
       }
     });
+    /* */
+
     //@ts-ignore
     return L.vectorGrid.protobuf(nutsUrl, options);
-
-
   }
 
 

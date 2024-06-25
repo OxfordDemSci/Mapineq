@@ -366,6 +366,51 @@ div.emptyDiv {
 }
 
 
+/* MAP INFO DIV */
+
+#gd_map_cursor_info {
+    position: absolute;
+    display: none;
+    padding: 5px; /*3px;*/
+    width: calc(min(50vw, 250px)); /* 180px; */
+    height: auto;
+    z-index: 1001; /* 505; */
+    font-size: 22px;
+    font-family: Arial, SansSerif;
+    color:  rgb(220, 0, 45);
+    background-color: rgba(255, 255, 255, .95);
+    text-align: center;
+}
+#gd_map_cursor_title {
+    font-size: 22px;
+    color:  rgb(220, 0, 45);
+    text-align: center;
+}
+#gd_map_cursor_data,
+#gd_map_cursor_graph {
+    padding-top: 5px;
+    font-size: 12px;
+    /*
+    font-style: italic;
+    */
+    color:  rgb(0, 0, 0);
+    text-align: left;
+}
+
+#gd_map_cursor_data div+div {
+    margin-top: 1em;
+}
+
+#gd_map_cursor_data td {
+    vertical-align: bottom;
+}
+
+
+/* end MAP INFO DIV */
+
+
+
+
 /* SELECTION LAYOUT */
 
 .selection-table:after {
