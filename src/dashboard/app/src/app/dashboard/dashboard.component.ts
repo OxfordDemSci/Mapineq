@@ -28,6 +28,7 @@ export class DashboardComponent implements OnInit{
 
     panelOpen: boolean;
 
+
     useCase: number;
     useCaseVariant: number;
     useCaseDescr: string;

@@ -293,15 +293,25 @@ div.emptyDiv {
     overflow: hidden !important;
 }
 
-.panelToggleContainerLeft {
+.panelToggleContainerLeft,
+.graphToggleContainerLeft{
     position: absolute;
     top: calc(50% - 20px);
     left: 5px;
-
+    z-index: 9999;
+}
+.panelToggleContainerRight,
+.graphToggleContainerRight{
+    position: absolute;
+    top: calc(50% - 20px);
+    left: -30px;
     z-index: 9999;
 }
 .panelToggleContainerButtonLeft,
-.panelToggleContainerButtonRight {
+.panelToggleContainerButtonRight,
+.graphToggleContainerButtonLeft,
+.graphToggleContainerButtonRight {
+    display: block;
     color: rgba(0,0,0,1);
     background-color: rgba(255,255,255,0.5);
     width: 25px;
@@ -320,12 +330,15 @@ div.emptyDiv {
     background-color: rgba(255,255,255,0.85);
 }
 
-.panelToggleContainerButtonLeft {
+.panelToggleContainerButtonLeft,
+.graphToggleContainerButtonLeft {
     background-image: url("assets/img/button_toggle_left.svg");
 }
-.panelToggleContainerButtonRight {
+.panelToggleContainerButtonRight,
+.graphToggleContainerButtonRight {
     background-image: url("assets/img/button_toggle_right.svg");
 }
+
 
 
 .useCaseInfo {

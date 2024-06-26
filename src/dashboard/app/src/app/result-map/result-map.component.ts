@@ -76,6 +76,10 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
   mapLegendDiv: any;
   mapGraphDiv: any;
+  mapGraphContainer: any;
+  graphOpen: boolean;
+
+
 
   private map;
   layerMapOSM: any;
@@ -86,7 +90,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
   selectedArea:any;
 
   constructor(private featureService: FeatureService) {
-
+    this.graphOpen = false;
   } // END CONSTRUCTOR
 
   ngOnChanges(changes: SimpleChanges) {
@@ -154,8 +158,12 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
 
     let graph = new LeafletControlGraph({position: 'topright'}).addTo(this.map);
-    console.log('id=', graph.getContainer().id);
-    this.mapGraphDiv = document.getElementById(graph.getContainer().id);
+    graph.addToggleButton(this.graphToggle.bind(this));
+
+    // console.log('id=', graph.getContainer().id);
+    // this.mapGraphDiv = document.getElementById(graph.getContainer().id);
+    this.mapGraphContainer = document.getElementById('map_graph_div');
+    this.mapGraphDiv = document.getElementById('map_graph_div_graph');
     this.mapGraphDiv.innerHTML += '<canvas id="myChart" width="400px" height="400px"></canvas>';
 
     this.hideLegend();
@@ -180,6 +188,27 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     //this.addMouseClick();
     this.map.fitBounds(L.latLng(53.238, 6.536).toBounds(3000000));
   } // END FUNCTION initResultMap
+
+
+
+  graphToggle(): void {
+    console.log('graphToggle() ...');
+    this.graphOpen = !this.graphOpen;
+    if (this.graphOpen) {
+      document.getElementById('map_graph_div_toggle_button').className = 'graphToggleContainerButtonRight';
+      document.getElementById('map_graph_div_graph_container').style.width = '420px';
+      //document.getElementById('map_graph_div_graph_container').style.height = '400px';
+    } else {
+      document.getElementById('map_graph_div_toggle_button').className = 'graphToggleContainerButtonLeft';
+      document.getElementById('map_graph_div_graph_container').style.width = '0px';
+      //document.getElementById('map_graph_div_graph_container').style.height = '400px';
+    }
+
+  } // END FUNCTION graphToggle
+
+
+
+
 
 
   regionLayerMouseInfo(event) {
@@ -561,11 +590,17 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
   } // END FUNCTION initLegend
 
   hideGraph() {
-    this.mapGraphDiv.style.display = 'none';
+    this.graphOpen = false;
+    document.getElementById('map_graph_div_graph_container').style.width = '0px';
+    this.mapGraphContainer.style.display = 'none';
   }
 
   showGraph() {
-    this.mapGraphDiv.style.display = 'block';
+    this.graphOpen = true;
+    document.getElementById('map_graph_div_graph_container').style.width = '420px';
+    setTimeout( () => {
+      this.mapGraphContainer.style.display = 'block';
+    }, 1000);
   }
 
   setLegend(info): any {
