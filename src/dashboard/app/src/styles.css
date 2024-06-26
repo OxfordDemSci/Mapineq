@@ -326,7 +326,9 @@ div.emptyDiv {
     background-position: center;
 }
 .panelToggleContainerButtonLeft:hover,
-.panelToggleContainerButtonRight:hover {
+.panelToggleContainerButtonRight:hover,
+.graphToggleContainerButtonLeft:hover,
+.graphToggleContainerButtonRight:hover {
     background-color: rgba(255,255,255,0.85);
 }
 

@@ -598,9 +598,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
   showGraph() {
     this.graphOpen = true;
     document.getElementById('map_graph_div_graph_container').style.width = '420px';
-    setTimeout( () => {
-      this.mapGraphContainer.style.display = 'block';
-    }, 1000);
+    document.getElementById('map_graph_div_toggle_button').className = 'graphToggleContainerButtonRight';
+    this.mapGraphContainer.style.display = 'block';
   }
 
   setLegend(info): any {
