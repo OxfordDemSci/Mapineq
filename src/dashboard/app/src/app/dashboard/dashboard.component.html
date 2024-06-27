@@ -33,6 +33,11 @@
                 </app-select-table-value>
             </div>
 
+            <div *ngIf="displayObject.displayData.length > 1" class="buttonsMargin">
+                <a mat-raised-button type="button" (click)="downloadCSV()" color="secondary" download="download.csv" [href]="downloadUrl">
+                    <mat-icon>download</mat-icon>Download csv
+                </a>
+            </div>
             <div class="json_preview">
                 <pre>{{displayObject | json}}</pre>
             </div>

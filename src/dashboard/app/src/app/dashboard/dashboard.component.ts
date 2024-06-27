@@ -295,7 +295,52 @@ export class DashboardComponent implements OnInit{
 
 
     } // END FUNCTION collectDataForSelection
+    downloadUrl: any;
 
+
+    downloadCSV() {
+
+        //this.displayObject.displayData;
+        let csv = this.createCSV(this.displayObject.displayData);
+        const blob = new Blob([csv], { type: 'text/csv' });
+
+        // Create a URL for the Blob
+
+        this.downloadUrl = URL.createObjectURL(blob);
+    }
+
+
+    createCSV(data: any[]) {
+
+        // Empty array for storing the values
+        let csvRows = [];
+
+        // Headers is basically a keys of an object which
+        // is id, name, and profession
+        const headers = Object.keys(data[0]);
+
+        // As for making csv format, headers must be
+        // separated by comma and pushing it into array
+        let displayHeaders = Object.keys(data[0]);
+        displayHeaders[1] = this.displayObject.tableFields[0].tableDescr;
+        displayHeaders[2] = this.displayObject.tableFields[1].tableDescr;
+        csvRows.push(displayHeaders.join(','));
+
+        // Pushing Object values into the array with
+        // comma separation
+
+        // Looping through the data values and make
+        // sure to align values with respect to headers
+        for (const row of data) {
+            const values = headers.map(e => {
+                return row[e]
+            })
+            csvRows.push(values.join(','))
+        }
+
+        // returning the array joining with new line
+        return csvRows.join('\n')
+    }
 
 
 } // END CLASS DashboardComponent
