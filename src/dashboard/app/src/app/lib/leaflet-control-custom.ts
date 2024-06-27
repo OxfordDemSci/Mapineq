@@ -45,7 +45,7 @@ export class LeafletControlLegend extends L.Control {
     mapLegend.style.border = '1px solid rgba(255, 255, 255, 1)';
     mapLegend.style.cursor = 'default';
     mapLegend.style.padding = '10px';
-    mapLegend.style.backgroundColor = 'rgba(255,255,255,0.75)';
+    mapLegend.style.backgroundColor = 'rgba(255,255,255,0.85)';
     mapLegend.style.borderRadius = '5px';
 
     L.DomEvent
@@ -92,7 +92,7 @@ export class LeafletControlGraph extends L.Control {
     mapGraphGraphBackground.style.border = '1px solid rgba(255, 255, 255, 1)';
     mapGraphGraphBackground.style.cursor = 'default';
     mapGraphGraphBackground.style.padding = '9px';
-    mapGraphGraphBackground.style.backgroundColor = 'rgba(255,255,255,0.75)';
+    mapGraphGraphBackground.style.backgroundColor = 'rgba(255,255,255,0.85)';
     mapGraphGraphBackground.style.borderRadius = '5px';
     mapGraphGraphBackground.style.width = '400px';
     mapGraphGraphBackground.style.height = '400px';

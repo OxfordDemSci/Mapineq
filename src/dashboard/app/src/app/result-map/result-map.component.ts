@@ -46,11 +46,17 @@ const colorsBivariate = {
   '11': '#e8e8e8', '12': '#e4acac', '13': '#c85a5a',
 }
 
-
+/*
 const titlesBivariate = {
   '31': 'high {0}, low {1}', '32': 'high {0}, medium {1}', '33': 'high {0} and {1}',
   '21': 'medium {0}, low {1}', '22': 'medium {0} and {1}', '23': 'medium {0}, high {1}',
   '11': 'low {0} and {1}', '12': 'low {0}, medium {1}', '13': 'low {0}, high {1}',
+}
+*/
+const titlesBivariate = {
+  '31': '{0}: HIGH   | {1}: LOW', '32': '{0}: HIGH   | {1}: MEDIUM', '33': '{0}: HIGH   | {1}: HIGH',
+  '21': '{0}: MEDIUM | {1}: LOW', '22': '{0}: MEDIUM | {1}: MEDIUM', '23': '{0}: MEDIUM | {1}: HIGH',
+  '11': '{0}: LOW    | {1}: LOW', '12': '{0}: LOW    | {1}: MEDIUM', '13': '{0}: LOW    | {1}: HIGH',
 }
 
 const colorsUnivariate = ['#ccd8de', '#99b2bd', '#668b9d', '#33657c', '#003e5b'];
@@ -638,7 +644,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
   private biVariateLegend(info: any) {
     const xmlns = 'http://www.w3.org/2000/svg';
     let svgWidth = 250;
-    let svgHeight = 200;
+    let svgHeight = 210;
 
     let containerSvg = document.createElementNS(xmlns, 'svg');
     this.mapLegendDiv.appendChild(containerSvg);
@@ -647,6 +653,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     containerSvg.setAttributeNS(null, 'height', svgHeight.toString());
     containerSvg.setAttributeNS(null, 'viewBox', '0 0 ' + svgWidth + ' ' + svgHeight);
 
+    /*
     let bg = document.createElementNS(xmlns, 'rect');
     containerSvg.appendChild(bg);
     bg.setAttributeNS(null, 'fill', '#ffffff');
@@ -654,6 +661,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     bg.setAttributeNS(null, 'width', svgWidth.toString());
     bg.setAttributeNS(null, 'height', svgHeight.toString());
     // bg.addEventListener('mouseover', legendBlockMouseOut);
+    */
+
 
     for (let x = 1; x <= 3; x++) {
       for (let y = 1; y <= 3; y++) {
@@ -675,8 +684,9 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         blockPath.setAttributeNS(null, 'title',
           formatString(titlesBivariate[x.toString() + y.toString()], this.legendLabel(info.xlabel), this.legendLabel(info.ylabel)));
 
-        blockPath.addEventListener('mouseover', legendBlockMouseOver);
-        blockPath.addEventListener('mouseout', legendBlockMouseOut);
+        blockPath.addEventListener('click', this.legendBlockMouseOver);
+        blockPath.addEventListener('mouseover', this.legendBlockMouseOver);
+        blockPath.addEventListener('mouseout', this.legendBlockMouseOut);
 
 
       }
@@ -719,21 +729,46 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     textOutcome.innerHTML = '&#11164; ' + this.legendLabel(info.ylabel);
 
 
-    let textExplain = document.createElementNS(xmlns, 'text');
-    containerSvg.appendChild(textExplain);
-    textExplain.id = 'legendTextExplain';
-    textExplain.setAttributeNS(null, 'x', Math.floor(1 * svgWidth / 2).toString());
-    textExplain.setAttributeNS(null, 'y', '14');
-    textExplain.setAttributeNS(null, 'fill', '#000000');
-    textExplain.setAttributeNS(null, 'text-anchor', 'middle');
-    //textExplain.setAttributeNS(null, 'font-weight', 'bold');
-    textExplain.setAttributeNS(null, 'font-style', 'italic');
-    textExplain.setAttributeNS(null, 'font-size', '11px');
-    textExplain.setAttributeNS(null, 'height', '4em');
-    textExplain.innerHTML = 'Select a color to see its meaning';
-  }
+    let textExplain0 = document.createElementNS(xmlns, 'text');
+    containerSvg.appendChild(textExplain0);
+    textExplain0.id = 'legendTextExplain0';
+    textExplain0.setAttributeNS(null, 'x', '30'); //Math.floor(1 * svgWidth / 2).toString());
+    textExplain0.setAttributeNS(null, 'y', '14');
+    textExplain0.setAttributeNS(null, 'fill', '#000000');
+    //textExplain0.setAttributeNS(null, 'text-anchor', 'middle');
+    textExplain0.setAttributeNS(null, 'font-weight', 'bold');
+    //textExplain0.setAttributeNS(null, 'font-style', 'italic');
+    textExplain0.setAttributeNS(null, 'font-size', '12px');
+    textExplain0.setAttributeNS(null, 'height', '4em');
+    textExplain0.innerHTML = 'Select a colored block to see ';
+
+    let textExplain1 = document.createElementNS(xmlns, 'text');
+    containerSvg.appendChild(textExplain1);
+    textExplain1.id = 'legendTextExplain1';
+    textExplain1.setAttributeNS(null, 'x', '30'); // Math.floor(1 * svgWidth / 2).toString());
+    textExplain1.setAttributeNS(null, 'y', '28');
+    textExplain1.setAttributeNS(null, 'fill', '#000000');
+    //textExplain1.setAttributeNS(null, 'text-anchor', 'middle');
+    textExplain1.setAttributeNS(null, 'font-weight', 'bold');
+    //textExplain1.setAttributeNS(null, 'font-style', 'italic');
+    textExplain1.setAttributeNS(null, 'font-size', '12px');
+    textExplain1.setAttributeNS(null, 'height', '4em');
+    textExplain1.innerHTML = 'its meaning';
+
+
+
+
+  } // END FUNCTION biVariateLegend
 
   private uniVariateLegend(info: any) {
+
+    let legendValueDescrLine = document.createElement('div');
+    this.mapLegendDiv.appendChild(legendValueDescrLine);
+    legendValueDescrLine.innerHTML = this.legendLabel(this.inputDisplayObject.tableFields[this.inputDisplayObject.displayTableId].tableDescr) + ':';
+    legendValueDescrLine.style.fontWeight = 'bold';
+    legendValueDescrLine.style.marginBottom = '0.5em';
+
+
     let colorStep = ((info.xmax - info.xmin) / colorsUnivariate.length);
     let colorsUnivariateReverse = colorsUnivariate.slice().reverse();
 
@@ -769,7 +804,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
 
     });
-  }
+  } // END FUNCTION uniVariateLegend
+
 
 
   legendLabel(text: string): string {
@@ -781,27 +817,52 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     return label;
   }
 
-}
 
 
-function legendBlockMouseOver(e) {
-  //console.log('legendBlockMouseOver(), event:', e.target.id);
+  legendBlockMouseOver(e) {
+    //console.log('legendBlockMouseOver(), event:', e.target.id);
+    console.log('legendBlockMouseOver(), event:', e.type);
 
-  document.getElementById(e.target.id).setAttributeNS(null, 'stroke-opacity', '1');
 
-  //console.log('TEST:', document.getElementById(e.target.id).getAttributeNS(null, 'd'));
-  // document.getElementById('legendBlockIndicator').setAttributeNS(null, 'd', document.getElementById(e.target.id).getAttributeNS(null, 'd') );
+    if (e.type === 'click') {
+      // reset other blocks ...
+      console.log('reset other blocks', e.target.id);
+      for (let x of ['1', '2', '3']) {
+        for (let y of ['1', '2', '3'] ) {
+          document.getElementById('legendBlock_' + x + '_' + y).setAttributeNS(null, 'stroke-opacity', '0');
+        }
+      }
+    }
 
-  document.getElementById('legendTextExplain').innerHTML = document.getElementById(e.target.id).getAttributeNS(null, 'title');
 
-} // END FUNCTION legendBlockMouseOver
+    document.getElementById(e.target.id).setAttributeNS(null, 'stroke-opacity', '1');
 
-function legendBlockMouseOut(e) {
-  //console.log('legendBlockMouseOut(), event:', e.target.id);
-  document.getElementById(e.target.id).setAttributeNS(null, 'stroke-opacity', '0');
+    //console.log('TEST:', document.getElementById(e.target.id).getAttributeNS(null, 'd'));
+    // document.getElementById('legendBlockIndicator').setAttributeNS(null, 'd', document.getElementById(e.target.id).getAttributeNS(null, 'd') );
 
-  // document.getElementById('legendBlockIndicator').setAttributeNS(null, 'd', 'M -100 -100 L -125 -125 L -100 -150 L -75 -125 z' );
+    let titleParts = document.getElementById(e.target.id).getAttributeNS(null, 'title').split('|');
 
-  document.getElementById('legendTextExplain').innerHTML = '';
+    document.getElementById('legendTextExplain0').innerHTML = titleParts[0].trim();
+    document.getElementById('legendTextExplain1').innerHTML = titleParts[1].trim();
 
-} // END FUNCTION legendBlockMouseOut
+  } // END FUNCTION legendBlockMouseOver
+
+  legendBlockMouseOut(e) {
+    //console.log('legendBlockMouseOut(), event:', e.target.id);
+    document.getElementById(e.target.id).setAttributeNS(null, 'stroke-opacity', '0');
+
+    // document.getElementById('legendBlockIndicator').setAttributeNS(null, 'd', 'M -100 -100 L -125 -125 L -100 -150 L -75 -125 z' );
+
+    //document.getElementById('legendTextExplain0').innerHTML = 'Select a colored block to see ';
+    //document.getElementById('legendTextExplain1').innerHTML = 'its meaning';
+    document.getElementById('legendTextExplain0').innerHTML = '';
+    document.getElementById('legendTextExplain1').innerHTML = '';
+
+  } // END FUNCTION legendBlockMouseOut
+
+
+
+
+} // END CLASS ResultMapComponent
+
+

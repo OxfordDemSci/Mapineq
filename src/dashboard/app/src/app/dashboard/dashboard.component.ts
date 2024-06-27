@@ -28,6 +28,7 @@ export class DashboardComponent implements OnInit{
 
     panelOpen: boolean;
 
+    showDevInfo: boolean;
 
     useCase: number;
     useCaseVariant: number;
@@ -38,6 +39,7 @@ export class DashboardComponent implements OnInit{
 
     constructor(private dashboardFeatureService: FeatureService, private route: ActivatedRoute) {
         // this.displayObject = new DisplayObject();
+        this.showDevInfo = false;
         this.displayDataUpdated = false;
         this.panelOpen = false;
         this.useCase = -1;
@@ -55,7 +57,7 @@ export class DashboardComponent implements OnInit{
         // this start values for formType (& displayType) should be set according to use-case ...
         this.displayObject = new DisplayObject({formType: 'bivariate', displayType: 'bivariate', tableFields: [{}, {}]});
 
-        this.checkForUseCaseInUrl();
+        this.checkForQueryValsInUrl();
 
         document.documentElement.style.setProperty('--select-cell-width', 'calc(100% / ' + this.displayObject.tableFields.length.toString() + ')');
         // document.documentElement.style.setProperty('--app-panel-left-width', (500 * this.displayObject.tableFields.length).toString() + 'px');
@@ -63,7 +65,7 @@ export class DashboardComponent implements OnInit{
 
     } // END FUNCTION ngOnInit
 
-    checkForUseCaseInUrl() {
+    checkForQueryValsInUrl() {
         /* */
         this.route.paramMap.subscribe(params => {
             if (params.get('id') !== null) {
@@ -104,7 +106,10 @@ export class DashboardComponent implements OnInit{
         // this.urlTo = (this.route.snapshot.queryParams['to'] ?? '').trim();
         /* */
 
-    } // END FUNCTION checkForUseCaseInUrl
+        this.showDevInfo = (typeof this.route.snapshot.queryParams['dev'] === 'string');
+
+
+    } // END FUNCTION checkForQueryValsInUrl
 
 
 

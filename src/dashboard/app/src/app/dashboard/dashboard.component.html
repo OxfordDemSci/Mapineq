@@ -33,7 +33,7 @@
                 </app-select-table-value>
             </div>
 
-            <div class="json_preview">
+            <div class="json_preview" *ngIf="showDevInfo">
                 <pre>{{displayObject | json}}</pre>
             </div>
 
