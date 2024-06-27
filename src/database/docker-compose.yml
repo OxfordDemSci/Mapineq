@@ -54,10 +54,11 @@ services:
 
   mapineq_postgres:
     container_name: mapineq_db
-    image: postgis/postgis:latest
     env_file: .env
     shm_size: '1gb'
-    command: [ 'postgres', '-c', 'config_file=/db/postgresql.conf' ]
+    build:
+      dockerfile: ./Dockerfile
+      context: ./sql/
     volumes:
       - mapineq-db:/db/data
       - ./sql/postgresql.conf:/db/postgresql.conf
