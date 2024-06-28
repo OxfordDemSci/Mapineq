@@ -126,7 +126,7 @@ export class GraphComponent implements OnChanges {
             backgroundColor: 'rgb(207,206,211)',
             callbacks: {
               label: function(context){
-                return context.parsed.x + ',' + context.parsed.y;
+                return [info.xlabel + ': ' + context.parsed.x ,  info.ylabel + ': ' + context.parsed.y];
               }
             }
           }
