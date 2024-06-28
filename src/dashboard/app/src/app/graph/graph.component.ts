@@ -77,8 +77,11 @@ export class GraphComponent implements OnChanges {
 
 
   ScatterPlot(info: any) {
+    let color = '#003e5b';
+    //console.log('info', info.xydata[22]);
     let xydata = info.xydata;
     const context = document.getElementById('myChart');
+    let labels = xydata.map((item) => {return item.geo})
     // @ts-ignore
     if (this.chart) {
       this.chart.destroy();
@@ -86,9 +89,10 @@ export class GraphComponent implements OnChanges {
     let alldata = {
       label: info.xlabel + ' & ' + info.ylabel,
       data: xydata,
-      backgroundColor: '#003e5b'
+      backgroundColor: color
     }
     const data = {
+      labels: labels,
       datasets: [alldata],
     };
     // @ts-ignore
@@ -115,6 +119,16 @@ export class GraphComponent implements OnChanges {
           title: {
             display: true,
             text: info.xlabel + ' & ' + info.ylabel
+          },
+          tooltip: {
+            titleColor: color,
+            bodyColor: color,
+            backgroundColor: 'rgb(207,206,211)',
+            callbacks: {
+              label: function(context){
+                return context.parsed.x + ',' + context.parsed.y;
+              }
+            }
           }
         }
 
