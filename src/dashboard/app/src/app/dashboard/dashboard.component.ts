@@ -118,13 +118,13 @@ export class DashboardComponent implements OnInit{
 
         this.dashboardFeatureService.getUseCase(this.useCase).subscribe((data) => {
             console.log('showUseCase()', this.useCase, this.useCaseVariant, data);
-
-            if (this.useCaseVariant >= JSON.parse(data[0].f_parameters).length) {
-                this.useCaseVariant = 0;
+            if (data[0].f_parameters !== null) {
+                if (this.useCaseVariant >= JSON.parse(data[0].f_parameters).length) {
+                    this.useCaseVariant = 0;
+                }
+                this.useCaseData = JSON.parse(data[0].f_parameters)[this.useCaseVariant];
             }
 
-
-            this.useCaseData = JSON.parse(data[0].f_parameters)[this.useCaseVariant];
 
             this.useCaseDescr = data[0].f_short_descr;
             this.useCaseDescrLong = data[0].f_long_descr;

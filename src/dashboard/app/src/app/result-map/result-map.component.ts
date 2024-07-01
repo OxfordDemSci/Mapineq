@@ -110,7 +110,6 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       }
       if (propName === 'inputDisplayDataUpdated') { //  && valueCurrent
         console.log('ngOnChanges(), "inputDisplayDataUpdated":', valueCurrent);
-
         this.changeResultMap();
       }
     }

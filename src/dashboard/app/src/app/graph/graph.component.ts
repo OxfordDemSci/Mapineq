@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, OnChanges, SimpleChanges} from '@angular/core';
 import {Chart} from "chart.js/auto";
 
 @Component({
