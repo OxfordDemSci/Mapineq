@@ -81,7 +81,7 @@ export class GraphComponent implements OnChanges {
     //console.log('info', info.xydata[22]);
     let xydata = info.xydata;
     const context = document.getElementById('myChart');
-    let labels = xydata.map((item) => {return item.geo})
+    let labels = xydata.map((item) => {return item.geo_name + ' (' + item.geo + ')'})
     // @ts-ignore
     if (this.chart) {
       this.chart.destroy();
