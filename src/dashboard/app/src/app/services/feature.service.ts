@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {catchError, Observable, of, tap} from "rxjs";
 
+import config from '../../assets/config.json';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -10,9 +12,10 @@ export class FeatureService {
   // https://mapineqfeatures.web.rug.nl/collections/pgtileserv.nrbirths/items.json?filter=NUTS_ID=%27NL12%27&properties=year,entity&limit=100
   baseUrl: string = '';
 
+
   constructor(private httpClient: HttpClient) {
-    //this.baseUrl = 'https://mapineqfeatures.web.rug.nl/collections/pgtileserv.nrbirths/items.json';
-    this.baseUrl = 'https://mapineqfeatures.web.rug.nl/';
+
+    this.baseUrl = config.featureServer;
   }
 
   public getFeaturesByArea(areas:any, table: string): Observable<any> {

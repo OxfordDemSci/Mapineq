@@ -1,9 +1,14 @@
+import {Config} from "../config";
+import config from '../../assets/config.json';
 
 
-export const vectorServer = "https://mapineqtiles.web.rug.nl/";
+
 export class BaseLayer {
 
+  tileServer: string;
+
   constructor() {
+      this.tileServer = config.tileServer;
 
   }
 
