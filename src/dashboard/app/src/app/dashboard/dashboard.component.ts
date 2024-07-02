@@ -327,8 +327,8 @@ export class DashboardComponent implements OnInit{
         // As for making csv format, headers must be
         // separated by comma and pushing it into array
         let displayHeaders = Object.keys(data[0]);
-        displayHeaders[1] = this.displayObject.tableFields[0].tableDescr;
-        displayHeaders[2] = this.displayObject.tableFields[1].tableDescr;
+        displayHeaders[2] = this.displayObject.tableFields[0].tableDescr;
+        displayHeaders[3] = this.displayObject.tableFields[1].tableDescr;
         csvRows.push(displayHeaders.join(','));
 
         // Pushing Object values into the array with
