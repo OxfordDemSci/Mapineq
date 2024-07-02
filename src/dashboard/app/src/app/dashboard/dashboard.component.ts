@@ -338,13 +338,13 @@ export class DashboardComponent implements OnInit{
         // sure to align values with respect to headers
         for (const row of data) {
             const values = headers.map(e => {
-                return row[e]
+                return row[e];
             })
-            csvRows.push(values.join(','))
+            csvRows.push(values.join(','));
         }
 
         // returning the array joining with new line
-        return csvRows.join('\n')
+        return csvRows.join('\n');
     }
 
 

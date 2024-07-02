@@ -1,7 +1,4 @@
-import {Config} from "../config";
 import config from '../../assets/config.json';
-
-
 
 export class BaseLayer {
 
@@ -9,7 +6,6 @@ export class BaseLayer {
 
   constructor() {
       this.tileServer = config.tileServer;
-
   }
 
 }
