@@ -1,6 +1,6 @@
 import L from "leaflet";
-import {BaseLayer, vectorServer} from "./base-layer";
-
+import {BaseLayer} from "./base-layer";
+import config from '../../assets/config.json';
 
 export class RegionsLayer extends BaseLayer  {
 
@@ -13,8 +13,10 @@ export class RegionsLayer extends BaseLayer  {
 
   public static getLayer(nutslevel: string, year: string): any {
 
+
+
     //let nutsid = 3;
-    let nutsUrl = vectorServer + "areas.get_nuts_areas_tiles" + "/{z}/{x}/{y}.pbf" + "?year=" + year + "&intlevel=" + nutslevel;
+    let nutsUrl = config.tileServer + "areas.get_nuts_areas_tiles" + "/{z}/{x}/{y}.pbf" + "?year=" + year + "&intlevel=" + nutslevel;
 
     let options = {
       // @ts-ignore

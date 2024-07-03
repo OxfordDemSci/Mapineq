@@ -118,13 +118,13 @@ export class DashboardComponent implements OnInit{
 
         this.dashboardFeatureService.getUseCase(this.useCase).subscribe((data) => {
             console.log('showUseCase()', this.useCase, this.useCaseVariant, data);
-
-            if (this.useCaseVariant >= JSON.parse(data[0].f_parameters).length) {
-                this.useCaseVariant = 0;
+            if (data[0].f_parameters !== null) {
+                if (this.useCaseVariant >= JSON.parse(data[0].f_parameters).length) {
+                    this.useCaseVariant = 0;
+                }
+                this.useCaseData = JSON.parse(data[0].f_parameters)[this.useCaseVariant];
             }
 
-
-            this.useCaseData = JSON.parse(data[0].f_parameters)[this.useCaseVariant];
 
             this.useCaseDescr = data[0].f_short_descr;
             this.useCaseDescrLong = data[0].f_long_descr;
@@ -327,8 +327,8 @@ export class DashboardComponent implements OnInit{
         // As for making csv format, headers must be
         // separated by comma and pushing it into array
         let displayHeaders = Object.keys(data[0]);
-        displayHeaders[1] = this.displayObject.tableFields[0].tableDescr;
-        displayHeaders[2] = this.displayObject.tableFields[1].tableDescr;
+        displayHeaders[2] = this.displayObject.tableFields[0].tableDescr;
+        displayHeaders[3] = this.displayObject.tableFields[1].tableDescr;
         csvRows.push(displayHeaders.join(','));
 
         // Pushing Object values into the array with
@@ -338,13 +338,13 @@ export class DashboardComponent implements OnInit{
         // sure to align values with respect to headers
         for (const row of data) {
             const values = headers.map(e => {
-                return row[e]
+                return row[e];
             })
-            csvRows.push(values.join(','))
+            csvRows.push(values.join(','));
         }
 
         // returning the array joining with new line
-        return csvRows.join('\n')
+        return csvRows.join('\n');
     }
 
 
