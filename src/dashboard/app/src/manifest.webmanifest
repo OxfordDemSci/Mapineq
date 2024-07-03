@@ -1,6 +1,6 @@
 {
-  "name": "Mapineq dashboard",
-  "short_name": "Mapineq",
+  "name": "Mapineq interactive map",
+  "short_name": "Mapineq interactive map",
   "theme_color": "#003e5b",
   "background_color": "#ffffff",
   "display": "standalone",

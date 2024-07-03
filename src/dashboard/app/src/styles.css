@@ -7,8 +7,14 @@
 /* */
 
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body {
+    height: 100%;
+}
+body {
+    margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
+    background-color: red;
+
+}
 
 
 
@@ -36,6 +42,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     --app-panel-left-one-select-width: 500px;
     --app-panel-left-number-selects: 1;
     --app-panel-left-width: calc(var(--app-panel-left-number-selects) * var(--app-panel-left-one-select-width));
+
+    /*
+    --mat-sidenav-container-background-color: yellow !important;
+    */
 }
 
 @media only screen and (max-width: 599px) {
