@@ -12,8 +12,6 @@ html, body {
 }
 body {
     margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
-    background-color: red;
-
 }
 
 
@@ -46,6 +44,11 @@ body {
     /*
     --mat-sidenav-container-background-color: yellow !important;
     */
+
+    /* */
+    --mat-app-background-color: #273a57;
+    --mat-app-text-color: #ffffff;
+    /* */
 }
 
 @media only screen and (max-width: 599px) {
@@ -54,6 +57,13 @@ body {
     }
 }
 
+
+/* */
+.mat-app-background {
+    background-color: var(--mat-app-background-color, transparent) !important;
+    color: var(--mat-app-text-color, inherit) !important;
+}
+/* */
 
 
 /* TOOLBAR */
