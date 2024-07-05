@@ -7,8 +7,12 @@
 /* */
 
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body {
+    height: 100%;
+}
+body {
+    margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 
 
@@ -36,6 +40,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     --app-panel-left-one-select-width: 500px;
     --app-panel-left-number-selects: 1;
     --app-panel-left-width: calc(var(--app-panel-left-number-selects) * var(--app-panel-left-one-select-width));
+
+    /*
+    --mat-sidenav-container-background-color: yellow !important;
+    */
+
+    /* /
+    --mat-app-background-color: #273a57;
+    --mat-app-text-color: #ffffff;
+    /* */
 }
 
 @media only screen and (max-width: 599px) {
@@ -44,6 +57,13 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     }
 }
 
+
+/* /
+.mat-app-background {
+    background-color: var(--mat-app-background-color, transparent) !important;
+    color: var(--mat-app-text-color, inherit) !important;
+}
+/* */
 
 
 /* TOOLBAR */
