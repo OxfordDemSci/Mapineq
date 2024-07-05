@@ -1,0 +1,89 @@
+
+<div class="datacatalogueDiv">
+
+        <div class="content">
+            <div>
+                <h1>Data catalogue</h1>
+
+                <p>
+                    Search for datasets in the Mapineq database
+                </p>
+
+                <br/>
+
+                <mat-form-field style="width:600px;" appearance="outline" floatLabel="always" class="form-field-white-background" #matFormFieldElement>
+                    <mat-label>{{placeHolder}}</mat-label>
+                    <input matInput [value]="searchText"
+                           [formControl]="searchResultsCtrl" placeholder="for datasets"  #inputElement>
+
+                    <button matSuffix mat-icon-button aria-label="Clear" (click)="clearSelection()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+
+                    <!-- mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="onSelected($event.option.value, matFormFieldElement, inputElement)" -->
+                    <!--        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelected($event.option.value, matFormFieldElement, inputElement)"-->
+                    <!--                          [displayWith]="displayWith">-->
+                    <!--            <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>-->
+                    <!--            <ng-container *ngIf="!isLoading">-->
+                    <!--                <mat-option *ngFor="let result of filteredSearchResults" [value]="result">-->
+                    <!--                    <span><b>{{result.f_description}}</b> </span>-->
+                    <!--                </mat-option>-->
+                    <!--            </ng-container>-->
+                    <!--        </mat-autocomplete>-->
+                </mat-form-field>
+
+                <ng-container *ngIf="errorMsg; else elseTemplate">
+                    {{errorMsg}}
+                </ng-container>
+                <ng-template #elseTemplate>
+
+                </ng-template>
+
+
+
+            </div>
+            <section class="card-container">
+                <div class="cardbox" *ngFor="let result of filteredSearchResults" >
+
+                    <mat-card class="example-card" appearance="outlined">
+                        <mat-card-header>
+                            <div mat-card-avatar class="example-header-image-{{result.f_provider}}"></div>
+                            <mat-card-title>{{result.f_short_description}}</mat-card-title>
+                            <mat-card-subtitle>{{result.f_resource}} from {{result.f_provider}}</mat-card-subtitle>
+                        </mat-card-header>
+                        <img mat-card-image src="../../assets/img/preview{{ 1+ Math.round(Math.random() * 3) }}.png" alt="Example map" >
+                        <mat-card-content>
+                            <br/>
+                            <p>
+                                {{result.f_description}}
+                            </p>
+
+                            <div>
+                                Available years:
+                                <div>
+                                    {{result.f_years }}
+                                </div>
+
+                            </div>
+                            <br/>
+                            <div>
+                                Available NUTS regios:
+                                <div>{{result.f_levels}}</div>
+                            </div>
+                        </mat-card-content>
+                        <mat-card-actions>
+
+                        </mat-card-actions>
+                    </mat-card>
+
+
+
+                </div>
+
+            </section>
+        </div>
+
+
+
+
+</div>

@@ -96,6 +96,14 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     /*background-color: rgba(255,355,0,0.75);*/
 }
 
+.datacatalogueDiv {
+    /*height: calc(var(--page-content-height) - 2em);*/
+    padding: 1em;
+    /*overflow: auto;*/
+
+
+}
+
 #dialogComponentContent {
     color: rgba(0,0,0,1) !important;
 }
