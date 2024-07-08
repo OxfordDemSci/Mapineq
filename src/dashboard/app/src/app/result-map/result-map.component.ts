@@ -243,7 +243,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
 
 
-    let regionValues = this.inputDisplayObject.displayData.find(item => {return item.geo === event.layer.properties['nuts_id'];});
+    let regionValues = this.inputDisplayObject.displayData.find(item => {return item.geo === event.layer.properties['nuts_id'];}) ?? {};
     // console.log('REGIONS LAYER info: ', event.layer.properties['nuts_id'], regionValues);
 
     let dataHtml = '';
