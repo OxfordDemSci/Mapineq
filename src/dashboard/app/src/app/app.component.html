@@ -1,8 +1,10 @@
 <mat-toolbar color="primary" class="app-toolbar">
     <mat-toolbar-row>
+        <!--
         <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
             <mat-icon>more_vert</mat-icon>
         </button>
+        -->
         <span>
             <a mat-flat-button href="http://13.39.76.182/"><mat-icon>undo</mat-icon> back to website</a> &nbsp;
             <!-- a mat-flat-button href="http://localhost:10004/"><mat-icon>undo</mat-icon> back to website</a> &nbsp; -->
@@ -14,6 +16,7 @@
         <span class="example-fill-remaining-space"></span>
     </mat-toolbar-row>
 </mat-toolbar>
+<!--
 <mat-menu #menu="matMenu" color="primary">
     <button mat-menu-item routerLink="/">
         <mat-icon>map</mat-icon>
@@ -24,7 +27,7 @@
         Data Catalogue
     </button>
 </mat-menu>
-
+-->
 <router-outlet></router-outlet>
 <!--
 <app-messages></app-messages>
