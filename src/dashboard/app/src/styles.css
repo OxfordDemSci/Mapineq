@@ -394,6 +394,56 @@ div.buttonsMargin {
 }
 
 
+/* MAP TITLE */
+
+#mapTitleDiv {
+    display: inline-block;
+    position: relative;
+    left: 50%;
+    -ms-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+    z-index: 1000;
+    top: 10px;
+    width: auto;
+    max-width: calc(100% - 130px);
+    text-align: center;
+    /*
+    background-color: rgba(255,255,255,0.25);
+    */
+    /*
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    */
+    border-radius: 5px;
+    cursor: default;
+    padding: 0 10px;
+}
+
+#mapTitle,
+#mapSubTitle {
+    color: var(--map-title-color);
+    margin: 0 !important;
+    font-weight: bold;
+    text-shadow:
+            -1px 1px 0 var(--map-title-color-shadow),
+            0px 1px 0 var(--map-title-color-shadow),
+            1px 1px 0 var(--map-title-color-shadow),
+            -1px 0px 0 var(--map-title-color-shadow),
+            1px 0px 0 var(--map-title-color-shadow),
+            -1px -1px 0 var(--map-title-color-shadow),
+            0px -1px 0 var(--map-title-color-shadow),
+            1px -1px 0 var(--map-title-color-shadow);
+}
+#mapTitle {
+    font-size: 24px;
+}
+#mapSubTitle {
+    font-size: 16px;
+}
+
+
+
+
+
 /* MAP LEGEND */
 
 .legendHeader {
