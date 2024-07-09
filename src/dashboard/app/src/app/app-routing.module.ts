@@ -8,8 +8,14 @@ const routes: Routes = [
   { path: 'case/:id', component: DashboardComponent },
   { path: 'case/:id/:variant', component: DashboardComponent },
   { path: 'datacatalogue', component: DatacatalogueComponent },
+  /*
+  {
+    path: 'datacatalogue',
+    redirectTo: '/mapineq_dashboard_tst',
+    pathMatch: 'prefix'
+  },
+  */
   { path: '**', component: DashboardComponent },
-
 ];
 
 @NgModule({

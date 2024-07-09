@@ -1,4 +1,0 @@
-AuthType Basic
-AuthName "Prototype Mapineq"
-AuthUserFile /var/www/html/mapineq_dashboard_dev/.htpasswd
-Require valid-user
