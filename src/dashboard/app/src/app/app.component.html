@@ -1,4 +1,4 @@
-<mat-toolbar color="primary" class="app-toolbar">
+<mat-toolbar color="primary" class="app-toolbar" (window:resize)="onAppResize()">
     <mat-toolbar-row>
         <!--
         <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
