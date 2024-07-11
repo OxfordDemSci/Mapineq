@@ -85,6 +85,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
   mapGraphContainer: any;
   graphOpen: boolean;
 
+  regionsColor: any = {};
 
 
   private map;
@@ -477,12 +478,13 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
       }
 
       let fillColor = this.getColorBivariate(entity1, xmin, xmax, entity2, ymin, ymax);
+      this.regionsColor[properties['nuts_id']] = fillColor;
       //console.log('fillColor', fillColor);
       //console.log('properties', properties);
 
-      if (properties['nuts_id'] === 'PL41') {
-        console.log('CHECK WAARDEN:', properties['nuts_id'], fillColor, mapdata[properties['nuts_id']].x, mapdata[properties['nuts_id']].y, xmin, xmax, ymin, ymax);
-      }
+      // if (properties['nuts_id'] === 'PL41') {
+      //   console.log('CHECK WAARDEN:', properties['nuts_id'], fillColor, mapdata[properties['nuts_id']].x, mapdata[properties['nuts_id']].y, xmin, xmax, ymin, ymax);
+      // }
       return {
         fill: true, fillColor: fillColor, fillOpacity: 1,
         // color: 'rgba(185,178,178,0.8)', opacity: 1, weight: 0.5,
@@ -860,8 +862,23 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
   } // END FUNCTION legendBlockMouseOut
 
 
+    newCode($event: any) {
+
+      console.log('code', $event, this.regionsColor[$event]);
+      this.regionsLayer.setFeatureStyle($event, {
+          default: {
+            weight: 3,
+            color: 'rgba(255,192,0,1)',
+            fillColor: this.regionsColor[$event],
+            fill: true,
+            fillOpacity: 1,
+          }
+        });
+
+      setTimeout( () => this.regionsLayer.resetFeatureStyle($event), 3000);
 
 
+    }
 } // END CLASS ResultMapComponent
 
 
