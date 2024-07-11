@@ -12,8 +12,6 @@ html, body {
 }
 body {
     margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
-    background-color: red;
-
 }
 
 
@@ -46,6 +44,11 @@ body {
     /*
     --mat-sidenav-container-background-color: yellow !important;
     */
+
+    /* /
+    --mat-app-background-color: #273a57;
+    --mat-app-text-color: #ffffff;
+    /* */
 }
 
 @media only screen and (max-width: 599px) {
@@ -54,6 +57,13 @@ body {
     }
 }
 
+
+/* /
+.mat-app-background {
+    background-color: var(--mat-app-background-color, transparent) !important;
+    color: var(--mat-app-text-color, inherit) !important;
+}
+/* */
 
 
 /* TOOLBAR */
@@ -104,6 +114,14 @@ body {
     padding: 1em;
     overflow: auto;
     /*background-color: rgba(255,355,0,0.75);*/
+}
+
+.datacatalogueDiv {
+    /*height: calc(var(--page-content-height) - 2em);*/
+    padding: 1em;
+    /*overflow: auto;*/
+
+
 }
 
 #dialogComponentContent {
@@ -374,6 +392,56 @@ div.buttonsMargin {
     height: 100%;
     width: 100%;
 }
+
+
+/* MAP TITLE */
+
+#mapTitleDiv {
+    display: inline-block;
+    position: relative;
+    left: 50%;
+    -ms-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+    z-index: 1000;
+    top: 10px;
+    width: auto;
+    max-width: calc(100% - 130px);
+    text-align: center;
+    /*
+    background-color: rgba(255,255,255,0.25);
+    */
+    /*
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    */
+    border-radius: 5px;
+    cursor: default;
+    padding: 0 10px;
+}
+
+#mapTitle,
+#mapSubTitle {
+    color: var(--map-title-color);
+    margin: 0 !important;
+    font-weight: bold;
+    text-shadow:
+            -1px 1px 0 var(--map-title-color-shadow),
+            0px 1px 0 var(--map-title-color-shadow),
+            1px 1px 0 var(--map-title-color-shadow),
+            -1px 0px 0 var(--map-title-color-shadow),
+            1px 0px 0 var(--map-title-color-shadow),
+            -1px -1px 0 var(--map-title-color-shadow),
+            0px -1px 0 var(--map-title-color-shadow),
+            1px -1px 0 var(--map-title-color-shadow);
+}
+#mapTitle {
+    font-size: 24px;
+}
+#mapSubTitle {
+    font-size: 16px;
+}
+
+
+
 
 
 /* MAP LEGEND */

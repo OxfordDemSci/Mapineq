@@ -209,7 +209,13 @@ export class FeatureService {
         catchError(this.handleError('search', 'ERROR')))
   } // END FUNCTION getXData
 
-
+  public searchCatalogue(searchtext: string): Observable<any> {
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.search_sources/items.json?_search_string=${searchtext}&limit=1500`).pipe(
+        tap((result) => {
+          //console.log(result);
+        }),
+        catchError(this.handleError('search', 'ERROR')))
+  } // END FUNCTION getXData
 
 
   handleError<T>(operation = 'operation', result?: T) {
@@ -225,4 +231,6 @@ export class FeatureService {
       return of(result as T);
     };
   }
+
+
 }

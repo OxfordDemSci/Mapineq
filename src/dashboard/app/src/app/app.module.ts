@@ -22,7 +22,10 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import { GraphComponent } from './graph/graph.component';
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgOptimizedImage} from "@angular/common";
+import { DatacatalogueComponent } from './datacatalogue/datacatalogue.component';
+import {MatGridList, MatGridTile} from "@angular/material/grid-list";
+import {MatDivider} from "@angular/material/divider";
 
 
 @NgModule({
@@ -31,7 +34,8 @@ import {NgForOf} from "@angular/common";
         DashboardComponent,
         SelectTableValueComponent,
         ResultMapComponent,
-        GraphComponent
+        GraphComponent,
+        DatacatalogueComponent
     ],
     imports: [
         BrowserModule,
@@ -56,7 +60,11 @@ import {NgForOf} from "@angular/common";
         ReactiveFormsModule,
         FormsModule,
         MatIconModule,
-        NgForOf
+        NgForOf,
+        NgOptimizedImage,
+        MatGridList,
+        MatGridTile,
+        MatDivider
     ],
     providers: [
     provideAnimationsAsync(), provideHttpClient()

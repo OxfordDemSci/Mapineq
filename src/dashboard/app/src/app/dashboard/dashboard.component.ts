@@ -112,6 +112,35 @@ export class DashboardComponent implements OnInit{
     } // END FUNCTION checkForQueryValsInUrl
 
 
+    updateUseCase() {
+        console.log('updateUseCase() ...', this.useCase);
+
+
+        if (isNaN(this.useCase)  ||  Number(this.useCase) === -1) {
+            console.log("AAA");
+            this.clearUseCase();
+            // this.showUseCase();
+        } else {
+            console.log("BBB");
+            this.showUseCase();
+        }
+
+    } // END FUNCTION updateUseCase
+
+
+    clearUseCase() {
+        this.useCase = -1;
+        this.useCaseVariant = 0;
+        this.useCaseDescr = '';
+        this.useCaseDescrLong = '';
+        this.useCaseData = [];
+
+        document.getElementById('mapTitle').innerHTML = this.useCaseDescr;
+        document.getElementById('mapSubTitle').innerHTML = this.useCaseDescrLong;
+
+        this.displayObject = new DisplayObject({formType: 'bivariate', displayType: 'bivariate', tableFields: [{}, {}]});
+
+    } // END FUNCTION clearUseCase
 
     showUseCase(): void {
         // console.log('showUseCase(), id/variant:', this.useCase, this.useCaseVariant);
@@ -130,6 +159,10 @@ export class DashboardComponent implements OnInit{
             this.useCaseDescrLong = data[0].f_long_descr;
 
             console.log('showUseCase(), useCaseData:', this.useCaseData);
+
+
+            document.getElementById('mapTitle').innerHTML = this.useCaseDescr;
+            document.getElementById('mapSubTitle').innerHTML = this.useCaseDescrLong;
 
             // console.log('data[0].f_parameters=', JSON.parse(data[0].f_parameters));
 

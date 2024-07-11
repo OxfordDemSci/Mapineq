@@ -7,17 +7,41 @@
     <mat-drawer-container id="matDrawerContainer" class="container-main" autosize  hasBackdrop="false">
 
         <!-- PANEL PART -->
-        <mat-drawer #drawer class="container-panel" mode="side" position="start" id="drawerRight" [(opened)]="panelOpen" (openedChange)="resizeResultMap()">
+        <mat-drawer #drawer class="container-panel mat-app-background" mode="side" position="start" id="drawerRight" [(opened)]="panelOpen" (openedChange)="resizeResultMap()">
             <div class="selection-table">
                 <!--
                 <app-select-table-value *ngFor="let tableSelection of displayObject.tableFields; let tableId = index;" [inputTableSelection]="tableSelection" [inputTableId]="tableId"></app-select-table-value>
                 -->
                 <div *ngIf="useCase > -1" class="useCaseInfo">
+                    <!--
                     <div>
                         Use case {{useCase}}: "<b>{{useCaseDescr}}</b>" (variant {{useCaseVariant}})
                     </div>
                     <div [innerHTML]="useCaseDescrLong"></div>
+                    -->
+
+                    <div class="boldText divCentered">
+                        Showing case study {{useCase}}
+                        <!-- button mat-icon-button aria-label="Clear case study">
+                            <mat-icon>delete</mat-icon>
+                        </button -->
+                    </div>
                 </div>
+
+                <!-- div>
+                    <mat-card>
+                        <mat-form-field>
+                            <mat-label>Case study</mat-label>
+                            <mat-select [(value)]="useCase" (valueChange)="updateUseCase()">
+                                <mat-option value="-1">CLEAR</mat-option>
+                                @for (option of [1,2,3,4,5,6]; track option) {
+                                    <mat-option [value]="option">Case study {{option}}</mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-card>
+                    {{useCase}}
+                </div -->
 
 
                 <app-select-table-value [inputTableSelection]="displayObject.tableFields[0]"
