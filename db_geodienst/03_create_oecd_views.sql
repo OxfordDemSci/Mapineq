@@ -1,4 +1,5 @@
-CREATE OR REPLACE PROCEDURE create_oecd_views()
+DROP PROCEDURE IF EXISTS  create_oecd_views(TEXT);
+CREATE OR REPLACE PROCEDURE create_oecd_views(strTable TEXT DEFAULT NULL)
 AS
 $BODY$
 DECLARE
@@ -26,12 +27,12 @@ BEGIN
 			provider = 'OECD'
 			AND column_name NOT ILIKE '%parent%'
 			AND column_name NOT ILIKE '%_desc.en'
-			AND LOWER(column_name) != 'obs_status'
-			-- AND table_name IN ('REGION_DEMOGR', 'GID2')
+			AND LOWER(column_name) NOT ILIKE 'obs_status%'
+			AND (table_name = strTable or strTable IS NULL)
 		ORDER BY 1, ordinal_position
 	LOOP
 
-		IF LOWER(rec.column_name) IN ('location','cou', 'country', 'reg_id', 'geo') THEN
+		IF LOWER(rec.column_name) IN ('location','cou', 'country', 'reg_id', 'geo') AND NOT bGeo THEN
 			arrColumns := ARRAY_APPEND(arrColumns,FORMAT(COLUMN_AS,rec.column_name,'geo'));
 			bGeo := TRUE;
 		ELSIF LOWER(rec.column_name) IN ('obstime', 'time') THEN
@@ -44,14 +45,15 @@ BEGIN
 			EXECUTE FORMAT(DROP_VIEW,LOWER(rec.table_name));
 			IF bGeo AND bTime THEN
 				BEGIN
+					-- RAISE INFO '%', FORMAT(CREATE_VIEW,LOWER(rec.table_name),ARRAY_TO_STRING(arrColumns, ', '),rec.table_name);
 					EXECUTE FORMAT(CREATE_VIEW,LOWER(rec.table_name),ARRAY_TO_STRING(arrColumns, ', '),rec.table_name);
-					-- RAISE INFO '%', rec.table_name;
+					
 				EXCEPTION
 					WHEN OTHERS THEN
 						RAISE WARNING 'table: % - error: % ', rec.table_name,SQLERRM;
 				END;
 			ELSE
-				RAISE WARNING 'tabel: % geo column presnt: %, time column present: %',rec.table_name,bGeo::TEXT,bTime::TEXT;
+				RAISE WARNING 'tabel: % geo column present: %, time column present: %',rec.table_name,bGeo::TEXT,bTime::TEXT;
 			END IF;
 			arrColumns := NULL;
 			bGeo := FALSE;
@@ -63,7 +65,9 @@ END;
 $BODY$
 LANGUAGE PLPGSQL;
 
-CALL create_oecd_views()
+
+
+
 
 
 

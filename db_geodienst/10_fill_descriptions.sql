@@ -18,7 +18,8 @@ CREATE TABLE website.catalogue_field_value_description
 );
 
 DROP PROCEDURE IF EXISTS website.oecd_fill_catalogue_field_value_description();
-CREATE OR REPLACE PROCEDURE website.oecd_fill_catalogue_field_value_description()
+DROP PROCEDURE IF EXISTS website.oecd_fill_catalogue_field_value_description(TEXT);
+CREATE OR REPLACE PROCEDURE website.oecd_fill_catalogue_field_value_description(strResource TEXT DEFAULT NULL)
 AS
 $BODY$
 DECLARE
@@ -35,7 +36,7 @@ DECLARE
 			"%1$s"
 		$$;
 BEGIN
-	DELETE FROM website.catalogue_field_value_description WHERE provider = 'OECD';
+	DELETE FROM website.catalogue_field_value_description WHERE provider = 'OECD' AND (resource = strResource OR strResource IS NULL);
 	FOR rec IN 
 	SELECT DISTINCT 
 		resource ,
@@ -46,7 +47,8 @@ BEGIN
 			ON table_name = query_resource
 	WHERE
 		provider = 'OECD'
-		AND LOWER(column_name ) NOT IN ('obstime','obsvalue','geo', 'time_format', 'tl')
+		AND (resource = strResource OR strResource IS NULL)
+		AND LOWER(column_name ) NOT IN ('obstime','obsvalue','geo', 'time_format','tl', 'territorial_level','country', 'territorial_type' )
 	ORDER BY 1,2
 	LOOP
 		BEGIN
@@ -106,16 +108,15 @@ END;
 $BODY$ LANGUAGE PLPGSQL;
 
 DROP PROCEDURE IF EXISTS website.fill_catalogue_field_description(TEXT);
-CREATE OR REPLACE PROCEDURE website.fill_catalogue_field_description(strResource TEXT DEFAULT NULL)
+DROP PROCEDURE IF EXISTS website.fill_catalogue_field_description(TEXT, TEXT);
+CREATE OR REPLACE PROCEDURE website.fill_catalogue_field_description(strResource TEXT DEFAULT NULL, strProvider TEXT DEFAULT NULL)
 AS
 $BODY$
 DECLARE
 	rec		RECORD;
-	QUERY	CONSTANT TEXT := $$
-		INSERT INTO website.catalogue_field_description
-		VALUES (%L,%L,%L,%L)$$;
+	QUERY	CONSTANT TEXT := $$INSERT INTO website.catalogue_field_description VALUES (%L,%L,%L,%L)$$;
 BEGIN
-	DELETE FROM website.catalogue_field_description WHERE provider != 'ESTAT' AND (resource = strResource OR strResource IS NULL);
+	DELETE FROM website.catalogue_field_description WHERE provider != 'ESTAT' AND (provider = strProvider OR strProvider IS NULL) AND  (resource = strResource OR strResource IS NULL);
 	FOR rec IN
 	SELECT
 		provider,
@@ -129,7 +130,8 @@ BEGIN
 	WHERE
 		provider != 'ESTAT'
 		AND (resource = strResource OR strResource IS NULL)
-		AND LOWER(column_name) NOT IN ('obstime','obsvalue','geo', 'time_format', 'tl')
+		AND (provider = strProvider OR strProvider IS NULL)
+		AND LOWER(column_name) NOT IN ('obstime','obsvalue','geo', 'time_format', 'tl', 'territorial_level','country', 'territorial_type' )
 	LOOP
 		EXECUTE FORMAT (QUERY, rec.provider, rec.resource, rec.column_name, rec.label);
 	END LOOP;
@@ -251,13 +253,13 @@ BEGIN
 	END IF;
 	IF bOECD THEN
 		CALL website.oecd_fill_catalogue_field_value_description();
-		CALL website.fill_catalogue_field_description('OECD');
+		CALL website.fill_catalogue_field_description(strProvider := 'OECD');
 	END IF;
 	IF bOxford THEN
 		CALL website.fill_catalogue_field_value_description(); 
-		CALL website.fill_catalogue_field_description('OXFORD');
+		CALL website.fill_catalogue_field_description(strProvider := 'OXFORD');
 	END IF;
 END;
 $BODY$ LANGUAGE PLPGSQL;
 
-CALL website.import_field_description(TRUE, FALSE, FALSE);
+--CALL website.import_field_description(TRUE, TRUE, TRUE);
