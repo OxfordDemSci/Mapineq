@@ -1,4 +1,4 @@
-import {Component, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Chart} from "chart.js/auto";
 
 @Component({
@@ -7,6 +7,8 @@ import {Chart} from "chart.js/auto";
   styleUrl: './graph.component.css'
 })
 export class GraphComponent implements OnChanges {
+
+  @Output() selectedCodeChange = new EventEmitter();
 
   chart: any;
 
@@ -125,9 +127,15 @@ export class GraphComponent implements OnChanges {
             bodyColor: color,
             backgroundColor: 'rgb(207,206,211)',
             callbacks: {
+
               label: function(context){
+                // @ts-ignore
+                //console.log(labels[context.dataIndex]);
+                //console.log(labels[context.dataIndex].split('(')[1].replace(')', ''));
+                // @ts-ignore
+                //this.selectedCodeChange.emit(labels[context.dataIndex].split('(')[1].replace(')', ''));
                 return [info.xlabel + ': ' + context.parsed.x ,  info.ylabel + ': ' + context.parsed.y];
-              }
+              }.bind(this)
             }
           }
         }
