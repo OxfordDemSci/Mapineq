@@ -87,7 +87,9 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       }
 
       if (propName === 'inputTableSelection' && valueCurrent) {
-
+        // DEZE REGEL HIERONDER MISTE ...
+        this.tableSelection = this.inputTableSelection;
+        // this.checkTableValueSelectionComplete(); // deze _hier_ aanroepen zorgt dat hij blijft checken en niet (kaart) plot
       }
 
       if (propName === 'inputOtherTableSelection' && valueCurrent) {
@@ -183,6 +185,21 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       }
     });
   } // END FUNCTION setAvailableRegionLevels
+
+
+  regionLevelChanged() {
+
+    if (this.tableId === 0) {
+      // this.tableSelection.tableRegionLevel = this.otherTableSelection.tableRegionLevel;
+      console.log('SJOERD SJOERD SJOERD');
+      // this.otherTableSelection.tableRegionLevel = this.tableSelection.tableRegionLevel;
+      this.updateTableValueFromSelect.emit(this.tableSelection);
+
+    }
+
+    this.setTableSources();
+
+  } // END FUNCTION regionLevelChanged
 
 
   setTableSources() {
