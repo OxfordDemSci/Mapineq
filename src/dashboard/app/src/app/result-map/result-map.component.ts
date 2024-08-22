@@ -7,12 +7,13 @@ import {FeatureService} from "../services/feature.service";
 import {RegionsLayer} from "../layers/regions-layer";
 import {DisplayObject} from "../lib/display-object";
 import {
-  LeafletControlGraph,
-  LeafletControlLegend,
-  LeafletControlMapButtonsLeft,
-  LeafletControlWatermark
+    LeafletControlGraph,
+    LeafletControlLegend,
+    LeafletControlMapButtonsLeft,
+    LeafletControlWatermark
 } from "../lib/leaflet-control-custom";
 import {GraphComponent} from "../graph/graph.component";
+import {LeafletControlSelectInformation} from "../lib/leaflet-control-select-information";
 
 
 /*
@@ -35,15 +36,14 @@ L.Marker.prototype.options.icon = iconDefault;
 
 // @ts-ignore
 L.DomEvent.fakeStop = function () {
-  return true;
+    return true;
 }
 
 
-
 const colorsBivariate = {
-  '31': '#64acbe', '32': '#627f8c', '33': '#574249',
-  '21': '#b0d5df', '22': '#ad9ea5', '23': '#985356',
-  '11': '#e8e8e8', '12': '#e4acac', '13': '#c85a5a',
+    '31': '#64acbe', '32': '#627f8c', '33': '#574249',
+    '21': '#b0d5df', '22': '#ad9ea5', '23': '#985356',
+    '11': '#e8e8e8', '12': '#e4acac', '13': '#c85a5a',
 }
 
 /*
@@ -54,828 +54,863 @@ const titlesBivariate = {
 }
 */
 const titlesBivariate = {
-  '31': '{0}: HIGH   | {1}: LOW', '32': '{0}: HIGH   | {1}: MEDIUM', '33': '{0}: HIGH   | {1}: HIGH',
-  '21': '{0}: MEDIUM | {1}: LOW', '22': '{0}: MEDIUM | {1}: MEDIUM', '23': '{0}: MEDIUM | {1}: HIGH',
-  '11': '{0}: LOW    | {1}: LOW', '12': '{0}: LOW    | {1}: MEDIUM', '13': '{0}: LOW    | {1}: HIGH',
+    '31': '{0}: HIGH   | {1}: LOW', '32': '{0}: HIGH   | {1}: MEDIUM', '33': '{0}: HIGH   | {1}: HIGH',
+    '21': '{0}: MEDIUM | {1}: LOW', '22': '{0}: MEDIUM | {1}: MEDIUM', '23': '{0}: MEDIUM | {1}: HIGH',
+    '11': '{0}: LOW    | {1}: LOW', '12': '{0}: LOW    | {1}: MEDIUM', '13': '{0}: LOW    | {1}: HIGH',
 }
 
 const colorsUnivariate = ['#ccd8de', '#99b2bd', '#668b9d', '#33657c', '#003e5b'];
 
 const formatString = (template, ...args) => {
-  return template.replace(/{([0-9]+)}/g, function (match, index) {
-    return typeof args[index] === 'undefined' ? match : args[index];
-  });
+    return template.replace(/{([0-9]+)}/g, function (match, index) {
+        return typeof args[index] === 'undefined' ? match : args[index];
+    });
 }
 
 @Component({
-  selector: 'app-result-map',
-  templateUrl: './result-map.component.html',
-  styleUrl: './result-map.component.css'
+    selector: 'app-result-map',
+    templateUrl: './result-map.component.html',
+    styleUrl: './result-map.component.css'
 })
 export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
-  @Input() inputDisplayObject!: DisplayObject;
-  @Input() inputDisplayDataUpdated!: boolean;
-
-  @ViewChild(GraphComponent) childGraph: GraphComponent;
-
-
-  mapLegendDiv: any;
-  mapGraphDiv: any;
-  mapGraphContainer: any;
-  graphOpen: boolean;
-
-  regionsColor: any = {};
-
-
-  private map;
-  layerMapOSM: any;
-  regionsLayer: any;
-  xydata: any;
-  displayType: string;
-  popup: any;
-  selectedArea:any;
-
-  constructor(private featureService: FeatureService) {
-    this.graphOpen = false;
-  } // END CONSTRUCTOR
-
-  ngOnChanges(changes: SimpleChanges) {
-    for (const propName in changes) {
-      // console.log('!!!!! !!!!! !!!!! !!!!! change in', propName, changes[propName].currentValue);
-      const change = changes[propName];
-      const valueCurrent = change.currentValue;
-      // const valuePrevious = change.previousValue;
-      if (propName === 'inputDisplayObject' && valueCurrent) {
-        console.log('ngOnChanges(), "inputDisplayObject":', valueCurrent);
-      }
-      if (propName === 'inputDisplayDataUpdated') { //  && valueCurrent
-        console.log('ngOnChanges(), "inputDisplayDataUpdated":', valueCurrent);
-        this.changeResultMap();
-      }
-    }
-  } // END FUNCTION ngOnChanges
-
-  ngOnInit(): void {
-    // console.log('ngOnInit() ... ');
-
-  } // END FUNCTION ngOnInit
-
-  ngAfterViewInit() {
-    // console.log('ngAfterViewInit() ...');
-
-    this.initResultMap();
-    /*
-    this.featureService.getRealXYData().subscribe((data) => {
-      //console.log('data=', data);
-      this.xydata = data;
-      this.plotData();
-    });
-    */
-
-  } // END FUNCTION ngAfterViewInit
-
-  initResultMap() {
-    this.map = L.map('resultMap');
-
-    // this.layerMapOSM = L.tileLayer(
-    //     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    //     {
-    //       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
-    //       minZoom: 0,
-    //       maxZoom: 19 // 21
-    //     });
-    // this.map.addLayer(this.layerMapOSM);
-
-    let Esri_WorldGrayCanvas = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-      attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
-      maxZoom: 16
-    });
-    this.map.addLayer(Esri_WorldGrayCanvas);
-    // let CartoDB_PositronNoLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
-    //   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    //   subdomains: 'abcd',
-    //   maxZoom: 20
-    // });
-    // this.map.addLayer(CartoDB_PositronNoLabels);
-
-    new LeafletControlLegend({position: 'bottomright'}).addTo(this.map);
-    this.mapLegendDiv = document.getElementById('map_legend_div');
-
-
-    let graph = new LeafletControlGraph({position: 'topright'}).addTo(this.map);
-    graph.addToggleButton(this.graphToggle.bind(this));
-
-    // console.log('id=', graph.getContainer().id);
-    // this.mapGraphDiv = document.getElementById(graph.getContainer().id);
-    this.mapGraphContainer = document.getElementById('map_graph_div');
-    this.mapGraphDiv = document.getElementById('map_graph_div_graph');
-    this.mapGraphDiv.innerHTML += '<canvas id="myChart" width="400px" height="400px"></canvas>';
-
-    this.hideLegend();
-    this.hideGraph();
-
-    new LeafletControlWatermark().addTo(this.map);
-
-    let mapButtonsDivLeft = new LeafletControlMapButtonsLeft().addTo(this.map);
-    // mapButtonsDivLeft.addButton(this.testToggle.bind(this), {id: 'mbl_0', mat_icon: 'near_me_disabled', title: 'start/stop navigatie', toggle: ['near_me', 'near_me_disabled']});
-    mapButtonsDivLeft.addButton(this.zoomMapToFit.bind(this), {
-      id: 'button_zoom_fit',
-      class: 'map_button_zoom_fit',
-      title: 'Show complete selection'
-    });
-    /*
-    mapButtonsDivLeft.addButton(this.consoleLogData.bind(this), {
-        id: 'button_zoom_fit',
-        mat_icon: 'terminal',
-        title: 'Log data in console ...'
-    });
-    */
-    //this.addMouseClick();
-    this.map.fitBounds(L.latLng(53.238, 6.536).toBounds(3000000));
-  } // END FUNCTION initResultMap
-
-
-
-  graphToggle(): void {
-    console.log('graphToggle() ...');
-    this.graphOpen = !this.graphOpen;
-    if (this.graphOpen) {
-      document.getElementById('map_graph_div_toggle_button').className = 'graphToggleContainerButtonRight';
-      document.getElementById('map_graph_div_graph_container').style.width = '420px';
-      //document.getElementById('map_graph_div_graph_container').style.height = '400px';
-    } else {
-      document.getElementById('map_graph_div_toggle_button').className = 'graphToggleContainerButtonLeft';
-      document.getElementById('map_graph_div_graph_container').style.width = '0px';
-      //document.getElementById('map_graph_div_graph_container').style.height = '400px';
-    }
-
-  } // END FUNCTION graphToggle
-
-
-
-
-
-
-  regionLayerMouseInfo(event) {
-    // console.log('REGIONS LAYER, event: ', event, event.originalEvent.clientX, event.originalEvent.clientY, event.type);
-
-
-
-    // this.regionsLayer.setFeatureStyle(properties['nuts_id'], {default: {
-    this.regionsLayer.setFeatureStyle(event.layer.properties['nuts_id'], {
-      default: {
-        weight: 3,
-        color: 'rgba(255,192,0,1)',
-        fillColor: event.layer.options.fillColor,
-        fill: true,
-        fillOpacity: 1,
-      }
-    });
-
-    let layer = event.layer;
-    layer.bringToFront();
-
-    // this.childGraph.highlightPoint([{ x: entity1, y: entity2 }]);
-    //this.childGraph.highlightPoint([{ x: 0, y: 85}]);
-    if (this.inputDisplayObject.displayType === 'bivariate'  &&  ['mouseover', 'click'].includes(event.type) ) {
-      this.childGraph.highlightPointById(event.layer.properties['nuts_id']);
-    }
-
-
-
-    let regionValues = this.inputDisplayObject.displayData.find(item => {return item.geo === event.layer.properties['nuts_id'];}) ?? {};
-    // console.log('REGIONS LAYER info: ', event.layer.properties['nuts_id'], regionValues);
-
-    let dataHtml = '';
-    if (this.inputDisplayObject.displayType === 'bivariate') {
-      dataHtml += this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr) + ': ' + (regionValues.x ?? 'EMPTY').toString() + '<br>';
-      dataHtml += this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr) + ': ' + (regionValues.y ?? 'EMPTY').toString() + '<br>';
-    } else {
-      dataHtml += this.legendLabel(this.inputDisplayObject.tableFields[this.inputDisplayObject.displayTableId].tableDescr) + ': ' + (regionValues.x ?? 'EMPTY').toString() + '<br>';
-    }
-
-
-
-
-
-
-    document.getElementById('gd_map_cursor_title').innerHTML = event.layer.properties['nuts_name'] + ' (' + event.layer.properties['nuts_id'] + ')';
-    document.getElementById('gd_map_cursor_data').innerHTML = dataHtml;
-    // document.getElementById('gd_map_cursor_graph').innerHTML = 'test-graph';
-
-
-    // let mapLeft = document.getElementById('resultMap').offsetLeft;
-    let mapLeft = document.getElementById('drawerRight').offsetWidth;
-    let mapTop = document.getElementById('matDrawerContainer').offsetTop;
-    let mapWidth = document.getElementById('resultMap').offsetWidth;
-    let mapHeight = document.getElementById('resultMap').offsetHeight;
-
-    // console.log('SIZES:', mapLeft, mapTop, mapWidth, mapHeight);
-
-    let cursorX = event.originalEvent.clientX;
-    let cursorY = event.originalEvent.clientY;
-
-    let infoX = cursorX - mapLeft; // + 20;
-    let infoY = cursorY - mapTop;
-    if (infoX > mapWidth/2) {
-      infoX = Math.max(infoX - 80 - document.getElementById('gd_map_cursor_info').offsetWidth, 10);
-    } else {
-      infoX = Math.min(infoX + 80, mapWidth - 10 - document.getElementById('gd_map_cursor_info').offsetWidth);
-    }
-    if (infoY > mapHeight/2) {
-      infoY = Math.min(infoY - (document.getElementById('gd_map_cursor_info').offsetHeight / 2), mapHeight - document.getElementById('gd_map_cursor_info').offsetHeight - 10);
-    } else {
-      infoY = Math.max(10, infoY - (document.getElementById('gd_map_cursor_info').offsetHeight / 2));
-    }
-
-    document.getElementById('gd_map_cursor_info').style.left = (infoX).toString() + 'px';
-    document.getElementById('gd_map_cursor_info').style.top = (infoY).toString() + 'px';
-
-
-    document.getElementById('gd_map_cursor_info').style.display = 'block';
-
-  } // END FUNCTION regionLayerMouseInfo
-
-  regionLayerMouseInfoClose(event) {
-    // console.log('REGIONS LAYER, event (CLOSE): ', event);
-
-    this.childGraph.removehighlight();
-
-    document.getElementById('gd_map_cursor_info').style.display = 'none';
-
-    this.regionsLayer.resetFeatureStyle(event.layer.properties['nuts_id']);
-
-  } // END FUNCTION regionLayerMouseInfoClose
-
-
-  changeResultMap() {
-    console.log('changeResultMap() ...');
-
-    this.displayType = this.inputDisplayObject.displayType;
-
-
-    // console.log(this.inputDisplayObject.tableFields[0].tableYear + ' ' + this.inputDisplayObject.tableFields[0].tableRegionLevel);
-    // if (valueCurrent === true) {
-    this.xydata = this.inputDisplayObject.displayData;
-
-    if (this.regionsLayer !== undefined) {
-      console.log('REMOVE regionsLayer');
-      this.map.removeLayer(this.regionsLayer);
-      this.hideGraph();
-    }
-
-    if (this.inputDisplayObject.displayData.length > 0) {
-      this.regionsLayer = RegionsLayer.getLayer(this.inputDisplayObject.tableFields[0].tableRegionLevel, this.inputDisplayObject.tableFields[0].tableYear);
-      if (typeof this.map !== 'undefined') {
-        console.log('ADD regionsLayer');
-        this.map.addLayer(this.regionsLayer);
-      }
-      /*
-      this.regionsLayer.on('click', (event) => {
-        console.log('click REGIONS LAYER: ', event);
-      });
-      */
-      this.regionsLayer.on({click: this.regionLayerMouseInfo.bind(this), mouseover: this.regionLayerMouseInfo.bind(this), mousemove: this.regionLayerMouseInfo.bind(this), mouseout: this.regionLayerMouseInfoClose.bind(this)});
-
-
-      this.plotData();
-      this.childGraph.ScatterPlot( {'xlabel': this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr),
-        'ylabel': this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr), 'xydata' : this.xydata});
-    } else {
-      //testdata
-      // this.featureService.getRealXYData().subscribe((data) => {
-      //   //console.log('data=', data);
-      //   if (this.regionsLayer !== undefined) {
-      //     this.map.removeLayer(this.regionsLayer);
-      //   }
-      //   this.regionsLayer = RegionsLayer.getLayer('2', '2018');
-      //   this.map.addLayer(this.regionsLayer);
-      //   this.xydata = data;
-      //
-      //   //this.setLegend({'type': 'bivariate','xlabel' : 'Deaths (Total)', 'ylabel' : 'Fertility Indicator'});
-      //   this.inputDisplayObject.tableFields[0].tableDescr = 'Unemployment Rate';
-      //   this.inputDisplayObject.tableFields[1].tableDescr = 'Life Expectancy';
-      //   this.plotData();
-      //   this.childGraph.ScatterPlot({'xydata': data,'xlabel' : this.inputDisplayObject.tableFields[0].tableDescr, 'ylabel' : this.inputDisplayObject.tableFields[1].tableDescr});
-      // });
-      // // NO DATA NO LEGEND ...
-      this.hideLegend();
-    }
-
-  } // END FUNCTION changeResultMap
-
-
-  resizeMap(): void {
-    // console.log('TEST: ', document.getElementById('map').offsetWidth);
-
-    this.map.invalidateSize(true);
-    // this.layerMap.redraw();
-
-  } // END FUNCTION resizeMap
-
-
-  public zoomMapToFit(): void {
-    // this.map.fitBounds(this.regionsLayer.getBounds());
-    this.map.fitBounds(L.latLng(53.238, 6.536).toBounds(3000000));
-  } // END FUNCTION zoomMapToFit
-
-
-  public consoleLogData() {
-    console.log('Current inputDisplayObject.displayData:', this.inputDisplayObject.displayData)
-  } // END FUNCTION consoleLogData
-
-
-  plotData() {
-    let result = this.xydata.reduce((map: { [x: string]: any; }, obj: { geo: string | number; }) => {
-      map[obj.geo] = obj;
-      return map;
-    }, {})
-
-    this.initLegend();
-
-    switch (this.displayType) {
-      case 'bivariate':
-        this.changeMapStyleBivariate(result);
-        this.showGraph();
-        break;
-
-      default:
-        this.changeMapStyleUnivariate(result);
+    @Input() inputDisplayObject!: DisplayObject;
+    @Input() inputDisplayDataUpdated!: boolean;
+
+    @ViewChild(GraphComponent) childGraph: GraphComponent;
+
+
+    mapLegendDiv: any;
+    mapGraphDiv: any;
+    mapGraphContainer: any;
+    graphOpen: boolean;
+    selectinformationDiv: any;
+
+    regionsColor: any = {};
+
+
+    private map;
+    layerMapOSM: any;
+    regionsLayer: any;
+    xydata: any;
+    displayType: string;
+    popup: any;
+    selectedArea: any;
+
+    constructor(private featureService: FeatureService) {
+        this.graphOpen = false;
+    } // END CONSTRUCTOR
+
+    ngOnChanges(changes: SimpleChanges) {
+        for (const propName in changes) {
+            // console.log('!!!!! !!!!! !!!!! !!!!! change in', propName, changes[propName].currentValue);
+            const change = changes[propName];
+            const valueCurrent = change.currentValue;
+            // const valuePrevious = change.previousValue;
+            if (propName === 'inputDisplayObject' && valueCurrent) {
+                console.log('ngOnChanges(), "inputDisplayObject":', valueCurrent);
+            }
+            if (propName === 'inputDisplayDataUpdated') { //  && valueCurrent
+                console.log('ngOnChanges(), "inputDisplayDataUpdated":', valueCurrent);
+                this.changeResultMap();
+            }
+        }
+    } // END FUNCTION ngOnChanges
+
+    ngOnInit(): void {
+        // console.log('ngOnInit() ... ');
+
+    } // END FUNCTION ngOnInit
+
+    ngAfterViewInit() {
+        // console.log('ngAfterViewInit() ...');
+
+        this.initResultMap();
+        /*
+        this.featureService.getRealXYData().subscribe((data) => {
+          //console.log('data=', data);
+          this.xydata = data;
+          this.plotData();
+        });
+        */
+
+    } // END FUNCTION ngAfterViewInit
+
+    initResultMap() {
+        this.map = L.map('resultMap');
+
+        // this.layerMapOSM = L.tileLayer(
+        //     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        //     {
+        //       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
+        //       minZoom: 0,
+        //       maxZoom: 19 // 21
+        //     });
+        // this.map.addLayer(this.layerMapOSM);
+
+        let Esri_WorldGrayCanvas = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+            maxZoom: 16
+        });
+        this.map.addLayer(Esri_WorldGrayCanvas);
+
+        new LeafletControlLegend({position: 'bottomright'}).addTo(this.map);
+        this.mapLegendDiv = document.getElementById('map_legend_div');
+
+
+        let graph = new LeafletControlGraph({position: 'topright'}).addTo(this.map);
+        graph.addToggleButton(this.graphToggle.bind(this));
+
+        //let selectinformation = new LeafletControlSelectInformation({position: 'topright'}).addTo(this.map);
+        //this.selectinformationDiv = document.getElementById(selectinformation.getContainer().id);
+
+        // console.log('id=', graph.getContainer().id);
+        // this.mapGraphDiv = document.getElementById(graph.getContainer().id);
+        this.mapGraphContainer = document.getElementById('map_graph_div');
+        this.mapGraphDiv = document.getElementById('map_graph_div_graph');
+        this.mapGraphDiv.innerHTML += '<canvas id="myChart" width="400px" height="400px"></canvas>';
+
+        this.hideLegend();
         this.hideGraph();
-        break;
-    }
-    // this.addMouseClick(result);
-    // this.addMouseOver(result);
 
-  } // END FUNCTION plotData
+        new LeafletControlWatermark().addTo(this.map);
 
-
-  changeMapStyleUnivariate(mapdata: any) {
-    let unknown = [];
-    let xdata = this.xydata.map((item: any) => Number(item.x)).filter(Number);
-    // console.log('UNI xdata:', xdata);
-    let xmax = Math.max(...xdata);
-    let xmin = Math.min(...xdata);
-    console.log(xmin, xmax);
-    this.regionsLayer.options.vectorTileLayerStyles.default = ((properties: any) => {
-      let entity1 = 0;
-      if (mapdata[properties['nuts_id']] != undefined) {
-        entity1 = +mapdata[properties['nuts_id']].x;
-      } else {
-        unknown.push(properties['nuts_id']);
-      }
-
-      let fillColor = this.getColorUnivariate(entity1, xmin, xmax);
-      return {
-        fill: true, fillColor: fillColor, fillOpacity: 1,
-        color: 'rgba(185,178,178,0.8)', opacity: 1, weight: 0.5,
-      };
-    })
-    this.regionsLayer.redraw();
-
-    this.setLegend({
-      'type': 'univariate',
-      'xlabel': this.inputDisplayObject.tableFields[0].tableDescr,
-      'xmin': xmin,
-      'xmax': xmax
-    });
-
-    console.log('nuts_ids not found', unknown);
-  } // END FUNCTION changeMapStyleUnivariate
-
-  getColorUnivariate(xvalue: number, xmin: number, xmax: number): any {
-    //console.log('getColorUnivariate():', xvalue, xmin, xmax);
-
-    let colorIndex = Math.floor((xvalue - xmin) / ((xmax - xmin) / colorsUnivariate.length));
-    if (xvalue === 0) {
-      return '#FFFFFF';
-    }
-    return colorsUnivariate[colorIndex];
-  } // END FUNCTION getColorUnivariate
+        let mapButtonsDivLeft = new LeafletControlMapButtonsLeft().addTo(this.map);
+        // mapButtonsDivLeft.addButton(this.testToggle.bind(this), {id: 'mbl_0', mat_icon: 'near_me_disabled', title: 'start/stop navigatie', toggle: ['near_me', 'near_me_disabled']});
+        mapButtonsDivLeft.addButton(this.zoomMapToFit.bind(this), {
+            id: 'button_zoom_fit',
+            class: 'map_button_zoom_fit',
+            title: 'Show complete selection'
+        });
+        /*
+        mapButtonsDivLeft.addButton(this.consoleLogData.bind(this), {
+            id: 'button_zoom_fit',
+            mat_icon: 'terminal',
+            title: 'Log data in console ...'
+        });
+        */
+        //this.addMouseClick();
+        this.map.fitBounds(L.latLng(53.238, 6.536).toBounds(3000000));
+    } // END FUNCTION initResultMap
 
 
-  changeMapStyleBivariate(mapdata: any) {
-    let unknown = [];
-    let xdata = this.xydata.map((item: any) => Number(item.x)).filter(Number);
-    let ydata = this.xydata.map((item: any) => item.y).filter(Number);
-    //console.log(xdata);
-    //console.log('BI xdata:', xdata);
-    //console.log('BI ydata:', ydata);
-    let xmax = Math.max(...xdata);
-    let ymax = Math.max(...ydata);
-    let ymin = Math.min(...ydata);
-    let xmin = Math.min(...xdata);
-    //console.log(xmin, xmax, ymin, ymax);
-    this.regionsLayer.options.vectorTileLayerStyles.default = ((properties: any) => {
-      let entity1 = 0;
-      let entity2 = 0;
-      if (mapdata[properties['nuts_id']] != undefined) {
-        entity1 = +mapdata[properties['nuts_id']].x;
-        entity2 = +mapdata[properties['nuts_id']].y;
-      } else {
-        unknown.push(properties['nuts_id']);
-      }
-
-      let fillColor = this.getColorBivariate(entity1, xmin, xmax, entity2, ymin, ymax);
-      this.regionsColor[properties['nuts_id']] = fillColor;
-      //console.log('fillColor', fillColor);
-      //console.log('properties', properties);
-
-      // if (properties['nuts_id'] === 'PL41') {
-      //   console.log('CHECK WAARDEN:', properties['nuts_id'], fillColor, mapdata[properties['nuts_id']].x, mapdata[properties['nuts_id']].y, xmin, xmax, ymin, ymax);
-      // }
-      return {
-        fill: true, fillColor: fillColor, fillOpacity: 1,
-        // color: 'rgba(185,178,178,0.8)', opacity: 1, weight: 0.5,
-        color: 'rgb(185,178,178)', opacity: 1, weight: 0.5,
-      };
-    })
-    this.regionsLayer.redraw();
-
-    this.setLegend({
-      'type': 'bivariate',
-      'xlabel': this.inputDisplayObject.tableFields[0].tableDescr,
-      'ylabel': this.inputDisplayObject.tableFields[1].tableDescr
-    });
-
-    console.log('nuts_ids not found', unknown);
-  } // END FUNCTION changeMapStyleBivariate
-
-
-  getColorBivariate(xvalue: number, xmin: number, xmax: number, yvalue: number, ymin: number, ymax: number): any {
-    //console.log('xvalue, xmin, xmax, yvalue, ymin, ymax',xvalue, xmin, xmax, yvalue, ymin, ymax);
-
-    if (xvalue === undefined  ||  yvalue === undefined  ||  typeof xvalue === 'undefined'  ||  typeof yvalue === 'undefined'  ||  xvalue === 0 || yvalue === 0  ||  xvalue === null || yvalue === null) {
-      return '#FFFFFF';
-    }
-
-    let index1 = Math.max(Math.ceil((xvalue - xmin) / ((xmax - xmin) / 3)), 1);
-    let index2 = Math.max(Math.ceil((yvalue - ymin) / ((ymax - ymin) / 3)), 1);
-
-    return colorsBivariate[index2.toString() + index1.toString()];
-  } // END FUNCTION getColorBivariate
-
-
-  addMouseOver(popupdata: any): any {
-    this.regionsLayer.on('mouseover', ((event: { layer: { properties: any; }; latlng: L.LatLngExpression; }) => {
-      //console.log('click', event);
-      const properties = event.layer.properties;
-      //console.log('properties', properties)
-      if (properties) {
-        this.selectedArea = properties['nuts_id'];
-        //console.log('properties', properties['nuts_id']);
-        let content = `<h3>${properties.nuts_name || 'Unknown'} (${properties.nuts_id})</h3>`;  // Assume that your data might contain a "name" field
-        let entity1 = 'no data';
-        if (popupdata[properties['nuts_id']] != 'null') {
-          entity1 = popupdata[properties['nuts_id']].x;
-        }
-        let entity2 = 'no data';
-        if (popupdata[properties['nuts_id']] != 'null') {
-          entity2 = popupdata[properties['nuts_id']].y;
-        }
-        content += '<div>' + this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr) + ':'  + entity1 + '</div>';
-        content += '<div>' + this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr) + ':'  + entity2 + '</div>';
-        this.regionsLayer.setFeatureStyle(properties['nuts_id'], {default: {
-            weight: 3,
-            color: 'rgba(185,178,178,0.8)',
-            fillOpacity: 0
-          }});
-        this.childGraph.highlightPoint([{ x: entity1, y: entity2 }]);
-        // You can place the popup at the event latlng or on the layer.
-        this.popup = L.popup()
-          .setContent(content)
-          .setLatLng(event.latlng)
-          .openOn(this.map);
-      } else {
-        // L.popup().close();
-      }
-
-    }));
-
-    this.regionsLayer.on('mouseout',  (event) => {
-      this.map.closePopup(this.popup);
-      this.regionsLayer.resetFeatureStyle(this.selectedArea);
-    });
-  }
-
-  addMouseClick(popupdata) : any {
-    this.regionsLayer.on('click', (event) => {
-
-      const properties = event.layer.properties;
-      if (properties) {
-        console.log('clicked:' + properties['nuts_id']);
-        let entity1, entity2 = 'no data';
-        if (popupdata[properties['nuts_id']] != 'null') {
-          entity1 = popupdata[properties['nuts_id']].x;
+    graphToggle(): void {
+        console.log('graphToggle() ...');
+        this.graphOpen = !this.graphOpen;
+        if (this.graphOpen) {
+            document.getElementById('map_graph_div_toggle_button').className = 'graphToggleContainerButtonRight';
+            document.getElementById('map_graph_div_graph_container').style.width = '420px';
+            //document.getElementById('map_graph_div_graph_container').style.height = '400px';
+        } else {
+            document.getElementById('map_graph_div_toggle_button').className = 'graphToggleContainerButtonLeft';
+            document.getElementById('map_graph_div_graph_container').style.width = '0px';
+            //document.getElementById('map_graph_div_graph_container').style.height = '400px';
         }
 
-        if (popupdata[properties['nuts_id']] != 'null') {
-          entity2 = popupdata[properties['nuts_id']].y;
-        }
-        this.selectedArea = properties['nuts_id'];
+    } // END FUNCTION graphToggle
 
-      }
-      //L.DomEvent.stop(event);
 
-    });
-  }
+    regionLayerMouseInfo(event) {
+        // console.log('REGIONS LAYER, event: ', event, event.originalEvent.clientX, event.originalEvent.clientY, event.type);
 
 
-  hideLegend() {
-    if (this.mapLegendDiv !== undefined) {
-      this.mapLegendDiv!.style.display = 'none';
-    }
-
-
-  } // END FUNCTION hideLegend
-
-  initLegend() {
-    this.mapLegendDiv.style.display = 'block';
-
-    this.mapLegendDiv.innerHTML = '';
-  } // END FUNCTION initLegend
-
-  hideGraph() {
-    this.graphOpen = false;
-    document.getElementById('map_graph_div_graph_container').style.width = '0px';
-    this.mapGraphContainer.style.display = 'none';
-  }
-
-  showGraph() {
-    this.graphOpen = true;
-    document.getElementById('map_graph_div_graph_container').style.width = '420px';
-    document.getElementById('map_graph_div_toggle_button').className = 'graphToggleContainerButtonRight';
-    this.mapGraphContainer.style.display = 'block';
-  }
-
-  setLegend(info): any {
-
-
-    const legendType = info.type;
-
-    console.log('setLegend()', legendType);
-
-
-    // this.mapLegendDiv.innerHTML = '<h4>Legend</h4>';
-    let legendHeader = document.createElement('h4');
-    legendHeader.setAttribute('class', 'legendHeader');
-    legendHeader.innerHTML = 'Legend';
-    this.mapLegendDiv.appendChild(legendHeader);
-
-    switch (legendType) {
-
-      case 'univariate':
-        this.uniVariateLegend(info);
-        break;
-
-      case 'bivariate':
-        this.biVariateLegend(info);
-
-        break;
-
-      default:
-        this.mapLegendDiv.innerHTML += 'unknown legend type \'' + legendType + '\'';
-
-        break;
-    } // END SWITCH legendType
-
-  } // END FUNCTION setLegend
-
-  private biVariateLegend(info: any) {
-    const xmlns = 'http://www.w3.org/2000/svg';
-    let svgWidth = 250;
-    let svgHeight = 210;
-
-    let containerSvg = document.createElementNS(xmlns, 'svg');
-    this.mapLegendDiv.appendChild(containerSvg);
-    containerSvg.setAttributeNS(null, 'class', 'legendSvgGraph');
-    containerSvg.setAttributeNS(null, 'width', svgWidth.toString());
-    containerSvg.setAttributeNS(null, 'height', svgHeight.toString());
-    containerSvg.setAttributeNS(null, 'viewBox', '0 0 ' + svgWidth + ' ' + svgHeight);
-
-    /*
-    let bg = document.createElementNS(xmlns, 'rect');
-    containerSvg.appendChild(bg);
-    bg.setAttributeNS(null, 'fill', '#ffffff');
-    bg.setAttributeNS(null, 'opacity', '0.5');
-    bg.setAttributeNS(null, 'width', svgWidth.toString());
-    bg.setAttributeNS(null, 'height', svgHeight.toString());
-    // bg.addEventListener('mouseover', legendBlockMouseOut);
-    */
-
-
-    for (let x = 1; x <= 3; x++) {
-      for (let y = 1; y <= 3; y++) {
-        // context.beginPath();
-        // context.fillStyle = colorsBivariate[x.toString() + y.toString()];
-        let blockPath = document.createElementNS(xmlns, 'path');
-        containerSvg.appendChild(blockPath);
-        let startX = Math.floor((svgWidth / 2) + (x * 26) - (y * 26));
-        let startY = Math.floor(svgHeight + 35 - (x * 26) - (y * 26));
-
-        let path = 'M ' + (startX).toString() + ' ' + (startY).toString() + ' L ' + (startX - 25).toString() + ' ' + (startY - 25).toString() + ' L ' + (startX).toString() + ' ' + (startY - 50).toString() + ' L ' + (startX + 25).toString() + ' ' + (startY - 25).toString() + ' z';
-        blockPath.id = 'legendBlock_' + x.toString() + '_' + y.toString();
-        blockPath.setAttributeNS(null, 'stroke', '#000000');
-        blockPath.setAttributeNS(null, 'stroke-width', '2');
-        blockPath.setAttributeNS(null, 'stroke-opacity', '0');
-        blockPath.setAttributeNS(null, 'opacity', '1');
-        blockPath.setAttributeNS(null, 'fill', colorsBivariate[y.toString() + x.toString()]);
-        blockPath.setAttributeNS(null, 'd', path);
-        blockPath.setAttributeNS(null, 'title',
-          formatString(titlesBivariate[x.toString() + y.toString()], this.legendLabel(info.xlabel), this.legendLabel(info.ylabel)));
-
-        blockPath.addEventListener('click', this.legendBlockMouseOver);
-        blockPath.addEventListener('mouseover', this.legendBlockMouseOver);
-        blockPath.addEventListener('mouseout', this.legendBlockMouseOut);
-
-
-      }
-    }
-
-    let blockIndicator = document.createElementNS(xmlns, 'path');
-    containerSvg.appendChild(blockIndicator);
-    // let indicatorPath = 'M ' + (-100).toString() + ' ' + (-100).toString() + ' L ' + (-100 - 25).toString() + ' ' + (-100 - 25).toString() + ' L ' + (-100).toString() + ' ' + (-100 - 50).toString() + ' L ' + (-100 + 25).toString() + ' ' + (-100 - 25).toString() +' z';
-    let indicatorPath = 'M -100 -100 L -125 -125 L -100 -150 L -75 -125 z';
-    blockIndicator.id = 'legendBlockIndicator';
-    blockIndicator.setAttributeNS(null, 'stroke', '#000000');
-    blockIndicator.setAttributeNS(null, 'stroke-width', '2');
-    blockIndicator.setAttributeNS(null, 'stroke-opacity', '1');
-    blockIndicator.setAttributeNS(null, 'opacity', '1');
-    blockIndicator.setAttributeNS(null, 'fill', '#ffffff');
-    blockIndicator.setAttributeNS(null, 'fill-opacity', '0');
-    blockIndicator.setAttributeNS(null, 'd', indicatorPath);
-
-
-    let textPredictor = document.createElementNS(xmlns, 'text');
-    containerSvg.appendChild(textPredictor);
-    textPredictor.setAttributeNS(null, 'x', Math.floor(3 * svgWidth / 4).toString());
-    textPredictor.setAttributeNS(null, 'y', Math.floor(3 * svgHeight / 4).toString());
-    textPredictor.setAttributeNS(null, 'fill', '#000000');
-    textPredictor.setAttributeNS(null, 'text-anchor', 'middle');
-    textPredictor.setAttributeNS(null, 'font-weight', 'bold');
-    textPredictor.setAttributeNS(null, 'font-size', '12px');
-    textPredictor.setAttributeNS(null, 'transform', 'rotate(-45, ' + Math.floor(3 * svgWidth / 4).toString() + ', ' + Math.floor(3 * svgHeight / 4).toString() + ')');
-    textPredictor.innerHTML = this.legendLabel(info.xlabel )+ ' &#11166;';
-
-    let textOutcome = document.createElementNS(xmlns, 'text');
-    containerSvg.appendChild(textOutcome);
-    textOutcome.setAttributeNS(null, 'x', Math.floor(1 * svgWidth / 4).toString());
-    textOutcome.setAttributeNS(null, 'y', Math.floor(3 * svgHeight / 4).toString());
-    textOutcome.setAttributeNS(null, 'fill', '#000000');
-    textOutcome.setAttributeNS(null, 'text-anchor', 'middle');
-    textOutcome.setAttributeNS(null, 'font-weight', 'bold');
-    textOutcome.setAttributeNS(null, 'font-size', '12px');
-    textOutcome.setAttributeNS(null, 'transform', 'rotate(45, ' + Math.floor(1 * svgWidth / 4).toString() + ', ' + Math.floor(3 * svgHeight / 4).toString() + ')');
-    textOutcome.innerHTML = '&#11164; ' + this.legendLabel(info.ylabel);
-
-
-    let textExplain0 = document.createElementNS(xmlns, 'text');
-    containerSvg.appendChild(textExplain0);
-    textExplain0.id = 'legendTextExplain0';
-    textExplain0.setAttributeNS(null, 'x', '30'); //Math.floor(1 * svgWidth / 2).toString());
-    textExplain0.setAttributeNS(null, 'y', '14');
-    textExplain0.setAttributeNS(null, 'fill', '#000000');
-    //textExplain0.setAttributeNS(null, 'text-anchor', 'middle');
-    textExplain0.setAttributeNS(null, 'font-weight', 'bold');
-    //textExplain0.setAttributeNS(null, 'font-style', 'italic');
-    textExplain0.setAttributeNS(null, 'font-size', '12px');
-    textExplain0.setAttributeNS(null, 'height', '4em');
-    textExplain0.innerHTML = 'Select a colored block to see ';
-
-    let textExplain1 = document.createElementNS(xmlns, 'text');
-    containerSvg.appendChild(textExplain1);
-    textExplain1.id = 'legendTextExplain1';
-    textExplain1.setAttributeNS(null, 'x', '30'); // Math.floor(1 * svgWidth / 2).toString());
-    textExplain1.setAttributeNS(null, 'y', '28');
-    textExplain1.setAttributeNS(null, 'fill', '#000000');
-    //textExplain1.setAttributeNS(null, 'text-anchor', 'middle');
-    textExplain1.setAttributeNS(null, 'font-weight', 'bold');
-    //textExplain1.setAttributeNS(null, 'font-style', 'italic');
-    textExplain1.setAttributeNS(null, 'font-size', '12px');
-    textExplain1.setAttributeNS(null, 'height', '4em');
-    textExplain1.innerHTML = 'its meaning';
-
-
-
-
-  } // END FUNCTION biVariateLegend
-
-  private uniVariateLegend(info: any) {
-
-    let legendValueDescrLine = document.createElement('div');
-    this.mapLegendDiv.appendChild(legendValueDescrLine);
-    legendValueDescrLine.innerHTML = this.legendLabel(this.inputDisplayObject.tableFields[this.inputDisplayObject.displayTableId].tableDescr) + ':';
-    legendValueDescrLine.style.fontWeight = 'bold';
-    legendValueDescrLine.style.marginBottom = '0.5em';
-
-
-    let colorStep = ((info.xmax - info.xmin) / colorsUnivariate.length);
-    let colorsUnivariateReverse = colorsUnivariate.slice().reverse();
-
-    let toFixedNumber = 0;
-    if (colorStep < 10) {
-      toFixedNumber = 1;
-      if (colorStep < 1) {
-        toFixedNumber = 2;
-        if (colorStep < 0.1) {
-          toFixedNumber = 3;
-        }
-      }
-    }
-
-    colorsUnivariateReverse.forEach((color, index) => {
-      let indexReverseFrom = colorsUnivariate.length - index - 1;
-      let indexReverseTo = colorsUnivariate.length - index;
-      // this.mapLegendDiv.innerHTML += '<div class="legendColorBlock" style="background-color: ' + color + '"></div> ' + (info.xmin + (colorStep * indexReverseFrom)).toFixed(toFixedNumber) + ' - ' + (info.xmin + (colorStep * indexReverseTo)).toFixed(toFixedNumber) + '<br>\n';
-
-      let legendLine = document.createElement('div');
-      legendLine.setAttribute('class', 'legendLine');
-      this.mapLegendDiv.appendChild(legendLine);
-
-      let legendBlock = document.createElement('div');
-      legendBlock.setAttribute('class', 'legendColorBlock');
-      legendBlock.style.backgroundColor = color;
-      legendLine.appendChild(legendBlock);
-
-      let legendText = document.createElement('div');
-      legendText.setAttribute('class', 'legendColorText');
-      legendText.innerHTML = (info.xmin + (colorStep * indexReverseFrom)).toFixed(toFixedNumber) + ' - ' + (info.xmin + (colorStep * indexReverseTo)).toFixed(toFixedNumber);
-      legendLine.appendChild(legendText);
-
-
-    });
-  } // END FUNCTION uniVariateLegend
-
-
-
-  legendLabel(text: string): string {
-    let label = '';
-    let textparts = text.split(' ');
-    if (textparts.length > 1) {
-      label = textparts[0] + ' ' + textparts[1].replace('by', '');
-    }
-    return label;
-  }
-
-
-
-  legendBlockMouseOver(e) {
-    //console.log('legendBlockMouseOver(), event:', e.target.id);
-    console.log('legendBlockMouseOver(), event:', e.type);
-
-
-    if (e.type === 'click') {
-      // reset other blocks ...
-      console.log('reset other blocks', e.target.id);
-      for (let x of ['1', '2', '3']) {
-        for (let y of ['1', '2', '3'] ) {
-          document.getElementById('legendBlock_' + x + '_' + y).setAttributeNS(null, 'stroke-opacity', '0');
-        }
-      }
-    }
-
-
-    document.getElementById(e.target.id).setAttributeNS(null, 'stroke-opacity', '1');
-
-    //console.log('TEST:', document.getElementById(e.target.id).getAttributeNS(null, 'd'));
-    // document.getElementById('legendBlockIndicator').setAttributeNS(null, 'd', document.getElementById(e.target.id).getAttributeNS(null, 'd') );
-
-    let titleParts = document.getElementById(e.target.id).getAttributeNS(null, 'title').split('|');
-
-    document.getElementById('legendTextExplain0').innerHTML = titleParts[0].trim();
-    document.getElementById('legendTextExplain1').innerHTML = titleParts[1].trim();
-
-  } // END FUNCTION legendBlockMouseOver
-
-  legendBlockMouseOut(e) {
-    //console.log('legendBlockMouseOut(), event:', e.target.id);
-    document.getElementById(e.target.id).setAttributeNS(null, 'stroke-opacity', '0');
-
-    // document.getElementById('legendBlockIndicator').setAttributeNS(null, 'd', 'M -100 -100 L -125 -125 L -100 -150 L -75 -125 z' );
-
-    //document.getElementById('legendTextExplain0').innerHTML = 'Select a colored block to see ';
-    //document.getElementById('legendTextExplain1').innerHTML = 'its meaning';
-    document.getElementById('legendTextExplain0').innerHTML = '';
-    document.getElementById('legendTextExplain1').innerHTML = '';
-
-  } // END FUNCTION legendBlockMouseOut
-
-
-    newCode($event: any) {
-
-      console.log('code', $event, this.regionsColor[$event]);
-      this.regionsLayer.setFeatureStyle($event, {
-          default: {
-            weight: 3,
-            color: 'rgba(255,192,0,1)',
-            fillColor: this.regionsColor[$event],
-            fill: true,
-            fillOpacity: 1,
-          }
+        // this.regionsLayer.setFeatureStyle(properties['nuts_id'], {default: {
+        this.regionsLayer.setFeatureStyle(event.layer.properties['nuts_id'], {
+            default: {
+                weight: 3,
+                color: 'rgba(255,192,0,1)',
+                fillColor: event.layer.options.fillColor,
+                fill: true,
+                fillOpacity: 1,
+            }
         });
 
-      setTimeout( () => this.regionsLayer.resetFeatureStyle($event), 3000);
+        let layer = event.layer;
+        layer.bringToFront();
+
+        // this.childGraph.highlightPoint([{ x: entity1, y: entity2 }]);
+        //this.childGraph.highlightPoint([{ x: 0, y: 85}]);
+        if (this.inputDisplayObject.displayType === 'bivariate' && ['mouseover', 'click'].includes(event.type)) {
+            this.childGraph.highlightPointById(event.layer.properties['nuts_id']);
+        }
+
+
+        let regionValues = this.inputDisplayObject.displayData.find(item => {
+            return item.geo === event.layer.properties['nuts_id'];
+        }) ?? {};
+        // console.log('REGIONS LAYER info: ', event.layer.properties['nuts_id'], regionValues);
+
+        let dataHtml = '';
+        if (this.inputDisplayObject.displayType === 'bivariate') {
+            dataHtml += this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr) + ': ' + (regionValues.x ?? 'EMPTY').toString() + '<br>';
+            dataHtml += this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr) + ': ' + (regionValues.y ?? 'EMPTY').toString() + '<br>';
+        } else {
+            dataHtml += this.legendLabel(this.inputDisplayObject.tableFields[this.inputDisplayObject.displayTableId].tableDescr) + ': ' + (regionValues.x ?? 'EMPTY').toString() + '<br>';
+        }
+
+
+        document.getElementById('gd_map_cursor_title').innerHTML = event.layer.properties['nuts_name'] + ' (' + event.layer.properties['nuts_id'] + ')';
+        document.getElementById('gd_map_cursor_data').innerHTML = dataHtml;
+        // document.getElementById('gd_map_cursor_graph').innerHTML = 'test-graph';
+
+
+        // let mapLeft = document.getElementById('resultMap').offsetLeft;
+        let mapLeft = document.getElementById('drawerRight').offsetWidth;
+        let mapTop = document.getElementById('matDrawerContainer').offsetTop;
+        let mapWidth = document.getElementById('resultMap').offsetWidth;
+        let mapHeight = document.getElementById('resultMap').offsetHeight;
+
+        // console.log('SIZES:', mapLeft, mapTop, mapWidth, mapHeight);
+
+        let cursorX = event.originalEvent.clientX;
+        let cursorY = event.originalEvent.clientY;
+
+        let infoX = cursorX - mapLeft; // + 20;
+        let infoY = cursorY - mapTop;
+        if (infoX > mapWidth / 2) {
+            infoX = Math.max(infoX - 80 - document.getElementById('gd_map_cursor_info').offsetWidth, 10);
+        } else {
+            infoX = Math.min(infoX + 80, mapWidth - 10 - document.getElementById('gd_map_cursor_info').offsetWidth);
+        }
+        if (infoY > mapHeight / 2) {
+            infoY = Math.min(infoY - (document.getElementById('gd_map_cursor_info').offsetHeight / 2), mapHeight - document.getElementById('gd_map_cursor_info').offsetHeight - 10);
+        } else {
+            infoY = Math.max(10, infoY - (document.getElementById('gd_map_cursor_info').offsetHeight / 2));
+        }
+
+        document.getElementById('gd_map_cursor_info').style.left = (infoX).toString() + 'px';
+        document.getElementById('gd_map_cursor_info').style.top = (infoY).toString() + 'px';
+
+
+        document.getElementById('gd_map_cursor_info').style.display = 'block';
+
+    } // END FUNCTION regionLayerMouseInfo
+
+    regionLayerMouseInfoClose(event) {
+        // console.log('REGIONS LAYER, event (CLOSE): ', event);
+
+        this.childGraph.removehighlight();
+
+        document.getElementById('gd_map_cursor_info').style.display = 'none';
+
+        this.regionsLayer.resetFeatureStyle(event.layer.properties['nuts_id']);
+
+    } // END FUNCTION regionLayerMouseInfoClose
+
+
+    changeResultMap() {
+        console.log('changeResultMap() ...');
+
+        this.displayType = this.inputDisplayObject.displayType;
+
+
+        // console.log(this.inputDisplayObject.tableFields[0].tableYear + ' ' + this.inputDisplayObject.tableFields[0].tableRegionLevel);
+        // if (valueCurrent === true) {
+        this.xydata = this.inputDisplayObject.displayData;
+
+        if (this.regionsLayer !== undefined) {
+            console.log('REMOVE regionsLayer');
+            this.map.removeLayer(this.regionsLayer);
+            this.hideGraph();
+        }
+
+        if (this.inputDisplayObject.displayData.length > 0) {
+            this.regionsLayer = RegionsLayer.getLayer(this.inputDisplayObject.tableFields[0].tableRegionLevel, this.inputDisplayObject.tableFields[0].tableYear);
+            if (typeof this.map !== 'undefined') {
+                console.log('ADD regionsLayer');
+                this.map.addLayer(this.regionsLayer);
+            }
+            /*
+            this.regionsLayer.on('click', (event) => {
+              console.log('click REGIONS LAYER: ', event);
+            });
+            */
+            this.regionsLayer.on({
+                click: this.regionLayerMouseInfo.bind(this),
+                mouseover: this.regionLayerMouseInfo.bind(this),
+                mousemove: this.regionLayerMouseInfo.bind(this),
+                mouseout: this.regionLayerMouseInfoClose.bind(this)
+            });
+
+
+            this.plotData();
+            this.childGraph.ScatterPlot({
+                'xlabel': this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr),
+                'ylabel': this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr), 'xydata': this.xydata
+            });
+            this.showSelections();
+        } else {
+            //testdata
+            // this.featureService.getRealXYData().subscribe((data) => {
+            //   //console.log('data=', data);
+            //   if (this.regionsLayer !== undefined) {
+            //     this.map.removeLayer(this.regionsLayer);
+            //   }
+            //   this.regionsLayer = RegionsLayer.getLayer('2', '2018');
+            //   this.map.addLayer(this.regionsLayer);
+            //   this.xydata = data;
+            //
+            //   //this.setLegend({'type': 'bivariate','xlabel' : 'Deaths (Total)', 'ylabel' : 'Fertility Indicator'});
+            //   this.inputDisplayObject.tableFields[0].tableDescr = 'Unemployment Rate';
+            //   this.inputDisplayObject.tableFields[1].tableDescr = 'Life Expectancy';
+            //   this.plotData();
+            //   this.childGraph.ScatterPlot({'xydata': data,'xlabel' : this.inputDisplayObject.tableFields[0].tableDescr, 'ylabel' : this.inputDisplayObject.tableFields[1].tableDescr});
+            // });
+            // // NO DATA NO LEGEND ...
+            this.hideLegend();
+        }
+
+    } // END FUNCTION changeResultMap
+
+    showSelections(): void {
+        let html = '<table>';
+        html += '<tr>';
+        html += '<th colspan="2">' + this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr) + '</th>'
+        html += '<th colspan="2">' + this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr) + '</th>'
+        html += '</tr>';
+        html += '<tr>';
+        html += '<td>';
+        //first table
+        html += this.showKeyvalues(this.inputDisplayObject.tableFields[0].Selections);
+        html += '</td>';
+        html += '<td>';
+        //second table
+        html += this.showKeyvalues(this.inputDisplayObject.tableFields[1].Selections);
+        html += '</td>';
+        html += '</tr>';
+        html += '</table>'
+        this.selectinformationDiv.innerHTML = html;
+    }
+
+    showKeyvalues(Selections: any) : string {
+        console.log(Selections);
+        if (Selections === undefined) { return '';}
+        let html = '<table>';
+        Object.keys(Selections).forEach((key) => {
+            html += '<tr>'
+            html += '<td>';
+            html += key;
+            html += '</td>';
+            html += '<td>';
+            html += Selections[key];
+            html += '</td>';
+            html += '</tr>';
+        })
+
+        html += '</table>'
+        return html;
+    }
+
+    resizeMap(): void {
+        // console.log('TEST: ', document.getElementById('map').offsetWidth);
+
+        this.map.invalidateSize(true);
+        // this.layerMap.redraw();
+
+    } // END FUNCTION resizeMap
+
+
+    public zoomMapToFit(): void {
+        // this.map.fitBounds(this.regionsLayer.getBounds());
+        this.map.fitBounds(L.latLng(53.238, 6.536).toBounds(3000000));
+    } // END FUNCTION zoomMapToFit
+
+
+    public consoleLogData() {
+        console.log('Current inputDisplayObject.displayData:', this.inputDisplayObject.displayData)
+    } // END FUNCTION consoleLogData
+
+
+    plotData() {
+        let result = this.xydata.reduce((map: { [x: string]: any; }, obj: { geo: string | number; }) => {
+            map[obj.geo] = obj;
+            return map;
+        }, {})
+
+        this.initLegend();
+
+        switch (this.displayType) {
+            case 'bivariate':
+                this.changeMapStyleBivariate(result);
+                this.showGraph();
+                break;
+
+            default:
+                this.changeMapStyleUnivariate(result);
+                this.hideGraph();
+                break;
+        }
+        // this.addMouseClick(result);
+        // this.addMouseOver(result);
+
+    } // END FUNCTION plotData
+
+
+    changeMapStyleUnivariate(mapdata: any) {
+        let unknown = [];
+        let xdata = this.xydata.map((item: any) => Number(item.x)).filter(Number);
+        // console.log('UNI xdata:', xdata);
+        let xmax = Math.max(...xdata);
+        let xmin = Math.min(...xdata);
+        console.log(xmin, xmax);
+        this.regionsLayer.options.vectorTileLayerStyles.default = ((properties: any) => {
+            let entity1 = 0;
+            if (mapdata[properties['nuts_id']] != undefined) {
+                entity1 = +mapdata[properties['nuts_id']].x;
+            } else {
+                unknown.push(properties['nuts_id']);
+            }
+
+            let fillColor = this.getColorUnivariate(entity1, xmin, xmax);
+            return {
+                fill: true, fillColor: fillColor, fillOpacity: 1,
+                color: 'rgba(185,178,178,0.8)', opacity: 1, weight: 0.5,
+            };
+        })
+        this.regionsLayer.redraw();
+
+        this.setLegend({
+            'type': 'univariate',
+            'xlabel': this.inputDisplayObject.tableFields[0].tableDescr,
+            'xmin': xmin,
+            'xmax': xmax
+        });
+
+        console.log('nuts_ids not found', unknown);
+    } // END FUNCTION changeMapStyleUnivariate
+
+    getColorUnivariate(xvalue: number, xmin: number, xmax: number): any {
+        //console.log('getColorUnivariate():', xvalue, xmin, xmax);
+
+        let colorIndex = Math.floor((xvalue - xmin) / ((xmax - xmin) / colorsUnivariate.length));
+        if (xvalue === 0) {
+            return '#FFFFFF';
+        }
+        return colorsUnivariate[colorIndex];
+    } // END FUNCTION getColorUnivariate
+
+
+    changeMapStyleBivariate(mapdata: any) {
+        let unknown = [];
+        let xdata = this.xydata.map((item: any) => Number(item.x)).filter(Number);
+        let ydata = this.xydata.map((item: any) => item.y).filter(Number);
+        //console.log(xdata);
+        //console.log('BI xdata:', xdata);
+        //console.log('BI ydata:', ydata);
+        let xmax = Math.max(...xdata);
+        let ymax = Math.max(...ydata);
+        let ymin = Math.min(...ydata);
+        let xmin = Math.min(...xdata);
+        //console.log(xmin, xmax, ymin, ymax);
+        this.regionsLayer.options.vectorTileLayerStyles.default = ((properties: any) => {
+            let entity1 = 0;
+            let entity2 = 0;
+            if (mapdata[properties['nuts_id']] != undefined) {
+                entity1 = +mapdata[properties['nuts_id']].x;
+                entity2 = +mapdata[properties['nuts_id']].y;
+            } else {
+                unknown.push(properties['nuts_id']);
+            }
+
+            let fillColor = this.getColorBivariate(entity1, xmin, xmax, entity2, ymin, ymax);
+            this.regionsColor[properties['nuts_id']] = fillColor;
+            //console.log('fillColor', fillColor);
+            //console.log('properties', properties);
+
+            // if (properties['nuts_id'] === 'PL41') {
+            //   console.log('CHECK WAARDEN:', properties['nuts_id'], fillColor, mapdata[properties['nuts_id']].x, mapdata[properties['nuts_id']].y, xmin, xmax, ymin, ymax);
+            // }
+            return {
+                fill: true, fillColor: fillColor, fillOpacity: 1,
+                // color: 'rgba(185,178,178,0.8)', opacity: 1, weight: 0.5,
+                color: 'rgb(185,178,178)', opacity: 1, weight: 0.5,
+            };
+        })
+        this.regionsLayer.redraw();
+
+        this.setLegend({
+            'type': 'bivariate',
+            'xlabel': this.inputDisplayObject.tableFields[0].tableDescr,
+            'ylabel': this.inputDisplayObject.tableFields[1].tableDescr
+        });
+
+        console.log('nuts_ids not found', unknown);
+    } // END FUNCTION changeMapStyleBivariate
+
+
+    getColorBivariate(xvalue: number, xmin: number, xmax: number, yvalue: number, ymin: number, ymax: number): any {
+        //console.log('xvalue, xmin, xmax, yvalue, ymin, ymax',xvalue, xmin, xmax, yvalue, ymin, ymax);
+
+        if (xvalue === undefined || yvalue === undefined || typeof xvalue === 'undefined' || typeof yvalue === 'undefined' || xvalue === 0 || yvalue === 0 || xvalue === null || yvalue === null) {
+            return '#FFFFFF';
+        }
+
+        let index1 = Math.max(Math.ceil((xvalue - xmin) / ((xmax - xmin) / 3)), 1);
+        let index2 = Math.max(Math.ceil((yvalue - ymin) / ((ymax - ymin) / 3)), 1);
+
+        return colorsBivariate[index2.toString() + index1.toString()];
+    } // END FUNCTION getColorBivariate
+
+
+    addMouseOver(popupdata: any): any {
+        this.regionsLayer.on('mouseover', ((event: { layer: { properties: any; }; latlng: L.LatLngExpression; }) => {
+            //console.log('click', event);
+            const properties = event.layer.properties;
+            //console.log('properties', properties)
+            if (properties) {
+                this.selectedArea = properties['nuts_id'];
+                //console.log('properties', properties['nuts_id']);
+                let content = `<h3>${properties.nuts_name || 'Unknown'} (${properties.nuts_id})</h3>`;  // Assume that your data might contain a "name" field
+                let entity1 = 'no data';
+                if (popupdata[properties['nuts_id']] != 'null') {
+                    entity1 = popupdata[properties['nuts_id']].x;
+                }
+                let entity2 = 'no data';
+                if (popupdata[properties['nuts_id']] != 'null') {
+                    entity2 = popupdata[properties['nuts_id']].y;
+                }
+                content += '<div>' + this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr) + ':' + entity1 + '</div>';
+                content += '<div>' + this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr) + ':' + entity2 + '</div>';
+                this.regionsLayer.setFeatureStyle(properties['nuts_id'], {
+                    default: {
+                        weight: 3,
+                        color: 'rgba(185,178,178,0.8)',
+                        fillOpacity: 0
+                    }
+                });
+                this.childGraph.highlightPoint([{x: entity1, y: entity2}]);
+                // You can place the popup at the event latlng or on the layer.
+                this.popup = L.popup()
+                    .setContent(content)
+                    .setLatLng(event.latlng)
+                    .openOn(this.map);
+            } else {
+                // L.popup().close();
+            }
+
+        }));
+
+        this.regionsLayer.on('mouseout', (event) => {
+            this.map.closePopup(this.popup);
+            this.regionsLayer.resetFeatureStyle(this.selectedArea);
+        });
+    }
+
+    addMouseClick(popupdata): any {
+        this.regionsLayer.on('click', (event) => {
+
+            const properties = event.layer.properties;
+            if (properties) {
+                console.log('clicked:' + properties['nuts_id']);
+                let entity1, entity2 = 'no data';
+                if (popupdata[properties['nuts_id']] != 'null') {
+                    entity1 = popupdata[properties['nuts_id']].x;
+                }
+
+                if (popupdata[properties['nuts_id']] != 'null') {
+                    entity2 = popupdata[properties['nuts_id']].y;
+                }
+                this.selectedArea = properties['nuts_id'];
+
+            }
+            //L.DomEvent.stop(event);
+
+        });
+    }
+
+
+    hideLegend() {
+        if (this.mapLegendDiv !== undefined) {
+            this.mapLegendDiv!.style.display = 'none';
+        }
+
+
+    } // END FUNCTION hideLegend
+
+    initLegend() {
+        this.mapLegendDiv.style.display = 'block';
+
+        this.mapLegendDiv.innerHTML = '';
+    } // END FUNCTION initLegend
+
+    hideGraph() {
+        this.graphOpen = false;
+        document.getElementById('map_graph_div_graph_container').style.width = '0px';
+        this.mapGraphContainer.style.display = 'none';
+    }
+
+    showGraph() {
+        this.graphOpen = true;
+        document.getElementById('map_graph_div_graph_container').style.width = '420px';
+        document.getElementById('map_graph_div_toggle_button').className = 'graphToggleContainerButtonRight';
+        this.mapGraphContainer.style.display = 'block';
+    }
+
+    setLegend(info): any {
+
+
+        const legendType = info.type;
+
+        console.log('setLegend()', legendType);
+
+
+        // this.mapLegendDiv.innerHTML = '<h4>Legend</h4>';
+        let legendHeader = document.createElement('h4');
+        legendHeader.setAttribute('class', 'legendHeader');
+        legendHeader.innerHTML = 'Legend';
+        this.mapLegendDiv.appendChild(legendHeader);
+
+        switch (legendType) {
+
+            case 'univariate':
+                this.uniVariateLegend(info);
+                break;
+
+            case 'bivariate':
+                this.biVariateLegend(info);
+
+                break;
+
+            default:
+                this.mapLegendDiv.innerHTML += 'unknown legend type \'' + legendType + '\'';
+
+                break;
+        } // END SWITCH legendType
+
+    } // END FUNCTION setLegend
+
+    private biVariateLegend(info: any) {
+        const xmlns = 'http://www.w3.org/2000/svg';
+        let svgWidth = 250;
+        let svgHeight = 210;
+
+        let containerSvg = document.createElementNS(xmlns, 'svg');
+        this.mapLegendDiv.appendChild(containerSvg);
+        containerSvg.setAttributeNS(null, 'class', 'legendSvgGraph');
+        containerSvg.setAttributeNS(null, 'width', svgWidth.toString());
+        containerSvg.setAttributeNS(null, 'height', svgHeight.toString());
+        containerSvg.setAttributeNS(null, 'viewBox', '0 0 ' + svgWidth + ' ' + svgHeight);
+
+        /*
+        let bg = document.createElementNS(xmlns, 'rect');
+        containerSvg.appendChild(bg);
+        bg.setAttributeNS(null, 'fill', '#ffffff');
+        bg.setAttributeNS(null, 'opacity', '0.5');
+        bg.setAttributeNS(null, 'width', svgWidth.toString());
+        bg.setAttributeNS(null, 'height', svgHeight.toString());
+        // bg.addEventListener('mouseover', legendBlockMouseOut);
+        */
+
+
+        for (let x = 1; x <= 3; x++) {
+            for (let y = 1; y <= 3; y++) {
+                // context.beginPath();
+                // context.fillStyle = colorsBivariate[x.toString() + y.toString()];
+                let blockPath = document.createElementNS(xmlns, 'path');
+                containerSvg.appendChild(blockPath);
+                let startX = Math.floor((svgWidth / 2) + (x * 26) - (y * 26));
+                let startY = Math.floor(svgHeight + 35 - (x * 26) - (y * 26));
+
+                let path = 'M ' + (startX).toString() + ' ' + (startY).toString() + ' L ' + (startX - 25).toString() + ' ' + (startY - 25).toString() + ' L ' + (startX).toString() + ' ' + (startY - 50).toString() + ' L ' + (startX + 25).toString() + ' ' + (startY - 25).toString() + ' z';
+                blockPath.id = 'legendBlock_' + x.toString() + '_' + y.toString();
+                blockPath.setAttributeNS(null, 'stroke', '#000000');
+                blockPath.setAttributeNS(null, 'stroke-width', '2');
+                blockPath.setAttributeNS(null, 'stroke-opacity', '0');
+                blockPath.setAttributeNS(null, 'opacity', '1');
+                blockPath.setAttributeNS(null, 'fill', colorsBivariate[y.toString() + x.toString()]);
+                blockPath.setAttributeNS(null, 'd', path);
+                blockPath.setAttributeNS(null, 'title',
+                    formatString(titlesBivariate[x.toString() + y.toString()], this.legendLabel(info.xlabel), this.legendLabel(info.ylabel)));
+
+                blockPath.addEventListener('click', this.legendBlockMouseOver);
+                blockPath.addEventListener('mouseover', this.legendBlockMouseOver);
+                blockPath.addEventListener('mouseout', this.legendBlockMouseOut);
+
+
+            }
+        }
+
+        let blockIndicator = document.createElementNS(xmlns, 'path');
+        containerSvg.appendChild(blockIndicator);
+        // let indicatorPath = 'M ' + (-100).toString() + ' ' + (-100).toString() + ' L ' + (-100 - 25).toString() + ' ' + (-100 - 25).toString() + ' L ' + (-100).toString() + ' ' + (-100 - 50).toString() + ' L ' + (-100 + 25).toString() + ' ' + (-100 - 25).toString() +' z';
+        let indicatorPath = 'M -100 -100 L -125 -125 L -100 -150 L -75 -125 z';
+        blockIndicator.id = 'legendBlockIndicator';
+        blockIndicator.setAttributeNS(null, 'stroke', '#000000');
+        blockIndicator.setAttributeNS(null, 'stroke-width', '2');
+        blockIndicator.setAttributeNS(null, 'stroke-opacity', '1');
+        blockIndicator.setAttributeNS(null, 'opacity', '1');
+        blockIndicator.setAttributeNS(null, 'fill', '#ffffff');
+        blockIndicator.setAttributeNS(null, 'fill-opacity', '0');
+        blockIndicator.setAttributeNS(null, 'd', indicatorPath);
+
+
+        let textPredictor = document.createElementNS(xmlns, 'text');
+        containerSvg.appendChild(textPredictor);
+        textPredictor.setAttributeNS(null, 'x', Math.floor(3 * svgWidth / 4).toString());
+        textPredictor.setAttributeNS(null, 'y', Math.floor(3 * svgHeight / 4).toString());
+        textPredictor.setAttributeNS(null, 'fill', '#000000');
+        textPredictor.setAttributeNS(null, 'text-anchor', 'middle');
+        textPredictor.setAttributeNS(null, 'font-weight', 'bold');
+        textPredictor.setAttributeNS(null, 'font-size', '12px');
+        textPredictor.setAttributeNS(null, 'transform', 'rotate(-45, ' + Math.floor(3 * svgWidth / 4).toString() + ', ' + Math.floor(3 * svgHeight / 4).toString() + ')');
+        textPredictor.innerHTML = this.legendLabel(info.xlabel) + ' &#11166;';
+
+        let textOutcome = document.createElementNS(xmlns, 'text');
+        containerSvg.appendChild(textOutcome);
+        textOutcome.setAttributeNS(null, 'x', Math.floor(1 * svgWidth / 4).toString());
+        textOutcome.setAttributeNS(null, 'y', Math.floor(3 * svgHeight / 4).toString());
+        textOutcome.setAttributeNS(null, 'fill', '#000000');
+        textOutcome.setAttributeNS(null, 'text-anchor', 'middle');
+        textOutcome.setAttributeNS(null, 'font-weight', 'bold');
+        textOutcome.setAttributeNS(null, 'font-size', '12px');
+        textOutcome.setAttributeNS(null, 'transform', 'rotate(45, ' + Math.floor(1 * svgWidth / 4).toString() + ', ' + Math.floor(3 * svgHeight / 4).toString() + ')');
+        textOutcome.innerHTML = '&#11164; ' + this.legendLabel(info.ylabel);
+
+
+        let textExplain0 = document.createElementNS(xmlns, 'text');
+        containerSvg.appendChild(textExplain0);
+        textExplain0.id = 'legendTextExplain0';
+        textExplain0.setAttributeNS(null, 'x', '30'); //Math.floor(1 * svgWidth / 2).toString());
+        textExplain0.setAttributeNS(null, 'y', '14');
+        textExplain0.setAttributeNS(null, 'fill', '#000000');
+        //textExplain0.setAttributeNS(null, 'text-anchor', 'middle');
+        textExplain0.setAttributeNS(null, 'font-weight', 'bold');
+        //textExplain0.setAttributeNS(null, 'font-style', 'italic');
+        textExplain0.setAttributeNS(null, 'font-size', '12px');
+        textExplain0.setAttributeNS(null, 'height', '4em');
+        textExplain0.innerHTML = 'Select a colored block to see ';
+
+        let textExplain1 = document.createElementNS(xmlns, 'text');
+        containerSvg.appendChild(textExplain1);
+        textExplain1.id = 'legendTextExplain1';
+        textExplain1.setAttributeNS(null, 'x', '30'); // Math.floor(1 * svgWidth / 2).toString());
+        textExplain1.setAttributeNS(null, 'y', '28');
+        textExplain1.setAttributeNS(null, 'fill', '#000000');
+        //textExplain1.setAttributeNS(null, 'text-anchor', 'middle');
+        textExplain1.setAttributeNS(null, 'font-weight', 'bold');
+        //textExplain1.setAttributeNS(null, 'font-style', 'italic');
+        textExplain1.setAttributeNS(null, 'font-size', '12px');
+        textExplain1.setAttributeNS(null, 'height', '4em');
+        textExplain1.innerHTML = 'its meaning';
+
+
+    } // END FUNCTION biVariateLegend
+
+    private uniVariateLegend(info: any) {
+
+        let legendValueDescrLine = document.createElement('div');
+        this.mapLegendDiv.appendChild(legendValueDescrLine);
+        legendValueDescrLine.innerHTML = this.legendLabel(this.inputDisplayObject.tableFields[this.inputDisplayObject.displayTableId].tableDescr) + ':';
+        legendValueDescrLine.style.fontWeight = 'bold';
+        legendValueDescrLine.style.marginBottom = '0.5em';
+
+
+        let colorStep = ((info.xmax - info.xmin) / colorsUnivariate.length);
+        let colorsUnivariateReverse = colorsUnivariate.slice().reverse();
+
+        let toFixedNumber = 0;
+        if (colorStep < 10) {
+            toFixedNumber = 1;
+            if (colorStep < 1) {
+                toFixedNumber = 2;
+                if (colorStep < 0.1) {
+                    toFixedNumber = 3;
+                }
+            }
+        }
+
+        colorsUnivariateReverse.forEach((color, index) => {
+            let indexReverseFrom = colorsUnivariate.length - index - 1;
+            let indexReverseTo = colorsUnivariate.length - index;
+            // this.mapLegendDiv.innerHTML += '<div class="legendColorBlock" style="background-color: ' + color + '"></div> ' + (info.xmin + (colorStep * indexReverseFrom)).toFixed(toFixedNumber) + ' - ' + (info.xmin + (colorStep * indexReverseTo)).toFixed(toFixedNumber) + '<br>\n';
+
+            let legendLine = document.createElement('div');
+            legendLine.setAttribute('class', 'legendLine');
+            this.mapLegendDiv.appendChild(legendLine);
+
+            let legendBlock = document.createElement('div');
+            legendBlock.setAttribute('class', 'legendColorBlock');
+            legendBlock.style.backgroundColor = color;
+            legendLine.appendChild(legendBlock);
+
+            let legendText = document.createElement('div');
+            legendText.setAttribute('class', 'legendColorText');
+            legendText.innerHTML = (info.xmin + (colorStep * indexReverseFrom)).toFixed(toFixedNumber) + ' - ' + (info.xmin + (colorStep * indexReverseTo)).toFixed(toFixedNumber);
+            legendLine.appendChild(legendText);
+
+
+        });
+    } // END FUNCTION uniVariateLegend
+
+
+    legendLabel(text: string): string {
+        let label = '';
+        let textparts = text.split(' ');
+        if (textparts.length > 1) {
+            label = textparts[0] + ' ' + textparts[1].replace('by', '');
+        }
+        return label;
+    }
+
+
+    legendBlockMouseOver(e) {
+        //console.log('legendBlockMouseOver(), event:', e.target.id);
+        console.log('legendBlockMouseOver(), event:', e.type);
+
+
+        if (e.type === 'click') {
+            // reset other blocks ...
+            console.log('reset other blocks', e.target.id);
+            for (let x of ['1', '2', '3']) {
+                for (let y of ['1', '2', '3']) {
+                    document.getElementById('legendBlock_' + x + '_' + y).setAttributeNS(null, 'stroke-opacity', '0');
+                }
+            }
+        }
+
+
+        document.getElementById(e.target.id).setAttributeNS(null, 'stroke-opacity', '1');
+
+        //console.log('TEST:', document.getElementById(e.target.id).getAttributeNS(null, 'd'));
+        // document.getElementById('legendBlockIndicator').setAttributeNS(null, 'd', document.getElementById(e.target.id).getAttributeNS(null, 'd') );
+
+        let titleParts = document.getElementById(e.target.id).getAttributeNS(null, 'title').split('|');
+
+        document.getElementById('legendTextExplain0').innerHTML = titleParts[0].trim();
+        document.getElementById('legendTextExplain1').innerHTML = titleParts[1].trim();
+
+    } // END FUNCTION legendBlockMouseOver
+
+    legendBlockMouseOut(e) {
+        //console.log('legendBlockMouseOut(), event:', e.target.id);
+        document.getElementById(e.target.id).setAttributeNS(null, 'stroke-opacity', '0');
+
+        // document.getElementById('legendBlockIndicator').setAttributeNS(null, 'd', 'M -100 -100 L -125 -125 L -100 -150 L -75 -125 z' );
+
+        //document.getElementById('legendTextExplain0').innerHTML = 'Select a colored block to see ';
+        //document.getElementById('legendTextExplain1').innerHTML = 'its meaning';
+        document.getElementById('legendTextExplain0').innerHTML = '';
+        document.getElementById('legendTextExplain1').innerHTML = '';
+
+    } // END FUNCTION legendBlockMouseOut
+
+
+    // highlight the region that is hovered by the mouse in the graph, for 3 seconds
+    // better would be to highlight on mouseover en unhighlight on mouseout
+    newCode($event: any) {
+
+        console.log('code', $event, this.regionsColor[$event]);
+        this.regionsLayer.setFeatureStyle($event, {
+            default: {
+                weight: 3,
+                color: 'rgba(255,192,0,1)',
+                fillColor: this.regionsColor[$event],
+                fill: true,
+                fillOpacity: 1,
+            }
+        });
+
+        setTimeout(() => this.regionsLayer.resetFeatureStyle($event), 3000);
 
 
     }

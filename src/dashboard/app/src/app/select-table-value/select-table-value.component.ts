@@ -545,8 +545,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
         this.availableColumnValues.push(jsonToPush);
 
       });
-
-
+      this.fillSelections();
       this.checkTableValueSelectionComplete();
 
     });
@@ -555,6 +554,22 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
   } // END FUNCTION getFieldsForTableForYearAndRegionLevel
 
+
+  fillSelections() : void {
+    let selections= {};
+
+    this.availableColumnValues.forEach((columnvalue)  => {
+
+      const selectedvalue = columnvalue.field_values.find((field_value: any) => {
+        return field_value.value === this.tableSelection.tableColumnValues[columnvalue.field];
+      })
+      // @ts-ignore
+      selections[columnvalue.field_label] = selectedvalue.label;
+    } )
+    //console.log('selections', selections);
+    this.tableSelection.Selections = selections;
+
+  }
 
   getFilteredFieldsForTableForYearAndRegionLevel() {
     // console.log(' >>> >>>  getFilteredFieldsForTableForYearAndRegionLevel(), tableId', this.tableSelection.tableId);
@@ -640,7 +655,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
   checkTableValueSelectionComplete() {
-    // console.log('checkTableValueSelectionComplete() ...', this.tableSelection.tableId);
+    console.log('checkTableValueSelectionComplete() ...', this.tableSelection.tableId);
 
     this.tableSelection.checkSelectionComplete();
     this.emitChangeTableValue();

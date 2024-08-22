@@ -8,6 +8,7 @@ export class DisplayTableValueObject {
     tableColumnValues: any;
     tableSelectionComplete: boolean;
     tableShowOnlyThisTable: boolean;
+    Selections: {};
 
     constructor(jsonObject = {}, index = 0) {
         this.tableId = index;

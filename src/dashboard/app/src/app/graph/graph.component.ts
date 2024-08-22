@@ -133,7 +133,7 @@ export class GraphComponent implements OnChanges {
                 //console.log(labels[context.dataIndex]);
                 //console.log(labels[context.dataIndex].split('(')[1].replace(')', ''));
                 // @ts-ignore
-                //this.selectedCodeChange.emit(labels[context.dataIndex].split('(')[1].replace(')', ''));
+                this.selectedCodeChange.emit(labels[context.dataIndex].split('(')[1].replace(')', ''));
                 return [info.xlabel + ': ' + context.parsed.x ,  info.ylabel + ': ' + context.parsed.y];
               }.bind(this)
             }
