@@ -162,8 +162,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         let graph = new LeafletControlGraph({position: 'topright'}).addTo(this.map);
         graph.addToggleButton(this.graphToggle.bind(this));
 
-        //let selectinformation = new LeafletControlSelectInformation({position: 'topright'}).addTo(this.map);
-        //this.selectinformationDiv = document.getElementById(selectinformation.getContainer().id);
+        let selectinformation = new LeafletControlSelectInformation({position: 'topright'}).addTo(this.map);
+        this.selectinformationDiv = document.getElementById(selectinformation.getContainer().id);
 
         // console.log('id=', graph.getContainer().id);
         // this.mapGraphDiv = document.getElementById(graph.getContainer().id);
@@ -173,6 +173,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
         this.hideLegend();
         this.hideGraph();
+        this.hideSelectInformation();
 
         new LeafletControlWatermark().addTo(this.map);
 
@@ -300,7 +301,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
 
     changeResultMap() {
-        console.log('changeResultMap() ...');
+        //console.log('changeResultMap() ...');
 
         this.displayType = this.inputDisplayObject.displayType;
 
@@ -310,7 +311,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         this.xydata = this.inputDisplayObject.displayData;
 
         if (this.regionsLayer !== undefined) {
-            console.log('REMOVE regionsLayer');
+            //console.log('REMOVE regionsLayer');
             this.map.removeLayer(this.regionsLayer);
             this.hideGraph();
         }
@@ -318,7 +319,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         if (this.inputDisplayObject.displayData.length > 0) {
             this.regionsLayer = RegionsLayer.getLayer(this.inputDisplayObject.tableFields[0].tableRegionLevel, this.inputDisplayObject.tableFields[0].tableYear);
             if (typeof this.map !== 'undefined') {
-                console.log('ADD regionsLayer');
+                //console.log('ADD regionsLayer');
                 this.map.addLayer(this.regionsLayer);
             }
             /*
@@ -349,33 +350,34 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     showSelections(): void {
         let html = '<table>';
         html += '<tr>';
-        html += '<th colspan="2">' + this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr) + '</th>'
-        html += '<th colspan="2">' + this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr) + '</th>'
+        html += '<th>' + this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr) + '</th>'
+        html += '<th>' + this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr) + '</th>'
         html += '</tr>';
         html += '<tr>';
-        html += '<td>';
+        html += '<td class="selectionsvalues">';
         //first table
         html += this.showKeyvalues(this.inputDisplayObject.tableFields[0].Selections);
         html += '</td>';
-        html += '<td>';
+        html += '<td class="selectionsvalues">';
         //second table
         html += this.showKeyvalues(this.inputDisplayObject.tableFields[1].Selections);
         html += '</td>';
         html += '</tr>';
         html += '</table>'
-        //this.selectinformationDiv.innerHTML = html;
+        this.selectinformationDiv.innerHTML = html;
+        this.showSelectInformation();
     }
 
     showKeyvalues(Selections: any) : string {
-        console.log('Selections', Selections);
+        //console.log('Selections', Selections);
         if (Selections === undefined) { return '';}
         let html = '<table>';
         Object.keys(Selections).forEach((key) => {
             html += '<tr>'
-            html += '<td>';
+            html += '<td class="selectionsvalues">';
             html += key;
-            html += '</td>';
-            html += '<td>';
+            html += ':</td>';
+            html += '<td class="selectionsvalues">';
             html += Selections[key];
             html += '</td>';
             html += '</tr>';
@@ -518,7 +520,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             'ylabel': this.inputDisplayObject.tableFields[1].tableDescr
         });
 
-        console.log('nuts_ids not found', unknown);
+        //console.log('nuts_ids not found', unknown);
     } // END FUNCTION changeMapStyleBivariate
 
 
@@ -621,6 +623,14 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         this.graphOpen = false;
         document.getElementById('map_graph_div_graph_container').style.width = '0px';
         this.mapGraphContainer.style.display = 'none';
+    }
+
+    hideSelectInformation() {
+        this.selectinformationDiv.style.display = 'none';
+    }
+
+    showSelectInformation() {
+        this.selectinformationDiv.style.display = 'block';
     }
 
     showGraph() {

@@ -8,9 +8,10 @@ export class DisplayTableValueObject {
     tableColumnValues: any;
     tableSelectionComplete: boolean;
     tableShowOnlyThisTable: boolean;
-    Selections: {};
+    Selections: any;
 
     constructor(jsonObject = {}, index = 0) {
+        console.log('jsonObject', jsonObject);
         this.tableId = index;
         this.tableName = '';
         this.tableDescr = '';
@@ -20,6 +21,7 @@ export class DisplayTableValueObject {
         this.tableColumnValues = {};
         this.tableSelectionComplete = false;
         this.tableShowOnlyThisTable = false;
+        this.Selections = {};
 
         for (const field in jsonObject) {
             if(Object.getOwnPropertyNames(this).includes(field)) {

@@ -566,7 +566,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       // @ts-ignore
       selections[columnvalue.field_label] = selectedvalue.label;
     } )
-    //console.log('selections', selections);
+    console.log('selections', selections);
     this.tableSelection.Selections = selections;
 
   }
@@ -658,6 +658,9 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     //console.log('checkTableValueSelectionComplete() ...', this.tableSelection.tableId);
 
     this.tableSelection.checkSelectionComplete();
+    if (this.tableSelection.tableSelectionComplete) {
+      this.fillSelections();
+    }
     this.emitChangeTableValue();
   } // END FUNCTION checkTableValueSelectionComplete
 
