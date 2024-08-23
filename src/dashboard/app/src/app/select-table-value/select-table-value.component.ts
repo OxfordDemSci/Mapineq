@@ -82,7 +82,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       // const valuePrevious = change.previousValue;
 
       if (propName === 'inputUseCaseData' && valueCurrent) {
-        console.log('ngOnChanges(), "inputUseCaseData":', valueCurrent);
+        console.log('ngOnChanges(), "inputUseCaseData":', valueCurrent, ' inputTableId', this.inputTableId);
         this.setAvailableRegionLevels();
       }
 
@@ -655,7 +655,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
   checkTableValueSelectionComplete() {
-    console.log('checkTableValueSelectionComplete() ...', this.tableSelection.tableId);
+    //console.log('checkTableValueSelectionComplete() ...', this.tableSelection.tableId);
 
     this.tableSelection.checkSelectionComplete();
     this.emitChangeTableValue();

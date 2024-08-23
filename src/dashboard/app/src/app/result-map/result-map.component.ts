@@ -96,6 +96,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     displayType: string;
     popup: any;
     selectedArea: any;
+    oldhighligth: string  = '';
 
     constructor(private featureService: FeatureService) {
         this.graphOpen = false;
@@ -340,23 +341,6 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             });
             this.showSelections();
         } else {
-            //testdata
-            // this.featureService.getRealXYData().subscribe((data) => {
-            //   //console.log('data=', data);
-            //   if (this.regionsLayer !== undefined) {
-            //     this.map.removeLayer(this.regionsLayer);
-            //   }
-            //   this.regionsLayer = RegionsLayer.getLayer('2', '2018');
-            //   this.map.addLayer(this.regionsLayer);
-            //   this.xydata = data;
-            //
-            //   //this.setLegend({'type': 'bivariate','xlabel' : 'Deaths (Total)', 'ylabel' : 'Fertility Indicator'});
-            //   this.inputDisplayObject.tableFields[0].tableDescr = 'Unemployment Rate';
-            //   this.inputDisplayObject.tableFields[1].tableDescr = 'Life Expectancy';
-            //   this.plotData();
-            //   this.childGraph.ScatterPlot({'xydata': data,'xlabel' : this.inputDisplayObject.tableFields[0].tableDescr, 'ylabel' : this.inputDisplayObject.tableFields[1].tableDescr});
-            // });
-            // // NO DATA NO LEGEND ...
             this.hideLegend();
         }
 
@@ -379,11 +363,11 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         html += '</td>';
         html += '</tr>';
         html += '</table>'
-        this.selectinformationDiv.innerHTML = html;
+        //this.selectinformationDiv.innerHTML = html;
     }
 
     showKeyvalues(Selections: any) : string {
-        console.log(Selections);
+        console.log('Selections', Selections);
         if (Selections === undefined) { return '';}
         let html = '<table>';
         Object.keys(Selections).forEach((key) => {
@@ -895,11 +879,15 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     } // END FUNCTION legendBlockMouseOut
 
 
+
     // highlight the region that is hovered by the mouse in the graph, for 3 seconds
     // better would be to highlight on mouseover en unhighlight on mouseout
     newCode($event: any) {
-
-        console.log('code', $event, this.regionsColor[$event]);
+        if (this.oldhighligth !== '') {
+            this.regionsLayer.resetFeatureStyle(this.oldhighligth);
+        }
+        //console.log('code', $event, this.regionsColor[$event]);
+        this.oldhighligth = $event;
         this.regionsLayer.setFeatureStyle($event, {
             default: {
                 weight: 3,
@@ -910,7 +898,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             }
         });
 
-        setTimeout(() => this.regionsLayer.resetFeatureStyle($event), 3000);
+        setTimeout(() => this.regionsLayer.resetFeatureStyle($event), 5000);
 
 
     }
