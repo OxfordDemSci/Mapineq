@@ -7,13 +7,13 @@ import {FeatureService} from "../services/feature.service";
 import {RegionsLayer} from "../layers/regions-layer";
 import {DisplayObject} from "../lib/display-object";
 import {
-    LeafletControlGraph,
     LeafletControlLegend,
     LeafletControlMapButtonsLeft,
     LeafletControlWatermark
 } from "../lib/leaflet-control-custom";
 import {GraphComponent} from "../graph/graph.component";
 import {LeafletControlSelectInformation} from "../lib/leaflet-control-select-information";
+import {LeafletControlGraph} from "../lib/leaflet-control-graph";
 
 
 /*
