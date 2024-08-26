@@ -348,7 +348,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     } // END FUNCTION changeResultMap
 
     showSelections(): void {
-        let html = '<table>';
+        let html = '<table class="selections">';
         html += '<tr>';
         html += '<th>' + this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr) + '</th>'
         html += '<th>' + this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr) + '</th>'
