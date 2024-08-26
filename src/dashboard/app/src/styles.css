@@ -612,6 +612,12 @@ tbody tr:nth-child(odd) {
 
 .selectionsvalues {
     vertical-align: top;
+    width:50%;
+}
+
+
+.selections {
+    width: 100%;
 }
 
 

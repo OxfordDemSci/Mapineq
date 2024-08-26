@@ -366,12 +366,13 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         html += '</table>'
         this.selectinformationDiv.innerHTML = html;
         this.showSelectInformation();
+
     }
 
     showKeyvalues(Selections: any) : string {
         //console.log('Selections', Selections);
         if (Selections === undefined) { return '';}
-        let html = '<table>';
+        let html = '<table class="selections">';
         Object.keys(Selections).forEach((key) => {
             html += '<tr>'
             html += '<td class="selectionsvalues">';
