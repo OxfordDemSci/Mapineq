@@ -377,6 +377,15 @@ div.buttonsMargin {
 
 
 
+.leftPanelTopButtons {
+    margin-top: 0.5em;
+    text-align: center;
+}
+
+
+
+
+
 .useCaseInfo {
     padding: 0.5em;
 }
