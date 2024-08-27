@@ -2,8 +2,13 @@
     <mat-card class="example-card mat-app-background">
         <mat-card-header>
             <div mat-card-avatar [class]="'selection-cell-header-image-'+tableId.toString()"></div>
-            <mat-card-title>{{tableSelection.tableName}}</mat-card-title>
+            <mat-card-title>{{tableSelection.tableName}} </mat-card-title>
             <mat-card-subtitle>{{tableSelection.tableFunction}} ({{(tableId+1)}})</mat-card-subtitle>
+            <mat-card-subtitle>
+                <button mat-flat-button type="button" [disabled]="!tableSelection.tableSelectionComplete" (click)="showOnlyThisTableOnMap()">
+                    <mat-icon>map</mat-icon> show only this table on map
+                </button>
+            </mat-card-subtitle>
 
         </mat-card-header>
 
@@ -141,7 +146,10 @@
 
 
             <!-- div>alle waarden geselecteerd? <b>{{( (Object.values(tableSelection.tableColumnValues).length === availableColumnValues.length  &&  !(Object.values(tableSelection.tableColumnValues).includes(""))   &&  Object.values(tableSelection.tableColumnValues).length > 0 ) ? 'JA': 'NEE')}}</b></div -->
+            <!--
             <div>Selection complete? <b>{{ (tableSelection.tableSelectionComplete ? 'YES' : 'no') }}</b></div>
+            -->
+            <!--
             <div *ngIf="tableSelection.tableSelectionComplete">
               <button mat-stroked-button type="button" (click)="showOnlyThisTableOnMap()">
                 <mat-icon>map</mat-icon> show only this table on map
@@ -154,6 +162,7 @@
                 <mat-icon>scatter_plot</mat-icon>Bivariate map
               </button>
             </div>
+            -->
             <!--div class="json_preview">
                 <pre>{{availableColumnValues | json}}</pre>
             </div-->
