@@ -3,7 +3,7 @@ import * as L from "leaflet";
 export class LeafletControlGraph extends L.Control {
 
     override onAdd(map: L.Map): any {
-        const mapGraph = L.DomUtil.create('div') as HTMLImageElement;
+        const mapGraph = L.DomUtil.create('div') as HTMLDivElement;
         mapGraph.id = 'map_graph_div';
         mapGraph.style.width = 'auto';
 

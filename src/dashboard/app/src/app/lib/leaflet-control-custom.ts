@@ -39,7 +39,7 @@ export class LeafletControlWatermark extends L.Control {
 export class LeafletControlLegend extends L.Control {
 
   override onAdd(map: L.Map): any {
-    const mapLegend = L.DomUtil.create('div') as HTMLImageElement;
+    const mapLegend = L.DomUtil.create('div') as HTMLDivElement;
     mapLegend.id = 'map_legend_div';
     mapLegend.style.width = 'auto';
     mapLegend.style.border = '1px solid rgba(255, 255, 255, 1)';

@@ -185,9 +185,14 @@ export class DashboardComponent implements OnInit{
 
     } // END FUNCTION panelToggle
 
-    resizeResultMap(): void {
+    panelLeftStatusChange(): void {
         this.childResultMap.resizeMap();
-    } // END FUNCTION resizeResultMap
+        if (this.panelOpen) {
+            this.childResultMap.closeMapInfo();
+        } else {
+            this.childResultMap.openMapInfo();
+        }
+    } // END FUNCTION panelLeftStatusChange
 
 
     updateTableFieldFromSelect(tableField: DisplayTableValueObject) {
@@ -240,7 +245,8 @@ export class DashboardComponent implements OnInit{
 
             // console.log(' - - doCollectDataForSelection ???');
             if (doCollectDataForSelection) {
-                this.collectDataForSelection(tableId);
+                // this.collectDataForSelection(tableId);
+                // SJOERD: tijdelijk UIT gezet
             } else {
                 this.displayObject['displayData'] = [];
                 this.displayDataUpdated = !this.displayDataUpdated;
@@ -250,6 +256,25 @@ export class DashboardComponent implements OnInit{
         }
 
     } // END FUNCTION updateTableFieldFromSelect
+
+
+    checkShowOnMapDisabled() {
+        switch(this.displayObject.formType) {
+            case 'bivariate':
+                if (this.displayObject.tableFields.length > 1  &&  this.displayObject.tableFields[0].tableSelectionComplete  &&  this.displayObject.tableFields[1].tableSelectionComplete) {
+                    return false;
+                } else {
+                    return true;
+                }
+                break;
+
+            default:
+                console.log('checkShowOnMapDisabled(), NOT IMPLEMENTED YET (formtype: ' + this.displayObject.formType.toString() + ')');
+                return true;
+                break;
+        }
+
+    } // END FUNCTION checkShowOnMapDisabled
 
 
     collectDataForSelection(tableId = 0) {

@@ -7,11 +7,28 @@
     <mat-drawer-container id="matDrawerContainer" class="container-main" autosize  hasBackdrop="false">
 
         <!-- PANEL PART -->
-        <mat-drawer #drawer class="container-panel mat-app-background" mode="side" position="start" id="drawerRight" [(opened)]="panelOpen" (openedChange)="resizeResultMap()">
+        <mat-drawer #drawer class="container-panel mat-app-background" mode="side" position="start" id="drawerRight" [(opened)]="panelOpen" (openedChange)="panelLeftStatusChange()">
             <div class="selection-table">
                 <!--
                 <app-select-table-value *ngFor="let tableSelection of displayObject.tableFields; let tableId = index;" [inputTableSelection]="tableSelection" [inputTableId]="tableId"></app-select-table-value>
                 -->
+
+                <div class="leftPanelTopButtons">
+                    <button [disabled]="checkShowOnMapDisabled()" mat-raised-button color="primary" aria-label="TEST" (click)="collectDataForSelection(1)">
+                        <mat-icon>map</mat-icon> Show on map
+                    </button>
+
+
+                    <a [disabled]="displayObject.displayData.length < 1" mat-stroked-button type="button" (click)="downloadCSV()" download="download.csv" [href]="downloadUrl">
+                        <mat-icon>download</mat-icon>Download csv
+                    </a>
+
+                    <button *ngIf="useCase > -1" mat-stroked-button aria-label="Clear case study" routerLink="/">
+                        <mat-icon>delete</mat-icon> clear case study
+                    </button>
+                </div>
+
+
                 <div *ngIf="useCase > -1" class="useCaseInfo">
                     <!--
                     <div>
@@ -22,9 +39,11 @@
 
                     <div class="boldText divCentered">
                         Showing case study {{useCase}}
-                        <!-- button mat-icon-button aria-label="Clear case study">
-                            <mat-icon>delete</mat-icon>
-                        </button -->
+                        <!--
+                        <button mat-raised-button aria-label="Clear case study" routerLink="/">
+                            <mat-icon>delete</mat-icon> clear case study
+                        </button>
+                        -->
                     </div>
                 </div>
 
@@ -63,11 +82,13 @@
                 </app-select-table-value>
             </div>
 
+            <!--
             <div *ngIf="displayObject.displayData.length > 1" class="buttonsMargin">
                 <a mat-raised-button type="button" (click)="downloadCSV()" color="secondary" download="download.csv" [href]="downloadUrl">
                     <mat-icon>download</mat-icon>Download csv
                 </a>
             </div>
+            -->
 
             <div class="json_preview" *ngIf="showDevInfo">
                 <pre>{{displayObject | json}}</pre>
