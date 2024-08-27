@@ -101,6 +101,13 @@ export class DashboardComponent implements OnInit{
             this.showUseCase();
         }
 
+
+        let tableString = (this.route.snapshot.queryParams['table'] ?? '');
+        if (tableString.trim() !== '') {
+            let regionString = (this.route.snapshot.queryParams['region'] ?? '');
+            this.setTableAndRegion(tableString, regionString);
+        }
+
         console.log('TEST useCase/useCaseVariant: ', this.useCase, this.useCaseVariant);
 
         // this.urlTo = (this.route.snapshot.queryParams['to'] ?? '').trim();
@@ -179,6 +186,13 @@ export class DashboardComponent implements OnInit{
 
 
     } // END FUNCTION showUseCase
+
+    setTableAndRegion(table: string, region: string): void {
+        console.log('table ' + table + ' region ' + region);
+        this.displayObject.tableFields[0].tableName = table;
+        this.displayObject.tableFields[0].tableRegionLevel = region;
+
+     }
 
     panelToggle(): void {
         this.panelOpen = !this.panelOpen;

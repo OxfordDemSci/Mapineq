@@ -23,8 +23,6 @@ export class LeafletControlSelectInformation extends L.Control  {
         return mapSelectInformation;
     }
 
-
-
     override onRemove(map: L.Map): void {
         // Nothing to do here
     } //

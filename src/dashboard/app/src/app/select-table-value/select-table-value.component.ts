@@ -21,6 +21,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   @Input() inputUseCase: number;
   @Input() inputUseCaseData: any;
 
+  @Input() region: string;
 
 
   @Output() updateTableValueFromSelect = new EventEmitter();
@@ -56,7 +57,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     this.inputUseCase = -1;
     this.inputUseCaseData = [];
-
+    this.region = "";
 
     this.tableSelectOptions = []; // [{f_resource: 'TST_A', f_description: 'Test table A'}];
     // this.tables = [];
@@ -76,7 +77,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
   ngOnChanges(changes: SimpleChanges) {
     for (const propName in changes) {
-      // console.log('!!!!! !!!!! !!!!! !!!!! change in', propName, changes[propName].currentValue);
+      //console.log('!!!!! !!!!! !!!!! !!!!! change in', propName, changes[propName].currentValue, changes[propName].previousValue);
       const change = changes[propName];
       const valueCurrent  = change.currentValue;
       // const valuePrevious = change.previousValue;
@@ -98,11 +99,18 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
         this.otherTableSelection = this.inputOtherTableSelection;
         this.setTableSources();
       }
+
+      if (propName === 'region') {
+        console.log('********** change in', propName, changes[propName].currentValue, changes[propName].previousValue);
+        this.tableId = 0;
+        this.setTableSources();
+        console.log('this.tableSelection.tableName=' + this.tableSelection.tableName)
+      }
     }
   } // END FUNCTION ngOnChanges
 
   ngOnInit(): void {
-    // console.log('ngOnInit() ... ');
+    console.log('ngOnInit() ... ');
 
     /*
     this.featureService.getNutsAreas(2).subscribe((data) => {
@@ -217,7 +225,21 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
             startWith(''),
             map(value => this.filterTableSelectOptions(value || '')),
         );
+        if (this.region !== '') {
+          console.log('this.region', this.region);
+          if (this.availableTableNames.includes(this.tableSelection.tableName)) {
+            console.log('TABLENAME setten', this.inputTableId);
+            // this.tableSelection.tableName = this.inputUseCaseData[this.inputTableId].tableName;
 
+            let selectedTableObject = this.tableSelectOptions.filter( tableObject => {
+              return tableObject.f_resource === this.tableSelection.tableName;
+            })
+
+            console.log('selectedTableObject: ', selectedTableObject);
+            this.tableSelectOption(selectedTableObject[0]);
+
+          }
+        }
 
         if (this.inputUseCase > -1) {
           // tableSelection.tableName
@@ -566,7 +588,6 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       // @ts-ignore
       selections[columnvalue.field_label] = selectedvalue.label;
     } )
-    console.log('selections', selections);
     this.tableSelection.Selections = selections;
 
   }

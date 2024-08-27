@@ -51,7 +51,7 @@
                 <app-select-table-value [inputTableSelection]="displayObject.tableFields[0]"
                                         [inputTableId]="0"
                                         [inputUseCase]="useCase" [inputUseCaseData]="useCaseData"
-
+                                        [region]="displayObject.tableFields[0].tableRegionLevel"
 
                                         (updateTableValueFromSelect)="updateTableFieldFromSelect($event)"  >
                 </app-select-table-value>
