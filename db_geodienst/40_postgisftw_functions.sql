@@ -267,7 +267,6 @@ DECLARE
 	caseTables		TEXT[] 	:= NULL;
 	bCaseOptions	BOOLEAN := FALSE;
 BEGIN
-	-- INSERT into website.log (functie, parameters) VALUES ('get_source_by_year_nuts_level', _level::TEXT || _year::TEXT);
 	SELECT 
 		case_options IS NOT NULL 
 	INTO
@@ -606,12 +605,15 @@ RETURNS TABLE
 (
 	geo			TEXT,
 	geo_name	TEXT,
+	best_year	TEXT,
 	x			DOUBLE PRECISION,
 	y			DOUBLE PRECISION
 	
 )
 AS
 $BODY$
+DECLARE 
+	best_year	INTEGER;
 BEGIN
 	CREATE TEMPORARY TABLE IF NOT EXISTS tmpSource_x AS 
 	SELECT * FROM website.get_data_source_level_year (_year, X_JSON) WITH NO DATA;
@@ -622,17 +624,18 @@ BEGIN
 	CREATE TEMPORARY TABLE IF NOT EXISTS tmpSource_y AS 
 	SELECT * FROM website.get_data_source_level_year (_year, Y_JSON) WITH NO DATA;
 	TRUNCATE TABLE tmpSource_y;
-	INSERT INTO tmpSource_y SELECT * FROM website.get_data_source_level_year (_year, y_JSON);
+	INSERT INTO tmpSource_y SELECT * FROM website.get_data_source_level_year (_year, Y_JSON);
 	CALL areas.get_nuts_codes(Y_JSON ->> 'source', _level,'tmpSource_y' );
-
+	SELECT * FROM areas.get_xy_data_map_year(_level, _year, X_JSON, Y_JSON ) INTO best_year;
 	RETURN QUERY
 	SELECT 
 		f_nuts_id,
 		nuts_name,
+		best_year::TEXT,
 		x.f_value::DOUBLE PRECISION,
 		y.f_value::DOUBLE PRECISION
 	FROM 
-		areas.get_nuts_areas(_year,_level)
+		areas.get_nuts_areas(best_year,_level)
 		LEFT JOIN  tmpSource_x  AS x
 			ON f_nuts_id = x.f_geo
 		LEFT JOIN  tmpSource_y  AS y
@@ -670,10 +673,13 @@ RETURNS TABLE
 (
 	geo			TEXT,
 	geo_name	TEXT,	
+	best_year	TEXT,
 	x			DOUBLE PRECISION
 )
 AS
 $BODY$
+DECLARE 
+	best_year	INTEGER;
 BEGIN
 	CREATE TEMPORARY TABLE IF NOT EXISTS tmpSource_x AS 
 	SELECT * FROM website.get_data_source_level_year (_year, X_JSON) WITH NO DATA;
@@ -681,13 +687,16 @@ BEGIN
 	INSERT INTO tmpSource_x SELECT * FROM website.get_data_source_level_year (_year, X_JSON);
 	CALL areas.get_nuts_codes(X_JSON ->> 'source', _level,'tmpSource_x' );
 
+	SELECT * FROM areas.get_xy_data_map_year(_level, _year, X_JSON ) INTO best_year;
+	
 	RETURN QUERY
 	SELECT 
 		f_nuts_id,
 		nuts_name,
+		best_year::TEXT,
 		x.f_value::DOUBLE PRECISION
 	FROM 
-		areas.get_nuts_areas(_year,_level)
+		areas.get_nuts_areas(best_year,_level)
 		LEFT JOIN  tmpSource_x  AS x
 			ON f_nuts_id = x.f_geo;
 END;
