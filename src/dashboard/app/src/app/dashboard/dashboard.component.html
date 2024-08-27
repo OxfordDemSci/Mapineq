@@ -7,7 +7,7 @@
     <mat-drawer-container id="matDrawerContainer" class="container-main" autosize  hasBackdrop="false">
 
         <!-- PANEL PART -->
-        <mat-drawer #drawer class="container-panel mat-app-background" mode="side" position="start" id="drawerRight" [(opened)]="panelOpen" (openedChange)="resizeResultMap()">
+        <mat-drawer #drawer class="container-panel mat-app-background" mode="side" position="start" id="drawerRight" [(opened)]="panelOpen" (openedChange)="panelLeftStatusChange()">
             <div class="selection-table">
                 <!--
                 <app-select-table-value *ngFor="let tableSelection of displayObject.tableFields; let tableId = index;" [inputTableSelection]="tableSelection" [inputTableId]="tableId"></app-select-table-value>

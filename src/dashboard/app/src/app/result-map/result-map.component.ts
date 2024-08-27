@@ -12,7 +12,7 @@ import {
     LeafletControlWatermark
 } from "../lib/leaflet-control-custom";
 import {GraphComponent} from "../graph/graph.component";
-import {LeafletControlSelectInformation} from "../lib/leaflet-control-select-information";
+import {LeafletControlInfo} from "../lib/leaflet-control-info";
 import {LeafletControlGraph} from "../lib/leaflet-control-graph";
 
 
@@ -81,10 +81,14 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
 
     mapLegendDiv: any;
+
     mapGraphDiv: any;
     mapGraphContainer: any;
     graphOpen: boolean;
-    selectinformationDiv: any;
+
+    mapInfoDiv: any;
+    mapInfoContainer: any;
+    infoOpen: boolean;
 
     regionsColor: any = {};
 
@@ -100,6 +104,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
     constructor(private featureService: FeatureService) {
         this.graphOpen = false;
+        this.infoOpen = false;
     } // END CONSTRUCTOR
 
     ngOnChanges(changes: SimpleChanges) {
@@ -159,11 +164,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         this.mapLegendDiv = document.getElementById('map_legend_div');
 
 
-        let graph = new LeafletControlGraph({position: 'topright'}).addTo(this.map);
-        graph.addToggleButton(this.graphToggle.bind(this));
-
-        let selectinformation = new LeafletControlSelectInformation({position: 'topright'}).addTo(this.map);
-        this.selectinformationDiv = document.getElementById(selectinformation.getContainer().id);
+        let mapGraphControl = new LeafletControlGraph({position: 'topright'}).addTo(this.map);
+        mapGraphControl.addToggleButton(this.toggleMapGraph.bind(this));
 
         // console.log('id=', graph.getContainer().id);
         // this.mapGraphDiv = document.getElementById(graph.getContainer().id);
@@ -171,9 +173,20 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         this.mapGraphDiv = document.getElementById('map_graph_div_graph');
         this.mapGraphDiv.innerHTML += '<canvas id="myChart" width="400px" height="400px"></canvas>';
 
+
+        let mapInfoControl = new LeafletControlInfo({position: 'topright'}).addTo(this.map);
+        //this.mapInfoDiv = document.getElementById(mapInfoControl.getContainer().id);
+        mapInfoControl.addToggleButton(this.toggleMapInfo.bind(this));
+        this.mapInfoContainer = document.getElementById('map_info_div');
+        this.mapInfoDiv = document.getElementById('map_info_div_info');
+
+
         this.hideLegend();
-        this.hideGraph();
-        this.hideSelectInformation();
+        this.hideMapGraph();
+
+
+        this.hideMapInfo();
+        // this.closeMapInfo();
 
         new LeafletControlWatermark().addTo(this.map);
 
@@ -196,8 +209,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     } // END FUNCTION initResultMap
 
 
-    graphToggle(): void {
-        console.log('graphToggle() ...');
+    toggleMapGraph(): void {
+        console.log('toggleMapGraph() ...');
         this.graphOpen = !this.graphOpen;
         if (this.graphOpen) {
             document.getElementById('map_graph_div_toggle_button').className = 'graphToggleContainerButtonRight';
@@ -209,7 +222,41 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             //document.getElementById('map_graph_div_graph_container').style.height = '400px';
         }
 
-    } // END FUNCTION graphToggle
+    } // END FUNCTION toggleMapGraph
+
+    toggleMapInfo() {
+        console.log('toggleMapInfo() ...');
+
+        this.infoOpen = !this.infoOpen;
+        if (this.infoOpen) {
+            document.getElementById('map_info_div_toggle_button').className = 'graphToggleContainerButtonRight';
+            document.getElementById('map_info_div_info_container').style.width = '420px';
+        } else {
+            document.getElementById('map_info_div_toggle_button').className = 'graphToggleContainerButtonLeft';
+            document.getElementById('map_info_div_info_container').style.width = '0px';
+        }
+
+    } // END FUNCTION toggleMapInfo
+
+    closeMapInfo() {
+        // this.mapInfoDiv.style.display = 'none';
+        this.infoOpen = false;
+        document.getElementById('map_info_div_toggle_button').className = 'graphToggleContainerButtonLeft';
+        document.getElementById('map_info_div_info_container').style.width = '0px';
+
+    } // END FUNCTION closeMapInfo
+
+    openMapInfo() {
+        // this.mapInfoDiv.style.display = 'block';
+        this.infoOpen = true;
+        document.getElementById('map_info_div_toggle_button').className = 'graphToggleContainerButtonRight';
+        document.getElementById('map_info_div_info_container').style.width = '420px';
+
+    } // END FUNCTION openMapInfo
+
+
+
+
 
 
     regionLayerMouseInfo(event) {
@@ -313,7 +360,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         if (this.regionsLayer !== undefined) {
             //console.log('REMOVE regionsLayer');
             this.map.removeLayer(this.regionsLayer);
-            this.hideGraph();
+            this.hideMapGraph();
         }
 
         if (this.inputDisplayObject.displayData.length > 0) {
@@ -340,15 +387,14 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
                 'xlabel': this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr),
                 'ylabel': this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr), 'xydata': this.xydata
             });
-            this.showSelections();
+            this.setInfoSelections();
         } else {
             this.hideLegend();
         }
 
     } // END FUNCTION changeResultMap
 
-    showSelections(): void {
-
+    setInfoSelections(): void {
         let html = '<table class="selections">';
         html += '<tr>';
         html += '<th>' + this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr) + '</th>'
@@ -357,20 +403,20 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         html += '<tr>';
         html += '<td class="selectionsvalues">';
         //first table
-        html += this.showKeyvalues(this.inputDisplayObject.tableFields[0].Selections);
+        html += this.setInfoSelectionsKeyvalues(this.inputDisplayObject.tableFields[0].Selections);
         html += '</td>';
         html += '<td class="selectionsvalues">';
         //second table
-        html += this.showKeyvalues(this.inputDisplayObject.tableFields[1].Selections);
+        html += this.setInfoSelectionsKeyvalues(this.inputDisplayObject.tableFields[1].Selections);
         html += '</td>';
         html += '</tr>';
         html += '</table>'
-        this.selectinformationDiv.innerHTML = html;
-        this.showSelectInformation();
-
+        this.mapInfoDiv.innerHTML = html;
+        // this.openMapInfo();
+        this.showMapInfo();
     }
 
-    showKeyvalues(Selections: any) : string {
+    setInfoSelectionsKeyvalues(Selections: any) : string {
         //console.log('Selections', Selections);
         if (Selections === undefined) { return '';}
         let html = '<table class="selections">';
@@ -420,12 +466,12 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         switch (this.displayType) {
             case 'bivariate':
                 this.changeMapStyleBivariate(result);
-                this.showGraph();
+                this.showMapGraph();
                 break;
 
             default:
                 this.changeMapStyleUnivariate(result);
-                this.hideGraph();
+                this.hideMapGraph();
                 break;
         }
         // this.addMouseClick(result);
@@ -621,26 +667,33 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         this.mapLegendDiv.innerHTML = '';
     } // END FUNCTION initLegend
 
-    hideGraph() {
+    hideMapGraph() {
         this.graphOpen = false;
         document.getElementById('map_graph_div_graph_container').style.width = '0px';
+        document.getElementById('map_graph_div_toggle_button').className = 'graphToggleContainerButtonLeft';
         this.mapGraphContainer.style.display = 'none';
-    }
+    } // END FUNCTION hideMapGraph
 
-    hideSelectInformation() {
-        this.selectinformationDiv.style.display = 'none';
-    }
-
-    showSelectInformation() {
-        this.selectinformationDiv.style.display = 'block';
-    }
-
-    showGraph() {
+    showMapGraph() {
         this.graphOpen = true;
         document.getElementById('map_graph_div_graph_container').style.width = '420px';
         document.getElementById('map_graph_div_toggle_button').className = 'graphToggleContainerButtonRight';
         this.mapGraphContainer.style.display = 'block';
-    }
+    } // END FUNCTION showMapGraph
+
+    hideMapInfo() {
+        this.infoOpen = false;
+        document.getElementById('map_info_div_info_container').style.width = '0px';
+        document.getElementById('map_info_div_toggle_button').className = 'panelToggleContainerButtonLeft';
+        this.mapInfoContainer.style.display = 'none';
+    } // END FUNCTION hideMapInfo
+
+    showMapInfo() {
+        this.infoOpen = false;
+        document.getElementById('map_graph_div_graph_container').style.width = '420px';
+        document.getElementById('map_graph_div_toggle_button').className = 'panelToggleContainerButtonRight';
+        this.mapInfoContainer.style.display = 'block';
+    } // END FUNCTION showMapInfo
 
     setLegend(info): any {
 

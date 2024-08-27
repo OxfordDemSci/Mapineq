@@ -199,9 +199,14 @@ export class DashboardComponent implements OnInit{
 
     } // END FUNCTION panelToggle
 
-    resizeResultMap(): void {
+    panelLeftStatusChange(): void {
         this.childResultMap.resizeMap();
-    } // END FUNCTION resizeResultMap
+        if (this.panelOpen) {
+            this.childResultMap.closeMapInfo();
+        } else {
+            this.childResultMap.openMapInfo();
+        }
+    } // END FUNCTION panelLeftStatusChange
 
 
     updateTableFieldFromSelect(tableField: DisplayTableValueObject) {

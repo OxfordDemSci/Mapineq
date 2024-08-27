@@ -84,7 +84,7 @@ $BODY$
 LANGUAGE PLPGSQL;
 
 DROP PROCEDURE IF EXISTS website.fill_resource_year_nuts_levels(TEXT);
-CREATE OR REPLACE PROCEDURE website.fill_resource_year_nuts_levels(strTable TEXt DEFAULT NULL)
+CREATE OR REPLACE PROCEDURE website.fill_resource_year_nuts_levels(strTable TEXT DEFAULT NULL)
 AS
 $BODY$
 DECLARE
