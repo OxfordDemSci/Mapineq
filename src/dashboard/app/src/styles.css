@@ -605,4 +605,19 @@ div.buttonsMargin {
     background-image: url("assets/map/buttons/map_button_zoom_fit.svg");
 }
 
+tbody tr:nth-child(odd) {
+    background-color: #eeeeee;
+
+}
+
+.selectionsvalues {
+    vertical-align: top;
+    width:50%;
+}
+
+
+.selections {
+    width: 100%;
+}
+
 

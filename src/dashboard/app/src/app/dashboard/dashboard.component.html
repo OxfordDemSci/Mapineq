@@ -44,9 +44,15 @@
                 </div -->
 
 
+                <!--
+                Toevoegen onderstaande regel in witte stuk onder inputTableId=0 zorgt voor eindeloos flikkeren van tabel-selecties ...
+                                        [inputOtherTableSelection]="displayObject.tableFields[1]"
+                -->
                 <app-select-table-value [inputTableSelection]="displayObject.tableFields[0]"
                                         [inputTableId]="0"
                                         [inputUseCase]="useCase" [inputUseCaseData]="useCaseData"
+
+
                                         (updateTableValueFromSelect)="updateTableFieldFromSelect($event)"  >
                 </app-select-table-value>
                 <app-select-table-value *ngIf="displayObject.tableFields.length > 1" [inputTableSelection]="displayObject.tableFields[1]"
