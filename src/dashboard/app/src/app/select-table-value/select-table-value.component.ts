@@ -649,7 +649,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     this.getFilteredFieldsForTableForYearAndRegionLevel();
 
-    this.checkTableValueSelectionComplete();
+    // this.checkTableValueSelectionComplete();
   } // END FUNCTION changedColumnValue
 
 

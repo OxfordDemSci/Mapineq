@@ -11,7 +11,7 @@ export class DisplayTableValueObject {
     Selections: any;
 
     constructor(jsonObject = {}, index = 0) {
-        console.log('jsonObject', jsonObject);
+        console.log('DisplayTableValueObject CONSTRUCTOR, jsonObject', jsonObject);
         this.tableId = index;
         this.tableName = '';
         this.tableDescr = '';
