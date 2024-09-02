@@ -21,6 +21,8 @@ export class DashboardComponent implements OnInit{
 
     displayObject: DisplayObject;
 
+    displayData: any[];
+
     displayDataUpdated: boolean;
 
 
@@ -259,10 +261,11 @@ export class DashboardComponent implements OnInit{
 
             // console.log(' - - doCollectDataForSelection ???');
             if (doCollectDataForSelection) {
-                // this.collectDataForSelection(tableId);
+                this.collectDataForSelection(tableId);
                 // SJOERD: tijdelijk UIT gezet
             } else {
-                this.displayObject['displayData'] = [];
+                // this.displayObject['displayData'] = [];
+                this.displayData = [];
                 this.displayDataUpdated = !this.displayDataUpdated;
             }
 
@@ -290,16 +293,27 @@ export class DashboardComponent implements OnInit{
 
     } // END FUNCTION checkShowOnMapDisabled
 
+    showBivariateMap() {
+        console.log('CALLED showBivariateMap() ...');
+
+        this.displayObject.displayType = 'bivariate';
+        this.displayObject.displayTableId = -1;
+
+        this.collectDataForSelection(1);
+    } // END FUNCTION showBivariateMap
+
+
 
     collectDataForSelection(tableId = 0) {
-        //console.log('collectDataForSelection() ... ', tableId);
+        console.log('CALLED collectDataForSelection() ... ', tableId);
 
-        if (this.displayObject.displayType === 'bivariate'  &&  this.displayObject.tableFields.length > 1  &&  tableId === 0) {
+        // if (this.displayObject.displayType === 'bivariate'  &&  this.displayObject.tableFields.length > 1  &&  tableId === 0) {
+        if (tableId === 999) {
             // wait for right part ... that one always followes shortly after this ...
-            // console.log('collect wait ...', tableId);
+            console.log('collect wait .', tableId);
         } else {
             // console.log('actually collect', tableId);
-            console.log('collectDataForSelection() ... ', tableId);
+            console.log('collect START ... ', tableId);
 
             // this.displayObject = new DisplayObject(this.displayObject);
 
@@ -333,7 +347,8 @@ export class DashboardComponent implements OnInit{
                         console.log('NET VOOR AANROEP getXYData (bivariate versie)');
                         this.dashboardFeatureService.getXYData(this.displayObject.tableFields[0].tableRegionLevel, this.displayObject.tableFields[0].tableYear, JSON.stringify(x_json), JSON.stringify(y_json)).subscribe(data => {
                             console.log('A. DISPLAY DATA COLLECTED! (bivariate)', data);
-                            this.displayObject['displayData'] = data;
+                            // this.displayObject['displayData'] = data;
+                            this.displayData = data;
                             this.displayDataUpdated = !this.displayDataUpdated;
                         });
                     } else {
@@ -351,10 +366,11 @@ export class DashboardComponent implements OnInit{
                         }
                         x_json['conditions'] = x_conditions;
 
-                        console.log('NET VOOR AANROEP getXYData (UNI versie)');
+                        console.log('NET VOOR AANROEP getXData (UNI versie)');
                         this.dashboardFeatureService.getXData(this.displayObject.tableFields[tableId].tableRegionLevel, this.displayObject.tableFields[tableId].tableYear, JSON.stringify(x_json)).subscribe(data => {
                             console.log('B. DISPLAY DATA COLLECTED! (univariate)', data);
-                            this.displayObject['displayData'] = data;
+                            // this.displayObject['displayData'] = data;
+                            this.displayData = data;
                             this.displayDataUpdated = !this.displayDataUpdated;
                         });
 
@@ -378,7 +394,8 @@ export class DashboardComponent implements OnInit{
     downloadCSV() {
 
         //this.displayObject.displayData;
-        let csv = this.createCSV(this.displayObject.displayData);
+        // let csv = this.createCSV(this.displayObject.displayData);
+        let csv = this.createCSV(this.displayData);
         const blob = new Blob([csv], { type: 'text/csv' });
 
         // Create a URL for the Blob

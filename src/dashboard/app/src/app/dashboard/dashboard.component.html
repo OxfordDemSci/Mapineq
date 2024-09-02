@@ -14,12 +14,15 @@
                 -->
 
                 <div class="leftPanelTopButtons">
-                    <button [disabled]="checkShowOnMapDisabled()" mat-raised-button color="primary" aria-label="TEST" (click)="collectDataForSelection(1)">
+                    <button [disabled]="checkShowOnMapDisabled()" mat-raised-button color="primary" aria-label="TEST" (click)="showBivariateMap()">
                         <mat-icon>map</mat-icon> Show on map
                     </button>
 
 
+                    <!--
                     <a [disabled]="displayObject.displayData.length < 1" mat-stroked-button type="button" (click)="downloadCSV()" download="download.csv" [href]="downloadUrl">
+                    -->
+                    <a [disabled]="displayData?.length < 1" mat-stroked-button type="button" (click)="downloadCSV()" download="download.csv" [href]="downloadUrl">
                         <mat-icon>download</mat-icon>Download csv
                     </a>
 
@@ -103,7 +106,7 @@
                 <button (click)="panelToggle()" class="panelToggleContainerButtonRight" *ngIf="!panelOpen"></button>
             </div>
             <div class="drawerContentMapContainer">
-              <app-result-map [inputDisplayObject]="displayObject" [inputDisplayDataUpdated]="displayDataUpdated"></app-result-map>
+              <app-result-map [inputDisplayObject]="displayObject" [inputDisplayData]="displayData" [inputDisplayDataUpdated]="displayDataUpdated"></app-result-map>
             </div>
         </mat-drawer-content>
 

@@ -75,6 +75,7 @@ const formatString = (template, ...args) => {
 export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
     @Input() inputDisplayObject!: DisplayObject;
+    @Input() inputDisplayData!: any[];
     @Input() inputDisplayDataUpdated!: boolean;
 
     @ViewChild(GraphComponent) childGraph: GraphComponent;
@@ -105,6 +106,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     constructor(private featureService: FeatureService) {
         this.graphOpen = false;
         this.infoOpen = false;
+
+        this.inputDisplayData = [];
     } // END CONSTRUCTOR
 
     ngOnChanges(changes: SimpleChanges) {
@@ -116,9 +119,15 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             if (propName === 'inputDisplayObject' && valueCurrent) {
                 console.log('ngOnChanges(), "inputDisplayObject":', valueCurrent);
             }
+            if (propName === 'inputDisplayData' && valueCurrent) {
+                console.log('ngOnChanges(), "inputDisplayData":', valueCurrent);
+                // this.changeResultMap();
+            }
             if (propName === 'inputDisplayDataUpdated') { //  && valueCurrent
                 console.log('ngOnChanges(), "inputDisplayDataUpdated":', valueCurrent);
-                this.changeResultMap();
+                if (typeof this.inputDisplayData !== 'undefined') {
+                    this.changeResultMap();
+                }
             }
         }
     } // END FUNCTION ngOnChanges
@@ -284,7 +293,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         }
 
 
-        let regionValues = this.inputDisplayObject.displayData.find(item => {
+        // let regionValues = this.inputDisplayObject.displayData.find(item => {
+        let regionValues = this.inputDisplayData.find(item => {
             return item.geo === event.layer.properties['nuts_id'];
         }) ?? {};
         // console.log('REGIONS LAYER info: ', event.layer.properties['nuts_id'], regionValues);
@@ -348,14 +358,16 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
 
     changeResultMap() {
-        //console.log('changeResultMap() ...');
+        console.log('changeResultMap() ...');
 
         this.displayType = this.inputDisplayObject.displayType;
 
 
         // console.log(this.inputDisplayObject.tableFields[0].tableYear + ' ' + this.inputDisplayObject.tableFields[0].tableRegionLevel);
         // if (valueCurrent === true) {
-        this.xydata = this.inputDisplayObject.displayData;
+        // this.xydata = this.inputDisplayObject.displayData;
+        this.xydata = this.inputDisplayData;
+
 
         if (this.regionsLayer !== undefined) {
             //console.log('REMOVE regionsLayer');
@@ -363,7 +375,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             this.hideMapGraph();
         }
 
-        if (this.inputDisplayObject.displayData.length > 0) {
+        // if (this.inputDisplayObject.displayData.length > 0) {
+        if (this.inputDisplayData.length > 0) {
             this.regionsLayer = RegionsLayer.getLayer(this.inputDisplayObject.tableFields[0].tableRegionLevel, this.inputDisplayObject.tableFields[0].tableYear);
             if (typeof this.map !== 'undefined') {
                 //console.log('ADD regionsLayer');
@@ -451,7 +464,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
 
     public consoleLogData() {
-        console.log('Current inputDisplayObject.displayData:', this.inputDisplayObject.displayData)
+        console.log('Current inputDisplayObject.displayData:', this.inputDisplayObject.displayData);
+        console.log('Current inputDisplayData:', this.inputDisplayData);
     } // END FUNCTION consoleLogData
 
 
