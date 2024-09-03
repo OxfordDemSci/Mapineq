@@ -429,6 +429,11 @@ export class DashboardComponent implements OnInit{
             const values = headers.map(e => {
                 return row[e];
             })
+            for (let i = 0; i< values.length; i++) {
+                if (typeof values[i] === 'string') {
+                    values[i] = values[i].replaceAll(',', ' ');
+                }
+            }
             csvRows.push(values.join(','));
         }
 
