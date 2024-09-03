@@ -120,14 +120,14 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
                 console.log('ngOnChanges(), "inputDisplayObject":', valueCurrent);
             }
             if (propName === 'inputDisplayData' && valueCurrent) {
-                console.log('ngOnChanges(), "inputDisplayData":', valueCurrent);
-                // this.changeResultMap();
+                console.log('before abc  RESULT-MAP ngOnChanges(), "inputDisplayData":', valueCurrent);
+                this.changeResultMap();
             }
-            if (propName === 'inputDisplayDataUpdated' && valueCurrent) { //  && valueCurrent
-                console.log('ngOnChanges(), "inputDisplayDataUpdated":', valueCurrent);
-                if (typeof this.inputDisplayData !== 'undefined') {
-                    this.changeResultMap();
-                }
+            if (propName === 'inputDisplayDataUpdated') { //  && valueCurrent
+                console.log('before abc  RESULT-MAP ngOnChanges(), "inputDisplayDataUpdated":', valueCurrent);
+                // if (typeof this.inputDisplayData !== 'undefined') {
+                //     this.changeResultMap();
+                // }
             }
         }
     } // END FUNCTION ngOnChanges

@@ -28,6 +28,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
   componentInitiated: boolean;
 
+  useCaseOtherTableLoaded: number;
+
   tableSelectFormControl = new FormControl('');
   tableSelectOptions: any[];
   tableSelectFilteredOptions: Observable<any[]>;
@@ -57,6 +59,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   constructor(private featureService: FeatureService) {
 
     this.componentInitiated = false;
+
+    this.useCaseOtherTableLoaded = 0;
 
     this.inputUseCase = -1;
     this.inputUseCaseData = [];
@@ -130,11 +134,18 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       }
 
       if (propName === 'inputOtherTableSelection' && valueCurrent  &&  this.componentInitiated) {
+      // if (propName === 'inputOtherTableSelection' && valueCurrent  &&  this.componentInitiated  &&  this.inputUseCase === -1) {
         // console.log('ngOnChanges(), "inputOtherTableSelection":', valueCurrent);
         // this.otherTableSelection = new DisplayTableValueObject(this.inputOtherTableSelection);
-        console.log('before abc - ngOnChanges(), "inputOtherTableSelection, inputTableId', this.inputTableId, this.componentInitiated, this.inputUseCaseData);
-        this.otherTableSelection = this.inputOtherTableSelection;
-        this.setTableSources();
+
+
+        console.log('before abc - ngOnChanges(), "inputOtherTableSelection" CHECK:', this.inputTableId, this.inputUseCase, this.useCaseOtherTableLoaded);
+        if (this.inputUseCase === -1  ||  this.useCaseOtherTableLoaded < 3) {
+          console.log('before abc - ngOnChanges(), "inputOtherTableSelection", inputTableId', this.inputTableId, this.componentInitiated, this.inputUseCaseData);
+          this.otherTableSelection = this.inputOtherTableSelection;
+          this.setTableSources();
+          this.useCaseOtherTableLoaded++;
+        }
       }
 
       if (propName === 'region'  &&  this.componentInitiated) {
@@ -443,6 +454,10 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     this.checkTableValueSelectionComplete();
 
+    if (this.tableSelection.tableId === 0  &&  this.inputUseCase > -1) {
+      console.log('before abc  RESET ...');
+      this.useCaseOtherTableLoaded = 0; // ANDERE useCaseOtherTableLoaded zou weer op nul moeten worden gezet ...
+    }
 
     this.emitChangeTableValue();
   } // END FUNCTION tableSelectClearSelectedOption
@@ -521,8 +536,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
   getFieldsForTableForYearAndRegionLevel() {
-    console.log(' >>> >>>  getFieldsForTableForYearAndRegionLevel(), tableId', this.tableSelection.tableId);
-    console.trace('TRACE0', this.tableSelection.tableId);
+    // console.log(' >>> >>>  getFieldsForTableForYearAndRegionLevel(), tableId', this.tableSelection.tableId);
+    // console.trace('TRACE0', this.tableSelection.tableId);
     //console.log('getFieldsForTableForYearAndRegionLevel(), year, regionLevel', this.tableSelection.tableYear, this.tableSelection.tableRegionLevel);
     this.availableColumnValues = [];
     this.availableColumnValuesWithInitiallyOneChoice = [];
