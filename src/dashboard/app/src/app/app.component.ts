@@ -58,7 +58,7 @@ export class AppComponent implements OnInit {
     if (currentRouteClean.substring(1).indexOf('/') > -1) {
       currentRouteClean = currentRouteClean.substring(0, currentRouteClean.substring(1).indexOf('/') + 1);
     }
-    console.log('setAppPageTitle():', this.currentRoute, currentRouteClean, this.routePageTitles[currentRouteClean]);
+    // console.log('setAppPageTitle():', this.currentRoute, currentRouteClean, this.routePageTitles[currentRouteClean]);
     this.title = this.routePageTitles[currentRouteClean];
   } // END FUNCTION setAppPageTitle
 

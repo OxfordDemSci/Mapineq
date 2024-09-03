@@ -358,7 +358,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
 
     changeResultMap() {
-        console.log('changeResultMap() ...');
+        // console.log('changeResultMap() ...');
 
         this.displayType = this.inputDisplayObject.displayType;
 
@@ -714,7 +714,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
         const legendType = info.type;
 
-        console.log('setLegend()', legendType);
+        // console.log('setLegend()', legendType);
 
 
         // this.mapLegendDiv.innerHTML = '<h4>Legend</h4>';

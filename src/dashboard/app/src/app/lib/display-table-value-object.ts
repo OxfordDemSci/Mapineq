@@ -11,7 +11,7 @@ export class DisplayTableValueObject {
     Selections: any;
 
     constructor(jsonObject = {}, index = 0) {
-        console.log('DisplayTableValueObject CONSTRUCTOR, jsonObject', jsonObject);
+        // console.log('DisplayTableValueObject CONSTRUCTOR, index/jsonObject:', index, jsonObject);
         this.tableId = index;
         this.tableName = '';
         this.tableDescr = '';
@@ -36,6 +36,8 @@ export class DisplayTableValueObject {
 
     checkSelectionComplete() {
         // console.log('checkSelectionComplete()', this);
+        this.tableSelectionComplete = false;
+
         let selectionComplete = true;
         if (this.tableRegionLevel === '-1') {
             selectionComplete = false;

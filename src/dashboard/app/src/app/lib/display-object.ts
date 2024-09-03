@@ -42,7 +42,9 @@ export class DisplayObject {
             } else if (field === 'tableFields') {
                 console.log('tableFields: ', jsonObject[field]);
                 let tableFieldsJson = jsonObject[field];
+                //console.log('CALLED before tableFieldsJson.forEach(), tableFieldsJson', tableFieldsJson);
                 tableFieldsJson.forEach( (tableField, index) => {
+                    //console.log('CALLED in tableFieldsJson.forEach(), index / tableField', index, tableField);
                     this.tableFields.push(new DisplayTableValueObject(tableField, index));
                 });
             } else {
@@ -61,6 +63,7 @@ export class DisplayObject {
 
 
     checkTableFields() {
+        // console.log('CALLED checkTableFields()', this.numberTableFields);
         let tmpTableFields = [];
         for (let i = 0; i < this.numberTableFields; i++) {
             if (typeof this.tableFields[i] !== 'undefined') {
