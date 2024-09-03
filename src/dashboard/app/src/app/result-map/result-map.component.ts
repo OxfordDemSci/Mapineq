@@ -123,7 +123,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
                 console.log('ngOnChanges(), "inputDisplayData":', valueCurrent);
                 // this.changeResultMap();
             }
-            if (propName === 'inputDisplayDataUpdated') { //  && valueCurrent
+            if (propName === 'inputDisplayDataUpdated' && valueCurrent) { //  && valueCurrent
                 console.log('ngOnChanges(), "inputDisplayDataUpdated":', valueCurrent);
                 if (typeof this.inputDisplayData !== 'undefined') {
                     this.changeResultMap();
@@ -531,6 +531,10 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         //console.log('getColorUnivariate():', xvalue, xmin, xmax);
 
         let colorIndex = Math.floor((xvalue - xmin) / ((xmax - xmin) / colorsUnivariate.length));
+        if (xvalue === xmax) {
+            colorIndex = (colorsUnivariate.length - 1);
+        }
+
         if (xvalue === 0) {
             return '#FFFFFF';
         }
