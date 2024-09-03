@@ -585,8 +585,11 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       const selectedvalue = columnvalue.field_values.find((field_value: any) => {
         return field_value.value === this.tableSelection.tableColumnValues[columnvalue.field];
       })
-      // @ts-ignore
-      selections[columnvalue.field_label] = selectedvalue.label;
+      if (selectedvalue !== undefined) {
+        // @ts-ignore
+        selections[columnvalue.field_label] = selectedvalue.label;
+      }
+
     } )
     this.tableSelection.Selections = selections;
 
