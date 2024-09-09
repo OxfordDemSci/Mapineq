@@ -73,46 +73,11 @@ export class DatacatalogueComponent implements OnInit {
     })
   }
 
-
-
-  displayWith(value: any) {
-    /*
-    console.log('displayWith()', value);
-    return value?.name;//  + ' ' + (value?.floor);
-    */
-    //console.log('=== === displayWith(), fromOrTo:', this.fromOrTo);
-    if (typeof value !== 'undefined'  &&  value !== null) {
-      //console.log('    === displayWith()', value, value.floor);
-      // return value?.name + (typeof value.floor !== 'undefined' ? ' (' + value.floor.toString() + ')' : '');//  + ' ' + (value?.floor);
-      return value?.f_description;
-    } else {
-      //console.log('    === displayWith() --- NULL or UNDEFINED');
-      return '';
-    }
-  }
-
-
-  onSelected(event: any, formField: any, input: any) {
-    //console.log(event);
-    this.searchResult = event;
-    // this.selectedLocationName = this.selectedLocation.name;
-
-
-    // https://stackoverflow.com/questions/50771298/remove-focus-blur-on-select-programmatically-angular6-material
-    setTimeout( () => {
-      console.log('blur ...');
-      formField._elementRef.nativeElement.classList.remove('mat-focused');
-      input.blur();
-    }, 250);
-  }
-
   protected readonly Math = Math;
   protected readonly JSON = JSON;
   protected readonly String = String;
 
   render(f_years: any) {
-
-
     return JSON.parse(f_years).map(Number);
   }
 }
