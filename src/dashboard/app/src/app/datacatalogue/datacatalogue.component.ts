@@ -20,7 +20,7 @@ export class DatacatalogueComponent implements OnInit {
   searchText: string = 'xxxxxx';
 
   constructor(private featureService: FeatureService) {
-
+    this.initData();
   }
 
 
@@ -63,10 +63,17 @@ export class DatacatalogueComponent implements OnInit {
 
   clearSelection() {
     this.searchResultsCtrl.setValue('');
-    this.filteredSearchResults = [];
+    this.initData();
     // this.selectedLocationName = '';
-
   }
+
+  initData(): void {
+    this.featureService.searchCatalogue('').subscribe((data) => {
+      this.filteredSearchResults = data;
+    })
+  }
+
+
 
   displayWith(value: any) {
     /*
@@ -106,6 +113,6 @@ export class DatacatalogueComponent implements OnInit {
   render(f_years: any) {
 
 
-    return JSON.parse(f_years).map(String);
+    return JSON.parse(f_years).map(Number);
   }
 }
