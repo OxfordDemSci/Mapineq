@@ -192,7 +192,6 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         this.hideLegend();
         this.hideMapGraph();
         this.hideMapInfo();
-        //this.closeMapInfo();
 
         new LeafletControlWatermark().addTo(this.map);
 
@@ -259,11 +258,6 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         document.getElementById('map_info_div_info_container').style.width = '420px';
 
     } // END FUNCTION openMapInfo
-
-
-
-
-
 
     regionLayerMouseInfo(event) {
         // console.log('REGIONS LAYER, event: ', event, event.originalEvent.clientX, event.originalEvent.clientY, event.type);
