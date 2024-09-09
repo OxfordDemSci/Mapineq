@@ -348,9 +348,9 @@ export class DashboardComponent implements OnInit{
                         }
                         y_json['conditions'] = y_conditions;
 
-                        console.log('before abc    NET VOOR AANROEP getXYData (bivariate versie)');
+                        //console.log('before abc    NET VOOR AANROEP getXYData (bivariate versie)');
                         this.dashboardFeatureService.getXYData(this.displayObject.tableFields[0].tableRegionLevel, this.displayObject.tableFields[0].tableYear, JSON.stringify(x_json), JSON.stringify(y_json)).subscribe(data => {
-                            console.log('before abc    A. DISPLAY DATA COLLECTED! (bivariate)', data);
+                            //console.log('before abc    A. DISPLAY DATA COLLECTED! (bivariate)', data);
                             // this.displayObject['displayData'] = data;
                             this.displayData = data;
                             this.displayDataUpdated = !this.displayDataUpdated;
@@ -372,7 +372,7 @@ export class DashboardComponent implements OnInit{
 
                         console.log('NET VOOR AANROEP getXData (UNI versie)');
                         this.dashboardFeatureService.getXData(this.displayObject.tableFields[tableId].tableRegionLevel, this.displayObject.tableFields[tableId].tableYear, JSON.stringify(x_json)).subscribe(data => {
-                            console.log('before abc    B. DISPLAY DATA COLLECTED! (univariate)', data);
+                            //console.log('before abc    B. DISPLAY DATA COLLECTED! (univariate)', data);
                             // this.displayObject['displayData'] = data;
                             this.displayData = data;
                             this.displayDataUpdated = !this.displayDataUpdated;
