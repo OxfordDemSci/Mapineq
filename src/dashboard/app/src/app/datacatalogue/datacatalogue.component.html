@@ -51,7 +51,7 @@
                             <mat-card-title>{{result.f_short_description}}</mat-card-title>
                             <mat-card-subtitle>{{result.f_resource}} from {{result.f_provider}}</mat-card-subtitle>
                         </mat-card-header>
-                        <img mat-card-image src="assets/img/preview{{ 1 + JSON.parse(result.f_levels)[0] }}.png" alt="Example map" >
+                        <img *ngIf="result.f_levels" mat-card-image src="assets/img/preview{{ 1 + JSON.parse(result.f_levels)[0] }}.png" alt="Example map" >
                         <mat-card-content>
                             <br/>
                             <p>
@@ -63,7 +63,6 @@
                                 <div>
                                     {{result.f_years }}
                                 </div>
-
                             </div>
                             <br/>
                             <div>
