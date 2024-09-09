@@ -96,7 +96,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.tableSelection = this.inputTableSelection;
     this.otherTableSelection = this.inputOtherTableSelection;
 
-    console.log('before abc ngOnInit ...', this.tableSelection.tableId);
+    //console.log('before abc ngOnInit ...', this.tableSelection.tableId);
     this.setAvailableRegionLevels();
 
 
@@ -129,6 +129,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
       if (propName === 'inputTableSelection' && valueCurrent) {
         // DEZE REGEL HIERONDER MISTE ...
+        //console.log('before abc - ngOnChanges(), "inputTableSelection":', this.tableSelection.tableId);
         this.tableSelection = this.inputTableSelection;
         // this.checkTableValueSelectionComplete(); // deze _hier_ aanroepen zorgt dat hij blijft checken en niet (kaart) plot
       }
@@ -139,21 +140,24 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
         // this.otherTableSelection = new DisplayTableValueObject(this.inputOtherTableSelection);
 
 
-        console.log('before abc - ngOnChanges(), "inputOtherTableSelection" CHECK:', this.inputTableId, this.inputUseCase, this.useCaseOtherTableLoaded);
+        //console.log('before abc - ngOnChanges(), "inputOtherTableSelection" CHECK:', this.inputTableId, this.inputUseCase, this.useCaseOtherTableLoaded, this.inputOtherTableSelection.tableName, this.tableSelection.tableName);
         if (this.inputUseCase === -1  ||  this.useCaseOtherTableLoaded < 3) {
-          console.log('before abc - ngOnChanges(), "inputOtherTableSelection", inputTableId', this.inputTableId, this.componentInitiated, this.inputUseCaseData);
+          //console.log('before abc - ngOnChanges(), "inputOtherTableSelection", inputTableId', this.inputTableId, this.componentInitiated, this.inputOtherTableSelection.tableName, this.tableSelection.tableName, this.inputUseCaseData);
           this.otherTableSelection = this.inputOtherTableSelection;
           this.setTableSources();
           this.useCaseOtherTableLoaded++;
         }
+        if (this.inputOtherTableSelection.tableName === '') {
+          this.useCaseOtherTableLoaded = 0; // SJO 20240909
+        }
       }
 
       if (propName === 'region'  &&  this.componentInitiated) {
-        console.log('********** change in', propName, changes[propName].currentValue, changes[propName].previousValue);
+        //console.log('********** change in', propName, changes[propName].currentValue, changes[propName].previousValue);
         this.tableId = 0;
-        console.log('before abc - ngOnChanges(), "region":', valueCurrent, ' inputTableId', this.inputTableId, this.componentInitiated, this.inputUseCaseData);
+        //console.log('before abc - ngOnChanges(), "region":', valueCurrent, ' inputTableId', this.inputTableId, this.componentInitiated, this.inputUseCaseData);
         this.setTableSources();
-        console.log('this.tableSelection.tableName=' + this.tableSelection.tableName)
+        // console.log('this.tableSelection.tableName=' + this.tableSelection.tableName)
       }
     }
   } // END FUNCTION ngOnChanges
@@ -203,13 +207,13 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       // this.availableRegionLevels = ['0', '1', '2', '3'].slice().reverse();
 
       if (this.inputUseCase > -1  &&  this.inputUseCaseData.length > 0) {
-        console.log('B setAvailableRegionLevels(), ', this.inputTableId, this.inputUseCaseData[this.inputTableId].tableRegionLevel, this.availableRegionLevels);
+        //console.log('B setAvailableRegionLevels(), ', this.inputTableId, this.inputUseCaseData[this.inputTableId].tableRegionLevel, this.availableRegionLevels);
 
         if ( this.availableRegionLevels.includes(this.inputUseCaseData[this.inputTableId].tableRegionLevel) ) {
           this.tableSelection.tableRegionLevel = this.inputUseCaseData[this.inputTableId].tableRegionLevel;
 
           // this.tableSelection.tableRegionLevel = '2';
-          console.log('before abc - before calling setTableSources() vanuit setAvailableRegionLevels()', this.tableSelection.tableId);
+          //console.log('before abc - before calling setTableSources() vanuit setAvailableRegionLevels()', this.tableSelection.tableId);
           this.setTableSources();
         }
       }
@@ -221,7 +225,6 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     if (this.tableId === 0) {
       // this.tableSelection.tableRegionLevel = this.otherTableSelection.tableRegionLevel;
-      console.log('SJOERD SJOERD SJOERD');
       // this.otherTableSelection.tableRegionLevel = this.tableSelection.tableRegionLevel;
       this.updateTableValueFromSelect.emit(this.tableSelection);
 
@@ -257,7 +260,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
               return tableObject.f_resource === this.tableSelection.tableName;
             })
 
-            console.log('before abc A - selectedTableObject: ', this.tableSelection.tableId, selectedTableObject);
+            //console.log('before abc A - selectedTableObject: ', this.tableSelection.tableId, selectedTableObject);
             this.tableSelectOption(selectedTableObject[0]);
 
           }
@@ -274,7 +277,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
               return tableObject.f_resource === this.inputUseCaseData[this.inputTableId].tableName;
             })
 
-            console.log('before abc B - selectedTableObject: ', this.tableSelection.tableId, selectedTableObject);
+            //console.log('before abc B - selectedTableObject: ', this.tableSelection.tableId, selectedTableObject);
             this.tableSelectOption(selectedTableObject[0]);
 
           }
@@ -299,6 +302,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
           }
         })
         if (!selectedTableStillAvailable) {
+          //console.log('before abc !selectedTableStillAvailable ...', this.tableSelection.tableId);
+
           this.tableSelection.tableName = '';
           this.tableSelection.tableDescr = '';
           this.tableSelection.tableColumnValues = {};
@@ -325,7 +330,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
               return tableObject.f_resource === this.inputUseCaseData[this.inputTableId].tableName;
             })
 
-            console.log('before abc C - selectedTableObject: ', this.tableSelection.tableId, selectedTableObject);
+            //console.log('before abc C - selectedTableObject: ', this.tableSelection.tableId, selectedTableObject);
             this.tableSelectOption(selectedTableObject[0]);
 
           }
@@ -429,7 +434,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
   tableSelectClearSelectedOption(autoComplete) {
-    console.log('tableSelectClearSelectedOption() ...');
+    //console.log('before abc tableSelectClearSelectedOption() ...', this.inputTableId);
+
 
     this.tableSelection.tableName = '';
     this.tableSelection.tableDescr = '';
@@ -455,8 +461,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.checkTableValueSelectionComplete();
 
     if (this.tableSelection.tableId === 0  &&  this.inputUseCase > -1) {
-      console.log('before abc  RESET ...');
-      this.useCaseOtherTableLoaded = 0; // ANDERE useCaseOtherTableLoaded zou weer op nul moeten worden gezet ...
+      //console.log('before abc  RESET ...');
+      // this.useCaseOtherTableLoaded = 0; // ANDERE useCaseOtherTableLoaded zou weer op nul moeten worden gezet ...
     }
 
     this.emitChangeTableValue();
@@ -486,7 +492,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
   setAvailableYears() {
-    console.log('CALLED setAvailableYears() ... ', this.tableSelection.tableId, JSON.stringify(this.availableYearsAndRegionLevels));
+    // console.log('CALLED setAvailableYears() ... ', this.tableSelection.tableId, JSON.stringify(this.availableYearsAndRegionLevels));
 
     this.availableYears = [];
 
