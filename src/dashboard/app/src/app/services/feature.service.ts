@@ -215,7 +215,7 @@ export class FeatureService {
           //console.log(result);
         }),
         catchError(this.handleError('search', 'ERROR')))
-  } // END FUNCTION getXData
+  }
 
 
   handleError<T>(operation = 'operation', result?: T) {
