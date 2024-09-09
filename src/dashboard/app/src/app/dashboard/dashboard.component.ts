@@ -71,7 +71,7 @@ export class DashboardComponent implements OnInit{
         /* */
         this.route.paramMap.subscribe(params => {
             if (params.get('id') !== null) {
-                console.log('use case:', params.get('id'));
+                console.log('From route paramMap: use case:', params.get('id'));
 
                 this.useCase = Number(params.get('id'));
 
@@ -79,6 +79,7 @@ export class DashboardComponent implements OnInit{
                     this.useCase = -1;
                 } else {
                     if (params.get('variant') !== null) {
+                        console.log('From route paramMap: variant:', params.get('variant'));
                         this.useCaseVariant = Number(params.get('variant'));
                         if (isNaN(this.useCaseVariant)) {
                             this.useCaseVariant = 0;
@@ -157,6 +158,7 @@ export class DashboardComponent implements OnInit{
         this.dashboardFeatureService.getUseCase(this.useCase).subscribe((data) => {
             console.log('showUseCase()', this.useCase, this.useCaseVariant, data);
             if (data[0].f_parameters !== null) {
+                console.log('number of variants: ', JSON.parse(data[0].f_parameters).length);
                 if (this.useCaseVariant >= JSON.parse(data[0].f_parameters).length) {
                     this.useCaseVariant = 0;
                 }
