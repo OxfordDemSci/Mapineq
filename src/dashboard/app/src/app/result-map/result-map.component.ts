@@ -189,13 +189,10 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         this.mapInfoContainer = document.getElementById('map_info_div');
         this.mapInfoDiv = document.getElementById('map_info_div_info');
 
-
         this.hideLegend();
         this.hideMapGraph();
-
-
         this.hideMapInfo();
-        // this.closeMapInfo();
+        //this.closeMapInfo();
 
         new LeafletControlWatermark().addTo(this.map);
 
@@ -408,25 +405,42 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     } // END FUNCTION changeResultMap
 
     setInfoSelections(): void {
+        console.log();
         let html = '<table class="selections">';
         html += '<tr>';
-        html += '<th>' + this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr) + '</th>'
-        html += '<th>' + this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr) + '</th>'
+        if (this.displayInfo(0)) {
+            html += '<th>' + this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr) + '</th>'
+        }
+        if (this.displayInfo(1)) {
+            html += '<th>' + this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr) + '</th>'
+        }
         html += '</tr>';
         html += '<tr>';
-        html += '<td class="selectionsvalues">';
-        //first table
-        html += this.setInfoSelectionsKeyvalues(this.inputDisplayObject.tableFields[0].Selections);
-        html += '</td>';
-        html += '<td class="selectionsvalues">';
-        //second table
-        html += this.setInfoSelectionsKeyvalues(this.inputDisplayObject.tableFields[1].Selections);
-        html += '</td>';
+        if (this.displayInfo(0)) {
+            html += '<td class="selectionsvalues">';
+            //first table
+            html += this.setInfoSelectionsKeyvalues(this.inputDisplayObject.tableFields[0].Selections);
+            html += '</td>';
+        }
+        if (this.displayInfo(1)) {
+            html += '<td class="selectionsvalues">';
+            //second table
+            html += this.setInfoSelectionsKeyvalues(this.inputDisplayObject.tableFields[1].Selections);
+            html += '</td>';
+        }
         html += '</tr>';
         html += '</table>'
         this.mapInfoDiv.innerHTML = html;
         // this.openMapInfo();
         this.showMapInfo();
+    }
+
+    displayInfo(tableId: number): Boolean {
+        if (this.inputDisplayObject.displayType === 'univariate') {
+            return this.inputDisplayObject.displayTableId === tableId;
+        } else {
+            return true;
+        }
     }
 
     setInfoSelectionsKeyvalues(Selections: any) : string {
