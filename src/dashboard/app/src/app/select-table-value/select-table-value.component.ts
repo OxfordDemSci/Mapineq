@@ -267,21 +267,21 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
         }
 
 
-        if (this.tableSelection.lastTableName !== '') {
+        if (this.tableSelection.lastTableName !== ''  &&  this.availableTableNames.includes(this.tableSelection.lastTableName)) {
 
           console.log("==> setTableSources(), set previous tableName", this.inputTableId, this.tableSelection.lastTableName, this.availableTableNames);
-          if (this.availableTableNames.includes(this.tableSelection.lastTableName)) {
-            // console.log('TABLENAME setten', this.inputTableId);
-            // this.tableSelection.tableName = this.inputUseCaseData[this.inputTableId].tableName;
+          // if (this.availableTableNames.includes(this.tableSelection.lastTableName)) {
+          // console.log('TABLENAME setten', this.inputTableId);
+          // this.tableSelection.tableName = this.inputUseCaseData[this.inputTableId].tableName;
 
-            let selectedTableObject = this.tableSelectOptions.filter(tableObject => {
-              return tableObject.f_resource === this.tableSelection.lastTableName;
-            })
+          let selectedTableObject = this.tableSelectOptions.filter(tableObject => {
+            return tableObject.f_resource === this.tableSelection.lastTableName;
+          })
 
-            //console.log('before abc B - selectedTableObject: ', this.tableSelection.tableId, selectedTableObject);
-            this.tableSelectOption(selectedTableObject[0]);
+          //console.log('before abc B - selectedTableObject: ', this.tableSelection.tableId, selectedTableObject);
+          this.tableSelectOption(selectedTableObject[0]);
 
-          }
+          // }
 
         } else {
 
@@ -341,21 +341,21 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
         //this.tableSelection.tableRegionLevel = this.otherTableSelection.tableRegionLevel;
 
 
-        if (this.tableSelection.lastTableName !== '') {
+        if (this.tableSelection.lastTableName !== ''  &&  this.availableTableNames.includes(this.tableSelection.lastTableName)) {
 
           console.log("==> setTableSources(), set previous tableName", this.inputTableId, this.tableSelection.lastTableName, this.availableTableNames);
-          if (this.availableTableNames.includes(this.tableSelection.lastTableName)) {
-            // console.log('TABLENAME setten', this.inputTableId);
-            // this.tableSelection.tableName = this.inputUseCaseData[this.inputTableId].tableName;
+          // if (this.availableTableNames.includes(this.tableSelection.lastTableName)) {
+          // console.log('TABLENAME setten', this.inputTableId);
+          // this.tableSelection.tableName = this.inputUseCaseData[this.inputTableId].tableName;
 
-            let selectedTableObject = this.tableSelectOptions.filter(tableObject => {
-              return tableObject.f_resource === this.tableSelection.lastTableName;
-            })
+          let selectedTableObject = this.tableSelectOptions.filter(tableObject => {
+            return tableObject.f_resource === this.tableSelection.lastTableName;
+          })
 
-            //console.log('before abc B - selectedTableObject: ', this.tableSelection.tableId, selectedTableObject);
-            this.tableSelectOption(selectedTableObject[0]);
+          //console.log('before abc B - selectedTableObject: ', this.tableSelection.tableId, selectedTableObject);
+          this.tableSelectOption(selectedTableObject[0]);
 
-          }
+          // }
 
         } else {
           if (this.inputUseCase > -1) {
@@ -548,11 +548,17 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.availableYears.sort();
     this.availableYears.reverse();
 
-    if (this.inputUseCase > -1  &&  this.inputTableId === 0) {
-      console.log('CHECK YEAR: ', this.inputUseCaseData[this.inputTableId]);
-      if (this.availableYears.includes(this.inputUseCaseData[this.inputTableId].tableYear)) {
-        this.tableSelection.tableYear = this.inputUseCaseData[this.inputTableId].tableYear;
-        this.getFieldsForTableForYearAndRegionLevel();
+
+    if (this.tableSelection.lastTableYear !== ''  &&  this.availableYears.includes(this.tableSelection.lastTableYear)) {
+      this.tableSelection.tableYear = this.tableSelection.lastTableYear;
+      this.getFieldsForTableForYearAndRegionLevel();
+    } else {
+      if (this.inputUseCase > -1 && this.inputTableId === 0) {
+        console.log('CHECK YEAR: ', this.inputUseCaseData[this.inputTableId]);
+        if (this.availableYears.includes(this.inputUseCaseData[this.inputTableId].tableYear)) {
+          this.tableSelection.tableYear = this.inputUseCaseData[this.inputTableId].tableYear;
+          this.getFieldsForTableForYearAndRegionLevel();
+        }
       }
     }
 
@@ -591,6 +597,11 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.availableColumnValuesManuallyChanged = [];
     // this.selectedColumnValues = {};
     this.tableSelection.tableColumnValues = {};
+
+
+    this.tableSelection.lastTableYear = this.tableSelection.tableYear;
+
+
 
     // this.emitChangeTableValue(); // SJO 20240903 - MSS OVERBODIG ??
 
