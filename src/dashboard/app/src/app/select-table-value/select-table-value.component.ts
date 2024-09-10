@@ -632,6 +632,26 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
           this.tableSelection.tableColumnValues[jsonToPush.field] = jsonToPush.field_values[0].value;
           this.availableColumnValuesWithInitiallyOneChoice.push(jsonToPush.field);
         } else {
+
+          if (Object.values(this.tableSelection.lastSelections).length > 0) {
+            // console.log('lastSelections:', this.tableSelection.tableId, this.tableSelection.lastSelections, this.tableSelection.tableColumnValues, jsonToPush.field, jsonToPush.field_values);
+            console.log('lastSelections A:', this.tableSelection.tableId, this.tableSelection.lastSelections, jsonToPush.field, jsonToPush.field_values);
+
+            // let lastValue = this.tableSelection.lastSelections
+            if ( Object.keys(this.tableSelection.lastSelections).includes(jsonToPush.field) ) {
+              console.log('lastSelections B:', this.tableSelection.tableId, this.tableSelection.lastSelections[jsonToPush.field], jsonToPush.field, jsonToPush.field_values);
+
+              // let lastSelectionFieldValue = jsonToPush.field_values.filter(field_value => {return field_value.value === this.tableSelection.lastSelections[jsonToPush.field]});
+              // console.log('lastSections C:', lastSelectionFieldValue);
+
+              console.log('lastSections C:', jsonToPush.field_values.map(field_value => {return field_value.value;}).includes(this.tableSelection.lastSelections[jsonToPush.field]) );
+              // als bovenstaande true is, dan kan deze waarde gezet worden ...
+
+            }
+
+
+
+          }
           // CHECK if use case, otherwise return empty
           if (this.inputUseCase > -1) {
             // console.log('USE CASE, ', this.inputTableId, jsonToPush.field, jsonToPush.field_values, this.inputUseCaseData.filter(tableObject => {return tableObject.tableName === this.tableSelection.tableName})[0] );
@@ -670,7 +690,11 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     // console.log('CALLED fillSelections() ...', this.tableSelection.tableId);
     let selections= {};
 
+    this.tableSelection.lastSelections = {};
+
     this.availableColumnValues.forEach((columnvalue)  => {
+
+      // console.log('columnvaluee:', columnvalue);
 
       const selectedvalue = columnvalue.field_values.find((field_value: any) => {
         return field_value.value === this.tableSelection.tableColumnValues[columnvalue.field];
@@ -678,10 +702,14 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       if (selectedvalue !== undefined) {
         // @ts-ignore
         selections[columnvalue.field_label] = selectedvalue.label;
+
+        this.tableSelection.lastSelections[columnvalue.field] = selectedvalue.value;
       }
 
     } )
     this.tableSelection.Selections = selections;
+
+    // this.tableSelection.lastSelections = this.tableSelection.Selections;
 
   }
 
