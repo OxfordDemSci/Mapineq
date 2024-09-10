@@ -266,19 +266,40 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
           }
         }
 
-        if (this.inputUseCase > -1) {
-          // tableSelection.tableName
-          console.log("==> setTableSources(), set case value", this.inputTableId, this.inputUseCaseData[this.inputTableId].tableName, this.availableTableNames);
-          if (this.availableTableNames.includes(this.inputUseCaseData[this.inputTableId].tableName)) {
+
+        if (this.tableSelection.lastTableName !== '') {
+
+          console.log("==> setTableSources(), set previous tableName", this.inputTableId, this.tableSelection.lastTableName, this.availableTableNames);
+          if (this.availableTableNames.includes(this.tableSelection.lastTableName)) {
             // console.log('TABLENAME setten', this.inputTableId);
             // this.tableSelection.tableName = this.inputUseCaseData[this.inputTableId].tableName;
 
-            let selectedTableObject = this.tableSelectOptions.filter( tableObject => {
-              return tableObject.f_resource === this.inputUseCaseData[this.inputTableId].tableName;
+            let selectedTableObject = this.tableSelectOptions.filter(tableObject => {
+              return tableObject.f_resource === this.tableSelection.lastTableName;
             })
 
             //console.log('before abc B - selectedTableObject: ', this.tableSelection.tableId, selectedTableObject);
             this.tableSelectOption(selectedTableObject[0]);
+
+          }
+
+        } else {
+
+          if (this.inputUseCase > -1) {
+            // tableSelection.tableName
+            console.log("==> setTableSources(), set case value", this.inputTableId, this.inputUseCaseData[this.inputTableId].tableName, this.availableTableNames);
+            if (this.availableTableNames.includes(this.inputUseCaseData[this.inputTableId].tableName)) {
+              // console.log('TABLENAME setten', this.inputTableId);
+              // this.tableSelection.tableName = this.inputUseCaseData[this.inputTableId].tableName;
+
+              let selectedTableObject = this.tableSelectOptions.filter(tableObject => {
+                return tableObject.f_resource === this.inputUseCaseData[this.inputTableId].tableName;
+              })
+
+              //console.log('before abc B - selectedTableObject: ', this.tableSelection.tableId, selectedTableObject);
+              this.tableSelectOption(selectedTableObject[0]);
+
+            }
 
           }
 
@@ -319,24 +340,42 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
         //this.tableSelection.tableYear = this.otherTableSelection.tableYear;
         //this.tableSelection.tableRegionLevel = this.otherTableSelection.tableRegionLevel;
 
-        if (this.inputUseCase > -1) {
-          // tableSelection.tableName
-          // console.log("==> setTableSources(), set case value", this.inputTableId, this.inputUseCaseData[this.inputTableId].tableName, this.availableTableNames);
-          if (this.availableTableNames.includes(this.inputUseCaseData[this.inputTableId].tableName)) {
+
+        if (this.tableSelection.lastTableName !== '') {
+
+          console.log("==> setTableSources(), set previous tableName", this.inputTableId, this.tableSelection.lastTableName, this.availableTableNames);
+          if (this.availableTableNames.includes(this.tableSelection.lastTableName)) {
             // console.log('TABLENAME setten', this.inputTableId);
             // this.tableSelection.tableName = this.inputUseCaseData[this.inputTableId].tableName;
 
-            let selectedTableObject = this.tableSelectOptions.filter( tableObject => {
-              return tableObject.f_resource === this.inputUseCaseData[this.inputTableId].tableName;
+            let selectedTableObject = this.tableSelectOptions.filter(tableObject => {
+              return tableObject.f_resource === this.tableSelection.lastTableName;
             })
 
-            //console.log('before abc C - selectedTableObject: ', this.tableSelection.tableId, selectedTableObject);
+            //console.log('before abc B - selectedTableObject: ', this.tableSelection.tableId, selectedTableObject);
             this.tableSelectOption(selectedTableObject[0]);
 
           }
 
-        }
+        } else {
+          if (this.inputUseCase > -1) {
+            // tableSelection.tableName
+            // console.log("==> setTableSources(), set case value", this.inputTableId, this.inputUseCaseData[this.inputTableId].tableName, this.availableTableNames);
+            if (this.availableTableNames.includes(this.inputUseCaseData[this.inputTableId].tableName)) {
+              // console.log('TABLENAME setten', this.inputTableId);
+              // this.tableSelection.tableName = this.inputUseCaseData[this.inputTableId].tableName;
 
+              let selectedTableObject = this.tableSelectOptions.filter(tableObject => {
+                return tableObject.f_resource === this.inputUseCaseData[this.inputTableId].tableName;
+              })
+
+              //console.log('before abc C - selectedTableObject: ', this.tableSelection.tableId, selectedTableObject);
+              this.tableSelectOption(selectedTableObject[0]);
+
+            }
+
+          }
+        }
 
       });
     }
@@ -389,6 +428,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     this.tableSelection.tableName = selectedOption.f_resource;
     this.tableSelection.tableDescr = selectedOption.f_description;
+
+    this.tableSelection.lastTableName = this.tableSelection.tableName;
 
     // this.emitChangeTableValue();
 

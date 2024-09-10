@@ -11,6 +11,7 @@ export class DisplayTableValueObject {
     Selections: any;
 
     lastTableName: string;
+    lastTableYear: string;
     lastSelections: any;
 
     constructor(jsonObject = {}, index = 0) {
@@ -27,6 +28,7 @@ export class DisplayTableValueObject {
         this.Selections = {};
 
         this.lastTableName = '';
+        this.lastTableYear = '';
         this.lastSelections = {};
 
         for (const field in jsonObject) {
