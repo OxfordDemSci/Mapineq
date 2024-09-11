@@ -70,10 +70,11 @@ export class DashboardComponent implements OnInit{
     checkForQueryValsInUrl() {
         /* */
         this.route.paramMap.subscribe(params => {
-            if (params.get('id') !== null) {
-                console.log('From route paramMap: use case:', params.get('id'));
+            // if (params.get('id') !== null) {
+            if (params.get('case') !== null) {
+                console.log('From route paramMap: use case:', params.get('case'));
 
-                this.useCase = Number(params.get('id'));
+                this.useCase = Number(params.get('case'));
 
                 if (isNaN(this.useCase)) {
                     this.useCase = -1;
@@ -89,7 +90,37 @@ export class DashboardComponent implements OnInit{
                 }
 
             }
-        });
+
+            if (params.get('table') !== null /* &&  params.get('minlevel') !== null  &&  params.get('maxlevel') !== null*/ ) {
+                console.log('CHECK: ', params.get('table'), params.get('minlevel'), params.get('maxlevel'));
+
+                // this.displayObject.tableFields[0].tableRegionLevel = Math.max(Number(params.get('minlevel')), Number(params.get('maxlevel'))).toString();
+
+                this.dashboardFeatureService.getInfoByReSource(params.get('table'), -1).subscribe( data => {
+                    console.log('getInfoByReSource data:', data);
+
+                    let tableLevels= [];
+                    data.forEach( row => {
+                        // only add years with correct (chosen) level
+                        if (!tableLevels.includes(row.f_level)) {
+                            tableLevels.push(row.f_level);
+                        }
+                    });
+
+                    tableLevels.sort();
+
+                    // @ts-ignore
+                    console.log('getInfoByReSource tableLevels:', tableLevels, tableLevels[tableLevels.length-1]);
+
+                    this.displayObject.tableFields[0].tableRegionLevel = tableLevels[tableLevels.length-1];
+                    this.displayObject.tableFields[0].lastTableName = params.get('table');
+
+                })
+
+
+            }
+
+            });
         /* */
         /* */
         let useCaseString = (this.route.snapshot.queryParams['case'] ?? '');

@@ -5,8 +5,10 @@ import {DatacatalogueComponent} from "./datacatalogue/datacatalogue.component";
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
-  { path: 'case/:id', component: DashboardComponent },
-  { path: 'case/:id/:variant', component: DashboardComponent },
+  { path: 'case/:case', component: DashboardComponent },
+  { path: 'case/:case/:variant', component: DashboardComponent },
+  // { path: 'load/:table/:minlevel/:maxlevel', component: DashboardComponent },
+  { path: 'load/:table', component: DashboardComponent },
   { path: 'datacatalogue', component: DatacatalogueComponent },
   /*
   {

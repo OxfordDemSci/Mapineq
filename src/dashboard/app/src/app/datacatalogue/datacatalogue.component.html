@@ -46,17 +46,17 @@
                             <div>
                                 Available years:
                                 <div>
-                                    {{result.f_years }}
+                                    {{jsonArrayToString(result.f_years, ', ')}}
                                 </div>
                             </div>
                             <br/>
                             <div>
-                                Available NUTS regios:
-                                <div>{{result.f_levels}}</div>
+                                Available region levels:
+                                <div>{{jsonArrayToString(result.f_levels, ', ')}}</div>
                             </div>
                         </mat-card-content>
-                        <mat-card-actions>
-
+                        <mat-card-actions align="end">
+                            <button mat-button [routerLink]="'/load/' + result.f_resource"><mat-icon>map</mat-icon> load in interactive map</button>
                         </mat-card-actions>
                     </mat-card>
                 </div>

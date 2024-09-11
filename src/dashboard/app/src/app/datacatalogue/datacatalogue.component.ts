@@ -80,4 +80,19 @@ export class DatacatalogueComponent implements OnInit {
   render(f_years: any) {
     return JSON.parse(f_years).map(Number);
   }
+
+
+  jsonArrayToString(jsonArray: string, joinString: string) {
+    let actualArray = JSON.parse(jsonArray);
+
+    if (actualArray === null) {
+      return '-none-';
+    } else {
+      actualArray.sort();
+      return actualArray.join(joinString);
+    }
+
+  } // END FUNCTION jsonArrayToString
+
+
 }

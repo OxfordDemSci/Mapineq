@@ -226,6 +226,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     if (this.tableId === 0) {
       // this.tableSelection.tableRegionLevel = this.otherTableSelection.tableRegionLevel;
       // this.otherTableSelection.tableRegionLevel = this.tableSelection.tableRegionLevel;
+      this.tableSelection.tableName = ''; // necessary to clear table if data unavailable for chosen level
       this.updateTableValueFromSelect.emit(this.tableSelection);
 
     }
