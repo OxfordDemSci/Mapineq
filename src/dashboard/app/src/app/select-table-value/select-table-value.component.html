@@ -5,7 +5,7 @@
             <mat-card-title>{{tableSelection.tableName}} </mat-card-title>
             <mat-card-subtitle>{{tableSelection.tableFunction}} ({{(tableId+1)}})</mat-card-subtitle>
             <mat-card-subtitle>
-                <button mat-flat-button type="button" [disabled]="!tableSelection.tableSelectionComplete" (click)="showOnlyThisTableOnMap()">
+                <button mat-stroked-button type="button" [disabled]="!tableSelection.tableSelectionComplete" (click)="showOnlyThisTableOnMap()">
                     <mat-icon>map</mat-icon> show only this table on map
                 </button>
             </mat-card-subtitle>
