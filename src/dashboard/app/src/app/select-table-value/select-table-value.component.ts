@@ -270,7 +270,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
         if (this.tableSelection.lastTableName !== ''  &&  this.availableTableNames.includes(this.tableSelection.lastTableName)) {
 
-          console.log("==> setTableSources(), set previous tableName", this.inputTableId, this.tableSelection.lastTableName, this.availableTableNames);
+          //  console.log("==> setTableSources(), set previous tableName", this.inputTableId, this.tableSelection.lastTableName, this.availableTableNames);
           // if (this.availableTableNames.includes(this.tableSelection.lastTableName)) {
           // console.log('TABLENAME setten', this.inputTableId);
           // this.tableSelection.tableName = this.inputUseCaseData[this.inputTableId].tableName;
@@ -288,7 +288,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
           if (this.inputUseCase > -1) {
             // tableSelection.tableName
-            console.log("==> setTableSources(), set case value", this.inputTableId, this.inputUseCaseData[this.inputTableId].tableName, this.availableTableNames);
+            //  console.log("==> setTableSources(), set case value", this.inputTableId, this.inputUseCaseData[this.inputTableId].tableName, this.availableTableNames);
             if (this.availableTableNames.includes(this.inputUseCaseData[this.inputTableId].tableName)) {
               // console.log('TABLENAME setten', this.inputTableId);
               // this.tableSelection.tableName = this.inputUseCaseData[this.inputTableId].tableName;
@@ -344,7 +344,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
         if (this.tableSelection.lastTableName !== ''  &&  this.availableTableNames.includes(this.tableSelection.lastTableName)) {
 
-          console.log("==> setTableSources(), set previous tableName", this.inputTableId, this.tableSelection.lastTableName, this.availableTableNames);
+          //  console.log("==> setTableSources(), set previous tableName", this.inputTableId, this.tableSelection.lastTableName, this.availableTableNames);
           // if (this.availableTableNames.includes(this.tableSelection.lastTableName)) {
           // console.log('TABLENAME setten', this.inputTableId);
           // this.tableSelection.tableName = this.inputUseCaseData[this.inputTableId].tableName;
@@ -361,7 +361,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
         } else {
           if (this.inputUseCase > -1) {
             // tableSelection.tableName
-            // console.log("==> setTableSources(), set case value", this.inputTableId, this.inputUseCaseData[this.inputTableId].tableName, this.availableTableNames);
+            //  console.log("==> setTableSources(), set case value", this.inputTableId, this.inputUseCaseData[this.inputTableId].tableName, this.availableTableNames);
             if (this.availableTableNames.includes(this.inputUseCaseData[this.inputTableId].tableName)) {
               // console.log('TABLENAME setten', this.inputTableId);
               // this.tableSelection.tableName = this.inputUseCaseData[this.inputTableId].tableName;
@@ -710,16 +710,16 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     this.tableSelection.lastSelections = {};
 
-    console.log('columnvaluee START:', this.tableSelection.tableColumnValues);
+    //console.log('columnvaluee START:', this.tableSelection.tableColumnValues);
 
     this.availableColumnValues.forEach((columnvalue)  => {
 
-      console.log('columnvaluee:', columnvalue, columnvalue.field, this.tableSelection.tableColumnValues[columnvalue.field]);
+      //console.log('columnvaluee:', columnvalue, columnvalue.field, this.tableSelection.tableColumnValues[columnvalue.field]);
 
       const selectedvalue = columnvalue.field_values.find((field_value: any) => {
         return field_value.value === this.tableSelection.tableColumnValues[columnvalue.field];
       })
-      console.log('columnvaluee selectedvalue:', selectedvalue);
+      //console.log('columnvaluee selectedvalue:', selectedvalue);
       if (selectedvalue !== undefined) {
         // @ts-ignore
         selections[columnvalue.field_label] = selectedvalue.label;
@@ -756,7 +756,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     sourceSelectionJson['selected'] = selectedJson;
 
     this.featureService.getColumnValuesBySourceJson(this.tableSelection.tableName, JSON.stringify(sourceSelectionJson), this.inputUseCase).subscribe( data => {
-      console.log('getColumnValuesBySourceJson()', data);
+      // console.log('getColumnValuesBySourceJson()', data);
 
       this.availableColumnValues = [];
 
@@ -808,7 +808,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     if (!this.availableColumnValuesManuallyChanged.includes(columnValueField)) {
       this.availableColumnValuesManuallyChanged.push(columnValueField);
     }
-    console.log('changedColumnValue()', columnValueField, this.availableColumnValuesManuallyChanged);
+    // console.log('changedColumnValue()', columnValueField, this.availableColumnValuesManuallyChanged);
 
     this.getFilteredFieldsForTableForYearAndRegionLevel();
 

@@ -352,7 +352,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         // console.log('changeResultMap() ...');
 
         this.displayType = this.inputDisplayObject.displayType;
-
+        // console.log('changeResultMap() ...', this.displayType);
 
         // console.log(this.inputDisplayObject.tableFields[0].tableYear + ' ' + this.inputDisplayObject.tableFields[0].tableRegionLevel);
         // if (valueCurrent === true) {
@@ -368,7 +368,9 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
         // if (this.inputDisplayObject.displayData.length > 0) {
         if (this.inputDisplayData.length > 0) {
-            this.regionsLayer = RegionsLayer.getLayer(this.inputDisplayObject.tableFields[0].tableRegionLevel, this.inputDisplayObject.tableFields[0].tableYear);
+            // this.regionsLayer = RegionsLayer.getLayer(this.inputDisplayObject.tableFields[0].tableRegionLevel, this.inputDisplayObject.tableFields[0].tableYear);
+            console.log('Check selected year/best year:', this.inputDisplayObject.tableFields[0].tableYear, '/', this.inputDisplayData[0].best_year);
+            this.regionsLayer = RegionsLayer.getLayer(this.inputDisplayObject.tableFields[0].tableRegionLevel, this.inputDisplayData[0].best_year);
             if (typeof this.map !== 'undefined') {
                 //console.log('ADD regionsLayer');
                 this.map.addLayer(this.regionsLayer);
@@ -508,7 +510,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         // console.log('UNI xdata:', xdata);
         let xmax = Math.max(...xdata);
         let xmin = Math.min(...xdata);
-        console.log(xmin, xmax);
+        // console.log(xmin, xmax);
         this.regionsLayer.options.vectorTileLayerStyles.default = ((properties: any) => {
             let entity1 = 0;
             if (mapdata[properties['nuts_id']] != undefined) {
