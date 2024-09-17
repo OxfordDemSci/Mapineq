@@ -396,6 +396,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             this.setInfoSelections();
         } else {
             this.hideLegend();
+            this.hideMapInfo();
         }
 
     } // END FUNCTION changeResultMap
