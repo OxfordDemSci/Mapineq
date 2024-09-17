@@ -28,7 +28,7 @@ BEGIN
 			AND column_name NOT ILIKE '%parent%'
 			AND column_name NOT ILIKE '%_desc.en'
 			AND LOWER(column_name) NOT ILIKE 'obs_status%'
-			AND (table_name = strTable or strTable IS NULL)
+			AND (table_name = strTable OR strTable IS NULL)
 		ORDER BY 1, ordinal_position
 	LOOP
 

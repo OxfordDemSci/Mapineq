@@ -1,23 +1,9 @@
-DROP VIEW IF EXISTS website.vw_data_tables;
-CREATE OR REPLACE VIEW website.vw_data_tables 
-AS
-WITH cte as
-(
-	SELECT 
-		*,
-		CASE WHEN provider =  'ESTAT' 
-			THEN 
-				resource
-			ELSE
-				'vw_' || LOWER(resource)
-		END AS query_resource
-	FROM 
-		catalogue
-)
+CREATE OR REPLACE VIEW website.vw_data_tables
+ AS
 SELECT 
-	cte.*
+	catalogue.*
 FROM 
-	cte
+	catalogue
 	INNER JOIN information_schema.tables
 		ON query_resource = table_name
 WHERE
