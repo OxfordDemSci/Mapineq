@@ -52,7 +52,9 @@ $BODY$
 DECLARE
     rec                 RECORD;
     strHeaderRow        TEXT;
-    
+
+	frequence			TEXT;
+	
     strColumnName       TEXT;
     intIndex            INTEGER := 0;
     arrColType			TEXT[] := ARRAY['INT','NUMERIC','TIMESTAMP','TEXT'];
@@ -66,13 +68,13 @@ DECLARE
 	CHARDELIMITER		CONSTANT TEXT := ',';
 	TABLE_SCHEMA		CONSTANT TEXT := 'public';
 	READ_CSV			CONSTANT TEXT := $$COPY %I.%I FROM PROGRAM ' curl %s' WITH DELIMITER %L CSV HEADER $$;
-	DROP_TABLE 			CONSTANT TEXT := $$DROP TABLE IF EXISTS %I.%I $$;
+	DROP_TABLE 			CONSTANT TEXT := $$DROP TABLE IF EXISTS %I.%I CASCADE$$;
 	CREATE_TABLE		CONSTANT TEXT := $$CREATE TABLE %I.%I () $$;
 	ADD_COLUMN			CONSTANT TEXT := $$ALTER TABLE %I.%I ADD COLUMN %I TEXT $$;
 	DROP_COLUMN			CONSTANT TEXT := $$ALTER TABLE %I.%I DROP COLUMN IF EXISTS %I $$;
 	GET_COLTYPE			CONSTANT TEXT := $$SELECT %I::%s FROM %I.%I $$;
 	ALTER_COLTYPE		CONSTANT TEXT := $$ ALTER TABLE %I.%I ALTER COLUMN %I TYPE %s USING %I::%s $$;
-
+	QUERY_FREQ			CONSTANT TEXT := $$SELECT DISTINCT freq FROM %I$$;
 BEGIN
 
     SET client_min_messages TO ERROR;
@@ -114,7 +116,7 @@ BEGIN
 		END IF;
 
 		EXECUTE FORMAT(ADD_COLUMN, TABLE_SCHEMA, strTable, strColumnName);
-		raise info '%',FORMAT(ADD_COLUMN, TABLE_SCHEMA, strTable, strColumnName);
+		RAISE INFO '%',FORMAT(ADD_COLUMN, TABLE_SCHEMA, strTable, strColumnName);
     END LOOP;
 	
 	EXECUTE FORMAT (READ_CSV, TABLE_SCHEMA, strTable, FORMAT(URL,strTable),CHARDELIMITER) ;
@@ -147,6 +149,11 @@ BEGIN
 		EXECUTE FORMAT (ALTER_COLTYPE, TABLE_SCHEMA, strTable, rec.col_name, rec.col_type,rec.col_name, rec.col_type);
 	END LOOP;
 	CALL get_estat_catalogue_info(strTable, FORMAT(URL, strTable));
+	
+	EXECUTE FORMAT (QUERY_FREQ, strTable) INTO frequence;
+	IF LOWER(frequence) IN ('q','s','m','w') THEN
+		CALL create_oecd_views(strTable);
+	END IF;
 	RETURN 'Table created';
 END;
 $BODY$

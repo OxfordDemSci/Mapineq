@@ -217,7 +217,7 @@ BEGIN
 				ON query_resource = table_name
 		WHERE 
 			provider = 'ESTAT' 
-			AND LOWER(column_name) NOT IN ('obstime','obsvalue','obs_flag','geo','metroreg')
+			AND LOWER(column_name) NOT IN ('obstime','obsvalue','obs_flag','geo','metroreg', 'Q', 'S', 'M', 'W')
 			AND (resource = strResource OR strResource IS NULL)
 		GROUP BY
 			CUBE(column_name)
@@ -240,8 +240,107 @@ BEGIN
 END;
 $BODY$ LANGUAGE PLPGSQL;
 
+DROP PROCEDURE IF EXISTS website.catalogue_estat_fill_special_cols();
+CREATE OR REPLACE PROCEDURE website.catalogue_estat_fill_special_cols()
+AS
+$BODY$
+BEGIN
 
--- call website.fill_eurostat_field_description ();
+	DELETE FROM website.catalogue_field_description
+	WHERE
+		provider = 'ESTAT'
+		AND field IN ('Q','S', 'M', 'S');
+		
+	INSERT INTO website.catalogue_field_description (provider, field, label)
+	VALUES
+	('ESTAT','Q','Quarter'),
+	('ESTAT','S','Semester'),
+	('ESTAT','M','Month'),
+	('ESTAT','W','Week');
+	
+	DELETE FROM website.catalogue_field_value_description
+	WHERE
+		provider = 'ESTAT'
+		AND field IN ('Q','S', 'M', 'S');
+	
+	INSERT INTO website.catalogue_field_value_description(provider, field, value,label)
+	VALUES
+	('ESTAT','Q','Q3','Q3'),
+	('ESTAT','Q','Q4','Q4'),
+	('ESTAT','Q','Q1','Q1'),
+	('ESTAT','Q','Q2','Q2'),
+	('ESTAT','S','S1','S1'),
+	('ESTAT','S','S2','S2'),
+	('ESTAT','M','01','01'),
+	('ESTAT','M','02','02'),
+	('ESTAT','M','03','03'),
+	('ESTAT','M','04','04'),
+	('ESTAT','M','05','05'),
+	('ESTAT','M','06','06'),
+	('ESTAT','M','07','07'),
+	('ESTAT','M','08','08'),
+	('ESTAT','M','09','09'),
+	('ESTAT','M','10','10'),
+	('ESTAT','M','11','11'),
+	('ESTAT','M','12','12'),
+	('ESTAT','W','W01','W01'),
+	('ESTAT','W','W02','W02'),
+	('ESTAT','W','W03','W03'),
+	('ESTAT','W','W04','W04'),
+	('ESTAT','W','W05','W05'),
+	('ESTAT','W','W06','W06'),
+	('ESTAT','W','W07','W07'),
+	('ESTAT','W','W08','W08'),
+	('ESTAT','W','W09','W09'),
+	('ESTAT','W','W10','W10'),
+	('ESTAT','W','W11','W11'),
+	('ESTAT','W','W12','W12'),
+	('ESTAT','W','W13','W13'),
+	('ESTAT','W','W14','W14'),
+	('ESTAT','W','W15','W15'),
+	('ESTAT','W','W16','W16'),
+	('ESTAT','W','W17','W17'),
+	('ESTAT','W','W18','W18'),
+	('ESTAT','W','W19','W19'),
+	('ESTAT','W','W20','W20'),
+	('ESTAT','W','W21','W21'),
+	('ESTAT','W','W22','W22'),
+	('ESTAT','W','W23','W23'),
+	('ESTAT','W','W24','W24'),
+	('ESTAT','W','W25','W25'),
+	('ESTAT','W','W26','W26'),
+	('ESTAT','W','W27','W27'),
+	('ESTAT','W','W28','W28'),
+	('ESTAT','W','W29','W29'),
+	('ESTAT','W','W30','W30'),
+	('ESTAT','W','W31','W31'),
+	('ESTAT','W','W32','W32'),
+	('ESTAT','W','W33','W33'),
+	('ESTAT','W','W34','W34'),
+	('ESTAT','W','W35','W35'),
+	('ESTAT','W','W36','W36'),
+	('ESTAT','W','W37','W37'),
+	('ESTAT','W','W38','W38'),
+	('ESTAT','W','W39','W39'),
+	('ESTAT','W','W40','W40'),
+	('ESTAT','W','W41','W41'),
+	('ESTAT','W','W42','W42'),
+	('ESTAT','W','W43','W43'),
+	('ESTAT','W','W44','W44'),
+	('ESTAT','W','W45','W45'),
+	('ESTAT','W','W46','W46'),
+	('ESTAT','W','W47','W47'),
+	('ESTAT','W','W48','W48'),
+	('ESTAT','W','W49','W49'),
+	('ESTAT','W','W50','W50'),
+	('ESTAT','W','W51','W51'),
+	('ESTAT','W','W52','W52'),
+	('ESTAT','W','W53','W53'),
+	('ESTAT','W','W99','W99');
+END;
+$BODY$
+LANGUAGE PLPGSQL;
+-- call website.catalogue_estat_fill_special_cols()
 
 DROP PROCEDURE IF EXISTS website.import_field_description(BOOLEAN, BOOLEAN, BOOLEAN);
 CREATE OR REPLACE PROCEDURE website.import_field_description(bEstat BOOLEAN DEFAULT FALSE, bOECD BOOLEAN DEFAULT FALSE, bOXFORD BOOLEAN DEFAULT FALSE)
@@ -250,6 +349,7 @@ $BODY$
 BEGIN
 	IF bESTAT THEN
 		CALL website.estat_fill_field_description ();
+		CALL website.catalogue_estat_fill_special_cols();
 	END IF;
 	IF bOECD THEN
 		CALL website.oecd_fill_catalogue_field_value_description();
