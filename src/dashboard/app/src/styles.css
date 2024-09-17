@@ -630,3 +630,10 @@ tbody tr:nth-child(odd) {
 }
 
 
+
+
+/* LEAFLET EASYPRINT HACK */
+
+.leaflet-control-easyPrint {
+    display: none !important;
+}

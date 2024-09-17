@@ -3,6 +3,10 @@ import * as L from "leaflet";
 
 import 'leaflet.vectorgrid/dist/Leaflet.VectorGrid.bundled.js';
 
+import 'leaflet-easyprint';
+
+
+
 import {FeatureService} from "../services/feature.service";
 import {RegionsLayer} from "../layers/regions-layer";
 import {DisplayObject} from "../lib/display-object";
@@ -202,6 +206,13 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             class: 'map_button_zoom_fit',
             title: 'Show complete selection'
         });
+
+        mapButtonsDivLeft.addButton(this.saveMapToImage.bind(this), {
+            id: 'button_z',
+            mat_icon: 'screenshot_monitor',
+            title: 'Save map as image'
+        });
+
         /*
         mapButtonsDivLeft.addButton(this.consoleLogData.bind(this), {
             id: 'button_zoom_fit',
@@ -472,6 +483,39 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         // this.map.fitBounds(this.regionsLayer.getBounds());
         this.map.fitBounds(L.latLng(53.238, 6.536).toBounds(3000000));
     } // END FUNCTION zoomMapToFit
+
+
+    public saveMapToImage() {
+        console.log('saveMapToImage() ...');
+
+
+
+        let print_date = new Date();
+
+        let time_string = print_date.getFullYear() + '' + ('00' + (print_date.getMonth() + 1)).substr(-2) + '' + ('00' + print_date.getDate()).substr(-2);
+        time_string += '_' + ('00' + print_date.getHours() ).substr(-2) + '' +('00' + print_date.getMinutes() ).substr(-2) + '' + ('00' + print_date.getSeconds()).substr(-2);
+
+
+        let customSize = {
+            width: document.getElementById('resultMap').offsetWidth,
+            height: document.getElementById('resultMap').offsetHeight,
+            className: "doesnt-matter",
+            name: "doesnt-matter"
+        };
+
+        let printPlugin = (L as any).easyPrint({
+            hidden: true,
+            exportOnly: true,
+            hideControlContainer: false,
+            hideClasses: ['leaflet-control-zoom', 'map_button', 'map_button_mat_icon', 'graphToggleContainerRight', 'panelToggleContainerRight'],
+            sizeModes: [customSize]
+        }).addTo(this.map);
+
+        printPlugin.printMap(customSize.name, time_string+'_mapineq');
+
+
+    } // END FUNCTION saveMapToImage
+
 
 
     public consoleLogData() {
