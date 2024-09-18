@@ -23,6 +23,26 @@ $$
 $$
 LANGUAGE SQL IMMUTABLE;
 
+DROP FUNCTION IF EXISTS areas.get_start_year_nuts_map(INTEGER);
+CREATE OR REPLACE FUNCTION areas.get_start_year_nuts_map(map_year INTEGER)
+RETURNS INTEGER
+AS
+$BODY$
+DECLARE
+	nuts_years	INTEGER[][] := ARRAY[[2003,2003],[2006,2008],[2010,2012],[2013,2015],[2016,2018],[2021,2021],[2024,2024]];
+	cur_year	INTEGER[];
+BEGIN
+	FOREACH cur_year SLICE 1 IN ARRAY nuts_years
+	LOOP
+		IF cur_year[1] = map_year THEN
+			RETURN cur_year[2];
+		END IF;
+	END LOOP;
+
+END;
+$BODY$
+LANGUAGE PLPGSQL IMMUTABLE;
+
 DROP FUNCTION IF EXISTS areas.get_nuts_areas(INT, INT);
 CREATE OR REPLACE FUNCTION areas.get_nuts_areas(intYear INTEGER, intLevel	INTEGER DEFAULT NULL)
 RETURNS TABLE
@@ -59,6 +79,7 @@ BEGIN
 		cte
 	WHERE
 		intYear BETWEEN start_year AND end_year;
+	
 	RETURN QUERY EXECUTE FORMAT(QUERY,CASE WHEN activeMapYear = 2003 THEN 'nuts_name' ELSE 'name_latn' END, activeMapYear, FORMAT(LEVEL_SELECT, intLevel));
 END;
 $BODY$
@@ -124,7 +145,7 @@ DECLARE
 	preferred_year	INTEGER;
 	nuts_year		INTEGER;
 	nuts_years		INTEGER[] := ARRAY[2003,2006,2010,2013,2016,2021, 2024];
-	best_year		INTEGER;
+	best_map_year	INTEGER;
 	best_score		INTEGER := 0;
 	preferred_score	INTEGER;
 	rec				RECORD;
@@ -150,17 +171,17 @@ BEGIN
 		EXECUTE FORMAT(COUNT_QUERY, nuts_year, _level) INTO rec;
 		IF rec.nr_x_y_geo > best_score THEN
 			best_score := rec.nr_x_y_geo;
-			best_year := nuts_year;
+			best_map_year := nuts_year;
 		END IF;
 		IF nuts_year = preferred_year THEN
 			preferred_score = rec.nr_x_y_geo;
 		END IF;
 	END LOOP;
 	IF preferred_score = best_score THEN
-		best_year = preferred_year;
+		best_map_year = preferred_year;
 	END IF;
-	INSERT INTO website.log(level, year, preferred_year, preferred_score, max_year, max_score, x_json, y_json) values(_level, _year, preferred_year, preferred_score, best_year, best_score, x_json, y_json);
-	RETURN best_year;
+	INSERT INTO website.log(level, year, preferred_year, preferred_score, max_year, max_score, x_json, y_json) values(_level, _year, preferred_year, preferred_score, best_map_year, best_score, x_json, y_json);
+	RETURN areas.get_start_year_nuts_map(best_map_year);
 END;
 $BODY$
 LANGUAGE PLPGSQL;
@@ -174,7 +195,7 @@ DECLARE
 	preferred_year	INTEGER;
 	nuts_year		INTEGER;
 	nuts_years		INTEGER[] := ARRAY[2003,2006,2010,2013,2016,2021, 2024];
-	best_year		INTEGER;
+	best_map_year	INTEGER;
 	best_score		INTEGER := 0;
 	preferred_score	INTEGER;
 	rec				RECORD;
@@ -196,17 +217,17 @@ BEGIN
 		EXECUTE FORMAT(COUNT_QUERY, nuts_year, _level) INTO rec;
 		IF rec.nr_x_geo > best_score THEN
 			best_score := rec.nr_x_geo;
-			best_year := nuts_year;
+			best_map_year := nuts_year;
 		END IF;
 		IF nuts_year = preferred_year THEN
 			preferred_score = rec.nr_x_geo;
 		END IF;
 	END LOOP;
 	IF preferred_score = best_score THEN
-		best_year = preferred_year;
+		best_map_year = preferred_year;
 	END IF;
-	INSERT INTO website.log(level, year, preferred_year, preferred_score, max_year, max_score, x_json) values(_level, _year, preferred_year, preferred_score, best_year, best_score, x_json);
-	RETURN best_year;
+	INSERT INTO website.log(level, year, preferred_year, preferred_score, max_year, max_score, x_json) values(_level, _year, preferred_year, preferred_score, best_map_year, best_score, x_json);
+	RETURN areas.get_start_year_nuts_map(best_map_year);
 END;
 $BODY$
 LANGUAGE PLPGSQL;
