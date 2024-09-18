@@ -387,6 +387,19 @@ SCANNEN NOG NIET GEIMPLEMENTEERD (Sjoerd)
               },
     ```
 
+  
+* Leaflet EasyPrint
+  * `npm install leaflet-easyprint`
+    * In `result-map.component.ts` toevoegen (bovenaan, na Leaflet):
+      ```
+      import 'leaflet-easyprint';
+      ```
+    *  En verderop waar je screenshot wilt maken, <br>**NB `(L as any).easyPrint` ipv `L.easyPrint`**:
+      ```
+      let printPlugin = (L as any).easyPrint({
+            ( ... )
+        }).addTo(this.map);
+      ```
 
 <!--
 

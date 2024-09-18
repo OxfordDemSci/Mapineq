@@ -3,6 +3,10 @@ import * as L from "leaflet";
 
 import 'leaflet.vectorgrid/dist/Leaflet.VectorGrid.bundled.js';
 
+import 'leaflet-easyprint';
+
+
+
 import {FeatureService} from "../services/feature.service";
 import {RegionsLayer} from "../layers/regions-layer";
 import {DisplayObject} from "../lib/display-object";
@@ -202,6 +206,13 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             class: 'map_button_zoom_fit',
             title: 'Show complete selection'
         });
+
+        mapButtonsDivLeft.addButton(this.saveMapToImage.bind(this), {
+            id: 'button_z',
+            mat_icon: 'screenshot_monitor',
+            title: 'Save map as image'
+        });
+
         /*
         mapButtonsDivLeft.addButton(this.consoleLogData.bind(this), {
             id: 'button_zoom_fit',
@@ -352,7 +363,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         // console.log('changeResultMap() ...');
 
         this.displayType = this.inputDisplayObject.displayType;
-
+        // console.log('changeResultMap() ...', this.displayType);
 
         // console.log(this.inputDisplayObject.tableFields[0].tableYear + ' ' + this.inputDisplayObject.tableFields[0].tableRegionLevel);
         // if (valueCurrent === true) {
@@ -368,7 +379,9 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
         // if (this.inputDisplayObject.displayData.length > 0) {
         if (this.inputDisplayData.length > 0) {
-            this.regionsLayer = RegionsLayer.getLayer(this.inputDisplayObject.tableFields[0].tableRegionLevel, this.inputDisplayObject.tableFields[0].tableYear);
+            // this.regionsLayer = RegionsLayer.getLayer(this.inputDisplayObject.tableFields[0].tableRegionLevel, this.inputDisplayObject.tableFields[0].tableYear);
+            console.log('Check selected year/best year:', this.inputDisplayObject.tableFields[0].tableYear, '/', this.inputDisplayData[0].best_year);
+            this.regionsLayer = RegionsLayer.getLayer(this.inputDisplayObject.tableFields[0].tableRegionLevel, this.inputDisplayData[0].best_year);
             if (typeof this.map !== 'undefined') {
                 //console.log('ADD regionsLayer');
                 this.map.addLayer(this.regionsLayer);
@@ -394,6 +407,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             this.setInfoSelections();
         } else {
             this.hideLegend();
+            this.hideMapInfo();
         }
 
     } // END FUNCTION changeResultMap
@@ -471,6 +485,39 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     } // END FUNCTION zoomMapToFit
 
 
+    public saveMapToImage() {
+        console.log('saveMapToImage() ...');
+
+
+
+        let print_date = new Date();
+
+        let time_string = print_date.getFullYear() + '' + ('00' + (print_date.getMonth() + 1)).substr(-2) + '' + ('00' + print_date.getDate()).substr(-2);
+        time_string += '_' + ('00' + print_date.getHours() ).substr(-2) + '' +('00' + print_date.getMinutes() ).substr(-2) + '' + ('00' + print_date.getSeconds()).substr(-2);
+
+
+        let customSize = {
+            width: document.getElementById('resultMap').offsetWidth,
+            height: document.getElementById('resultMap').offsetHeight,
+            className: "doesnt-matter",
+            name: "doesnt-matter"
+        };
+
+        let printPlugin = (L as any).easyPrint({
+            hidden: true,
+            exportOnly: true,
+            hideControlContainer: false,
+            hideClasses: ['leaflet-control-zoom', 'map_button', 'map_button_mat_icon', 'graphToggleContainerRight', 'panelToggleContainerRight'],
+            sizeModes: [customSize]
+        }).addTo(this.map);
+
+        printPlugin.printMap(customSize.name, time_string+'_mapineq');
+
+
+    } // END FUNCTION saveMapToImage
+
+
+
     public consoleLogData() {
         console.log('Current inputDisplayObject.displayData:', this.inputDisplayObject.displayData);
         console.log('Current inputDisplayData:', this.inputDisplayData);
@@ -508,7 +555,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         // console.log('UNI xdata:', xdata);
         let xmax = Math.max(...xdata);
         let xmin = Math.min(...xdata);
-        console.log(xmin, xmax);
+        // console.log(xmin, xmax);
         this.regionsLayer.options.vectorTileLayerStyles.default = ((properties: any) => {
             let entity1 = 0;
             if (mapdata[properties['nuts_id']] != undefined) {
