@@ -1,8 +1,12 @@
 import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+// import 'leaflet/dist/leaflet.js';
 import * as L from "leaflet";
 
 import 'leaflet.vectorgrid/dist/Leaflet.VectorGrid.bundled.js';
 
+// import 'leaflet-easyprint/dist/bundle.js';
+// import 'leaflet-easyprint';
+// import easyPrint from "leaflet-easyprint";
 import 'leaflet-easyprint';
 
 
@@ -503,7 +507,10 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             name: "doesnt-matter"
         };
 
-        let printPlugin = (L as any).easyPrint({
+        console.log('just before (L as any).easyPrint / L.easyPrint ...');
+        // let printPlugin = (L as any).easyPrint({
+        // @ts-ignore
+        let printPlugin = L.easyPrint({
             hidden: true,
             exportOnly: true,
             hideControlContainer: false,
