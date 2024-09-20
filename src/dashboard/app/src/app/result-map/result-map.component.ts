@@ -2,13 +2,14 @@ import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewC
 // import 'leaflet/dist/leaflet.js';
 import * as L from "leaflet";
 
-import 'leaflet.vectorgrid/dist/Leaflet.VectorGrid.bundled.js';
 
 // import 'leaflet-easyprint/dist/bundle.js';
 // import 'leaflet-easyprint';
 // import easyPrint from "leaflet-easyprint";
 import 'leaflet-easyprint';
 
+
+import 'leaflet.vectorgrid/dist/Leaflet.VectorGrid.bundled.js';
 
 
 import {FeatureService} from "../services/feature.service";
@@ -508,9 +509,9 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         };
 
         console.log('just before (L as any).easyPrint / L.easyPrint ...');
-        // let printPlugin = (L as any).easyPrint({
+        let printPlugin = (L as any).easyPrint({
         // @ts-ignore
-        let printPlugin = L.easyPrint({
+        //let printPlugin = L.easyPrint({
             hidden: true,
             exportOnly: true,
             hideControlContainer: false,
