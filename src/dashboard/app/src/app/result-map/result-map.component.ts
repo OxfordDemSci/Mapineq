@@ -2,12 +2,12 @@ import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewC
 // import 'leaflet/dist/leaflet.js';
 import * as L from "leaflet";
 
-
+/*
 // import 'leaflet-easyprint/dist/bundle.js';
 // import 'leaflet-easyprint';
 // import easyPrint from "leaflet-easyprint";
 import 'leaflet-easyprint';
-
+*/
 
 import 'leaflet.vectorgrid/dist/Leaflet.VectorGrid.bundled.js';
 
@@ -23,6 +23,10 @@ import {
 import {GraphComponent} from "../graph/graph.component";
 import {LeafletControlInfo} from "../lib/leaflet-control-info";
 import {LeafletControlGraph} from "../lib/leaflet-control-graph";
+
+
+import html2canvas from "html2canvas";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 
 /*
@@ -112,11 +116,16 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     selectedArea: any;
     oldhighligth: string  = '';
 
-    constructor(private featureService: FeatureService) {
+
+    takingScreenshot: boolean;
+
+    constructor(private featureService: FeatureService, private snackBar: MatSnackBar) {
         this.graphOpen = false;
         this.infoOpen = false;
 
         this.inputDisplayData = [];
+
+        this.takingScreenshot = false;
     } // END CONSTRUCTOR
 
     ngOnChanges(changes: SimpleChanges) {
@@ -213,7 +222,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         });
 
         mapButtonsDivLeft.addButton(this.saveMapToImage.bind(this), {
-            id: 'button_z',
+            id: 'button_screenshot',
             mat_icon: 'screenshot_monitor',
             title: 'Save map as image'
         });
@@ -493,14 +502,56 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     public saveMapToImage() {
         console.log('saveMapToImage() ...');
 
+        if (!this.takingScreenshot) {
+
+            document.getElementById('button_screenshot').style.display = 'none';
+            this.takingScreenshot = true;
+
+            // this.openSnack('Creating image of map, please wait');
 
 
-        let print_date = new Date();
+            let print_date = new Date();
 
-        let time_string = print_date.getFullYear() + '' + ('00' + (print_date.getMonth() + 1)).substr(-2) + '' + ('00' + print_date.getDate()).substr(-2);
-        time_string += '_' + ('00' + print_date.getHours() ).substr(-2) + '' +('00' + print_date.getMinutes() ).substr(-2) + '' + ('00' + print_date.getSeconds()).substr(-2);
+            let time_string = print_date.getFullYear() + '' + ('00' + (print_date.getMonth() + 1)).substr(-2) + '' + ('00' + print_date.getDate()).substr(-2);
+            time_string += '_' + ('00' + print_date.getHours()).substr(-2) + '' + ('00' + print_date.getMinutes()).substr(-2) + '' + ('00' + print_date.getSeconds()).substr(-2);
+
+            let img_filename = time_string + '_mapineq.png';
+
+            // button_screenshot button_zoom_fit map_graph_div_toggle map_info_div_toggle
+            // leaflet-control-zoom
+            let zoomButtons = document.getElementsByClassName('leaflet-control-zoom');
+            for (let i = 0; i < zoomButtons.length; i++) {
+                zoomButtons[i].setAttribute('data-html2canvas-ignore', 'true');
+            }
+            document.getElementById('button_zoom_fit').setAttribute('data-html2canvas-ignore', 'true');
+            document.getElementById('button_screenshot').setAttribute('data-html2canvas-ignore', 'true');
+            document.getElementById('map_graph_div_toggle').setAttribute('data-html2canvas-ignore', 'true');
+            document.getElementById('map_info_div_toggle').setAttribute('data-html2canvas-ignore', 'true');
 
 
+            // Select the element that you want to capture
+            // const captureElement = document.querySelector("#capture");
+            const captureElement = document.getElementById('resultMap');
+
+            // Call the html2canvas function and pass the element as an argument
+            html2canvas(captureElement, {allowTaint: true, useCORS: true}).then((canvas) => {
+                // Get the image data as a base64-encoded string
+                const imageData = canvas.toDataURL("image/png");
+
+                // Do something with the image data, such as saving it as a file or sending it to a server
+                // For example, you can create an anchor element and trigger a download action
+                const link = document.createElement("a");
+                link.setAttribute("download", img_filename);
+                link.setAttribute("href", imageData);
+                link.click();
+
+                this.takingScreenshot = false;
+                document.getElementById('button_screenshot').style.display = 'block';
+            });
+
+
+        }
+        /*
         let customSize = {
             width: document.getElementById('resultMap').offsetWidth,
             height: document.getElementById('resultMap').offsetHeight,
@@ -520,7 +571,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         }).addTo(this.map);
 
         printPlugin.printMap(customSize.name, time_string+'_mapineq');
-
+        */
 
     } // END FUNCTION saveMapToImage
 
@@ -1048,6 +1099,21 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
 
     }
+
+
+    public openSnack(snackText, duration = 6, actionText = null): any {
+        // const snackBarRef = this.snackBar.open('Dit is nog een prototype!', 'ok', {duration: 6000});
+        const snackBarRef = this.snackBar.open(snackText, actionText, {
+            duration: (duration * 1000),
+            panelClass: ['snackBarPageWithBottomTabsClass']
+            //, verticalPosition: 'top'
+        });
+
+        return snackBarRef;
+    } // END FUNCTION openSnack
+
+
+
 } // END CLASS ResultMapComponent
 
 
