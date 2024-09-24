@@ -523,11 +523,19 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             for (let i = 0; i < zoomButtons.length; i++) {
                 zoomButtons[i].setAttribute('data-html2canvas-ignore', 'true');
             }
+            /* /
+            let attributionDivs = document.getElementsByClassName('leaflet-control-attribution');
+            for (let i = 0; i < attributionDivs.length; i++) {
+                attributionDivs[i].setAttribute('data-html2canvas-ignore', 'true');
+            }
+            /* */
             document.getElementById('button_zoom_fit').setAttribute('data-html2canvas-ignore', 'true');
             document.getElementById('button_screenshot').setAttribute('data-html2canvas-ignore', 'true');
             document.getElementById('map_graph_div_toggle').setAttribute('data-html2canvas-ignore', 'true');
             document.getElementById('map_info_div_toggle').setAttribute('data-html2canvas-ignore', 'true');
-
+            /* /
+            document.getElementById('map_legend_div').setAttribute('data-html2canvas-ignore', 'true');
+            /* */
 
             // Select the element that you want to capture
             // const captureElement = document.querySelector("#capture");
