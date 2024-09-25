@@ -43,6 +43,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   availableYears: string[];
   availableRegionLevels: string[];
 
+  availableRegionLevelsForTable: string[];
 
   availableColumnValues: any[];
   availableColumnValuesWithInitiallyOneChoice: string[];
@@ -73,6 +74,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.availableYearsAndRegionLevels = [];
     this.availableYears = [];
     //this.availableRegionLevels = ['3', '2', '1', '0'];
+
+    this.availableRegionLevelsForTable = [];
 
     this.availableColumnValues = [];
     this.availableColumnValuesWithInitiallyOneChoice = [];
@@ -450,6 +453,18 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.featureService.getInfoByReSource(this.tableSelection.tableName, this.inputUseCase).subscribe( data => {
       this.availableYearsAndRegionLevels = data;
       this.setAvailableYears();
+
+      // console.log('REFRESH available region levels for selected table ... ... ... ... ... ');
+      this.availableRegionLevelsForTable = [];
+      data.forEach( row => {
+        // only add years with correct (chosen) level
+        if (!this.availableRegionLevelsForTable.includes(row.f_level)) {
+          this.availableRegionLevelsForTable.push(row.f_level);
+        }
+      });
+
+      this.availableRegionLevelsForTable.sort();
+
       // if (this.tableSelection.tableId === 1) {
       //   this.setAvailableRegionLevelsForYear();
       // }
