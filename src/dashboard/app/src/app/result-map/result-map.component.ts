@@ -313,7 +313,9 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         let regionValues = this.inputDisplayData.find(item => {
             return item.geo === event.layer.properties['nuts_id'];
         }) ?? {};
-        // console.log('REGIONS LAYER info: ', event.layer.properties['nuts_id'], regionValues);
+        console.log('REGIONS LAYER info: ', event.layer.properties['nuts_id'], regionValues);
+        // evt land erbij halen obv eerste twee letters van event.layer.properties['nuts_id'] / regionValues.geo
+        // of de feature service / tiles ook land mee laten geven
 
         let dataHtml = '';
         if (this.inputDisplayObject.displayType === 'bivariate') {
@@ -871,7 +873,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     private biVariateLegend(info: any) {
         const xmlns = 'http://www.w3.org/2000/svg';
         let svgWidth = 250;
-        let svgHeight = 210;
+        let svgHeight = 240; // 210;
 
         let containerSvg = document.createElementNS(xmlns, 'svg');
         this.mapLegendDiv.appendChild(containerSvg);
@@ -898,7 +900,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
                 let blockPath = document.createElementNS(xmlns, 'path');
                 containerSvg.appendChild(blockPath);
                 let startX = Math.floor((svgWidth / 2) + (x * 26) - (y * 26));
-                let startY = Math.floor(svgHeight + 35 - (x * 26) - (y * 26));
+                // let startY = Math.floor(svgHeight + 35 - (x * 26) - (y * 26));
+                let startY = Math.floor(svgHeight + 0 - (x * 26) - (y * 26));
 
                 let path = 'M ' + (startX).toString() + ' ' + (startY).toString() + ' L ' + (startX - 25).toString() + ' ' + (startY - 25).toString() + ' L ' + (startX).toString() + ' ' + (startY - 50).toString() + ' L ' + (startX + 25).toString() + ' ' + (startY - 25).toString() + ' z';
                 blockPath.id = 'legendBlock_' + x.toString() + '_' + y.toString();
@@ -936,7 +939,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         let textPredictor = document.createElementNS(xmlns, 'text');
         containerSvg.appendChild(textPredictor);
         textPredictor.setAttributeNS(null, 'x', Math.floor(3 * svgWidth / 4).toString());
-        textPredictor.setAttributeNS(null, 'y', Math.floor(3 * svgHeight / 4).toString());
+        textPredictor.setAttributeNS(null, 'y', Math.floor(3 * svgHeight / 4 - 20).toString());
         textPredictor.setAttributeNS(null, 'fill', '#000000');
         textPredictor.setAttributeNS(null, 'text-anchor', 'middle');
         textPredictor.setAttributeNS(null, 'font-weight', 'bold');
@@ -947,7 +950,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         let textOutcome = document.createElementNS(xmlns, 'text');
         containerSvg.appendChild(textOutcome);
         textOutcome.setAttributeNS(null, 'x', Math.floor(1 * svgWidth / 4).toString());
-        textOutcome.setAttributeNS(null, 'y', Math.floor(3 * svgHeight / 4).toString());
+        textOutcome.setAttributeNS(null, 'y', Math.floor(3 * svgHeight / 4 - 20).toString());
         textOutcome.setAttributeNS(null, 'fill', '#000000');
         textOutcome.setAttributeNS(null, 'text-anchor', 'middle');
         textOutcome.setAttributeNS(null, 'font-weight', 'bold');
@@ -981,6 +984,36 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         textExplain1.setAttributeNS(null, 'font-size', '12px');
         textExplain1.setAttributeNS(null, 'height', '4em');
         textExplain1.innerHTML = 'its meaning';
+
+
+
+
+        let blockNoData = document.createElementNS(xmlns, 'path');
+        containerSvg.appendChild(blockNoData);
+        // let indicatorPath = 'M ' + (-100).toString() + ' ' + (-100).toString() + ' L ' + (-100 - 25).toString() + ' ' + (-100 - 25).toString() + ' L ' + (-100).toString() + ' ' + (-100 - 50).toString() + ' L ' + (-100 + 25).toString() + ' ' + (-100 - 25).toString() +' z';
+        let noDataPath = 'M 10 ' + (svgHeight - 14).toString() + ' l 8 8 l 8 -8 l -8 -8 z';
+        blockNoData.id = 'legendBlockNoData';
+        blockNoData.setAttributeNS(null, 'stroke', 'rgb(185,178,178)');
+        blockNoData.setAttributeNS(null, 'stroke-width', '1');
+        blockNoData.setAttributeNS(null, 'stroke-opacity', '1');
+        blockNoData.setAttributeNS(null, 'opacity', '1');
+        blockNoData.setAttributeNS(null, 'fill', '#ffffff');
+        blockNoData.setAttributeNS(null, 'fill-opacity', '1');
+        blockNoData.setAttributeNS(null, 'd', noDataPath);
+
+
+        let textNoData = document.createElementNS(xmlns, 'text');
+        containerSvg.appendChild(textNoData);
+        textNoData.id = 'legendTextExplain1';
+        textNoData.setAttributeNS(null, 'x', '30'); // Math.floor(1 * svgWidth / 2).toString());
+        textNoData.setAttributeNS(null, 'y', (svgHeight - 10).toString());
+        textNoData.setAttributeNS(null, 'fill', '#000000');
+        //textNoData.setAttributeNS(null, 'text-anchor', 'middle');
+        //textNoData.setAttributeNS(null, 'font-weight', 'bold');
+        //textNoData.setAttributeNS(null, 'font-style', 'italic');
+        textNoData.setAttributeNS(null, 'font-size', '12px');
+        textNoData.setAttributeNS(null, 'height', '4em');
+        textNoData.innerHTML = '= no data';
 
 
     } // END FUNCTION biVariateLegend
@@ -1029,6 +1062,21 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
 
         });
+
+        let legendLine = document.createElement('div');
+        legendLine.setAttribute('class', 'legendLine');
+        this.mapLegendDiv.appendChild(legendLine);
+
+        let legendBlock = document.createElement('div');
+        legendBlock.setAttribute('class', 'legendColorBlock');
+        legendBlock.style.backgroundColor = '#ffffff';
+        legendLine.appendChild(legendBlock);
+
+        let legendText = document.createElement('div');
+        legendText.setAttribute('class', 'legendColorText');
+        legendText.innerHTML = 'no data';
+        legendLine.appendChild(legendText);
+
     } // END FUNCTION uniVariateLegend
 
 
