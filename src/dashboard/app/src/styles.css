@@ -504,7 +504,7 @@ div.buttonsMargin {
 #gd_map_cursor_title {
     background-color: var(--color-toolbar);
     color: var(--color-toolbar-font);
-    font-size: 22px;
+    font-size: 18px;
     border-radius: 5px 5px 0 0;
     text-align: center;
     padding: 5px 0;
