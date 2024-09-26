@@ -27,6 +27,9 @@
                 <ng-template #elseTemplate>
 
                 </ng-template>
+                <div>
+                    {{ filteredSearchResults.length }} Dataset(s) available
+                </div>
             </div>
             <section class="card-container">
                 <div class="cardbox" *ngFor="let result of filteredSearchResults" >
