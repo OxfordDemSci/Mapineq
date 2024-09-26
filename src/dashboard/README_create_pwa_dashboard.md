@@ -387,9 +387,9 @@ SCANNEN NOG NIET GEIMPLEMENTEERD (Sjoerd)
               },
     ```
 
-  
-* Leaflet EasyPrint
-  * `npm install leaflet-easyprint`
+<!--  
+* ***Leaflet EasyPrint***
+  * `npm install leaflet-easyprint --save`
     * In `result-map.component.ts` toevoegen (bovenaan, na Leaflet):
       ```
       import 'leaflet-easyprint';
@@ -400,6 +400,16 @@ SCANNEN NOG NIET GEIMPLEMENTEERD (Sjoerd)
             ( ... )
         }).addTo(this.map);
       ```
+-->
+
+
+* ***html2canvas***
+  * `npm install html2canvas --save`
+    * In `result-map.component.ts` toevoegen:
+      ```
+      import html2canvas from "html2canvas";
+      ```
+
 
 <!--
 

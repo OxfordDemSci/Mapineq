@@ -81,6 +81,18 @@ export class DatacatalogueComponent implements OnInit {
     return JSON.parse(f_years).map(Number);
   }
 
+  getMaxRegionLevel(jsonArray: any) {
+    let actualLevelsArray = JSON.parse(jsonArray);
+
+    if (actualLevelsArray === null  ||  actualLevelsArray.length === 0) {
+      return '';
+    } else {
+      actualLevelsArray.sort().reverse();
+      return actualLevelsArray[0].toString();
+    }
+
+  } // getMaxRegionLevel
+
 
   jsonArrayToString(jsonArray: string, joinString: string) {
     let actualArray = JSON.parse(jsonArray);

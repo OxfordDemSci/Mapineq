@@ -1,10 +1,15 @@
 import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+// import 'leaflet/dist/leaflet.js';
 import * as L from "leaflet";
 
-import 'leaflet.vectorgrid/dist/Leaflet.VectorGrid.bundled.js';
-
+/*
+// import 'leaflet-easyprint/dist/bundle.js';
+// import 'leaflet-easyprint';
+// import easyPrint from "leaflet-easyprint";
 import 'leaflet-easyprint';
+*/
 
+import 'leaflet.vectorgrid/dist/Leaflet.VectorGrid.bundled.js';
 
 
 import {FeatureService} from "../services/feature.service";
@@ -18,6 +23,10 @@ import {
 import {GraphComponent} from "../graph/graph.component";
 import {LeafletControlInfo} from "../lib/leaflet-control-info";
 import {LeafletControlGraph} from "../lib/leaflet-control-graph";
+
+
+import html2canvas from "html2canvas";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 
 /*
@@ -107,11 +116,16 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     selectedArea: any;
     oldhighligth: string  = '';
 
-    constructor(private featureService: FeatureService) {
+
+    takingScreenshot: boolean;
+
+    constructor(private featureService: FeatureService, private snackBar: MatSnackBar) {
         this.graphOpen = false;
         this.infoOpen = false;
 
         this.inputDisplayData = [];
+
+        this.takingScreenshot = false;
     } // END CONSTRUCTOR
 
     ngOnChanges(changes: SimpleChanges) {
@@ -208,7 +222,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         });
 
         mapButtonsDivLeft.addButton(this.saveMapToImage.bind(this), {
-            id: 'button_z',
+            id: 'button_screenshot',
             mat_icon: 'screenshot_monitor',
             title: 'Save map as image'
         });
@@ -299,7 +313,9 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         let regionValues = this.inputDisplayData.find(item => {
             return item.geo === event.layer.properties['nuts_id'];
         }) ?? {};
-        // console.log('REGIONS LAYER info: ', event.layer.properties['nuts_id'], regionValues);
+        console.log('REGIONS LAYER info: ', event.layer.properties['nuts_id'], regionValues);
+        // evt land erbij halen obv eerste twee letters van event.layer.properties['nuts_id'] / regionValues.geo
+        // of de feature service / tiles ook land mee laten geven
 
         let dataHtml = '';
         if (this.inputDisplayObject.displayType === 'bivariate') {
@@ -488,14 +504,64 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     public saveMapToImage() {
         console.log('saveMapToImage() ...');
 
+        if (!this.takingScreenshot) {
+
+            document.getElementById('button_screenshot').style.display = 'none';
+            this.takingScreenshot = true;
+
+            // this.openSnack('Creating image of map, please wait');
 
 
-        let print_date = new Date();
+            let print_date = new Date();
 
-        let time_string = print_date.getFullYear() + '' + ('00' + (print_date.getMonth() + 1)).substr(-2) + '' + ('00' + print_date.getDate()).substr(-2);
-        time_string += '_' + ('00' + print_date.getHours() ).substr(-2) + '' +('00' + print_date.getMinutes() ).substr(-2) + '' + ('00' + print_date.getSeconds()).substr(-2);
+            let time_string = print_date.getFullYear() + '' + ('00' + (print_date.getMonth() + 1)).substr(-2) + '' + ('00' + print_date.getDate()).substr(-2);
+            time_string += '_' + ('00' + print_date.getHours()).substr(-2) + '' + ('00' + print_date.getMinutes()).substr(-2) + '' + ('00' + print_date.getSeconds()).substr(-2);
+
+            let img_filename = time_string + '_mapineq.png';
+
+            // button_screenshot button_zoom_fit map_graph_div_toggle map_info_div_toggle
+            // leaflet-control-zoom
+            let zoomButtons = document.getElementsByClassName('leaflet-control-zoom');
+            for (let i = 0; i < zoomButtons.length; i++) {
+                zoomButtons[i].setAttribute('data-html2canvas-ignore', 'true');
+            }
+            /* /
+            let attributionDivs = document.getElementsByClassName('leaflet-control-attribution');
+            for (let i = 0; i < attributionDivs.length; i++) {
+                attributionDivs[i].setAttribute('data-html2canvas-ignore', 'true');
+            }
+            /* */
+            document.getElementById('button_zoom_fit').setAttribute('data-html2canvas-ignore', 'true');
+            document.getElementById('button_screenshot').setAttribute('data-html2canvas-ignore', 'true');
+            document.getElementById('map_graph_div_toggle').setAttribute('data-html2canvas-ignore', 'true');
+            document.getElementById('map_info_div_toggle').setAttribute('data-html2canvas-ignore', 'true');
+            /* /
+            document.getElementById('map_legend_div').setAttribute('data-html2canvas-ignore', 'true');
+            /* */
+
+            // Select the element that you want to capture
+            // const captureElement = document.querySelector("#capture");
+            const captureElement = document.getElementById('resultMap');
+
+            // Call the html2canvas function and pass the element as an argument
+            html2canvas(captureElement, {allowTaint: true, useCORS: true}).then((canvas) => {
+                // Get the image data as a base64-encoded string
+                const imageData = canvas.toDataURL("image/png");
+
+                // Do something with the image data, such as saving it as a file or sending it to a server
+                // For example, you can create an anchor element and trigger a download action
+                const link = document.createElement("a");
+                link.setAttribute("download", img_filename);
+                link.setAttribute("href", imageData);
+                link.click();
+
+                this.takingScreenshot = false;
+                document.getElementById('button_screenshot').style.display = 'block';
+            });
 
 
+        }
+        /*
         let customSize = {
             width: document.getElementById('resultMap').offsetWidth,
             height: document.getElementById('resultMap').offsetHeight,
@@ -503,7 +569,10 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             name: "doesnt-matter"
         };
 
+        console.log('just before (L as any).easyPrint / L.easyPrint ...');
         let printPlugin = (L as any).easyPrint({
+        // @ts-ignore
+        //let printPlugin = L.easyPrint({
             hidden: true,
             exportOnly: true,
             hideControlContainer: false,
@@ -512,7 +581,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         }).addTo(this.map);
 
         printPlugin.printMap(customSize.name, time_string+'_mapineq');
-
+        */
 
     } // END FUNCTION saveMapToImage
 
@@ -804,7 +873,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     private biVariateLegend(info: any) {
         const xmlns = 'http://www.w3.org/2000/svg';
         let svgWidth = 250;
-        let svgHeight = 210;
+        let svgHeight = 240; // 210;
 
         let containerSvg = document.createElementNS(xmlns, 'svg');
         this.mapLegendDiv.appendChild(containerSvg);
@@ -831,7 +900,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
                 let blockPath = document.createElementNS(xmlns, 'path');
                 containerSvg.appendChild(blockPath);
                 let startX = Math.floor((svgWidth / 2) + (x * 26) - (y * 26));
-                let startY = Math.floor(svgHeight + 35 - (x * 26) - (y * 26));
+                // let startY = Math.floor(svgHeight + 35 - (x * 26) - (y * 26));
+                let startY = Math.floor(svgHeight + 0 - (x * 26) - (y * 26));
 
                 let path = 'M ' + (startX).toString() + ' ' + (startY).toString() + ' L ' + (startX - 25).toString() + ' ' + (startY - 25).toString() + ' L ' + (startX).toString() + ' ' + (startY - 50).toString() + ' L ' + (startX + 25).toString() + ' ' + (startY - 25).toString() + ' z';
                 blockPath.id = 'legendBlock_' + x.toString() + '_' + y.toString();
@@ -869,7 +939,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         let textPredictor = document.createElementNS(xmlns, 'text');
         containerSvg.appendChild(textPredictor);
         textPredictor.setAttributeNS(null, 'x', Math.floor(3 * svgWidth / 4).toString());
-        textPredictor.setAttributeNS(null, 'y', Math.floor(3 * svgHeight / 4).toString());
+        textPredictor.setAttributeNS(null, 'y', Math.floor(3 * svgHeight / 4 - 20).toString());
         textPredictor.setAttributeNS(null, 'fill', '#000000');
         textPredictor.setAttributeNS(null, 'text-anchor', 'middle');
         textPredictor.setAttributeNS(null, 'font-weight', 'bold');
@@ -880,7 +950,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         let textOutcome = document.createElementNS(xmlns, 'text');
         containerSvg.appendChild(textOutcome);
         textOutcome.setAttributeNS(null, 'x', Math.floor(1 * svgWidth / 4).toString());
-        textOutcome.setAttributeNS(null, 'y', Math.floor(3 * svgHeight / 4).toString());
+        textOutcome.setAttributeNS(null, 'y', Math.floor(3 * svgHeight / 4 - 20).toString());
         textOutcome.setAttributeNS(null, 'fill', '#000000');
         textOutcome.setAttributeNS(null, 'text-anchor', 'middle');
         textOutcome.setAttributeNS(null, 'font-weight', 'bold');
@@ -914,6 +984,36 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         textExplain1.setAttributeNS(null, 'font-size', '12px');
         textExplain1.setAttributeNS(null, 'height', '4em');
         textExplain1.innerHTML = 'its meaning';
+
+
+
+
+        let blockNoData = document.createElementNS(xmlns, 'path');
+        containerSvg.appendChild(blockNoData);
+        // let indicatorPath = 'M ' + (-100).toString() + ' ' + (-100).toString() + ' L ' + (-100 - 25).toString() + ' ' + (-100 - 25).toString() + ' L ' + (-100).toString() + ' ' + (-100 - 50).toString() + ' L ' + (-100 + 25).toString() + ' ' + (-100 - 25).toString() +' z';
+        let noDataPath = 'M 10 ' + (svgHeight - 14).toString() + ' l 8 8 l 8 -8 l -8 -8 z';
+        blockNoData.id = 'legendBlockNoData';
+        blockNoData.setAttributeNS(null, 'stroke', 'rgb(185,178,178)');
+        blockNoData.setAttributeNS(null, 'stroke-width', '1');
+        blockNoData.setAttributeNS(null, 'stroke-opacity', '1');
+        blockNoData.setAttributeNS(null, 'opacity', '1');
+        blockNoData.setAttributeNS(null, 'fill', '#ffffff');
+        blockNoData.setAttributeNS(null, 'fill-opacity', '1');
+        blockNoData.setAttributeNS(null, 'd', noDataPath);
+
+
+        let textNoData = document.createElementNS(xmlns, 'text');
+        containerSvg.appendChild(textNoData);
+        textNoData.id = 'legendTextExplain1';
+        textNoData.setAttributeNS(null, 'x', '30'); // Math.floor(1 * svgWidth / 2).toString());
+        textNoData.setAttributeNS(null, 'y', (svgHeight - 10).toString());
+        textNoData.setAttributeNS(null, 'fill', '#000000');
+        //textNoData.setAttributeNS(null, 'text-anchor', 'middle');
+        //textNoData.setAttributeNS(null, 'font-weight', 'bold');
+        //textNoData.setAttributeNS(null, 'font-style', 'italic');
+        textNoData.setAttributeNS(null, 'font-size', '12px');
+        textNoData.setAttributeNS(null, 'height', '4em');
+        textNoData.innerHTML = '= no data';
 
 
     } // END FUNCTION biVariateLegend
@@ -962,6 +1062,21 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
 
         });
+
+        let legendLine = document.createElement('div');
+        legendLine.setAttribute('class', 'legendLine');
+        this.mapLegendDiv.appendChild(legendLine);
+
+        let legendBlock = document.createElement('div');
+        legendBlock.setAttribute('class', 'legendColorBlock');
+        legendBlock.style.backgroundColor = '#ffffff';
+        legendLine.appendChild(legendBlock);
+
+        let legendText = document.createElement('div');
+        legendText.setAttribute('class', 'legendColorText');
+        legendText.innerHTML = 'no data';
+        legendLine.appendChild(legendText);
+
     } // END FUNCTION uniVariateLegend
 
 
@@ -1040,6 +1155,21 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
 
     }
+
+
+    public openSnack(snackText, duration = 6, actionText = null): any {
+        // const snackBarRef = this.snackBar.open('Dit is nog een prototype!', 'ok', {duration: 6000});
+        const snackBarRef = this.snackBar.open(snackText, actionText, {
+            duration: (duration * 1000),
+            panelClass: ['snackBarPageWithBottomTabsClass']
+            //, verticalPosition: 'top'
+        });
+
+        return snackBarRef;
+    } // END FUNCTION openSnack
+
+
+
 } // END CLASS ResultMapComponent
 
 

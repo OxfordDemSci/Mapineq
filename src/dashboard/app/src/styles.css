@@ -161,7 +161,9 @@ body {
 }
 
 
-
+.mat_card_content > div {
+    margin-top: 1em;
+}
 
 
 
@@ -464,9 +466,10 @@ div.buttonsMargin {
 }
 .legendColorBlock {
     display: inline-block;
-    width: 1em;
-    height: 1em;
+    width: calc(1em - 2px);
+    height: calc(1em - 2px);
     margin-right: 0.5em;
+    border: 1px solid rgba(0,0,0,0.5);
 }
 .legendColorText {
     display: inline-block;
