@@ -26,8 +26,14 @@ export class RegionsLayer extends BaseLayer  {
         default: {
           weight: 1,
           color: '#da0a0a',
+          /*
+          color: 'rgba(185,178,178,0.8)',
+          */
           fill: true,
           fillColor: '#DA0A0A',
+          /*
+          fillColor: '#ffffff',
+          */
           fillOpacity: 1,
         }
       },

@@ -47,18 +47,22 @@ DROP FUNCTION IF EXISTS areas.get_nuts_areas(INT, INT);
 CREATE OR REPLACE FUNCTION areas.get_nuts_areas(intYear INTEGER, intLevel	INTEGER DEFAULT NULL)
 RETURNS TABLE
 	(
-		f_nuts_id	TEXT,
-		cntr_code	TEXT, 
-		nuts_name	TEXT, 
-		levl_code	INTEGER, 
-		geom		GEOMETRY(MultiPolygon,4326)
+		f_nuts_id		TEXT,
+		cntr_code		TEXT, 
+		nuts_name		TEXT, 
+		country_name	TEXT,
+		levl_code		INTEGER, 
+		geom			GEOMETRY(MultiPolygon,4326)
 	)
 AS
 $BODY$
 DECLARE
 	activeMapYear	INTEGER;
-	QUERY			CONSTANT TEXT := $$SELECT nuts_id, cntr_code, %s, levl_code, geom FROM areas.nuts_%s %s$$;
-	LEVEL_SELECT	CONSTANT TEXT := $$ WHERE levl_code = %1$L OR %1$L IS NULL $$;
+	QUERY			CONSTANT TEXT := $$SELECT l.nuts_id, l.cntr_code, l.%1$s, c.%1$s, l.levl_code, l.geom 
+										FROM areas.nuts_%2$s l 
+											INNER JOIN areas.nuts_%2$s c 
+												ON l.cntr_code = c.cntr_code AND c.levl_code = 0 %s$$;
+	LEVEL_SELECT	CONSTANT TEXT := $$ WHERE l.levl_code = %1$L OR %1$L IS NULL $$;
 BEGIN
 	WITH cte(map_year,start_year,end_year) AS
 	(
@@ -101,8 +105,8 @@ BEGIN
       SELECT 
 		ST_AsMVTGeom(ST_Transform(n.geom, 3857), bounds.geom) AS geom,
         f_nuts_id AS nuts_id, 
-		nuts_name 
-		
+		nuts_name,
+		country_name
       FROM 
 			bounds, 
 			areas.get_nuts_areas(year, intLevel) n

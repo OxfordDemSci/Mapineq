@@ -36,12 +36,16 @@
                             <mat-card-title>{{result.f_short_description}}</mat-card-title>
                             <mat-card-subtitle>{{result.f_resource}} from {{result.f_provider}}</mat-card-subtitle>
                         </mat-card-header>
+                        <!--
                         <img mat-card-image src="assets/img/preview{{ result.f_levels===null ? 3 : (1 + JSON.parse(result.f_levels)[0]) }}.png" alt="Example map" >
-                        <mat-card-content>
-                            <br/>
-                            <p>
+                        -->
+                        <img mat-card-image src="assets/img/preview_level_{{ getMaxRegionLevel(result.f_levels) }}.png" alt="Max level ({{getMaxRegionLevel(result.f_levels)}}) example map" >
+                        <mat-card-content class="mat_card_content">
+                            <!--div>{{ result.f_levels===null ? 99999 : (JSON.parse(result.f_levels)[0]) }} - {{getMaxRegionLevel(result.f_levels)}}</div -->
+
+                            <div>
                                 {{result.f_description}}
-                            </p>
+                            </div>
 
                             <div>
                                 Available years:
@@ -49,7 +53,7 @@
                                     {{jsonArrayToString(result.f_years, ', ')}}
                                 </div>
                             </div>
-                            <br/>
+
                             <div>
                                 Available region levels:
                                 <div>{{jsonArrayToString(result.f_levels, ', ')}}</div>

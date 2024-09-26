@@ -87,6 +87,7 @@
                         <div class="optionLine2">{{option.f_resource}}</div>
                     </mat-option>
                 </mat-autocomplete>
+                <mat-hint  *ngIf="this.tableSelection.tableName !== ''">This table is available at region level(s): {{availableRegionLevelsForTable}}</mat-hint>
             </mat-form-field>
 
 
