@@ -38,6 +38,8 @@ export class DashboardComponent implements OnInit{
     useCaseDescrLong: string;
     useCaseData: any;
 
+    downloadUrl: any;
+    downloadFileName: string;
 
     constructor(private dashboardFeatureService: FeatureService, private route: ActivatedRoute) {
         // this.displayObject = new DisplayObject();
@@ -64,6 +66,13 @@ export class DashboardComponent implements OnInit{
         document.documentElement.style.setProperty('--select-cell-width', 'calc(100% / ' + this.displayObject.tableFields.length.toString() + ')');
         // document.documentElement.style.setProperty('--app-panel-left-width', (500 * this.displayObject.tableFields.length).toString() + 'px');
         document.documentElement.style.setProperty('--app-panel-left-number-selects', this.displayObject.tableFields.length.toString() );
+
+        if (this.displayObject.tableFields.length === 1) {
+            /*
+            document.documentElement.style.setProperty('--side-bar-button-part-height', '84px' ); // 3: 120px   2: 84px   1: 48px
+            */
+            document.documentElement.style.setProperty('--side-bar-button-part-height', '84px' );
+        }
 
     } // END FUNCTION ngOnInit
 
@@ -322,6 +331,14 @@ export class DashboardComponent implements OnInit{
                 }
                 break;
 
+            case 'choropleth':
+                if (this.displayObject.tableFields.length >= 1  &&  this.displayObject.tableFields[0].tableSelectionComplete) {
+                    return false;
+                } else {
+                    return true;
+                }
+                break;
+
             default:
                 console.log('checkShowOnMapDisabled(), NOT IMPLEMENTED YET (formtype: ' + this.displayObject.formType.toString() + ')');
                 return true;
@@ -339,6 +356,11 @@ export class DashboardComponent implements OnInit{
         this.collectDataForSelection(1);
     } // END FUNCTION showBivariateMap
 
+    showUnivariateMap(tableId) {
+        this.displayObject.displayType = 'univariate';
+        this.displayObject.displayTableId = tableId;
+        this.collectDataForSelection(tableId);
+    } // END FUNCTION showUnivariateMap
 
 
     collectDataForSelection(tableId = 0) {
@@ -356,6 +378,7 @@ export class DashboardComponent implements OnInit{
 
             switch(this.displayObject.formType) {
                 case 'bivariate':
+                case 'choropleth':
 
                     if (this.displayObject.displayType === 'bivariate') {
                         let x_json = {};
@@ -425,7 +448,6 @@ export class DashboardComponent implements OnInit{
 
 
     } // END FUNCTION collectDataForSelection
-    downloadUrl: any;
 
 
     downloadCSV() {
@@ -438,7 +460,16 @@ export class DashboardComponent implements OnInit{
         // Create a URL for the Blob
 
         this.downloadUrl = URL.createObjectURL(blob);
-    }
+
+
+        let save_date = new Date();
+
+        let save_date_string = save_date.getFullYear() + '' + ('00' + (save_date.getMonth() + 1)).substr(-2) + '' + ('00' + save_date.getDate()).substr(-2);
+        save_date_string += '_' + ('00' + save_date.getHours()).substr(-2) + '' + ('00' + save_date.getMinutes()).substr(-2) + '' + ('00' + save_date.getSeconds()).substr(-2);
+
+        this.downloadFileName = save_date_string + '_mapineq_data.csv';
+
+    } // END FUNCTION downloadCSV
 
 
     createCSV(data: any[]) {

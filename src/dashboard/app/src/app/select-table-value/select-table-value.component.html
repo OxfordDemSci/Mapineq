@@ -4,11 +4,13 @@
             <div mat-card-avatar [class]="'selection-cell-header-image-'+tableId.toString()"></div>
             <mat-card-title>{{tableSelection.tableName}} </mat-card-title>
             <mat-card-subtitle>{{tableSelection.tableFunction}} ({{(tableId+1)}})</mat-card-subtitle>
+            <!--
             <mat-card-subtitle>
                 <button mat-stroked-button type="button" [disabled]="!tableSelection.tableSelectionComplete" (click)="showOnlyThisTableOnMap()">
                     <mat-icon>map</mat-icon> show only this table on map
                 </button>
             </mat-card-subtitle>
+            -->
 
         </mat-card-header>
 
@@ -150,6 +152,15 @@
             <!--
             <div>Selection complete? <b>{{ (tableSelection.tableSelectionComplete ? 'YES' : 'no') }}</b></div>
             -->
+
+
+            <!--
+            <button mat-stroked-button type="button" [disabled]="!tableSelection.tableSelectionComplete" (click)="showOnlyThisTableOnMap()" class="buttonFullWidth">
+                <mat-icon>map</mat-icon> show only this table on map
+            </button>
+            -->
+
+
             <!--
             <div *ngIf="tableSelection.tableSelectionComplete">
               <button mat-stroked-button type="button" (click)="showOnlyThisTableOnMap()">
