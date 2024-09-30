@@ -152,7 +152,7 @@ BEGIN
 	
 	EXECUTE FORMAT (QUERY_FREQ, strTable) INTO frequence;
 	IF LOWER(frequence) IN ('q','s','m','w') THEN
-		CALL create_oecd_views(strTable);
+		CALL create_estat_views(strTable);
 	END IF;
 	RETURN 'Table created';
 END;
