@@ -43,6 +43,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   availableYears: string[];
   availableRegionLevels: string[];
 
+  regionLevelsText: any;
+
   availableRegionLevelsForTable: string[];
 
   availableColumnValues: any[];
@@ -74,6 +76,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.availableYearsAndRegionLevels = [];
     this.availableYears = [];
     //this.availableRegionLevels = ['3', '2', '1', '0'];
+
+    this.regionLevelsText = {'0': 'countries', '1': 'large regions', '2': 'base regions', '3': 'small regions'};
 
     this.availableRegionLevelsForTable = [];
 

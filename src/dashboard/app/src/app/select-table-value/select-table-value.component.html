@@ -53,9 +53,9 @@
                 -->
                 <mat-select *ngIf="tableSelection.tableId === 0" [(value)]="tableSelection.tableRegionLevel" (valueChange)="regionLevelChanged()">
                     <!--mat-option value="-1">--clear--</mat-option-->
-                    <mat-option [value]="regionLevel" *ngFor="let regionLevel of availableRegionLevels">{{regionLevel}}</mat-option>
+                    <mat-option [value]="regionLevel" *ngFor="let regionLevel of availableRegionLevels">{{regionLevel}} - <i>{{regionLevelsText[regionLevel]}}</i></mat-option>
                 </mat-select>
-                <mat-hint *ngIf="tableSelection.tableId === 0">0: country / 1: large regions / 2: base regions / 3: small regions</mat-hint>
+                <mat-hint *ngIf="tableSelection.tableId === 0">0: countries / 1: large regions / 2: base regions / 3: small regions</mat-hint>
 
                 <mat-label *ngIf="tableSelection.tableId === 1">Region Level</mat-label>
                 <input matInput type="text" *ngIf="tableSelection.tableId === 1" readonly [value]="(tableSelection.tableRegionLevel !== '-1' ? tableSelection.tableRegionLevel : '')" [disabled]="true">
