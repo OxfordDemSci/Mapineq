@@ -285,7 +285,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     } // END FUNCTION openMapInfo
 
     regionLayerMouseInfo(event) {
-        // console.log('REGIONS LAYER, event: ', event, event.originalEvent.clientX, event.originalEvent.clientY, event.type);
+        console.log('REGIONS LAYER, event: ', event.layer.properties);
 
 
         // this.regionsLayer.setFeatureStyle(properties['nuts_id'], {default: {
@@ -325,8 +325,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             dataHtml += this.legendLabel(this.inputDisplayObject.tableFields[this.inputDisplayObject.displayTableId].tableDescr) + ': ' + (regionValues.x ?? 'EMPTY').toString() + '<br>';
         }
 
-
-        document.getElementById('gd_map_cursor_title').innerHTML = event.layer.properties['nuts_name'] + ' (' + event.layer.properties['nuts_id'] + ')';
+        const regionLabel = (this.inputDisplayObject.tableFields[0].tableRegionLevel !== '0') ? event.layer.properties['country_name'] + ', ' + event.layer.properties['nuts_id'] :  event.layer.properties['nuts_id']
+        document.getElementById('gd_map_cursor_title').innerHTML = event.layer.properties['nuts_name'] + ' (' + regionLabel + ')';
         document.getElementById('gd_map_cursor_data').innerHTML = dataHtml;
         // document.getElementById('gd_map_cursor_graph').innerHTML = 'test-graph';
 

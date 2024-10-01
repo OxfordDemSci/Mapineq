@@ -4,11 +4,13 @@
             <div mat-card-avatar [class]="'selection-cell-header-image-'+tableId.toString()"></div>
             <mat-card-title>{{tableSelection.tableName}} </mat-card-title>
             <mat-card-subtitle>{{tableSelection.tableFunction}} ({{(tableId+1)}})</mat-card-subtitle>
+            <!--
             <mat-card-subtitle>
                 <button mat-stroked-button type="button" [disabled]="!tableSelection.tableSelectionComplete" (click)="showOnlyThisTableOnMap()">
                     <mat-icon>map</mat-icon> show only this table on map
                 </button>
             </mat-card-subtitle>
+            -->
 
         </mat-card-header>
 
@@ -53,9 +55,9 @@
                 -->
                 <mat-select *ngIf="tableSelection.tableId === 0" [(value)]="tableSelection.tableRegionLevel" (valueChange)="regionLevelChanged()">
                     <!--mat-option value="-1">--clear--</mat-option-->
-                    <mat-option [value]="regionLevel" *ngFor="let regionLevel of availableRegionLevels">{{regionLevel}}</mat-option>
+                    <mat-option [value]="regionLevel" *ngFor="let regionLevel of availableRegionLevels">{{regionLevel}} - <i>{{regionLevelsText[regionLevel]}}</i></mat-option>
                 </mat-select>
-                <mat-hint *ngIf="tableSelection.tableId === 0">0: country / 1: large regions / 2: base regions / 3: small regions</mat-hint>
+                <mat-hint *ngIf="tableSelection.tableId === 0">0: countries / 1: large regions / 2: base regions / 3: small regions</mat-hint>
 
                 <mat-label *ngIf="tableSelection.tableId === 1">Region Level</mat-label>
                 <input matInput type="text" *ngIf="tableSelection.tableId === 1" readonly [value]="(tableSelection.tableRegionLevel !== '-1' ? tableSelection.tableRegionLevel : '')" [disabled]="true">
@@ -150,6 +152,15 @@
             <!--
             <div>Selection complete? <b>{{ (tableSelection.tableSelectionComplete ? 'YES' : 'no') }}</b></div>
             -->
+
+
+            <!--
+            <button mat-stroked-button type="button" [disabled]="!tableSelection.tableSelectionComplete" (click)="showOnlyThisTableOnMap()" class="buttonFullWidth">
+                <mat-icon>map</mat-icon> show only this table on map
+            </button>
+            -->
+
+
             <!--
             <div *ngIf="tableSelection.tableSelectionComplete">
               <button mat-stroked-button type="button" (click)="showOnlyThisTableOnMap()">
