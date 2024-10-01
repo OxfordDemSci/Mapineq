@@ -1,3 +1,5 @@
+
+
 DROP TABLE IF EXISTS public.urban_green_area CASCADE;
 CREATE TABLE IF NOT EXISTS urban_green_area
 (
@@ -12,12 +14,14 @@ CREATE TABLE IF NOT EXISTS urban_green_area
 
 Load with  PSQL
 truncate table urban_green_area
-\copy urban_green_area FROM 'C:\Users\RonnieLassche\Downloads\green_urban_area.csv' HEADER DELIMITER ',' CSV
+\copy urban_green_area FROM 'c:\projects\mapineq\db_geodienst\data\urban_green_area.csv' HEADER DELIMITER ',' CSV
 
+DELETE FROM catalogue WHERE resource = 'urban_green_area';
 INSERT INTO public.catalogue(
-	provider, resource, descr,   use, short_descr)
-	VALUES ('Urban Atlas', 'urban_green_area', 'Green urban area', TRUE, 'Urban green');
+	provider, resource, descr,   use, short_descr, query_resource)
+	VALUES ('Urban Atlas', 'urban_green_area', 'Urban green area', TRUE, 'Urban green', 'vw_urban_green_area');
 
+DROP VIEW IF EXISTS vw_urban_green_area;
 CREATE OR REPLACE VIEW vw_urban_green_area AS
 SELECT
 	geo,
