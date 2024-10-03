@@ -24,8 +24,8 @@ CREATE TABLE IF NOT EXISTS ookla
 --Add an entry to the catalogue table.
 --Check upfromt if the entry is not already there.
 INSERT INTO public.catalogue(
-	provider, resource, descr,   use, short_descr)
-	VALUES ('Ookla', 'ookla', 'Internet speed by ookla', TRUE, 'Ookla');
+	provider, resource, descr,   use, short_descr, query_resource)
+	VALUES ('Ookla', 'ookla', 'Internet speed by ookla', TRUE, 'Ookla', 'vw_ookla');
 
 --Create a view with the name vw_tablename. Leave columns out which should not be used. A view is needed.
 CREATE OR REPLACE VIEW vw_ookla AS
