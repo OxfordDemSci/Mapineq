@@ -26,6 +26,7 @@ import {NgForOf, NgOptimizedImage} from "@angular/common";
 import { DatacatalogueComponent } from './datacatalogue/datacatalogue.component';
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 import {MatDivider} from "@angular/material/divider";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 
 @NgModule({
@@ -64,7 +65,8 @@ import {MatDivider} from "@angular/material/divider";
         NgOptimizedImage,
         MatGridList,
         MatGridTile,
-        MatDivider
+        MatDivider,
+        MatTooltipModule
     ],
     providers: [
     provideAnimationsAsync(), provideHttpClient()

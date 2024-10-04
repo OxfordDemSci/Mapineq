@@ -27,7 +27,7 @@ export class DisplayObject {
         // this.objectFeatureService = new FeatureService(objectHttpClient);
 
         for (const field in jsonObject) {
-            if (field === 'displayType') {
+            if (field === 'formType') {
                 this.formType = jsonObject[field];
                 switch(jsonObject[field]) {
                     case 'bivariate':
