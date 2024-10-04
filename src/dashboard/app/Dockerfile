@@ -8,5 +8,5 @@ RUN npm run build --prod
 FROM nginx:alpine
 COPY --from=node /app/dist/app/browser /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
-
+RUN chmod 750 /usr/share/nginx/html/.htaccess
 EXPOSE 80
