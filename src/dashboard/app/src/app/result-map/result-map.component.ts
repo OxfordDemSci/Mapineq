@@ -285,7 +285,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     } // END FUNCTION openMapInfo
 
     regionLayerMouseInfo(event) {
-        console.log('REGIONS LAYER, event: ', event.layer.properties);
+        // console.log('REGIONS LAYER, event: ', event.layer.properties);
 
 
         // this.regionsLayer.setFeatureStyle(properties['nuts_id'], {default: {
@@ -313,7 +313,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         let regionValues = this.inputDisplayData.find(item => {
             return item.geo === event.layer.properties['nuts_id'];
         }) ?? {};
-        console.log('REGIONS LAYER info: ', event.layer.properties['nuts_id'], regionValues);
+        // console.log('REGIONS LAYER info: ', event.layer.properties['nuts_id'], regionValues);
         // evt land erbij halen obv eerste twee letters van event.layer.properties['nuts_id'] / regionValues.geo
         // of de feature service / tiles ook land mee laten geven
 
@@ -322,6 +322,19 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             dataHtml += this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr) + ': ' + (regionValues.x ?? 'EMPTY').toString() + '<br>';
             dataHtml += this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr) + ': ' + (regionValues.y ?? 'EMPTY').toString() + '<br>';
         } else {
+            /* /
+            if (event.layer.properties['nuts_id'] === 'NO042') {
+                // console.log(' = = = = TEST: ', event.layer.properties, regionValues, [regionValues].map((item: any) => Number(item.x)).filter(Number)  );
+                console.log(' = = = = TEST 1: ', regionValues, [regionValues].map((item: any) => Number(item.x)).filter(Number) );
+                console.log(' = = = = TEST 2: ', regionValues, [regionValues].map((item: any) =>
+                {
+                    console.log('item.x:', item.x, Number(item.x), Number(0), Number(null), item.x === null, item.x !== null, null !== null);
+                    item.x;
+                }).filter(Number));
+                console.log(' = = = = TEST 3: ', regionValues, [regionValues].map((item: any) => Number(item.x)).filter( mappedValue => {mappedValue !== null}) );
+                console.log(' = = = = TEST 4: ', regionValues, [regionValues].map((item: any) => Number(item.x)) );
+            }
+            /* */
             dataHtml += this.legendLabel(this.inputDisplayObject.tableFields[this.inputDisplayObject.displayTableId].tableDescr) + ': ' + (regionValues.x ?? 'EMPTY').toString() + '<br>';
         }
 
@@ -624,7 +637,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         // console.log('UNI xdata:', xdata);
         let xmax = Math.max(...xdata);
         let xmin = Math.min(...xdata);
-        // console.log(xmin, xmax);
+        console.log('changeMapStyleUnivariate() xmin/xmax:', xmin, xmax, this.xydata.filter( item => item.geo === 'NO042'));
         this.regionsLayer.options.vectorTileLayerStyles.default = ((properties: any) => {
             let entity1 = 0;
             if (mapdata[properties['nuts_id']] != undefined) {
@@ -677,7 +690,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         let ymax = Math.max(...ydata);
         let ymin = Math.min(...ydata);
         let xmin = Math.min(...xdata);
-        //console.log(xmin, xmax, ymin, ymax);
+        // console.log('xmin, xmax, ymin, ymax:', xmin, xmax, ymin, ymax);
         this.regionsLayer.options.vectorTileLayerStyles.default = ((properties: any) => {
             let entity1 = 0;
             let entity2 = 0;
