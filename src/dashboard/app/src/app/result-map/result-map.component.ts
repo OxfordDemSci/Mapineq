@@ -80,6 +80,15 @@ const formatString = (template, ...args) => {
     });
 }
 
+
+const lowerCaseAllWordsExceptFirstLetters = (sentence) =>
+    sentence.replaceAll(/\S*/g, word =>
+        // `${word.slice(0, 1).toUpperCase()}${word.slice(1).toLowerCase()}`
+        `${word.slice(0, 1).toUpperCase()}${word.slice(1).toLowerCase()}`
+    );
+
+
+
 @Component({
     selector: 'app-result-map',
     templateUrl: './result-map.component.html',
@@ -285,7 +294,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     } // END FUNCTION openMapInfo
 
     regionLayerMouseInfo(event) {
-        console.log('REGIONS LAYER, event: ', event.layer.properties);
+        // console.log('REGIONS LAYER, event: ', event.layer.properties);
 
 
         // this.regionsLayer.setFeatureStyle(properties['nuts_id'], {default: {
@@ -313,19 +322,36 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         let regionValues = this.inputDisplayData.find(item => {
             return item.geo === event.layer.properties['nuts_id'];
         }) ?? {};
-        console.log('REGIONS LAYER info: ', event.layer.properties['nuts_id'], regionValues);
+        // console.log('REGIONS LAYER info: ', event.layer.properties['nuts_id'], regionValues);
         // evt land erbij halen obv eerste twee letters van event.layer.properties['nuts_id'] / regionValues.geo
         // of de feature service / tiles ook land mee laten geven
 
         let dataHtml = '';
         if (this.inputDisplayObject.displayType === 'bivariate') {
-            dataHtml += this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr) + ': ' + (regionValues.x ?? 'EMPTY').toString() + '<br>';
-            dataHtml += this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr) + ': ' + (regionValues.y ?? 'EMPTY').toString() + '<br>';
+            dataHtml += this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr) + ': ' + (regionValues.x ?? 'NO DATA').toString() + '<br>';
+            dataHtml += this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr) + ': ' + (regionValues.y ?? 'NO DATA').toString() + '<br>';
         } else {
-            dataHtml += this.legendLabel(this.inputDisplayObject.tableFields[this.inputDisplayObject.displayTableId].tableDescr) + ': ' + (regionValues.x ?? 'EMPTY').toString() + '<br>';
+            /* /
+            if (event.layer.properties['nuts_id'] === 'NO042') {
+                // console.log(' = = = = TEST: ', event.layer.properties, regionValues, [regionValues].map((item: any) => Number(item.x)).filter(Number)  );
+                console.log(' = = = = TEST 1: ', regionValues, [regionValues].map((item: any) => Number(item.x)).filter(Number) );
+                console.log(' = = = = TEST 2: ', regionValues, [regionValues].map((item: any) =>
+                {
+                    console.log('item.x:', item.x, Number(item.x), Number(0), Number(null), item.x === null, item.x !== null, null !== null);
+                    item.x;
+                }).filter(Number));
+                console.log(' = = = = TEST 3: ', regionValues, [regionValues].map((item: any) => Number(item.x)).filter( mappedValue => {mappedValue !== null}) );
+                console.log(' = = = = TEST 4: ', regionValues, [regionValues, {x: 0}, {x: "0"}, {x: null}].map((item: any) => Number(item.x)) );
+                console.log(' = = = = TEST 5: ', regionValues, [regionValues, {x: 0}, {x: "0"}, {x: null}].map((item: any) => Number(item.x).toString()) );
+                console.log(' = = = = TEST 6: ', regionValues, [regionValues, {x: 0}, {x: "0"}, {x: null}].map((item: any) => Number(item.x).toString()).filter( mappedValue => {mappedValue !== null}) );
+            }
+            /* */
+            dataHtml += this.legendLabel(this.inputDisplayObject.tableFields[this.inputDisplayObject.displayTableId].tableDescr) + ': ' + (regionValues.x ?? 'NO DATA').toString() + '<br>';
         }
+        dataHtml += '<br><i>Country: ' + lowerCaseAllWordsExceptFirstLetters(event.layer.properties['country_name']) + '</i>';
 
-        const regionLabel = (this.inputDisplayObject.tableFields[0].tableRegionLevel !== '0') ? event.layer.properties['country_name'] + ', ' + event.layer.properties['nuts_id'] :  event.layer.properties['nuts_id']
+        // const regionLabel = (this.inputDisplayObject.tableFields[0].tableRegionLevel !== '0') ? event.layer.properties['country_name'] + ', ' + event.layer.properties['nuts_id'] :  event.layer.properties['nuts_id']
+        const regionLabel = (this.inputDisplayObject.tableFields[0].tableRegionLevel !== '0') ? event.layer.properties['nuts_id'] :  event.layer.properties['nuts_id']
         document.getElementById('gd_map_cursor_title').innerHTML = event.layer.properties['nuts_name'] + ' (' + regionLabel + ')';
         document.getElementById('gd_map_cursor_data').innerHTML = dataHtml;
         // document.getElementById('gd_map_cursor_graph').innerHTML = 'test-graph';
@@ -620,18 +646,31 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
     changeMapStyleUnivariate(mapdata: any) {
         let unknown = [];
+        /* /
         let xdata = this.xydata.map((item: any) => Number(item.x)).filter(Number);
+        /* */
+        let xdata = this.xydata.map((item: any) => item.x).filter( mappedValue => (mappedValue === 0 ? '0' : mappedValue) );
+        /* */
         // console.log('UNI xdata:', xdata);
         let xmax = Math.max(...xdata);
         let xmin = Math.min(...xdata);
-        // console.log(xmin, xmax);
+        console.log('changeMapStyleUnivariate() xmin/xmax:', xmin, xmax, this.xydata.filter( item => item.geo === 'NO042'));
         this.regionsLayer.options.vectorTileLayerStyles.default = ((properties: any) => {
-            let entity1 = 0;
+            let entity1 = null;
             if (mapdata[properties['nuts_id']] != undefined) {
+                /*
                 entity1 = +mapdata[properties['nuts_id']].x;
+                */
+                entity1 = mapdata[properties['nuts_id']].x;
             } else {
                 unknown.push(properties['nuts_id']);
             }
+
+            /*
+            if (properties['nuts_id'] == 'UKM61') {
+                console.log('UKM61', entity1, mapdata[properties['nuts_id']], mapdata[properties['nuts_id']].x, +mapdata[properties['nuts_id']].x);
+            }
+            */
 
             let fillColor = this.getColorUnivariate(entity1, xmin, xmax);
             return {
@@ -654,22 +693,32 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     getColorUnivariate(xvalue: number, xmin: number, xmax: number): any {
         //console.log('getColorUnivariate():', xvalue, xmin, xmax);
 
+        if (xvalue === null) {
+            return '#FFFFFF';
+        }
+
         let colorIndex = Math.floor((xvalue - xmin) / ((xmax - xmin) / colorsUnivariate.length));
         if (xvalue === xmax) {
             colorIndex = (colorsUnivariate.length - 1);
         }
 
+        /*
         if (xvalue === 0) {
             return '#FFFFFF';
         }
+        */
         return colorsUnivariate[colorIndex];
     } // END FUNCTION getColorUnivariate
 
 
     changeMapStyleBivariate(mapdata: any) {
         let unknown = [];
+        /*
         let xdata = this.xydata.map((item: any) => Number(item.x)).filter(Number);
         let ydata = this.xydata.map((item: any) => item.y).filter(Number);
+        */
+        let xdata = this.xydata.map((item: any) => item.x).filter( mappedValue => (mappedValue === 0 ? '0' : mappedValue) );
+        let ydata = this.xydata.map((item: any) => item.y).filter( mappedValue => (mappedValue === 0 ? '0' : mappedValue) );
         //console.log(xdata);
         //console.log('BI xdata:', xdata);
         //console.log('BI ydata:', ydata);
@@ -677,13 +726,21 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         let ymax = Math.max(...ydata);
         let ymin = Math.min(...ydata);
         let xmin = Math.min(...xdata);
-        //console.log(xmin, xmax, ymin, ymax);
+        // console.log('xmin, xmax, ymin, ymax:', xmin, xmax, ymin, ymax);
         this.regionsLayer.options.vectorTileLayerStyles.default = ((properties: any) => {
+            /*
             let entity1 = 0;
             let entity2 = 0;
+            */
+            let entity1 = null;
+            let entity2 = null;
             if (mapdata[properties['nuts_id']] != undefined) {
+                /*
                 entity1 = +mapdata[properties['nuts_id']].x;
                 entity2 = +mapdata[properties['nuts_id']].y;
+                */
+                entity1 = mapdata[properties['nuts_id']].x;
+                entity2 = mapdata[properties['nuts_id']].y;
             } else {
                 unknown.push(properties['nuts_id']);
             }
@@ -717,7 +774,10 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     getColorBivariate(xvalue: number, xmin: number, xmax: number, yvalue: number, ymin: number, ymax: number): any {
         //console.log('xvalue, xmin, xmax, yvalue, ymin, ymax',xvalue, xmin, xmax, yvalue, ymin, ymax);
 
+        /*
         if (xvalue === undefined || yvalue === undefined || typeof xvalue === 'undefined' || typeof yvalue === 'undefined' || xvalue === 0 || yvalue === 0 || xvalue === null || yvalue === null) {
+        */
+        if (xvalue === undefined || yvalue === undefined || typeof xvalue === 'undefined' || typeof yvalue === 'undefined' || xvalue === null || yvalue === null) {
             return '#FFFFFF';
         }
 
@@ -1037,6 +1097,12 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
                 toFixedNumber = 2;
                 if (colorStep < 0.1) {
                     toFixedNumber = 3;
+                    if (colorStep < 0.01) {
+                        toFixedNumber = 4;
+                        if (colorStep < 0.001) {
+                            toFixedNumber = 5;
+                        }
+                    }
                 }
             }
         }
@@ -1057,7 +1123,19 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
             let legendText = document.createElement('div');
             legendText.setAttribute('class', 'legendColorText');
+            /*
             legendText.innerHTML = (info.xmin + (colorStep * indexReverseFrom)).toFixed(toFixedNumber) + ' - ' + (info.xmin + (colorStep * indexReverseTo)).toFixed(toFixedNumber);
+            */
+            let startVal = info.xmin + (colorStep * indexReverseFrom);
+            let endVal = info.xmin + (colorStep * indexReverseTo);
+
+            let startValStr = (startVal).toFixed(toFixedNumber);
+            if (startVal === 0) {
+                startValStr = startVal.toString();
+            }
+            let endValStr = (endVal).toFixed(toFixedNumber);
+
+            legendText.innerHTML = startValStr + ' - ' + endValStr;
             legendLine.appendChild(legendText);
 
 

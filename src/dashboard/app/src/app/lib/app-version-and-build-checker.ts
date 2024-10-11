@@ -92,7 +92,18 @@ export class AppVersionAndBuildChecker {
   } // END FUNCTION makeAppVersionAndBuildString
 
   updateAppVersionAndBuild(): void {
-    window.open('./?t=' + Date.now().toString(), '_self');
+    // window.open('./?t=' + Date.now().toString(), '_self');
+    let newUrlVars = [];
+    if (window.location.href.split('?').length > 1) {
+      let urlVars = window.location.href.split('?')[1].split('&');
+      urlVars.forEach( (urlVar, index) => {
+        // console.log('var ' + index.toString() + ':', urlVar);
+        if (urlVar.split('=')[0] !== 't') {
+          newUrlVars.push(urlVar);
+        }
+      })
+    }
+    window.open(window.location.pathname + '?t=' + Date.now().toString() + ( newUrlVars.length > 0 ? '&' + newUrlVars.join('&') : '' ), '_self');
   } // END FUNCTION updateAppVersionAndBuild
 
 } // END CLASS AppVersionChecker

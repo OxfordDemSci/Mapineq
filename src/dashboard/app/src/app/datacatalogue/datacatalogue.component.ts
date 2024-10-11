@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl} from "@angular/forms";
 import {FeatureService} from "../services/feature.service";
 import {debounceTime, distinctUntilChanged, filter, finalize, switchMap, tap} from "rxjs";
+import {AppVersionAndBuildChecker} from "../lib/app-version-and-build-checker";
 
 @Component({
   selector: 'app-datacatalogue',
@@ -9,6 +10,8 @@ import {debounceTime, distinctUntilChanged, filter, finalize, switchMap, tap} fr
   styleUrl: './datacatalogue.component.css'
 })
 export class DatacatalogueComponent implements OnInit {
+
+  versionChecker: AppVersionAndBuildChecker;
 
   isLoading = false;
   errorMsg!: string;
@@ -20,6 +23,7 @@ export class DatacatalogueComponent implements OnInit {
   searchText: string = 'xxxxxx';
 
   constructor(private featureService: FeatureService) {
+    // this.filteredSearchResults = [];
     this.initData();
   }
 
@@ -27,6 +31,9 @@ export class DatacatalogueComponent implements OnInit {
   //https://stackoverflow.com/questions/70875775/angular-autocomplete-loading-from-api-reactivity
 
   ngOnInit() {
+
+    this.versionChecker = new AppVersionAndBuildChecker();
+
     this.searchResultsCtrl.valueChanges
         .pipe(
             filter(res => {
@@ -68,6 +75,7 @@ export class DatacatalogueComponent implements OnInit {
   }
 
   initData(): void {
+    this.filteredSearchResults = [];
     this.featureService.searchCatalogue('').subscribe((data) => {
       this.filteredSearchResults = data;
     })
