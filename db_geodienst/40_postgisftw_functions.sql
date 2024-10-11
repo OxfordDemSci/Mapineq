@@ -498,7 +498,7 @@ DECLARE
 							field_value
 						)
 						SELECT
-							jsonb_agg(JSONB_BUILD_OBJECT('value',value,'label',	label)) AS field_values
+							jsonb_agg(JSONB_BUILD_OBJECT('value',value,'label', CASE WHEN label = '' THEN value ELSE COALESCE(label, value) END)) AS field_values
 						FROM
 							cte
 							INNER JOIN website.catalogue_field_value_description d
@@ -595,11 +595,7 @@ END;
 $BODY$
 LANGUAGE PLPGSQL;
 
-
-
-
 DROP FUNCTION IF EXISTS postgisftw.get_xy_data(INT, INT, JSONB, JSONB);
-
 CREATE OR REPLACE FUNCTION postgisftw.get_xy_data(_level INTEGER, _year INTEGER, X_JSON JSONB, Y_JSON JSONB)
 RETURNS TABLE
 (
@@ -687,7 +683,7 @@ BEGIN
 	INSERT INTO tmpSource_x SELECT * FROM website.get_data_source_level_year (_year, X_JSON);
 	CALL areas.get_nuts_codes(X_JSON ->> 'source', _level,'tmpSource_x' );
 
-	SELECT * FROM areas.get_xy_data_map_year(_level, _year, X_JSON ) INTO best_year;
+	SELECT * FROM areas.get_x_data_map_year(_level, _year, X_JSON ) INTO best_year;
 	
 	RETURN QUERY
 	SELECT 

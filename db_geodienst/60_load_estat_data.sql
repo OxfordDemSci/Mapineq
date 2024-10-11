@@ -7,7 +7,7 @@ DECLARE
 
 	JSON_URL	CONSTANT TEXT := $$curl "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/dataflow/ESTAT/all?detail=allstubs&format=JSON"$$;
 	CAT_DELETE	CONSTANT TEXT := $$DELETE FROM catalogue WHERE provider = %L AND resource = %L $$;
-	CAT_INSERT	CONSTANT TEXT := $$INSERT INTO catalogue VALUES(%L,%L,%L,%L,%L,TRUE,%L) $$;
+	CAT_INSERT	CONSTANT TEXT := $$INSERT INTO catalogue VALUES(%L,%L,%L,%L,%L,TRUE,%L, %L) $$;
 BEGIN
 	SET client_min_messages TO 'warning';
 	CREATE TEMPORARY TABLE IF NOT EXISTS tmpDictionary(id SERIAL, result_json TEXT);
@@ -35,7 +35,7 @@ BEGIN
 
 	IF rec.resource IS NOT NULL THEN
 		EXECUTE FORMAT(CAT_DELETE, rec.provider, rec.resource);
-		EXECUTE FORMAT(CAT_INSERT, rec.provider, rec.resource, rec.descr,rec.version,strUrl, LEFT(rec.descr,20));
+		EXECUTE FORMAT(CAT_INSERT, rec.provider, rec.resource, rec.descr,rec.version,strUrl, LEFT(rec.descr,20),rec.resource);
 	END IF;
 	
 END;
@@ -56,7 +56,8 @@ DECLARE
 	frequence			TEXT;
 	
     strColumnName       TEXT;
-    intIndex            INTEGER := 0;
+	i					INTEGER := 0;
+	arrCols				TEXT[]; 
     arrColType			TEXT[] := ARRAY['INT','NUMERIC','TIMESTAMP','TEXT'];
     colType				TEXT;
 
@@ -67,25 +68,27 @@ DECLARE
 
 	CHARDELIMITER		CONSTANT TEXT := ',';
 	TABLE_SCHEMA		CONSTANT TEXT := 'public';
-	READ_CSV			CONSTANT TEXT := $$COPY %I.%I FROM PROGRAM ' curl %s' WITH DELIMITER %L CSV HEADER $$;
 	DROP_TABLE 			CONSTANT TEXT := $$DROP TABLE IF EXISTS %I.%I CASCADE$$;
-	CREATE_TABLE		CONSTANT TEXT := $$CREATE TABLE %I.%I () $$;
+	CREATE_TABLE		CONSTANT TEXT := $$CREATE UNLOGGED TABLE %I.%I () $$;
 	ADD_COLUMN			CONSTANT TEXT := $$ALTER TABLE %I.%I ADD COLUMN %I TEXT $$;
+	COL					CONSTANT TEXT := $$(STRING_TO_ARRAY(content, ',', ''))[%s]$$;
+	INSERT_DATA			CONSTANT TEXT := $$INSERT INTO %I.%I SELECT %s FROM tmpHeaderRow OFFSET 1 $$;
+	
 	DROP_COLUMN			CONSTANT TEXT := $$ALTER TABLE %I.%I DROP COLUMN IF EXISTS %I $$;
 	GET_COLTYPE			CONSTANT TEXT := $$SELECT %I::%s FROM %I.%I $$;
 	ALTER_COLTYPE		CONSTANT TEXT := $$ ALTER TABLE %I.%I ALTER COLUMN %I TYPE %s USING %I::%s $$;
 	QUERY_FREQ			CONSTANT TEXT := $$SELECT DISTINCT freq FROM %I$$;
 BEGIN
-
-    SET client_min_messages TO ERROR;
+	SET client_min_messages TO ERROR;
     
     DROP TABLE IF EXISTS tmpHeaderRow;
     
     CREATE TEMPORARY TABLE tmpHeaderRow (content text);
     
     EXECUTE 'COPY tmpHeaderRow FROM PROGRAM ' || QUOTE_LITERAL('curl ' || FORMAT(URL,strTable)) ;
-
-	IF (select count(*) FROM tmpHeaderRow) < 2 THEN
+	RAISE INFO '% - data file imported', clock_timestamp();
+	
+	IF (SELECT COUNT(*) FROM tmpHeaderRow) < 2 THEN
 		RETURN 'Table Creation failed';
 	END IF;
     
@@ -99,7 +102,7 @@ BEGIN
 	
 	CREATE TEMPORARY TABLE tmpColumn (id SERIAL, col_name TEXT, col_type TEXT);
 	
-    FOR rec IN SELECT * FROM regexp_split_to_table(strHeaderRow, CHARDELIMITER) AS columnName
+    FOR rec IN SELECT * FROM REGEXP_SPLIT_TO_TABLE(strHeaderRow, CHARDELIMITER) AS columnName
     LOOP
         strColumnName := LOWER(REPLACE(rec.columnName, ' ', '_'));
 		
@@ -116,11 +119,13 @@ BEGIN
 		END IF;
 
 		EXECUTE FORMAT(ADD_COLUMN, TABLE_SCHEMA, strTable, strColumnName);
-		RAISE INFO '%',FORMAT(ADD_COLUMN, TABLE_SCHEMA, strTable, strColumnName);
+		i := i + 1;
+		arrCols := ARRAY_APPEND(arrCols, FORMAT(COL,i) );		
     END LOOP;
 	
-	EXECUTE FORMAT (READ_CSV, TABLE_SCHEMA, strTable, FORMAT(URL,strTable),CHARDELIMITER) ;
-
+	
+	EXECUTE FORMAT (INSERT_DATA,TABLE_SCHEMA, strTable, array_to_string(arrCols,CHARDELIMITER));
+	RAISE INFO '% - Data inserted', clock_timestamp();
 	FOREACH dropColumn IN ARRAY arrDropColumn
 	LOOP
 		EXECUTE FORMAT(DROP_COLUMN,TABLE_SCHEMA, strTable, dropColumn);
@@ -143,7 +148,7 @@ BEGIN
 			END;
 		END LOOP;
 	END LOOP;
-
+	
 	FOR rec IN SELECT * from tmpColumn ORDER BY id
 	LOOP
 		EXECUTE FORMAT (ALTER_COLTYPE, TABLE_SCHEMA, strTable, rec.col_name, rec.col_type,rec.col_name, rec.col_type);
@@ -157,7 +162,7 @@ BEGIN
 	RETURN 'Table created';
 END;
 $BODY$
-  LANGUAGE plpgsql;
+LANGUAGE plpgsql;
 
 
 DROP PROCEDURE IF EXISTS website.import_estat_data(TEXT);
