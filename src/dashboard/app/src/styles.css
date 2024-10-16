@@ -39,7 +39,10 @@ body {
 
     --app-panel-left-one-select-width: 500px;
     --app-panel-left-number-selects: 1;
+    /*
     --app-panel-left-width: calc(var(--app-panel-left-number-selects) * var(--app-panel-left-one-select-width));
+    */
+    --app-panel-left-width: calc(min(80%, var(--app-panel-left-number-selects) * var(--app-panel-left-one-select-width) ));
 
     --side-bar-button-part-height: 120px; /* 84px; */
     --side-bar-selection-part-height: calc(var(--page-content-height) - var(--side-bar-button-part-height));
@@ -337,8 +340,9 @@ div.buttonsMargin {
     /* *
     padding: 10px;
     width: calc(min(80%, 500px)) !important;
-    /* */
     width: calc(min(80%, var(--app-panel-left-width))) !important;
+    /* */
+    width: var(--app-panel-left-width) !important;
     /* /
     max-width: calc(min(50%, 600px)) !important;
     /* */
@@ -451,6 +455,16 @@ div.buttonsMargin {
 }
 
 
+/* MAP CONTROL */
+.leaflet-bottom.leaflet-right {
+    /*
+    background-color: rgba(255,0,0,0.25);
+    */
+    z-index: 999;
+}
+
+
+
 /* MAP TITLE */
 
 #mapTitleDiv {
@@ -525,6 +539,20 @@ div.buttonsMargin {
     width: 100%;
     display: block;
 }
+
+
+
+/* MAP DATA INFO DIV (SCROLL) */
+#map_info_div_info_container {
+    max-height: calc(var(--page-content-height) - 450px);
+}
+
+#map_info_div_info {
+    max-height: calc(var(--page-content-height) - 470px);
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
 
 
 /* MAP INFO DIV */
@@ -618,6 +646,10 @@ div.buttonsMargin {
     width: 100%;
 }
 
+
+.mat-mdc-card-header {
+    overflow-x: hidden;
+}
 
 .title {
   background-color: rgb(63, 81, 180);

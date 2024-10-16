@@ -196,7 +196,10 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         });
         this.map.addLayer(Esri_WorldGrayCanvas);
 
+        /*
         new LeafletControlLegend({position: 'bottomright'}).addTo(this.map);
+        */
+        new LeafletControlLegend({position: 'bottomleft'}).addTo(this.map);
         this.mapLegendDiv = document.getElementById('map_legend_div');
 
 
@@ -220,7 +223,11 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         this.hideMapGraph();
         this.hideMapInfo();
 
+        /*
         new LeafletControlWatermark().addTo(this.map);
+        */
+        new LeafletControlWatermark({position: 'bottomright'}).addTo(this.map);
+
 
         let mapButtonsDivLeft = new LeafletControlMapButtonsLeft().addTo(this.map);
         // mapButtonsDivLeft.addButton(this.testToggle.bind(this), {id: 'mbl_0', mat_icon: 'near_me_disabled', title: 'start/stop navigatie', toggle: ['near_me', 'near_me_disabled']});
@@ -455,14 +462,14 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
     } // END FUNCTION changeResultMap
 
     setInfoSelections(): void {
-        console.log();
+        console.log('setInfoSelections() ...', this.inputDisplayObject.tableFields);
         let html = '<table class="selections">';
         html += '<tr>';
         if (this.displayInfo(0)) {
-            html += '<th>' + this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr) + '</th>'
+            html += '<th>' + this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr) + '<br><i>' + this.inputDisplayObject.tableFields[0].tableName + '</i> (' + this.inputDisplayObject.tableFields[0].tableYear + ')</th>'
         }
         if (this.displayInfo(1)) {
-            html += '<th>' + this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr) + '</th>'
+            html += '<th>' + this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr) + '<br><i>' + this.inputDisplayObject.tableFields[1].tableName + '</i> (' + this.inputDisplayObject.tableFields[1].tableYear + ')</th>'
         }
         html += '</tr>';
         html += '<tr>';

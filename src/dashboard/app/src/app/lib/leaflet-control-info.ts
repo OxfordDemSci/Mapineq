@@ -27,7 +27,12 @@ export class LeafletControlInfo extends L.Control  {
         const mapInfo = L.DomUtil.create('div') as HTMLDivElement;
         mapInfo.id = 'map_info_div';
         mapInfo.style.width = 'auto';
-
+        // mapInfo.style.maxHeight = 'calc(var(--page-content-height) - 450px)';
+        /*
+        mapInfo.style.backgroundColor = 'rgba(255,0,0,0.25';
+        mapInfo.style.overflowX = 'hidden';
+        mapInfo.style.overflowY = 'auto';
+        */
 
         const mapInfoToggleContainer = document.createElement('div');
         mapInfo.appendChild(mapInfoToggleContainer);
@@ -42,7 +47,12 @@ export class LeafletControlInfo extends L.Control  {
         mapInfoInfoContainer.style.width = '0px';
         //mapInfoInfoContainer.style.height = '420px';
         mapInfoInfoContainer.style.transition = '0.5s';
-
+        // mapInfoInfoContainer.style.maxHeight = 'calc(var(--page-content-height) - 450px)';
+        mapInfoInfoContainer.style.height = 'auto'
+        /* *
+        mapInfoInfoContainer.style.overflow = 'hidden';
+        mapInfoInfoContainer.style.overflowY = 'auto';
+        /* */
 
         const mapInfoInfoBackground = document.createElement('div');
         mapInfoInfoContainer.appendChild(mapInfoInfoBackground);
@@ -60,7 +70,7 @@ export class LeafletControlInfo extends L.Control  {
 
 
         L.DomEvent
-            .addListener(mapInfo, 'contextmenu mousedown click dblclick', L.DomEvent.stopPropagation);
+            .addListener(mapInfo, 'contextmenu mousedown click dblclick wheel', L.DomEvent.stopPropagation);
 
         return mapInfo;
 
