@@ -531,7 +531,23 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
   tableSelectClearChosenColumnValues() {
-    this.getFieldsForTableForYearAndRegionLevel();
+    // console.log('tableSelectClearChosenColumnValues() CALLED ...', this.tableSelection.tableColumnValues, this.availableColumnValuesWithInitiallyOneChoice);
+
+    for( const property in this.tableSelection.tableColumnValues ) {
+        // console.log('item: ', property, this.tableSelection.tableColumnValues[property], !this.availableColumnValuesWithInitiallyOneChoice.includes(property));
+        if ( !this.availableColumnValuesWithInitiallyOneChoice.includes(property) ) {
+          this.tableSelection.tableColumnValues[property] = '';
+        }
+    }
+
+    // console.log('tableSelectClearChosenColumnValues() IN BETWEEN:', this.tableSelection.tableColumnValues, this.availableColumnValuesWithInitiallyOneChoice);
+
+    //this.getFieldsForTableForYearAndRegionLevel(); // this collects the default case study values (and won't work with new select/input version)
+    this.getFilteredFieldsForTableForYearAndRegionLevel();
+
+    // console.log('tableSelectClearChosenColumnValues() END FUNCTION:', this.tableSelection.tableColumnValues, this.availableColumnValuesWithInitiallyOneChoice);
+
+
   } // END FUNCTION tableSelectClearChosenColumnValues
 
   showOnlyThisTableOnMap() {
