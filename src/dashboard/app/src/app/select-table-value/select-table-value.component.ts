@@ -271,7 +271,17 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
             //console.log('before abc A - selectedTableObject: ', this.tableSelection.tableId, selectedTableObject);
             this.tableSelectOption(selectedTableObject[0]);
 
+          } else {
+            // console.log('CHECKPOINT Y:', this.tableId, this.tableSelection.tableName);
+
+            this.tableSelection.tableName = '';
+            this.tableSelection.tableDescr = '';
+            this.tableSelection.tableColumnValues = {};
+            this.availableColumnValues = [];
+            this.availableYears = [];
+
           }
+
         }
 
 
@@ -313,6 +323,9 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
         }
 
+        // console.log('CHECKPOINT X', this.tableSelection.tableId, this.tableSelection, this.tableSelection.tableName);
+
+
       });
     } else if (this.tableId === 1) {
       // getSourcesByYearAndNutsLevel year & nuts level
@@ -337,6 +350,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
           this.tableSelection.tableDescr = '';
           this.tableSelection.tableColumnValues = {};
           this.availableColumnValues = [];
+          this.availableYears = [];
         }
 
 
@@ -384,6 +398,9 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
           }
         }
+
+        // console.log('CHECKPOINT X', this.tableSelection.tableId, this.tableSelection, this.tableSelection.tableName);
+
 
       });
     }

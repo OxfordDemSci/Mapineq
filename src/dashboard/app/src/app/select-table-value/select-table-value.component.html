@@ -132,7 +132,7 @@
 
 
             <mat-form-field *ngFor="let columnValue of availableColumnValues; let partId = index;">
-                <mat-label>Select {{columnValue.field_label}}</mat-label>
+                <mat-label>{{ (tableSelection.tableColumnValues[columnValue.field] === '' ? 'Select ' : '') + columnValue.field_label }}</mat-label>
                 <!-- mat-select [(value)]="selectedColumnValues[columnValue.field]" -->
                 <!-- mat-select [(value)]="tableSelection.tableColumnValues[columnValue.field]" (valueChange)="checkTableValueSelectionComplete()" -->
 
