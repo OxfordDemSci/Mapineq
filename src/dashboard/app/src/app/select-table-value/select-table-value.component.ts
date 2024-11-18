@@ -259,7 +259,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
             map(value => this.filterTableSelectOptions(value || '')),
         );
         if (this.region !== '') {
-          console.log('this.region', this.region);
+          // console.log('this.region', this.region);
           if (this.availableTableNames.includes(this.tableSelection.tableName)) {
             // console.log('TABLENAME setten', this.inputTableId);
             // this.tableSelection.tableName = this.inputUseCaseData[this.inputTableId].tableName;
@@ -470,7 +470,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.availableYears = [];
     // this.availableRegionLevels = [];
 
-    console.log('before this.featureService.getInfoByReSource()', this.tableSelection.tableId, this.tableSelection.tableName);
+    // console.log('before this.featureService.getInfoByReSource()', this.tableSelection.tableId, this.tableSelection.tableName);
     this.featureService.getInfoByReSource(this.tableSelection.tableName, this.inputUseCase).subscribe( data => {
       this.availableYearsAndRegionLevels = data;
       this.setAvailableYears();
@@ -611,7 +611,14 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
         if (this.availableYears.includes(this.inputUseCaseData[this.inputTableId].tableYear)) {
           this.tableSelection.tableYear = this.inputUseCaseData[this.inputTableId].tableYear;
           this.getFieldsForTableForYearAndRegionLevel();
+        } else {
+          // this should never happen ...
+          this.tableSelection.tableYear = this.availableYears[0];
+          this.getFieldsForTableForYearAndRegionLevel();
         }
+      } else {
+        this.tableSelection.tableYear = this.availableYears[0];
+        this.getFieldsForTableForYearAndRegionLevel();
       }
     }
 
