@@ -695,15 +695,30 @@ div.buttonsMargin {
     background-image: url("assets/map/buttons/map_button_zoom_fit.svg");
 }
 
+/*
+tbody tr:nth-child(odd) {
+*/
+tbody tr:first-of-type {
+    background-color: #eeeeee;
+}
+/*
 tbody tr:nth-child(odd) {
     background-color: #eeeeee;
+}
+*/
 
+.centered_td {
+    text-align: center;
 }
 
 .selectionsvalues {
     vertical-align: top;
     width:50%;
 }
+.selectionsvalues tr:nth-child(odd) {
+    background-color: #eeeeee;
+}
+
 
 
 .selections {

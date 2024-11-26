@@ -463,7 +463,19 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
     setInfoSelections(): void {
         console.log('setInfoSelections() ...', this.inputDisplayObject.tableFields);
+
+
+        let regionLevelsText = {'0': 'countries', '1': 'large regions', '2': 'base regions', '3': 'small regions'};
+
+
         let html = '<table class="selections">';
+
+        html += '<tr><td';
+        if (this.displayInfo(1)) {
+            html += ' colspan="2"';
+        }
+        html += ' class="centered_td">Region level: ' + this.inputDisplayObject.tableFields[0].tableRegionLevel + ' (\'<i>' + regionLevelsText[this.inputDisplayObject.tableFields[0].tableRegionLevel] + '</i>\')</td></tr>';
+
         html += '<tr>';
         if (this.displayInfo(0)) {
             html += '<th>' + this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr) + '<br><i>' + this.inputDisplayObject.tableFields[0].tableName + '</i> (' + this.inputDisplayObject.tableFields[0].tableYear + ')</th>'
@@ -472,6 +484,9 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             html += '<th>' + this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr) + '<br><i>' + this.inputDisplayObject.tableFields[1].tableName + '</i> (' + this.inputDisplayObject.tableFields[1].tableYear + ')</th>'
         }
         html += '</tr>';
+
+
+
         html += '<tr>';
         if (this.displayInfo(0)) {
             html += '<td class="selectionsvalues">';
@@ -486,7 +501,9 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             html += '</td>';
         }
         html += '</tr>';
+
         html += '</table>'
+
         this.mapInfoDiv.innerHTML = html;
         // this.openMapInfo();
         this.showMapInfo();
