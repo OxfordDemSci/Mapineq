@@ -675,15 +675,18 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     this.featureService.getColumnValuesBySourceJson(this.tableSelection.tableName, JSON.stringify(sourceSelectionJson), this.inputUseCase).subscribe( data => {
       // this.featureService.getColumnValuesBySource(this.tableSelection.tableName, this.tableSelection.tableYear, this.tableSelection.tableRegionLevel).subscribe( data => {
-      // console.log('getColumnValuesBySource()', this.tableSelection.tableName, this.tableSelection.tableYear, this.tableSelection.tableRegionLevel, data);
+      console.log('getColumnValuesBySource()', this.tableSelection.tableName, this.tableSelection.tableYear, this.tableSelection.tableRegionLevel, data);
 
       this.availableColumnValues = [];
       this.availableColumnValuesWithInitiallyOneChoice = [];
       this.availableColumnValuesManuallyChanged = [];
       // this.selectedColumnValues = new Array(data.length).fill('');
       data.forEach( row => {
+        console.log('data.forEach, row:', row);
         let jsonToPush = row;
+        /*  SJO dd 20241129
         jsonToPush.field_values = JSON.parse(jsonToPush.field_values);
+        */
 
         // console.log('jsonToPush:' ,jsonToPush);
         // this.selectedColumnValues[jsonToPush.field] = '';
@@ -821,7 +824,9 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
       data.forEach( row => {
         let jsonToPush = row;
+        /*  SJO dd 20241129
         jsonToPush.field_values = JSON.parse(jsonToPush.field_values);
+        */
 
         if (jsonToPush.field_values.length === 1) {
           this.tableSelection.tableColumnValues[jsonToPush.field] = jsonToPush.field_values[0].value;

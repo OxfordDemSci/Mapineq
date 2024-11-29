@@ -198,11 +198,22 @@ export class DashboardComponent implements OnInit{
         this.dashboardFeatureService.getUseCase(this.useCase).subscribe((data) => {
             console.log('showUseCase()', this.useCase, this.useCaseVariant, data);
             if (data[0].f_parameters !== null) {
+                /*   SJO dd 20241129
                 console.log('number of variants: ', JSON.parse(data[0].f_parameters).length);
+                */
+                console.log('number of variants: ', data[0].f_parameters.length);
+
+                /* SJO dd 20241129
                 if (this.useCaseVariant >= JSON.parse(data[0].f_parameters).length) {
+                */
+                if (this.useCaseVariant >= data[0].f_parameters.length) {
                     this.useCaseVariant = 0;
                 }
+                /*  SJO dd 20241129
                 this.useCaseData = JSON.parse(data[0].f_parameters)[this.useCaseVariant];
+                */
+                this.useCaseData = data[0].f_parameters[this.useCaseVariant];
+
             }
 
 
