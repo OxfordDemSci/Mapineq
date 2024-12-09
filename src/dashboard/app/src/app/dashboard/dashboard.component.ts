@@ -79,6 +79,9 @@ export class DashboardComponent implements OnInit{
     checkForQueryValsInUrl() {
         /* */
         this.route.paramMap.subscribe(params => {
+
+            // console.log('params: ', params);
+
             // if (params.get('id') !== null) {
             if (params.get('case') !== null) {
                 console.log('From route paramMap: use case:', params.get('case'));
@@ -129,7 +132,9 @@ export class DashboardComponent implements OnInit{
 
             }
 
-            });
+            // console.log('TEST AAA useCase/useCaseVariant: ', this.useCase, this.useCaseVariant);
+
+        });
         /* */
         /* */
         let useCaseString = (this.route.snapshot.queryParams['case'] ?? '');
