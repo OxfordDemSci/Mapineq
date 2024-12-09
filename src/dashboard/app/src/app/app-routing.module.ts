@@ -5,7 +5,6 @@ import {DatacatalogueComponent} from "./datacatalogue/datacatalogue.component";
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
-  { path: 'case/:case', component: DashboardComponent },
   { path: 'case/:case/:variant', component: DashboardComponent },
   // { path: 'load/:table/:minlevel/:maxlevel', component: DashboardComponent },
   { path: 'load/:table', component: DashboardComponent },
@@ -15,7 +14,8 @@ const routes: Routes = [
     path: 'datacatalogue',
     redirectTo: '/mapineq_dashboard_tst',
     pathMatch: 'prefix'
-  },
+  }, { path: 'case/:case', component: DashboardComponent },
+
   */
   { path: '**', component: DashboardComponent },
 ];
