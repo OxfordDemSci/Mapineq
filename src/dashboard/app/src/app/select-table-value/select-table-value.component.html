@@ -111,7 +111,7 @@
                 <input matInput type="text" *ngIf="tableSelection.tableId === 1" readonly [value]="(tableSelection.tableYear !== '-1' ? tableSelection.tableYear : '')" [disabled]="true">
                 <mat-hint  *ngIf="tableSelection.tableId === 1">(filled automatically)</mat-hint>
             </mat-form-field>
-            <div *ngIf="availableYears.length > 0"><div class="textSmaller">Available years: <i>{{availableYears.join(', ')}}</i></div><div class="divWhiteSpace"></div></div>
+            <div *ngIf="availableYears.length > 0"><div class="textSmall">Available years: <i>{{availableYears.join(', ')}}</i></div><div class="divWhiteSpace"></div></div>
 
 
             <!--
