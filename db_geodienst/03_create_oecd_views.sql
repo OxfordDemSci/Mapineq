@@ -3,14 +3,16 @@ CREATE OR REPLACE PROCEDURE create_oecd_views(strTable TEXT DEFAULT NULL)
 AS
 $BODY$
 DECLARE
-	rec			RECORD;
-	arrColumns	TEXT[];
-	bGeo		BOOLEAN := FALSE;
-	bTime		BOOLEAN := FALSE;
-	DROP_VIEW	CONSTANT TEXT := $$DROP VIEW IF EXISTS vw_%s$$;
-	COLUMN_AS	CONSTANT TEXT := $$ %I AS %I$$;
-	COLUMN_VIEW CONSTANT TEXT := $$%I$$;
-	CREATE_VIEW	CONSTANT TEXT := $$CREATE VIEW vw_%s AS SELECT %s FROM %I$$;
+	rec					RECORD;
+	arrColumns			TEXT[];
+	bGeo				BOOLEAN := FALSE;
+	bTime				BOOLEAN := FALSE;
+	UPDATE_CATALOGUE	CONSTANT TEXT := $$UPDATE catalogue SET query_resource = 'vw_%s' WHERE resource = %L AND provider = 'OECD'$$;
+	CLEAR_CATALOGUE		CONSTANT TEXT := $$UPDATE catalogue SET query_resource = NULL WHERE resource = %L AND provider = 'OECD'$$;	
+	DROP_VIEW			CONSTANT TEXT := $$DROP VIEW IF EXISTS vw_%s$$;
+	COLUMN_AS			CONSTANT TEXT := $$ %I AS %I$$;
+	COLUMN_VIEW 		CONSTANT TEXT := $$%I$$;
+	CREATE_VIEW			CONSTANT TEXT := $$CREATE VIEW vw_%s AS SELECT %s FROM %I$$;
 BEGIN
 	SET client_min_messages = WARNING;
 	FOR rec in
@@ -45,14 +47,14 @@ BEGIN
 			EXECUTE FORMAT(DROP_VIEW,LOWER(rec.table_name));
 			IF bGeo AND bTime THEN
 				BEGIN
-					-- RAISE INFO '%', FORMAT(CREATE_VIEW,LOWER(rec.table_name),ARRAY_TO_STRING(arrColumns, ', '),rec.table_name);
 					EXECUTE FORMAT(CREATE_VIEW,LOWER(rec.table_name),ARRAY_TO_STRING(arrColumns, ', '),rec.table_name);
-					
+					EXECUTE FORMAT(UPDATE_CATALOGUE,LOWER(rec.table_name), rec.table_name);
 				EXCEPTION
 					WHEN OTHERS THEN
 						RAISE WARNING 'table: % - error: % ', rec.table_name,SQLERRM;
 				END;
 			ELSE
+				EXECUTE FORMAT(CLEAR_CATALOGUE, rec.table_name);
 				RAISE WARNING 'tabel: % geo column present: %, time column present: %',rec.table_name,bGeo::TEXT,bTime::TEXT;
 			END IF;
 			arrColumns := NULL;
