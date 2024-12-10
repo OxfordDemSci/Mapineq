@@ -106,11 +106,13 @@ export class GraphComponent implements OnChanges {
           x: {
             type: 'linear',
             position: 'bottom',
+            ticks: {maxRotation: 0},
             title: {text: info.xlabel, display: true}
           },
           y: {
             type: 'linear',
             position: 'bottom',
+            ticks: {maxRotation: 0},
             title: {text: info.ylabel, display: true},
           }
         },

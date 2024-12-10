@@ -16,6 +16,7 @@ const routes: Routes = [
     redirectTo: '/mapineq_dashboard_tst',
     pathMatch: 'prefix'
   },
+
   */
   { path: '**', component: DashboardComponent },
 ];

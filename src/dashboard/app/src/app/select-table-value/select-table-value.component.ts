@@ -259,7 +259,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
             map(value => this.filterTableSelectOptions(value || '')),
         );
         if (this.region !== '') {
-          console.log('this.region', this.region);
+          // console.log('this.region', this.region);
           if (this.availableTableNames.includes(this.tableSelection.tableName)) {
             // console.log('TABLENAME setten', this.inputTableId);
             // this.tableSelection.tableName = this.inputUseCaseData[this.inputTableId].tableName;
@@ -271,7 +271,17 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
             //console.log('before abc A - selectedTableObject: ', this.tableSelection.tableId, selectedTableObject);
             this.tableSelectOption(selectedTableObject[0]);
 
+          } else {
+            // console.log('CHECKPOINT Y:', this.tableId, this.tableSelection.tableName);
+
+            this.tableSelection.tableName = '';
+            this.tableSelection.tableDescr = '';
+            this.tableSelection.tableColumnValues = {};
+            this.availableColumnValues = [];
+            this.availableYears = [];
+
           }
+
         }
 
 
@@ -313,6 +323,9 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
         }
 
+        // console.log('CHECKPOINT X', this.tableSelection.tableId, this.tableSelection, this.tableSelection.tableName);
+
+
       });
     } else if (this.tableId === 1) {
       // getSourcesByYearAndNutsLevel year & nuts level
@@ -337,6 +350,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
           this.tableSelection.tableDescr = '';
           this.tableSelection.tableColumnValues = {};
           this.availableColumnValues = [];
+          this.availableYears = [];
         }
 
 
@@ -384,6 +398,9 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
           }
         }
+
+        // console.log('CHECKPOINT X', this.tableSelection.tableId, this.tableSelection, this.tableSelection.tableName);
+
 
       });
     }
@@ -453,7 +470,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.availableYears = [];
     // this.availableRegionLevels = [];
 
-    console.log('before this.featureService.getInfoByReSource()', this.tableSelection.tableId, this.tableSelection.tableName);
+    // console.log('before this.featureService.getInfoByReSource()', this.tableSelection.tableId, this.tableSelection.tableName);
     this.featureService.getInfoByReSource(this.tableSelection.tableName, this.inputUseCase).subscribe( data => {
       this.availableYearsAndRegionLevels = data;
       this.setAvailableYears();
@@ -531,7 +548,23 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
   tableSelectClearChosenColumnValues() {
-    this.getFieldsForTableForYearAndRegionLevel();
+    // console.log('tableSelectClearChosenColumnValues() CALLED ...', this.tableSelection.tableColumnValues, this.availableColumnValuesWithInitiallyOneChoice);
+
+    for( const property in this.tableSelection.tableColumnValues ) {
+        // console.log('item: ', property, this.tableSelection.tableColumnValues[property], !this.availableColumnValuesWithInitiallyOneChoice.includes(property));
+        if ( !this.availableColumnValuesWithInitiallyOneChoice.includes(property) ) {
+          this.tableSelection.tableColumnValues[property] = '';
+        }
+    }
+
+    // console.log('tableSelectClearChosenColumnValues() IN BETWEEN:', this.tableSelection.tableColumnValues, this.availableColumnValuesWithInitiallyOneChoice);
+
+    //this.getFieldsForTableForYearAndRegionLevel(); // this collects the default case study values (and won't work with new select/input version)
+    this.getFilteredFieldsForTableForYearAndRegionLevel();
+
+    // console.log('tableSelectClearChosenColumnValues() END FUNCTION:', this.tableSelection.tableColumnValues, this.availableColumnValuesWithInitiallyOneChoice);
+
+
   } // END FUNCTION tableSelectClearChosenColumnValues
 
   showOnlyThisTableOnMap() {
@@ -578,7 +611,14 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
         if (this.availableYears.includes(this.inputUseCaseData[this.inputTableId].tableYear)) {
           this.tableSelection.tableYear = this.inputUseCaseData[this.inputTableId].tableYear;
           this.getFieldsForTableForYearAndRegionLevel();
+        } else {
+          // this should never happen ...
+          this.tableSelection.tableYear = this.availableYears[0];
+          this.getFieldsForTableForYearAndRegionLevel();
         }
+      } else {
+        this.tableSelection.tableYear = this.availableYears[0];
+        this.getFieldsForTableForYearAndRegionLevel();
       }
     }
 
@@ -635,15 +675,18 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     this.featureService.getColumnValuesBySourceJson(this.tableSelection.tableName, JSON.stringify(sourceSelectionJson), this.inputUseCase).subscribe( data => {
       // this.featureService.getColumnValuesBySource(this.tableSelection.tableName, this.tableSelection.tableYear, this.tableSelection.tableRegionLevel).subscribe( data => {
-      // console.log('getColumnValuesBySource()', this.tableSelection.tableName, this.tableSelection.tableYear, this.tableSelection.tableRegionLevel, data);
+      console.log('getColumnValuesBySource()', this.tableSelection.tableName, this.tableSelection.tableYear, this.tableSelection.tableRegionLevel, data);
 
       this.availableColumnValues = [];
       this.availableColumnValuesWithInitiallyOneChoice = [];
       this.availableColumnValuesManuallyChanged = [];
       // this.selectedColumnValues = new Array(data.length).fill('');
       data.forEach( row => {
+        console.log('data.forEach, row:', row);
         let jsonToPush = row;
+        /*  SJO dd 20241129
         jsonToPush.field_values = JSON.parse(jsonToPush.field_values);
+        */
 
         // console.log('jsonToPush:' ,jsonToPush);
         // this.selectedColumnValues[jsonToPush.field] = '';
@@ -781,7 +824,9 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
       data.forEach( row => {
         let jsonToPush = row;
+        /*  SJO dd 20241129
         jsonToPush.field_values = JSON.parse(jsonToPush.field_values);
+        */
 
         if (jsonToPush.field_values.length === 1) {
           this.tableSelection.tableColumnValues[jsonToPush.field] = jsonToPush.field_values[0].value;

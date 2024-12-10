@@ -111,7 +111,7 @@
                 <input matInput type="text" *ngIf="tableSelection.tableId === 1" readonly [value]="(tableSelection.tableYear !== '-1' ? tableSelection.tableYear : '')" [disabled]="true">
                 <mat-hint  *ngIf="tableSelection.tableId === 1">(filled automatically)</mat-hint>
             </mat-form-field>
-            <div *ngIf="availableYears.length > 0"><div class="textSmaller">Available years: <i>{{availableYears.join(', ')}}</i></div><div class="divWhiteSpace"></div></div>
+            <div *ngIf="availableYears.length > 0"><div class="textSmall">Available years: <i>{{availableYears.join(', ')}}</i></div><div class="divWhiteSpace"></div></div>
 
 
             <!--
@@ -132,13 +132,49 @@
 
 
             <mat-form-field *ngFor="let columnValue of availableColumnValues; let partId = index;">
-                <mat-label>Select {{columnValue.field_label}}</mat-label>
+                <mat-label>{{ (tableSelection.tableColumnValues[columnValue.field] === '' ? 'Select ' : '') + columnValue.field_label }}</mat-label>
                 <!-- mat-select [(value)]="selectedColumnValues[columnValue.field]" -->
                 <!-- mat-select [(value)]="tableSelection.tableColumnValues[columnValue.field]" (valueChange)="checkTableValueSelectionComplete()" -->
+
+                <!--
+                OLD VERSION:
                 <mat-select [(value)]="tableSelection.tableColumnValues[columnValue.field]" (valueChange)="changedColumnValue(columnValue.field)">
                     <mat-option [value]="partValue.value" *ngFor="let partValue of columnValue.field_values">{{partValue.label}}</mat-option>
                 </mat-select>
                 <button mat-icon-button matSuffix *ngIf="!availableColumnValuesWithInitiallyOneChoice.includes(columnValue.field)" type="button" color="primary" (click)="tableSelectClearChosenColumnValue(columnValue.field)" [attr.aria-label]="'Refresh/Clear'" [disabled]="tableSelection.tableColumnValues[columnValue.field] === ''"><mat-icon>replay</mat-icon></button>
+                -->
+
+
+
+
+                <!-- NEW VERSION: -->
+                <!--
+                <mat-select *ngIf="tableSelection.tableColumnValues[columnValue.field] === ''  ||  columnValue.field_values.length > 1" [(value)]="tableSelection.tableColumnValues[columnValue.field]" (valueChange)="changedColumnValue(columnValue.field)">
+                -->
+                <mat-select *ngIf="tableSelection.tableColumnValues[columnValue.field] === ''" [(value)]="tableSelection.tableColumnValues[columnValue.field]" (valueChange)="changedColumnValue(columnValue.field)">
+                    <mat-option [value]="partValue.value" *ngFor="let partValue of columnValue.field_values">{{partValue.label}}</mat-option>
+                </mat-select>
+
+                <!--
+                <input matInput type="hidden" *ngIf="tableSelection.tableColumnValues[columnValue.field] !== ''  &&  columnValue.field_values.length === 1" readonly [value]="tableSelection.tableColumnValues[columnValue.field]">
+                -->
+                <input matInput type="hidden" *ngIf="tableSelection.tableColumnValues[columnValue.field] !== ''" readonly [value]="tableSelection.tableColumnValues[columnValue.field]">
+
+                <!--
+                <span *ngIf="tableSelection.tableColumnValues[columnValue.field] !== ''  &&  columnValue.field_values.length === 1">
+                -->
+                <span *ngIf="tableSelection.tableColumnValues[columnValue.field] !== ''">
+                    <!-- -->
+                    <span *ngFor="let partValue of columnValue.field_values">
+                        <input matInput type="text" *ngIf="tableSelection.tableColumnValues[columnValue.field] === partValue.value" readonly [value]="partValue.label">
+                    </span>
+                    <!-- -->
+                    <!--
+                    <input matInput type="text" *ngFor="let partValue of columnValue.field_values" readonly [value]="partValue.label">
+                    -->
+                </span>
+                <button mat-icon-button matSuffix type="button" *ngIf="!availableColumnValuesWithInitiallyOneChoice.includes(columnValue.field)  &&  tableSelection.tableColumnValues[columnValue.field] !== ''" type="button" color="primary" (click)="tableSelectClearChosenColumnValue(columnValue.field)" [attr.aria-label]="'Clear'"><mat-icon>backspace</mat-icon></button>
+
             </mat-form-field>
 
 

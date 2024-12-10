@@ -1,7 +1,7 @@
 
 
-docker build --no-cache --tag=mapineqfrontend .
+docker build --no-cache --tag=mapineqfrontendfirst .
 
-docker tag mapineqfrontend registry.webhosting.rug.nl/mapineq/mapineqfrontend:latest
+docker tag mapineqfrontendfirst registry.webhosting.rug.nl/mapineq/mapineqfrontendfirst:latest
 
-docker push registry.webhosting.rug.nl/mapineq/mapineqfrontend:latest
+docker push registry.webhosting.rug.nl/mapineq/mapineqfrontendfirst:latest
