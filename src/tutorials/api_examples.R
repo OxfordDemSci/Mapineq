@@ -75,9 +75,10 @@ params <- list(
   `_resource` = "TGS00103",
   source_selections = toJSON(list(
     source = "TGS00103",
-    conditions = list(
-      list(field = "unit", value = "PC_POP"),
-      list(field = "freq", value = "A")
+    source_selections = list(
+      year = 2020,
+      level = 2, 
+      selected = list()
     )
   ), auto_unbox = TRUE),
   limit = 40
