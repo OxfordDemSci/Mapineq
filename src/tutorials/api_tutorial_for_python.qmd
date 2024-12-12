@@ -97,34 +97,14 @@ else:
 The API response should have an HTTP status code of 200, which indicates that our API request was successful. The response contains the data list that we want in JSON format, so we now need to do some data wrangling to convert this into a DataFrame object.
 
 ```{python}
-#| code-fold: true
-# Embed JavaScript for DataTables functionality with pagination and search
-js = """
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
-<script>
-$(document).ready(function() {
-    $('table.display').DataTable({
-        "paging": true,
-        "searching": true,
-        "pageLength": 10
-    });
-});
-</script>
-"""
-```
-
-```{python}
 # Convert JSON to DataFrame
 data = response.json()
 df_content = pd.DataFrame(data)
 
 # View data
-html_table = df_content.to_html(classes="display", index=False)
-display(HTML(js + html_table))
+df_content.head(10)
 ```
-We now have a nice searchable DataFrame that we can use to explore data available in the Mapineq database. 
+We now have a nice DataFrame that we can use to explore data available in the Mapineq database. Note: We are only showing the first 10 rows of a much larger data frame.
 
 ---
 
@@ -151,8 +131,7 @@ else:
     raise Exception(f"Error: {response.status_code}")
 
 # Look at the data
-html_table = df_content.to_html(classes="display", index=False)
-display(HTML(js + html_table))
+df_content
 ```
 The API response provides all of the years and geographic levels covered by this data set.
 
@@ -200,9 +179,6 @@ if response.status_code == 200:
     )
 else:
     raise Exception(f"Error: {response.status_code}")
-
-html_table = df_content.to_html(classes="display", index=False)
-display(HTML(js + html_table))
 ```
 The API response contains a more complex JSON object with nested values that our previous API responses did not include. So, we have done a bit of extra data wrangling to get it into a nice data.frame format making use of the `unnest_longer` and `unnest_wider` functions from the `tidyr` package. 
 
@@ -214,7 +190,7 @@ print(json.dumps(response.json(), indent=4))
 And, here is our nicely formatted data frame which splits those elements into two columns:
 ```{python}
 # Look at the data
-df_content.head()
+df_content
 ```
 This response shows us the filters available for this data source and their respective values.
 
@@ -256,10 +232,9 @@ else:
     raise Exception(f"Error: {response.status_code}")
 
 # View data
-html_table = df_content.to_html(classes="display", index=False)
-display(HTML(js + html_table))
+df_content.head(10)
 ```
-The response includes the data that we have requested, including identifiers like geographic unit name (`geo_name`), NUTS ID (`geo`), and year (`best_year`).
+The response includes the data that we have requested, including identifiers like geographic unit name (`geo_name`), NUTS ID (`geo`), and year (`best_year`). Note: We are only showing the first 10 rows of a much larger data frame.
 
 ---
 
@@ -308,10 +283,9 @@ else:
     raise Exception(f"Error: {response.status_code}")
 
 # View data
-html_table = df_content.to_html(classes="display", index=False)
-display(HTML(js + html_table))
+df_content.head(10)
 ```
-The `x` column contains the variable defined by the parameter `X_JSON`, and the `y` column contains the variable defined by the `Y_JSON` parameter.
+The `x` column contains the variable defined by the parameter `X_JSON`, and the `y` column contains the variable defined by the `Y_JSON` parameter. Note: We are only showing the first 10 rows of a much larger data frame.
 
 ---
 
