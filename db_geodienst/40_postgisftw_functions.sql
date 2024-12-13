@@ -119,8 +119,75 @@ END;
 $BODY$
 LANGUAGE PLPGSQL STABLE;
 
-DROP FUNCTION IF EXISTS postgisftw.get_source_by_year(INTEGER, INTEGER, TEXT);
-CREATE OR REPLACE FUNCTION postgisftw.get_source_by_year(_year INTEGER, _use_case INTEGER DEFAULT NULL, _function TEXT DEFAULT NULL)
+DROP FUNCTION IF EXISTS postgisftw.get_tag(TEXT, INTEGER, TEXT);
+
+CREATE OR REPLACE FUNCTION postgisftw.get_tag(_resource TEXT DEFAULT NULL, _use_case INTEGER DEFAULT NULL, _function TEXT DEFAULT NULL)
+RETURNS TABLE
+	(
+		f_id			INTEGER,
+		f_description	TEXT
+	)
+AS
+$BODY$
+DECLARE
+	caseTables		TEXT[] 	:= NULL;
+	bCaseOptions	BOOLEAN := FALSE;
+BEGIN
+	SELECT 
+		case_options IS NOT NULL 
+	INTO
+		bCaseOptions
+	FROM 
+		website.use_cases 
+	WHERE 
+		use_case = _use_case;
+
+	IF bCaseOptions THEN
+		WITH cte AS
+		(
+			SELECT
+				jsonb_array_elements(case_options) AS j
+			FROM
+				website.use_cases
+			WHERE
+				use_case = _use_case
+		)
+		SELECT 
+			ARRAY_AGG(j ->> 'tableName')  
+		INTO
+			caseTables
+		FROM 
+			cte
+		WHERE
+			 (j ->> 'tableFunction' = _function OR _function IS NULL);
+	END IF;	
+	
+	RETURN QUERY
+	SELECT DISTINCT
+		ct.id,
+		ct.descr
+	FROM
+		website.catalogue_tag ct
+		LEFT JOIN website.resource_tag rt
+			ON ct.id = rt.tag_id
+	WHERE
+		(
+			rt.resource = ANY(caseTables)
+			OR (caseTables IS NULL AND(_use_case IS NULL OR NOT bCaseOptions))
+		)
+		AND
+		(
+			_resource IS NULL
+			OR resource ILIKE _resource
+		)
+	ORDER BY
+		ct.descr;
+END;
+$BODY$
+LANGUAGE PLPGSQL STABLE;
+
+DROP FUNCTION IF EXISTS postgisftw.get_source_by_year(INTEGER, INTEGER, TEXT, TEXT);
+CREATE OR REPLACE FUNCTION postgisftw.get_source_by_year(_year INTEGER, _use_case INTEGER DEFAULT NULL, _function TEXT DEFAULT NULL, _tag TEXT DEFAULT NULL)
 RETURNS TABLE
 (
 	f_resource			TEXT,
@@ -131,8 +198,13 @@ AS
 $BODY$
 DECLARE
 	caseTables		TEXT[] 	:= NULL;
+	tagTables		TEXT[]  := NULL;
 	bCaseOptions	BOOLEAN := FALSE;
 BEGIN
+	IF _tag IS NOT NULL THEN
+		SELECT * FROM website.get_resources_by_tag(_Tag) INTO tagTables;
+	END IF;
+
 	SELECT 
 		case_options IS NOT NULL 
 	INTO
@@ -159,9 +231,10 @@ BEGIN
 			cte
 		WHERE
 			 (j ->> 'tableFunction' = _function OR _function IS NULL) AND
-			(j -> 'tableYears') @>  _year::TEXT::JSONB  ;
+			(j -> 'tableYears' @>  _year::TEXT::JSONB  OR j -> 'tableYears' @> ('"*"'));
+			
 	
-		RAISE INFO '%', caseTables;
+		-- RAISE INFO '%', caseTables;
 	END IF;	
 	RETURN QUERY
 	SELECT 
@@ -178,6 +251,10 @@ BEGIN
 				r.resource = ANY(caseTables) 
 				OR (caseTables IS NULL AND (_use_case IS NULL OR NOT bCaseOptions))
 			)
+		AND (
+				r.resource = ANY(tagTables)
+				OR _tag IS NULL
+			)
 	ORDER BY
 		descr;
 END;
@@ -186,8 +263,8 @@ LANGUAGE PLPGSQL STABLE;
 
 -- https://mapineqfeatures.web.rug.nl/functions/postgisftw.get_source_by_year/items.json?_year=2021
 	
-DROP FUNCTION IF EXISTS postgisftw.get_source_by_nuts_level(INTEGER, INTEGER, TEXT);
-CREATE OR REPLACE FUNCTION postgisftw.get_source_by_nuts_level(_level INTEGER, _use_case INTEGER DEFAULT NULL, _function TEXT DEFAULT NULL)
+DROP FUNCTION IF EXISTS postgisftw.get_source_by_nuts_level(INTEGER, INTEGER, TEXT, TEXT);
+CREATE OR REPLACE FUNCTION postgisftw.get_source_by_nuts_level(_level INTEGER, _use_case INTEGER DEFAULT NULL, _function TEXT DEFAULT NULL, _tag TEXT DEFAULT NULL)
 RETURNS TABLE
 (
 	f_resource			TEXT,
@@ -198,8 +275,13 @@ AS
 $BODY$
 DECLARE
 	caseTables		TEXT[] 	:= NULL;
+	tagTables		TEXT[]	:= NULL;
 	bCaseOptions	BOOLEAN := FALSE;
 BEGIN
+	IF _tag IS NOT NULL THEN
+		SELECT * FROM website.get_resources_by_tag(_Tag) INTO tagTables;
+	END IF;
+	
 	SELECT 
 		case_options IS NOT NULL 
 	INTO
@@ -244,6 +326,10 @@ BEGIN
 				r.resource = ANY(caseTables) 
 				OR (caseTables IS NULL AND (_use_case IS NULL OR NOT bCaseOptions))
 			)
+		AND (
+				r.resource = ANY(tagTables)
+				OR _tag IS NULL
+			)			
 	ORDER BY 
 		descr;
 END;
@@ -253,8 +339,8 @@ LANGUAGE PLPGSQL STABLE;
 -- select * from postgisftw.get_source_by_nuts_level(1) where f_description like '%(OXFORD)%'
 -- https://mapineqfeatures.web.rug.nl/functions/postgisftw.get_source_by_nuts_level/items.json?_level=1
 
-DROP FUNCTION IF EXISTS postgisftw.get_source_by_year_nuts_level(INTEGER, INTEGER, INTEGER, TEXT);
-CREATE OR REPLACE FUNCTION postgisftw.get_source_by_year_nuts_level(_level INTEGER, _year INTEGER, _use_case INTEGER DEFAULT NULL, _function TEXT DEFAULT NULL)
+DROP FUNCTION IF EXISTS postgisftw.get_source_by_year_nuts_level(INTEGER, INTEGER, INTEGER, TEXT, TEXT);
+CREATE OR REPLACE FUNCTION postgisftw.get_source_by_year_nuts_level(_level INTEGER, _year INTEGER, _use_case INTEGER DEFAULT NULL, _function TEXT DEFAULT NULL, _tag TEXT DEFAULT NULL)
 RETURNS TABLE
 (
 	f_resource			TEXT,
@@ -265,8 +351,13 @@ AS
 $BODY$
 DECLARE
 	caseTables		TEXT[] 	:= NULL;
+	tagTables		TEXT[]	:= NULL;
 	bCaseOptions	BOOLEAN := FALSE;
 BEGIN
+	IF _tag IS NOT NULL THEN
+		SELECT * FROM website.get_resources_by_tag(_Tag) INTO tagTables;
+	END IF;
+	
 	SELECT 
 		case_options IS NOT NULL 
 	INTO
@@ -313,7 +404,11 @@ BEGIN
 		AND (
 				r.resource = ANY(caseTables) 
 				OR (caseTables IS NULL AND (_use_case IS NULL OR NOT bCaseOptions))
-			)		
+			)	
+		AND (
+				r.resource = ANY(tagTables)
+				OR _tag IS NULL
+			)				
 	ORDER BY 
 		descr;
 END;
@@ -384,11 +479,10 @@ END;
 $BODY$
 LANGUAGE PLPGSQL STABLE;
 
-
 --https://mapineqfeatures.web.rug.nl/functions/postgisftw.get_year_nuts_level_from_source/items.json?_resource=TRAN_R_NET&_level=2
 
-DROP FUNCTION IF EXISTS postgisftw.get_all_sources(INTEGER, TEXT);
-CREATE OR REPLACE FUNCTION postgisftw.get_all_sources(_use_case INTEGER DEFAULT NULL, _function TEXT DEFAULT NULL)
+DROP FUNCTION IF EXISTS postgisftw.get_all_sources(INTEGER, TEXT, TEXT);
+CREATE OR REPLACE FUNCTION postgisftw.get_all_sources(_use_case INTEGER DEFAULT NULL, _function TEXT DEFAULT NULL, _tag TEXT DEFAULT NULL)
 RETURNS TABLE
 (
 	f_resource			TEXT,
@@ -399,8 +493,12 @@ AS
 $BODY$
 DECLARE
 	caseTables		TEXT[] := NULL;
+	tagTables		TEXT[]	:= NULL;
 	bCaseOptions	BOOLEAN := FALSE;
 BEGIN
+	IF _tag IS NOT NULL THEN
+		SELECT * FROM website.get_resources_by_tag(_tag) INTO tagTables;
+	END IF;
 	SELECT 
 		case_options IS NOT NULL 
 	INTO
@@ -438,8 +536,14 @@ BEGIN
 	FROM
 		website.vw_data_tables e
 	WHERE
-		resource = ANY(caseTables) 
-		OR (caseTables IS NULL AND (_use_case IS NULL OR NOT bCaseOptions))
+		(
+			resource = ANY(caseTables) 
+			OR (caseTables IS NULL AND (_use_case IS NULL OR NOT bCaseOptions))
+		)
+		AND (
+				resource = ANY(tagTables)
+				OR _tag IS NULL
+			)	
 	
 	ORDER BY
 		descr;

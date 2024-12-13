@@ -41,7 +41,7 @@ BEGIN
 	strResource := SPLIT_PART(strDataFlowIndentifier,'@',2);
    
     EXECUTE 'COPY tmpCSV FROM PROGRAM ' || QUOTE_LITERAL(FORMAT(CURL,FORMAT(URL,strAgencyIndentifier, strDataFlowIndentifier))) ;
-	--COPY tmpCSV FROM 'C:\temp\output2.csv';
+	
 	EXECUTE FORMAT(DROP_TABLE, TABLE_SCHEMA, strResource );
 	EXECUTE FORMAT(CREATE_TABLE,TABLE_SCHEMA,  strResource );
 	
