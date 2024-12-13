@@ -3,6 +3,7 @@ title: "Querying the Mapineq API with Python"
 author: "Doug Leasure"
 format: 
   html:
+    output-file: api_tutorial_python.html
     toc: true
 ---
 ```{python}

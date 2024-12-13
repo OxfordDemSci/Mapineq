@@ -4,6 +4,7 @@ author: "Doug Leasure"
 date: "`r Sys.Date()`"
 format: 
   html:
+    output-file: api_tutorial_R.html
     toc: true
 ---
 
