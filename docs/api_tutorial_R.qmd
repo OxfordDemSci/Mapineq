@@ -10,20 +10,6 @@ format:
     css: styles.css
 ---
 
-<nav class="navbar">
-  <div class="navbar-left">
-    <a href="index.html"><img src="https://www.mapineq.org/wp-content/themes/mapineq/assets/images/logo_mapineq1.svg" alt="Mapineq" class="logo"></a>
-    <a href="index.html">Home</a>
-    <a href="case-studies.html">Case Studies</a>
-    <a href="research.html">Research</a>
-    <a href="data-catalogue.html">Data Catalogue</a>
-  </div>
-  <div class="navbar-right">
-    <a href="about-us.html">About Us</a>
-    <a href="contact.html">Contact</a>
-  </div>
-</nav>
-
 <img src="https://www.mapineq.org/wp-content/themes/mapineq/assets/images/logo_mapineq1.svg" alt="Logo" class="logo">
 
 ## Introduction
