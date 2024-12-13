@@ -1,15 +1,20 @@
 ---
 title: "Querying the Mapineq API with Python"
 author: "Doug Leasure"
-date: "`r Sys.Date()`"
 format: 
   html:
     toc: true
 ---
+```{python}
+# | echo: false
+from datetime import datetime
 
+print(datetime.now().strftime("%B %d, %Y"))
+```
 ## Introduction
 
-This tutorial demonstrates how to query the Mapineq API using Python. An API (Application Programming Interface) is a tool that allows us to communicate with the Mapineq database to request data.
+This tutorial demonstrates how to query the Mapineq API using Python. An
+API (Application Programming Interface) is a tool that allows our computer to communicate with a remote server. In this case, we will use it to automate data imports from the MapIneq database directly into our local R environment.
 
 This tutorial covers the following topics:
 
