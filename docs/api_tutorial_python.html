@@ -64,15 +64,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="api_tutorial_python_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="api_tutorial_python_files/libs/quarto-html/anchor.min.js"></script>
 <link href="api_tutorial_python_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="api_tutorial_python_files/libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="api_tutorial_python_files/libs/quarto-html/quarto-syntax-highlighting-dark-d166b450ba5a8e9f7a0ab969bf6592c1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="api_tutorial_python_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="api_tutorial_python_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="api_tutorial_python_files/libs/bootstrap/bootstrap-8a79a254b8e706d3c925cde0a310d4f0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="api_tutorial_python_files/libs/bootstrap/bootstrap-207e17f1a70ca2c9891d2c9981023b9d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -83,11 +84,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
   <ul class="collapse">
-  <li><a href="#install-required-libraries" id="toc-install-required-libraries" class="nav-link" data-scroll-target="#install-required-libraries">Install Required Libraries</a></li>
-  <li><a href="#import-libraries" id="toc-import-libraries" class="nav-link" data-scroll-target="#import-libraries">Import Libraries</a></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup</a></li>
   <li><a href="#api-base-url" id="toc-api-base-url" class="nav-link" data-scroll-target="#api-base-url">API Base URL</a></li>
   </ul></li>
   <li><a href="#fetch-sources-by-nuts-level" id="toc-fetch-sources-by-nuts-level" class="nav-link" data-scroll-target="#fetch-sources-by-nuts-level">1. Fetch Sources by NUTS Level</a></li>
@@ -126,11 +125,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div id="be733507" class="cell" data-execution_count="1">
+<div id="1dc7d6cc" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-stdout">
 <pre><code>December 13, 2024</code></pre>
 </div>
 </div>
+<p><img src="https://www.mapineq.org/wp-content/themes/mapineq/assets/images/logo_mapineq1.svg" alt="Logo" class="logo"></p>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>This tutorial demonstrates how to query the Mapineq API using Python. An API (Application Programming Interface) is a tool that allows our computer to communicate with a remote server. In this case, we will use it to automate data imports from the MapIneq database directly into our local R environment.</p>
@@ -145,17 +145,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We use the <code>requests</code> and <code>json</code> libraries for API requests and JSON processing, and the <code>pandas</code> library for data wrangling.</p>
 <p>Please note that the complete technical documentation for the API is available from <a href="https://mapineq.org/data-users">https://mapineq.org/data-users</a>.</p>
 <hr>
-</section>
-<section id="setup" class="level2">
-<h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<section id="install-required-libraries" class="level3">
-<h3 class="anchored" data-anchor-id="install-required-libraries">Install Required Libraries</h3>
+<section id="setup" class="level3">
+<h3 class="anchored" data-anchor-id="setup">Setup</h3>
+<section id="install-required-libraries" class="level4">
+<h4 class="anchored" data-anchor-id="install-required-libraries">Install Required Libraries</h4>
 <p>Install the necessary Python libraries if not already installed:</p>
 <pre class="{bash}"><code>pip install requests pandas</code></pre>
 </section>
-<section id="import-libraries" class="level3">
-<h3 class="anchored" data-anchor-id="import-libraries">Import Libraries</h3>
-<div id="2305bcab" class="cell" data-execution_count="2">
+<section id="import-libraries" class="level4">
+<h4 class="anchored" data-anchor-id="import-libraries">Import Libraries</h4>
+<div id="19eaf793" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Required for API queries</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
@@ -167,10 +166,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display, HTML</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
+</section>
 <section id="api-base-url" class="level3">
 <h3 class="anchored" data-anchor-id="api-base-url">API Base URL</h3>
 <p>Let’s start by defining the base URL for the Mapineq API:</p>
-<div id="ee23c6b0" class="cell" data-execution_count="3">
+<div id="d6d5b3c9" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://api.mapineq.org"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <hr>
@@ -181,9 +181,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="fetch-sources-by-nuts-level">1. Fetch Sources by NUTS Level</h2>
 <p>Now, let’s get a list of data that are available in the Mapineq database for a given geographic level.</p>
 <p>We will use NUTS administrative units to define geographic levels. NUTS regions are standardized administrative boundaries for Europe. NUTS level-0 are country boundaries, NUTS level-1 are the largest subnational administrative units, and NUTS level-3 are the smallest subnational administrative units.</p>
-<p>Let’s take a look at how to get a list of all data available in the Mapineq database for NUTS level-2. We will do this by querying the Mapineq API endpoint <a href="https://www.mapineq.org/data-users/#get_source_by_nuts_level"><code>get_source_by_nuts_level</code></a>.</p>
+<p>Let’s take a look at how to get a list of all data available in the Mapineq database for NUTS level-2. We will do this by querying the Mapineq API endpoint <a href="https://www.mapineq.org/data-users/#get_source_by_nuts_level">get_source_by_nuts_level</a>.</p>
 <p>The first step is to select the API endpoint that we want to query and to define our values for its parameters:</p>
-<div id="90d08aa7" class="cell" data-execution_count="4">
+<div id="c50eec78" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Identify the API endpoint to query</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>endpoint <span class="op">=</span> <span class="st">"functions/postgisftw.get_source_by_nuts_level/items.json"</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -195,7 +195,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Notice that we defined the parameters to retrieve the data catalogue for NUTS level-2 and to limit the response to include no more than 500 data sets.</p>
 <p>Now, we are ready to submit our API request:</p>
-<div id="43d730e3" class="cell" data-execution_count="5">
+<div id="28b7faf2" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Submit HTTP GET request to query the API</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(<span class="ss">f"</span><span class="sc">{</span>url<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>endpoint<span class="sc">}</span><span class="ss">"</span>, params<span class="op">=</span>params)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -208,14 +208,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>The API response should have an HTTP status code of 200, which indicates that our API request was successful. The response contains the data list that we want in JSON format, so we now need to do some data wrangling to convert this into a DataFrame object.</p>
-<div id="a577d253" class="cell" data-execution_count="6">
+<div id="6117990a" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert JSON to DataFrame</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> response.json()</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>df_content <span class="op">=</span> pd.DataFrame(data)</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># View data</span></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>df_content.head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
+<div class="cell-output cell-output-display" data-execution_count="34">
 <div>
 
 
@@ -295,14 +295,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>We now have a nice DataFrame that we can use to explore data available in the Mapineq database. Note: We are only showing the first 10 rows of a much larger data frame.</p>
+<p>We now have a nice data frame that we can use to explore the data that are available in the Mapineq database. <strong>Note:</strong> We are only showing the first 10 rows of a much larger data frame.</p>
 <hr>
 </section>
 <section id="retrieve-years-and-nuts-levels-available-for-a-data-source" class="level2">
 <h2 class="anchored" data-anchor-id="retrieve-years-and-nuts-levels-available-for-a-data-source">2. Retrieve Years and NUTS Levels Available for a Data Source</h2>
-<p>For this step, we will select a single data source that we want to investigate further. Let’s look at <code>At-risk-of-poverty rate by NUTS 2 regions</code> from EuroStat (ESTAT). You will notice from the data catalogue that we retrieved in the previous step that the resource ID for this data set is <code>TGS00103</code>, which we will use for our next steps.</p>
-<p>To retrieve years and NUTS levels that are available for this data source, we will use the API endpoint <a href="https://www.mapineq.org/data-users/#get_year_nuts_level_from_source"><code>get_year_nuts_level_from_source</code></a>:</p>
-<div id="10918359" class="cell" data-execution_count="7">
+<p>For this step, we will select a single data source that we want to investigate further. Let’s look at <strong>At-risk-of-poverty rate by NUTS 2 regions</strong> from EuroStat (ESTAT). You will notice from the data catalogue that we retrieved in the previous step that the resource ID for this data set is <strong>TGS00103</strong>, which we will use for our next steps.</p>
+<p>To retrieve years and NUTS levels that are available for this data source, we will use the API endpoint <a href="https://www.mapineq.org/data-users/#get_year_nuts_level_from_source">get_year_nuts_level_from_source</a>:</p>
+<div id="51c83b45" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># API endpoint</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>endpoint <span class="op">=</span> <span class="st">"functions/postgisftw.get_year_nuts_level_from_source/items.json"</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -320,7 +320,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Look at the data</span></span>
 <span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>df_content</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
+<div class="cell-output cell-output-display" data-execution_count="35">
 <div>
 
 
@@ -394,9 +394,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="identify-data-filters-available-for-a-data-source" class="level2">
 <h2 class="anchored" data-anchor-id="identify-data-filters-available-for-a-data-source">3. Identify Data Filters Available for a Data Source</h2>
-<p>Many data sets available in the Mapineq database contain various data filters that can be applied to extract the data you are specifically interested in. These filters could include age, sex, education level, etc. Our next step is to identify which filters are available for the <code>At-risk-of-poverty rate by NUTS 2 regions</code> data that we are investigating.</p>
-<p>To identify the filters that are available for this data source, we will use the API endpoint <a href="https://www.mapineq.org/data-users/#get_column_values_source_json"><code>get_column_values_source_json</code></a>:</p>
-<div id="5a6c89c5" class="cell" data-execution_count="8">
+<p>Many data sets available in the Mapineq database contain various data filters that can be applied to extract the data you are specifically interested in. These filters could include age, sex, education level, etc. Our next step is to identify which filters are available for the <strong>At-risk-of-poverty rate by NUTS 2 regions</strong> data that we are investigating.</p>
+<p>To identify the filters that are available for this data source, we will use the API endpoint <a href="https://www.mapineq.org/data-users/#get_column_values_source_json">get_column_values_source_json</a>:</p>
+<div id="b4bad011" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># API endpoint</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>endpoint <span class="op">=</span> <span class="st">"functions/postgisftw.get_column_values_source_json/items.json"</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -410,15 +410,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  })</span>
 <span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>This endpoint requires a <code>source_selections</code> that is in JSON format. We implemented this in Python by creating a dictionary object and then converting it to JSON using the <code>json.dumps</code> function. Let’s take a quick look at what that final JSON parameter looks like:</p>
-<div id="845d125c" class="cell" data-execution_count="9">
+<p>This endpoint requires a <strong>source_selections</strong> that is in JSON format. We implemented this in Python by creating a dictionary object and then converting it to JSON using the <strong>json.dumps</strong> function. Let’s take a quick look at what that final JSON parameter looks like:</p>
+<div id="d17ee0bb" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(params[<span class="st">'source_selections'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>{"year": "2020", "level": "2", "selected": []}</code></pre>
 </div>
 </div>
 <p>Now we are ready to submit our API request:</p>
-<div id="5d200933" class="cell" data-execution_count="10">
+<div id="50fb2fbe" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># GET request to query API</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(<span class="ss">f"</span><span class="sc">{</span>url<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>endpoint<span class="sc">}</span><span class="ss">"</span>, params<span class="op">=</span>params)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -432,9 +432,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
 <span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">raise</span> <span class="pp">Exception</span>(<span class="ss">f"Error: </span><span class="sc">{</span>response<span class="sc">.</span>status_code<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The API response contains a more complex JSON object with nested values that our previous API responses did not include. So, we have done a bit of extra data wrangling to get it into a nice data.frame format making use of the <code>unnest_longer</code> and <code>unnest_wider</code> functions from the <code>tidyr</code> package.</p>
-<p>Here is the original nested JSON which contains a named list within each element of the <code>field_values</code> column:</p>
-<div id="a11f117c" class="cell" data-execution_count="11">
+<p>The API response contains a more complex JSON object with nested values that our previous API responses did not include. So, we have done a bit of extra data wrangling to get it into a nice data.frame format making use of the <strong>unnest_longer</strong> and <strong>unnest_wider</strong> functions from the <strong>tidyr</strong> package.</p>
+<p>Here is the original nested JSON which contains a named list within each element of the <strong>field_values</strong> column:</p>
+<div id="e4f02eea" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(json.dumps(response.json(), indent<span class="op">=</span><span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[
@@ -462,10 +462,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>And, here is our nicely formatted data frame which splits those elements into two columns:</p>
-<div id="e18a8278" class="cell" data-execution_count="12">
+<div id="3185c507" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Look at the data</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>df_content</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="12">
+<div class="cell-output cell-output-display" data-execution_count="40">
 <div>
 
 
@@ -505,9 +505,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="query-data-for-one-data-source" class="level2">
 <h2 class="anchored" data-anchor-id="query-data-for-one-data-source">4. Query Data for One Data Source</h2>
-<p>In the previous steps, we (1) identified a data source to query, (2) checked which years and geographic levels are available, and (3) identified the filters available. We will now use this information to retrieve the data that we want from our selected data source, <code>TGS00103</code>.</p>
-<p>To query data from this data source, we will use the API endpoint <a href="https://www.mapineq.org/data-users/#get_x_data"><code>get_x_data</code></a>:</p>
-<div id="653118d6" class="cell" data-execution_count="13">
+<p>In the previous steps, we (1) identified a data source to query, (2) checked which years and geographic levels are available, and (3) identified the filters available. We will now use this information to retrieve the data that we want from our selected data source, <strong>TGS00103</strong>.</p>
+<p>To query data from this data source, we will use the API endpoint <a href="https://www.mapineq.org/data-users/#get_x_data">get_x_data</a>:</p>
+<div id="d737f2d9" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># API endpoint</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>endpoint <span class="op">=</span> <span class="st">"functions/postgisftw.get_x_data/items.json"</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -538,7 +538,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a><span class="co"># View data</span></span>
 <span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>df_content.head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="13">
+<div class="cell-output cell-output-display" data-execution_count="41">
 <div>
 
 
@@ -629,13 +629,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>The response includes the data that we have requested, including identifiers like geographic unit name (<code>geo_name</code>), NUTS ID (<code>geo</code>), and year (<code>best_year</code>). Note: We are only showing the first 10 rows of a much larger data frame.</p>
+<p>The response includes the data that we have requested, including identifiers like geographic unit name (<strong>geo_name</strong>), NUTS ID (<strong>geo</strong>), and year (<strong>best_year</strong>). Note: We are only showing the first 10 rows of a much larger data frame.</p>
 <hr>
 </section>
 <section id="query-data-from-two-sources-joined-by-location" class="level2">
 <h2 class="anchored" data-anchor-id="query-data-from-two-sources-joined-by-location">5. Query Data from Two Sources Joined by Location</h2>
-<p>Now we want to repeat the same query from our previous step, but this time we will include a second variable joined to the output by geographic location. We will use <code>Life expectancy by age, sex, and NUTS 2 region</code> from EuroStat as our second variable. This data has resource ID <code>DEMO_R_MLIFEXP</code>, and we will fill in the correct filters following the steps outlined above:</p>
-<div id="65c33cbc" class="cell" data-execution_count="14">
+<p>Now we want to repeat the same query from our previous step, but this time we will include a second variable joined to the output by geographic location. We will use <strong>Life expectancy by age, sex, and NUTS 2 region</strong> from EuroStat as our second variable. This data has resource ID <strong>DEMO_R_MLIFEXP</strong>, and we will fill in the correct filters following the steps outlined above:</p>
+<div id="912ba2bd" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># API endpoint</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>endpoint <span class="op">=</span> <span class="st">"functions/postgisftw.get_xy_data/items.json"</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -677,7 +677,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a><span class="co"># View data</span></span>
 <span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a>df_content.head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="14">
+<div class="cell-output cell-output-display" data-execution_count="42">
 <div>
 
 
@@ -779,7 +779,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>The <code>x</code> column contains the variable defined by the parameter <code>X_JSON</code>, and the <code>y</code> column contains the variable defined by the <code>Y_JSON</code> parameter. Note: We are only showing the first 10 rows of a much larger data frame.</p>
+<p>The <strong>x</strong> column contains the variable defined by the parameter <strong>X_JSON</strong>, and the <strong>y</strong> column contains the variable defined by the <strong>Y_JSON</strong> parameter. Note: We are only showing the first 10 rows of a much larger data frame.</p>
 <hr>
 </section>
 <section id="conclusion" class="level2">
