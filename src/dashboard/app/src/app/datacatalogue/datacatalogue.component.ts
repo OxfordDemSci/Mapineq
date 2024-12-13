@@ -90,7 +90,7 @@ export class DatacatalogueComponent implements OnInit {
   }
 
   getMaxRegionLevel(jsonArray: any) {
-    let actualLevelsArray = JSON.parse(jsonArray);
+    let actualLevelsArray = (jsonArray);
 
     if (actualLevelsArray === null  ||  actualLevelsArray.length === 0) {
       return '';
@@ -103,14 +103,14 @@ export class DatacatalogueComponent implements OnInit {
 
 
   jsonArrayToString(jsonArray: string, joinString: string) {
-    let actualArray = JSON.parse(jsonArray);
-
-    if (actualArray === null) {
-      return '-none-';
-    } else {
-      actualArray.sort();
-      return actualArray.join(joinString);
-    }
+    let actualArray = jsonArray;
+    return jsonArray;
+    // if (actualArray === null) {
+    //   return '-none-';
+    // } else {
+    //   actualArray.sort();
+    //   return actualArray.join(joinString);
+    // }
 
   } // END FUNCTION jsonArrayToString
 

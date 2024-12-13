@@ -1,7 +1,0 @@
-
-<div id="graph" class="graph" [hidden]="areas.length === 0" >
-  <div><h3 style="text-align: center">{{selectedTable?.title}}</h3></div>
-  <div class="graphlabel" *ngFor="let areax of areas"><mat-icon (click)="removeArea(areax.nuts_id)">delete_outline</mat-icon><span class="arealabel"> {{areax.name}} ({{ areax.nuts_id }})</span></div>
-  <canvas id="myChart"></canvas>
-
-</div>
