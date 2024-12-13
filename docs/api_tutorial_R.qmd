@@ -1,5 +1,5 @@
 ---
-title: "Querying the Mapineq API with R"
+title: 'Querying the <a href="https://mapineq.org"><img src="https://www.mapineq.org/wp-content/themes/mapineq/assets/images/logo_mapineq1.svg" alt="Mapineq" class="logo"></a> API with R'
 author: "Doug Leasure"
 date: "`r Sys.Date()`"
 format: 
@@ -9,8 +9,6 @@ format:
     theme: darkly
     css: styles.css
 ---
-
-<img src="https://www.mapineq.org/wp-content/themes/mapineq/assets/images/logo_mapineq1.svg" alt="Logo" class="logo">
 
 ## Introduction
 

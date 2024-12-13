@@ -1,5 +1,5 @@
 ---
-title: "Querying the Mapineq API with Python"
+title: 'Querying the <a href="https://mapineq.org"><img src="https://www.mapineq.org/wp-content/themes/mapineq/assets/images/logo_mapineq1.svg" alt="Mapineq" class="logo"></a> API with Python'
 author: "Doug Leasure"
 format: 
   html:
@@ -15,8 +15,6 @@ from datetime import datetime
 print(datetime.now().strftime("%B %d, %Y"))
 ```
 
-<img src="https://www.mapineq.org/wp-content/themes/mapineq/assets/images/logo_mapineq1.svg" alt="Logo" class="logo">
-
 ## Introduction
 
 This tutorial demonstrates how to query the Mapineq API using Python. An
@@ -30,7 +28,7 @@ This tutorial covers the following topics:
 4. Querying data from a single data set.
 5. Querying data from two data sets joined by location.
 
-We use the `requests` and `json` libraries for API requests and JSON processing, and the `pandas` library for data wrangling.
+We use the **requests** and **json** libraries for API requests and JSON processing, and the **pandas** library for data wrangling.
 
 Please note that the complete technical documentation for the API is available from [https://mapineq.org/data-users](https://mapineq.org/data-users). 
 

@@ -25,12 +25,9 @@ main {
 }
 
 .logo {
-    top: 10px;
-    /* Distance from the top */
-    left: 50px;
-    /* Distance from the left */
-    width: 150px;
-    /* Adjust the size */
-    height: auto;
-    /* Maintain aspect ratio */
+    display: inline-block;
+    vertical-align: -40%;
+    margin-right: 5px;
+    height: 55px;
+    width: auto;
 }
