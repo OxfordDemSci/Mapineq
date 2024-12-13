@@ -27,7 +27,7 @@ This tutorial covers the following topics:
 
 We use the `requests` and `json` libraries for API requests and JSON processing, and the `pandas` library for data wrangling.
 
-Please note that the complete technical documentation for the API is available from https://mapineq.org/data-users. 
+Please note that the complete technical documentation for the API is available from [https://mapineq.org/data-users](https://mapineq.org/data-users). 
 
 ---
 
@@ -297,4 +297,4 @@ The `x` column contains the variable defined by the parameter `X_JSON`, and the 
 
 ## Conclusion
 
-This tutorial provided a step-by-step guide to querying the Mapineq API using Python. The code examples demonstrate how to retrieve data for various endpoints and how to process the responses into usable formats. For further details, consult the Mapineq API documentation available from https://mapineq.org/data-users.
+This tutorial provided a step-by-step guide to querying the Mapineq API using Python. The code examples demonstrate how to retrieve data for various endpoints and how to process the responses into usable formats. For further details, consult the Mapineq API documentation available from [https://mapineq.org/data-users](https://mapineq.org/data-users).
