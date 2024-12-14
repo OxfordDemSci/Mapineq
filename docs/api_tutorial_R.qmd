@@ -1,5 +1,5 @@
 ---
-title: 'Querying the <a href="https://mapineq.org"><img src="https://www.mapineq.org/wp-content/themes/mapineq/assets/images/logo_mapineq1.svg" alt="Mapineq" class="logo"></a> API with R'
+title: '<a href="https://mapineq.org"><img src="https://www.mapineq.org/wp-content/themes/mapineq/assets/images/logo_mapineq1.svg" alt="Mapineq" class="logo"></a><br>A tutorial for using the Mapineq API from R'
 author: "Doug Leasure"
 date: "`r Sys.Date()`"
 format: 
@@ -12,7 +12,9 @@ format:
 
 ## Introduction
 
-This tutorial demonstrates how to query the Mapineq API using R.  An API (Application Programming Interface) is a tool that allows your computer to communicate with a remote server. In this case, we will use it to automate data imports from the MapIneq database directly into your local R environment.
+The [Mapineq dashboard](https://dashboard.mapineq.org) and [data catalogue](https://dashboard.mapineq.org/datacatalogue) are interactive tools that allow you to explore the Mapineq database and discover data relationships on the map. The dashboard uses the Mapineq API in the background to pull data from the Mapineq database, providing a user-friendly way to explore the database. If you are interested in automating this process or exporting many data sources, then you may benefit from accessing the API directly from your local R or Python console. 
+
+This tutorial demonstrates how to query the Mapineq API using R.  In general terms, an API (Application Programming Interface) is a tool that allows your computer to communicate with a remote server. In this case, we will use it to automate data imports from the MapIneq database server directly into our local R environment.
 
 This tutorial covers the following topics:
 
@@ -24,7 +26,7 @@ This tutorial covers the following topics:
 
 We use the **httr** and **jsonlite** libraries for API requests and JSON processing, and the **tidyr** library for data wrangling.
 
-Please note that the complete technical documentation for the API is available from [https://mapineq.org/data-users](https://mapineq.org/data-users). 
+For additional information about the API, please refer to our [tutorial on using the API from Python](./api_tutorial_python.html) and the complete [technical documentation for the API](https://mapineq.org/data-users).
 
 ---
 
