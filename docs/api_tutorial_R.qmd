@@ -24,7 +24,7 @@ This tutorial covers the following topics:
 4. Querying data from a single data set.
 5. Querying data from two data sets joined by location.
 
-For additional information about the API, please refer to our [tutorial on using the API from Python](./api_tutorial_python.html) and the complete [technical documentation for the API](https://mapineq.org/data-users).
+For additional information about the API, please refer to our [tutorial on using the API from Python](./api_tutorial_python.html) and the complete [technical documentation for the API](https://mapineq.org/data-users). You can also download the [Quarto source code for this tutorial](./api_tutorial_R.qmd) if you prefer to work with it directly in your R development environment.
 
 ### Setup
 

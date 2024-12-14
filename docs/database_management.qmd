@@ -1,0 +1,271 @@
+---
+title: '<a href="https://mapineq.org"><img src="https://www.mapineq.org/wp-content/themes/mapineq/assets/images/logo_mapineq1.svg" alt="Mapineq" class="logo"></a><br>A tutorial for managing the MapIneq SQL database'
+author: "Ronnie Lassche, Doug Leasure"
+date: "`r Sys.Date()`"
+format: 
+  html:
+    output-file: database_management.html
+    toc: true
+    theme: darkly
+    css: styles.css
+---
+
+## Introduction
+
+This tutorial provides an overview of common database management tasks for the Mapineq database that serves data to the [Mapineq dashboard](https://dashboard.mapineq.org) and [data catalogue](https://dashboard.mapineq.org/datacatalogue). Note that the live Mapineq database is not directly accessible by the public. However, the database is reproducible from the source code available in the Mapineq GitHub repository at [https://github.com/OxfordDemSci/MapIneq](https://github.com/OxfordDemSci/MapIneq), and these database management tools will be useful if you want to replicate the database or use portions of it for your own work.
+
+The Mapineq database is a PostgreSQL database with a PostGIS extension that enables geospatial data types and analyses. We implemented a dockerised version of the database for easy containerised deployment on local machines or remote servers, independent of operating system. All of this is Free Open Source Software that is available to anyone anywhere.
+
+This tutorial will cover the following database management tasks: 
+1. Importing data directly from EuroStat
+2. Importing data directly from OECD
+3. Importing custom data
+4. Managing existing data
+
+
+### Setup
+
+To get started, we will need to connect to the Mapineq database. This can be done using a variety of tools, but we might suggest using [pgAdmin](https://www.pgadmin.org/) or [DBeaver](https://dbeaver.io/) which are both Free Open Source Software with tools to connect to and manage SQL databases. pgAdmin is specifically designed for PostgreSQL databases like the Mapineq database, while DBeaver is a universal database tool with support for all major SQL databases  (e.g. PostgreSQL, MySQL, MariaDB, SQLite). You can also connect to the database using R (**DBI** and **Postgres** packages) or Python (**psycopg2** and **sqlalchemy** libraries).
+
+To connect to the Mapineq database, you will need to know the following information:
+- hostname (use "localhost" if running the database locally)
+- port (default: 5432)
+- database (default: "mapineq")
+- username (i.e. superuser with admin privileges)
+- password
+
+---
+
+## Import Eurostat Data
+
+The Mapineq database includes a function that allows us to easily import entire datasets from EuroStat using the following steps:
+
+1. **Find the Dataset:** Locate the desired dataset in the [Eurostat data browser](https://ec.europa.eu/eurostat/databrowser/explore/all/all_themes?lang=en&display=list&sort=category).
+
+2. **Note the Dataset's "Online Data Code":**  The EuroStat online data code is a unique identifier for each dataset. You can find an example for subnational data on Employment in Technology and Knowledge-intensive Sectors which has the "online data code" of **htec_emp_reg2** (see [https://doi.org/10.2908/HTEC_EMP_REG2](https://doi.org/10.2908/HTEC_EMP_REG2)).
+
+3. **Check the "Number of values" in the Dataset:** If the dataset is very large (e.g. more than 25 million values), then the import process might encounter issues due to disk space or memory limitations in the database server.
+
+4. **Import the Dataset:** Issue the following SQL command to the Mapineq database to import the data (e.g. using the DBeaver SQL console for the mapineq database connection):
+
+      ```sql
+      CALL website.import_estat_data('htec_emp_reg2');
+      ```
+
+      This example would import the entire Eurostat dataset with the "oneline data code" of **htec_emp_reg2**
+
+      You should see the following outputs in the SQL command to import the data was successful: 
+
+      ```bash
+      INFO: 2024-11-18 10:08:56.089359+00 - Data file imported
+      INFO: 2024-11-18 10:09:02.377092+00 - Data inserted
+      INFO: Table created
+      INFO: All fields processed
+      INFO: CALL Query returned successfully in 13 secs 84 msec.
+      ```
+
+5. **Verify the Import:** Use the Mapineq [data catalogue](https://dashboard.mapineq.org/datacatalogue) and the [interactive map](https://dashboard.mapineq.org) to confirm the import was successful. Be sure to confirm that: 
+      - All appropriate years and geographic levels of data have been imported.
+      - All fields are filled.
+      - The map is generated properly.
+
+---
+
+## Import OECD Data
+
+The Mapineq database also include a function to import entire datasets from OECD using the following steps:  
+
+1. **Locate the Dataset:** Search for the dataset on the [OECD Data Explorer](https://data-explorer.oecd.org/) using relevant keywords. We can search for a dataset titled, **Gender, Institutions and Development Database (GID-DB) 2023** as an example. 
+
+2. **Retrieve Dataset Information:** When we select the dataset, there will be an option to open the **Developer API** tool where we will find dataset details. This will provide you with an SDMX Structure Query:  
+
+     ```bash
+     https://sdmx.oecd.org/public/rest/dataflow/OECD.DEV.NPG/DSD_GID@DF_GID_2023/1.0?references=all
+     ```  
+
+      This includes the "AgendcyIdentifier" (**OECD.DEV.NPG**) and "DataFlowIdentifier" (**DSD_GID@DF_GID_2023**) that will be used in the next step.
+
+3. **Import the Dataset:** Now we can import this dataset directly into the MapIneq database using the following SQL command structure:
+
+     ```sql
+     CALL website.import_oecd_data('AgencyIdentifier', 'DataFlowIdentifier', 'Description', 'ShortDescription');
+     ```
+    
+    You can write your own **Description** and **ShortDescription** for the data, although it is good practice to use the the same data description as OECD. The short description must conform to the character limit defined in the Mapineq database (i.e. 20 character max by default).
+    
+    The database command for our example dataset would look like this:
+
+     ```sql
+     CALL website.import_oecd_data('OECD.DEV.NPG', 'DSD_GID@DF_GID_2023', 'Gender, Institutions and Development Database (GID-DB) 2023', 'Gender Development');
+     ```
+     The dataset will be stored in the Mapineq database table named, **DF_GID_2023**. 
+
+4. **Verify the Import:** Now the data should have been imported into the Mapineq database. We can use the Mapineq [data catalogue](https://dashboard.mapineq.org/datacatalogue) and the [interactive map](https://dashboard.mapineq.org) to confirm taht the import was successful. Be sure to confirm that: 
+      - All appropriate years and geographic levels of data have been imported.
+      - All fields are filled.
+      - The map is generated properly.
+
+      **Note:** Data outside Europe will not be displayed on the map even though it has been imported to the database because all data in the Mapineq dashboard is currenlty linked to European administrative units (NUTS regions).
+
+---
+
+## Import Custom Data
+
+The process to import custom data from sources other than EuroStat or OECD requires a few additional step to complete the import manually. We will walk through this process using an example importing data on [internet speeds from Ookla](https://www.ookla.com/ookla-for-good/open-data). There are several ways to create a new SQL table, but we will walk through the standard workflow for the Mapineq team to demonstrate the key steps.
+
+**1. Prepare the Data:** The first step is to prepare the data as a .csv file following the SDMX data format used by EuroStat and OECD and implemented in the Mapineq database. Our custom data need to be summarised by NUTS regions (or other spatial polygons that could be added to the database). 
+
+```{r}
+#| echo: false
+#| warning: false
+library(DT)
+df <- read.csv("./ookla.csv")
+datatable(df[,c("geo", "obsTime", "obsValue", "unit", "freq", "network_type", "direction")])
+```
+**Note:** Columns not shown: id, geo_source
+
+There are a few required columns:  
+- geo: The NUTS region ID which is required to spatially join with other data and to display on the map. The NUTS region ID encodes the geographic level as well. ISO-2 country codes are national level (NUTS-0), one additional numeric digit indicates NUTS-1, two numeric digits indicate NUTS-2, and three numeric digits indicate NUTS-3.
+- obsTime: The year or other time identifier.
+- obsValue: The observed value which, in this case, contains Ookla internet speeds summarised for each NUTS region.
+
+All other columns (excluding **id**) will be made available as data filters in the Mapineq dashboard. 
+
+**2. Create a SQL table:** Create an empty table in the SQL database to accommodate this data:
+
+```sql
+DROP TABLE IF EXISTS public.ookla CASCADE;
+CREATE TABLE IF NOT EXISTS ookla (
+  id               INTEGER,
+  geo              TEXT,
+  quarter          TEXT,
+  unit             TEXT,
+  freq             TEXT,
+  "obsTime"       NUMERIC,
+  network_type     TEXT,
+  direction        TEXT,
+  "obsValue"      NUMERIC,
+  geo_source      TEXT
+);
+```
+
+**3. Copy data to the SQL table:** Copy the data from the local .csv file to the SQL table in the remote server using the **psql** command-line utility. There are other ways to copy a csv to a SQL table, but this approach works well when copying local data to a remote server.
+
+  ```bash
+  \copy ookla FROM './ookla.csv' HEADER DELIMITER ',' CSV
+  ```
+
+**4: Add to the data catalogue:** We will now add a new row to the **catalogue** table to record this new dataset and its metadata:
+
+```sql
+INSERT INTO public.catalogue (
+  provider, 
+  resource, 
+  descr, 
+  use, 
+  short_descr, 
+  query_resource
+) VALUES (
+  'Ookla', 
+  'ookla', 
+  'Fixed broadband and mobile (cellular) network performance collected by the Speedtest by Ookla apps', 
+  TRUE, 
+  'Ookla internet speed', 
+  'vw_ookla'
+);
+```
+
+**5: Create a View:** We will create a "view" in the database that returns the Ookla data in the exact format expected by the Mapineq API:
+
+```sql
+CREATE OR REPLACE VIEW vw_ookla AS
+SELECT
+  geo,
+  quarter,
+  unit,
+  freq,
+  "obsTime",
+  network_type,
+  direction,
+  "obsValue"
+FROM ookla;
+```
+Note that the View excludes the **geo_source** column from the SQL table because we do not want it to be used as a data filter in the dashboard.
+
+
+**6: Fill Supporting Tables:** We now need to update all tables used by the Mapineq dashboard to include the new dataset. The Mapineq database includes convenience functions to make this simple:
+
+```sql
+CALL website.fill_resource_years('ookla');
+CALL website.fill_resource_nuts_levels('ookla');
+CALL website.fill_resource_year_nuts_levels('ookla');
+CALL website.fill_catalogue_field_description('ookla');
+CALL website.fill_catalogue_field_value_description('ookla');
+```
+
+**7: Verify Data:** As always, we now need to verify that the data are working as intended. Here are a few SQL queries that will help check the data:
+
+```sql
+SELECT * FROM website.vw_data_tables WHERE resource = 'ookla';
+SELECT * FROM website.resource_years WHERE resource = 'ookla';
+SELECT * FROM website.resource_nuts_levels WHERE resource = 'ookla';
+SELECT * FROM website.resource_year_nuts_levels WHERE resource = 'ookla';
+```
+We can also use the Mapineq [data catalogue](https://dashboard.mapineq.org/datacatalogue) and the [interactive map](https://dashboard.mapineq.org) to confirm taht the import was successful. Be sure to confirm that:  
+
+      - All appropriate years and geographic levels of data have been imported.
+      - All fields are filled.
+      - The map is generated properly.
+
+**Note:** Data outside Europe will not be displayed on the map even though it has been imported to the database because all data in the Mapineq dashboard is currenlty linked to European administrative units (NUTS regions).
+
+
+If the custom data have been summarised for multiple versions (i.e. years) of NUTS boundaries, we have two options:  
+
+  1. Create separate tables for each NUTS version (e.g., **ookla_2003**, **ookla_2006**), or
+  2. Link individual years of Ookla data to only one NUTS version (i.e. the closest year).
+
+---
+
+## Manage Existing Data
+
+There are a few routine database maintenance tasks for which database functions can assist: 
+
+- Toggle on/off datasets to control if they are available from the Mapineq dashboard and data catalogue,
+- Modify data descriptions and short descriptions,
+- Remove data from the database, dashboard, and data catalogue.
+
+### Change Descriptions
+
+```sql
+CALL website.set_table_description('provider', 'table_name', 'description');
+CALL website.set_table_short_description('provider', 'table_name', 'short_description');
+```
+Example:
+```sql
+CALL website.set_table_short_description('estat', 'lfso_16cmt4j', 'Travel times');
+```
+
+### Toggle Table Status
+
+```sql
+CALL website.set_table_status('provider', 'table_name', status);
+```
+Example of hiding a table:
+```sql
+CALL website.set_table_status('estat', 'lfso_16cmt4j', FALSE);
+```
+Example of showing a table:
+```sql
+CALL website.set_table_status('estat', 'lfso_16cmt4j', TRUE);
+```
+
+### Removing a Dataset
+
+```sql
+CALL website.remove_resource('provider', 'table_name');
+```
+Example:
+```sql
+CALL website.remove_resource('estat', 'teilm010');
+```
