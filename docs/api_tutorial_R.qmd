@@ -24,16 +24,23 @@ This tutorial covers the following topics:
 4. Querying data from a single data set.
 5. Querying data from two data sets joined by location.
 
-We use the **httr** and **jsonlite** libraries for API requests and JSON processing, and the **tidyr** library for data wrangling.
-
 For additional information about the API, please refer to our [tutorial on using the API from Python](./api_tutorial_python.html) and the complete [technical documentation for the API](https://mapineq.org/data-users).
-
----
 
 ### Setup
 
 #### Load R Libraries
 
+We begin by loading the R libraries that we need for the tutorial. We use the **httr** and **jsonlite** libraries for API requests and JSON processing, and the **tidyr** library for data wrangling. We will use the **DT** package to produce nice interactive tables, but this is not essential. If these packages are not already installed on your local machine, then you can install them from your R session:
+
+```{r}
+# List of required packages
+required_packages <- c("httr", "jsonlite", "tidyr", "DT")
+
+# Install missing packages
+install.packages(setdiff(required_packages, installed.packages()[, "Package"]))
+```
+
+Now we can load these packages into our R environment:
 ```{r} 
 #| warning: false
 
@@ -44,14 +51,14 @@ library(jsonlite)
 # required for data wrangling
 library(tidyr)
 
-# required to nicely format the quarto doc
+# optional to nicely format big tables
 library(DT)
 ```
 
 
 #### API Base URL
 
-Let's start by defining the base URL for the Mapineq API:
+We also need to identify the base URL for the Mapineq API:
 
 ```{r}
 url <- "https://api.mapineq.org"

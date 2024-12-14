@@ -29,23 +29,21 @@ This tutorial covers the following topics:
 4. Querying data from a single data set.
 5. Querying data from two data sets joined by location.
 
-We use the **requests** and **json** libraries for API requests and JSON processing, and the **pandas** library for data wrangling.
-
 For additional information about the API, please refer to our [tutorial on using the API from R](./api_tutorial_R.html) and the complete [technical documentation for the API](https://mapineq.org/data-users).
-
----
 
 ### Setup
 
 #### Install Required Libraries
 
-Install the necessary Python libraries if not already installed:
+We begin by loading the Python libraries that we need for the tutorial. We use the **requests** and **json** libraries for API requests and JSON processing, and the **pandas** library for data wrangling. If these libraries are not already installed on your local machine, then you can use the command line tool **pip** to install them: 
+
 ```{bash}
 pip install requests pandas
-```
+``` 
 
 #### Import Libraries
 
+Now let's import those libraries into our Python session:
 ```{python}
 # Required for API queries
 import requests
@@ -53,14 +51,11 @@ import json
 
 # Required for data wrangling
 import pandas as pd
-
-# Required to nicely format the quarto doc
-from IPython.display import display, HTML
 ```
 
 ### API Base URL
 
-Let's start by defining the base URL for the Mapineq API:
+We also need to identify the base URL for the Mapineq API:
 
 ```{python}
 url = "https://api.mapineq.org"
