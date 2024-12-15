@@ -1,8 +1,8 @@
-private/
-out/
+**/private/
+**/wd/
+**/out/
 .idea/
 *.env
-
 #---- R -----#
 
 # History files

@@ -119,7 +119,7 @@ The process to import custom data from sources other than EuroStat or OECD requi
 #| echo: false
 #| warning: false
 library(DT)
-df <- read.csv("./ookla.csv")
+df <- read.csv("./wd/ookla.csv")
 datatable(df[,c("geo", "obsTime", "obsValue", "unit", "freq", "network_type", "direction")])
 ```
 **Note:** Columns not shown: id, geo_source
@@ -161,17 +161,25 @@ CREATE TABLE IF NOT EXISTS ookla (
 INSERT INTO public.catalogue (
   provider, 
   resource, 
-  descr, 
+  query_resource,
   use, 
+  descr, 
   short_descr, 
-  query_resource
+  url,
+  meta_data_url,
+  web_source_url,
+  license
 ) VALUES (
   'Ookla', 
   'ookla', 
-  'Fixed broadband and mobile (cellular) network performance collected by the Speedtest by Ookla apps', 
+  'vw_ookla',
   TRUE, 
+  'Fixed broadband and mobile (cellular) network performance collected by the Speedtest by Ookla apps', 
   'Ookla internet speed', 
-  'vw_ookla'
+  'https://www.ookla.com/ookla-for-good/open-data',
+  'https://github.com/teamookla/ookla-open-data',
+  'https://registry.opendata.aws/speedtest-global-performance/',
+  'https://creativecommons.org/licenses/by-nc-sa/4.0/'
 );
 ```
 
