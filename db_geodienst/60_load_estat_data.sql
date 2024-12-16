@@ -14,7 +14,7 @@ BEGIN
 	SET client_min_messages TO 'warning';
 	CREATE TEMPORARY TABLE IF NOT EXISTS tmpDictionary(id SERIAL, result_json TEXT);
 	TRUNCATE TABLE tmpDictionary;
-	RAISE INFO '% % ', strTable, strUrl;
+	
 	EXECUTE 'copy tmpDictionary(result_json) from program ' || QUOTE_LITERAL(JSON_URL);
 	WITH cte AS
 	(
@@ -37,7 +37,6 @@ BEGIN
 
 	IF rec.resource IS NOT NULL THEN
 		EXECUTE FORMAT(CAT_DELETE, rec.provider, rec.resource);
-		RAISE INFO '%', FORMAT(CAT_INSERT, rec.provider, rec.resource, rec.descr,rec.version,strUrl, LEFT(rec.descr,20),rec.resource, FORMAT(WEB_SOURCE_URL,rec.resource), FORMAT(META_DATA_URL,rec.resource));
 		EXECUTE FORMAT(CAT_INSERT, rec.provider, rec.resource, rec.descr,rec.version,strUrl, LEFT(rec.descr,20),rec.resource, FORMAT(WEB_SOURCE_URL,rec.resource), FORMAT(META_DATA_URL,rec.resource));
 	END IF;
 	
