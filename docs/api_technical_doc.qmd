@@ -28,7 +28,7 @@ def print_json(url):
 
 ## Introduction
 
-Do you want to use the data from Mapineq in your own application or website? This API technical documentation provides a complete list of API endpoints and their parameters with simple examples for their usage. In this tutorial, we will submit queries to the MapIneq API endpoints in the form of HTTP GET requests, and we will receieve API responses in JSON format containing the data that we requested. 
+Do you want to use the data from Mapineq in your own application or website? This API technical documentation provides a complete list of API endpoints and their parameters with simple examples for their usage. In this tutorial, we will submit queries to the Mapineq API endpoints in the form of HTTP GET requests, and we will receieve API responses in JSON format containing the data that we requested. 
 
 If you would like an introduction on querying the API from R or Python to retrieve data in the form of data frame objects, please take a look at:  
 - [API Tutorial for R](https://docs.mapineq.org/api_tutorial_R)  
@@ -36,9 +36,9 @@ If you would like an introduction on querying the API from R or Python to retrie
 
 Before we get going, let's first introduce the basic characteristics of the API. The base URL (i.e. hostname) of the Mapineq API is: 
 
-```bash
-https://api.mapineq.org
-```
+<span style="color:#1abc9c">
+  <strong>api.mapineq.org</strong>
+</span>
 
 The API is a collection "endpoints" that each provide a specific function. The following functions are available:
 
@@ -52,9 +52,12 @@ The API is a collection "endpoints" that each provide a specific function. The f
 
 Each function requires one or more parameters that you must specify. You can build an HTTP GET request by adapting the following URL to identify the **function_name** and **parameter:value** pairs:
 
-```bash
-https://api.mapineq.org/functions/postgisftw.function_name/item.json?parameter1=value&parameter2=value&limit=1000
-```
+<div class="wrapped-url">
+  <span style="color:#1abc9c">
+    https://api.mapineq.org/functions/postgisftw.**function_name**/item.json?**parameter1=value**&**parameter2=value**&limit=1000
+  </span>
+</div>
+
 
 You will replace "function_name" with your chosen function from the list above, and you will replace "parameter=value" with one or more parameters and their values. See the function documentation below for a complete list of parameters required for each function.
 
@@ -66,14 +69,14 @@ You will replace "function_name" with your chosen function from the list above, 
 
 ### get_levels
 
-Returns of list of geographic levels (i.e. NUTS adminstrative units in Europe) that are available to query.
+This endpoint returns of list of geographic levels (i.e. NUTS adminstrative units in Europe) that are available to query.
 
 #### Parameters:
 - None
 
 #### Example Call:
 
-<div class="scrollable-url">
+<div class="wrapped-url">
   <a href="https://api.mapineq.org/functions/postgisftw.get_levels/items.json" target="_blank">
     https://api.mapineq.org/functions/postgisftw.get_levels/items.json
   </a>
@@ -93,7 +96,7 @@ print_json("https://api.mapineq.org/functions/postgisftw.get_levels/items.json")
 
 ### get_source_by_nuts_level
 
-Returns a complete list of available data sources that are available for a specified geographic level.
+This endpoint returns a complete list of available data sources that are available for a specified geographic level.
 
 #### Parameters:  
 
@@ -101,7 +104,7 @@ Returns a complete list of available data sources that are available for a speci
 
 #### Example Call:
 
-<div class="scrollable-url">
+<div class="wrapped-url">
   <a href="https://api.mapineq.org/functions/postgisftw.get_source_by_nuts_level/items.json?_level=2&limit=500" target="_blank">
     https://api.mapineq.org/functions/postgisftw.get_source_by_nuts_level/items.json?_level=2&limit=500
   </a>
@@ -133,7 +136,7 @@ This endpoint provides a list of available data sources for a specified year and
 
 #### Example Call:
 
-<div class="scrollable-url">
+<div class="wrapped-url">
   <a href="https://api.mapineq.org/functions/postgisftw.get_source_by_year_nuts_level/items.json?_year=2017&_level=2&limit=500" target="_blank">
     https://api.mapineq.org/functions/postgisftw.get_source_by_year_nuts_level/items.json?_year=2017&_level=2&limit=500
   </a>
@@ -152,7 +155,7 @@ _Note: Only the first five json elements are shown._
 
 ### get_year_nuts_level_from_source
 
-Returns a list of all geographic levels and years that contain data for the specified data source.
+This endpoint returns a list of all geographic levels and years that contain data for the specified data source.
 
 #### Parameters:
 
@@ -160,7 +163,7 @@ Returns a list of all geographic levels and years that contain data for the spec
 
 #### Example Call:
 
-<div class="scrollable-url">
+<div class="wrapped-url">
   <a href="https://api.mapineq.org/functions/postgisftw.get_year_nuts_level_from_source/items.json?_resource=BD_HGNACE2_R3&limit=500" target="_blank">
     https://api.mapineq.org/functions/postgisftw.get_year_nuts_level_from_source/items.json?_resource=BD_HGNACE2_R3&limit=500
   </a>
@@ -183,7 +186,7 @@ _Note: Only the first five json elements are shown._
 
 ### get_column_values_source_json
 
-Provides a list of all filters that can be applied to a data source along with all possible values for each filter. 
+This endpoint provides a list of all filters that can be applied to a data source along with all possible values for each filter. 
 
 #### Parameters:
 
@@ -202,7 +205,7 @@ Provides a list of all filters that can be applied to a data source along with a
 
 #### Example Call:
 
-<div class="scrollable-url">
+<div class="wrapped-url">
   <a href='https://api.mapineq.org/functions/postgisftw.get_column_values_source_json/items.json?_resource=TGS00010&source_selections={"year":"2020","level":"2","selected":[]}&limit=40' target="_blank">
     https://api.mapineq.org/functions/postgisftw.get_column_values_source_json/items.json?_resource=TGS00010&source_selections={"year":"2020","level":"2","selected":[]}&limit=40
   </a>
@@ -236,7 +239,7 @@ The initial value for sources_selections would not include any "selected" values
 
 #### Example call:
 
-<div class="scrollable-url">
+<div class="wrapped-url">
   <a href='https://api.mapineq.org/functions/postgisftw.get_column_values_source_json/items.json?_resource=DEMO_R_FIND2&source_selections={"year":"2020","level":"2","selected":[]}&limit=40' target="_blank">
     https://api.mapineq.org/functions/postgisftw.get_column_values_source_json/items.json?_resource=DEMO_R_FIND2&source_selections={"year":"2020","level":"2","selected":[]}&limit=40
   </a>
@@ -267,7 +270,7 @@ This source selection will reduce the values available for the **Demographic Ind
 
 #### Example call:
 
-<div class="scrollable-url">
+<div class="wrapped-url">
   <a href='https://api.mapineq.org/functions/postgisftw.get_column_values_source_json/items.json?_resource=DEMO_R_FIND2&source_selections={"year":"2020","level":"2","selected":[{"field":"unit","value":"YR"}]}&limit=40' target="_blank">
     https://api.mapineq.org/functions/postgisftw.get_column_values_source_json/items.json?_resource=DEMO_R_FIND2&source_selections={"year":"2020","level":"2","selected":[{"field":"unit","value":"YR"}]}&limit=40
   </a>
@@ -287,7 +290,7 @@ Notice that there are now only two options for **Demographic Indicator** (Mean a
 
 ### get_x_data
 
-Retrieve data for a specific source.
+With this endpoint, you can retrieve data for a specific source.
 
 #### Parameters:
 - **\_level**: Geographic level
@@ -296,7 +299,7 @@ Retrieve data for a specific source.
 
 #### Example Call:
 
-<div class="scrollable-url">
+<div class="wrapped-url">
   <a href='https://api.mapineq.org/functions/postgisftw.get_x_data/items.json?_level=2&_year=2018&X_JSON={"source":"TGS00010","conditions":[{"field":"isced11","value":"TOTAL"},{"field":"unit","value":"PC"},{"field":"age","value":"Y_GE15"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&limit=1500' target="_blank">
     https://api.mapineq.org/functions/postgisftw.get_x_data/items.json?_level=2&_year=2018&X_JSON={"source":"TGS00010","conditions":[{"field":"isced11","value":"TOTAL"},{"field":"unit","value":"PC"},{"field":"age","value":"Y_GE15"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&limit=1500
   </a>
@@ -316,7 +319,7 @@ _Note: Only the first five json elements are shown._
 
 ### get_xy_data
 
-Retrieve data for two sources joined by location.
+This endpoint allows you to retrieve data for two sources joined by location.
 
 #### Parameters:
 - **\_level**: Geographic level
@@ -326,7 +329,7 @@ Retrieve data for two sources joined by location.
 
 #### Example Call:
 
-<div class="scrollable-url">
+<div class="wrapped-url">
   <a href='https://api.mapineq.org/functions/postgisftw.get_xy_data/items.json?_level=2&_year=2018&X_JSON={"source":"TGS00010","conditions":[{"field":"isced11","value":"TOTAL"},{"field":"unit","value":"PC"},{"field":"age","value":"Y_GE15"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&Y_JSON={"source":"DEMO_R_MLIFEXP","conditions":[{"field":"unit","value":"YR"},{"field":"age","value":"Y_LT1"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&limit=1500' target="_blank">
     https://api.mapineq.org/functions/postgisftw.get_xy_data/items.json?_level=2&_year=2018&X_JSON={"source":"TGS00010","conditions":[{"field":"isced11","value":"TOTAL"},{"field":"unit","value":"PC"},{"field":"age","value":"Y_GE15"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&Y_JSON={"source":"DEMO_R_MLIFEXP","conditions":[{"field":"unit","value":"YR"},{"field":"age","value":"Y_LT1"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&limit=1500
   </a>

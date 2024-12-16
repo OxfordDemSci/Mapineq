@@ -122,19 +122,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div id="9076e269" class="cell" data-execution_count="1">
+<div id="81402c30" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-stdout">
 <pre><code>December 16, 2024</code></pre>
 </div>
 </div>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>Do you want to use the data from Mapineq in your own application or website? This API technical documentation provides a complete list of API endpoints and their parameters with simple examples for their usage. In this tutorial, we will submit queries to the MapIneq API endpoints in the form of HTTP GET requests, and we will receieve API responses in JSON format containing the data that we requested.</p>
+<p>Do you want to use the data from Mapineq in your own application or website? This API technical documentation provides a complete list of API endpoints and their parameters with simple examples for their usage. In this tutorial, we will submit queries to the Mapineq API endpoints in the form of HTTP GET requests, and we will receieve API responses in JSON format containing the data that we requested.</p>
 <p>If you would like an introduction on querying the API from R or Python to retrieve data in the form of data frame objects, please take a look at:<br>
 - <a href="https://docs.mapineq.org/api_tutorial_R">API Tutorial for R</a><br>
 - <a href="https://docs.mapineq.org/api_tutorial_python">API Tutorial for Python</a></p>
 <p>Before we get going, let’s first introduce the basic characteristics of the API. The base URL (i.e.&nbsp;hostname) of the Mapineq API is:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">https://api.mapineq.org</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span style="color:#1abc9c"> <strong>api.mapineq.org</strong> </span></p>
 <p>The API is a collection “endpoints” that each provide a specific function. The following functions are available:</p>
 <ul>
 <li><a href="#get_levels">get_levels</a></li>
@@ -146,7 +146,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><a href="#get_xy_data">get_xy_data</a></li>
 </ul>
 <p>Each function requires one or more parameters that you must specify. You can build an HTTP GET request by adapting the following URL to identify the <strong>function_name</strong> and <strong>parameter:value</strong> pairs:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">https://api.mapineq.org/functions/postgisftw.function_name/item.json?parameter1=value</span><span class="kw">&amp;</span><span class="va">parameter2</span><span class="op">=</span>value<span class="kw">&amp;</span><span class="va">limit</span><span class="op">=</span>1000</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="wrapped-url">
+<p><span style="color:#1abc9c"> https://api.mapineq.org/functions/postgisftw.<strong>function_name</strong>/item.json?<strong>parameter1=value</strong>&amp;<strong>parameter2=value</strong>&amp;limit=1000 </span></p>
+</div>
 <p>You will replace “function_name” with your chosen function from the list above, and you will replace “parameter=value” with one or more parameters and their values. See the function documentation below for a complete list of parameters required for each function.</p>
 <blockquote class="blockquote">
 <p><strong>Note:</strong> Always use the parameter <strong>limit</strong>, otherwise you only get 10 values. Choose a value higher than the number of expected values.</p>
@@ -157,7 +159,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="functions">Functions</h2>
 <section id="get_levels" class="level3">
 <h3 class="anchored" data-anchor-id="get_levels">get_levels</h3>
-<p>Returns of list of geographic levels (i.e.&nbsp;NUTS adminstrative units in Europe) that are available to query.</p>
+<p>This endpoint returns of list of geographic levels (i.e.&nbsp;NUTS adminstrative units in Europe) that are available to query.</p>
 <section id="parameters" class="level4">
 <h4 class="anchored" data-anchor-id="parameters">Parameters:</h4>
 <ul>
@@ -166,33 +168,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="example-call" class="level4">
 <h4 class="anchored" data-anchor-id="example-call">Example Call:</h4>
-<div class="scrollable-url">
+<div class="wrapped-url">
 <p><a href="https://api.mapineq.org/functions/postgisftw.get_levels/items.json" target="_blank"> https://api.mapineq.org/functions/postgisftw.get_levels/items.json </a></p>
 </div>
 </section>
 <section id="returns" class="level4">
 <h4 class="anchored" data-anchor-id="returns">Returns:</h4>
 <p>A list of geographic levels in JSON format:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_level"</span><span class="fu">:</span> <span class="st">"3"</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_level"</span><span class="fu">:</span> <span class="st">"2"</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_level"</span><span class="fu">:</span> <span class="st">"1"</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_level"</span><span class="fu">:</span> <span class="st">"0"</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_level"</span><span class="fu">:</span> <span class="st">"3"</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_level"</span><span class="fu">:</span> <span class="st">"2"</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_level"</span><span class="fu">:</span> <span class="st">"1"</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_level"</span><span class="fu">:</span> <span class="st">"0"</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <hr>
 </section>
 </section>
 <section id="get_source_by_nuts_level" class="level3">
 <h3 class="anchored" data-anchor-id="get_source_by_nuts_level">get_source_by_nuts_level</h3>
-<p>Returns a complete list of available data sources that are available for a specified geographic level.</p>
+<p>This endpoint returns a complete list of available data sources that are available for a specified geographic level.</p>
 <section id="parameters-1" class="level4">
 <h4 class="anchored" data-anchor-id="parameters-1">Parameters:</h4>
 <ul>
@@ -201,40 +203,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="example-call-1" class="level4">
 <h4 class="anchored" data-anchor-id="example-call-1">Example Call:</h4>
-<div class="scrollable-url">
+<div class="wrapped-url">
 <p><a href="https://api.mapineq.org/functions/postgisftw.get_source_by_nuts_level/items.json?_level=2&amp;limit=500" target="_blank"> https://api.mapineq.org/functions/postgisftw.get_source_by_nuts_level/items.json?_level=2&amp;limit=500 </a></p>
 </div>
 </section>
 <section id="returns-1" class="level4">
 <h4 class="anchored" data-anchor-id="returns-1">Returns:</h4>
 <p>A list of data sources in JSON format:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_description"</span><span class="fu">:</span> <span class="st">"All causes of death by NUTS 2 regions (ESTAT)"</span><span class="fu">,</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_resource"</span><span class="fu">:</span> <span class="st">"TGS00057"</span><span class="fu">,</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_short_description"</span><span class="fu">:</span> <span class="st">"All causes of death "</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_description"</span><span class="fu">:</span> <span class="st">"Area by NUTS 3 region (ESTAT)"</span><span class="fu">,</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_resource"</span><span class="fu">:</span> <span class="st">"DEMO_R_D3AREA"</span><span class="fu">,</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_short_description"</span><span class="fu">:</span> <span class="st">"Area by NUTS 3 regio"</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_description"</span><span class="fu">:</span> <span class="st">"At-risk-of-poverty rate by NUTS 2 regions (ESTAT)"</span><span class="fu">,</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_resource"</span><span class="fu">:</span> <span class="st">"TGS00103"</span><span class="fu">,</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_short_description"</span><span class="fu">:</span> <span class="st">"At-risk-of-poverty r"</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_description"</span><span class="fu">:</span> <span class="st">"Available beds in hospitals by NUTS 2 region (ESTAT)"</span><span class="fu">,</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_resource"</span><span class="fu">:</span> <span class="st">"HLTH_RS_BDSRG2"</span><span class="fu">,</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_short_description"</span><span class="fu">:</span> <span class="st">"Available beds in ho"</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_description"</span><span class="fu">:</span> <span class="st">"Available beds in hospitals by NUTS 2 regions (ESTAT)"</span><span class="fu">,</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_resource"</span><span class="fu">:</span> <span class="st">"TGS00064"</span><span class="fu">,</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_short_description"</span><span class="fu">:</span> <span class="st">"Available beds in ho"</span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_description"</span><span class="fu">:</span> <span class="st">"All causes of death by NUTS 2 regions (ESTAT)"</span><span class="fu">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_resource"</span><span class="fu">:</span> <span class="st">"TGS00057"</span><span class="fu">,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_short_description"</span><span class="fu">:</span> <span class="st">"All causes of death "</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_description"</span><span class="fu">:</span> <span class="st">"Area by NUTS 3 region (ESTAT)"</span><span class="fu">,</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_resource"</span><span class="fu">:</span> <span class="st">"DEMO_R_D3AREA"</span><span class="fu">,</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_short_description"</span><span class="fu">:</span> <span class="st">"Area of regions"</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_description"</span><span class="fu">:</span> <span class="st">"At-risk-of-poverty rate by NUTS 2 regions (ESTAT)"</span><span class="fu">,</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_resource"</span><span class="fu">:</span> <span class="st">"TGS00103"</span><span class="fu">,</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_short_description"</span><span class="fu">:</span> <span class="st">"At-risk-of-poverty r"</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_description"</span><span class="fu">:</span> <span class="st">"Available beds in hospitals by NUTS 2 region (ESTAT)"</span><span class="fu">,</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_resource"</span><span class="fu">:</span> <span class="st">"HLTH_RS_BDSRG2"</span><span class="fu">,</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_short_description"</span><span class="fu">:</span> <span class="st">"Available beds in ho"</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_description"</span><span class="fu">:</span> <span class="st">"Available beds in hospitals by NUTS 2 regions (ESTAT)"</span><span class="fu">,</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_resource"</span><span class="fu">:</span> <span class="st">"TGS00064"</span><span class="fu">,</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_short_description"</span><span class="fu">:</span> <span class="st">"Available beds in ho"</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><em>Note: Only the first five json elements are shown.</em></p>
 <p>Notice that a value for <strong>f_resource</strong> is provided for each data set. This resource identifier will be used to query data from a specific data source from API endpoints described below.</p>
 <hr>
@@ -252,46 +254,46 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="example-call-2" class="level4">
 <h4 class="anchored" data-anchor-id="example-call-2">Example Call:</h4>
-<div class="scrollable-url">
+<div class="wrapped-url">
 <p><a href="https://api.mapineq.org/functions/postgisftw.get_source_by_year_nuts_level/items.json?_year=2017&amp;_level=2&amp;limit=500" target="_blank"> https://api.mapineq.org/functions/postgisftw.get_source_by_year_nuts_level/items.json?_year=2017&amp;_level=2&amp;limit=500 </a></p>
 </div>
 </section>
 <section id="returns-2" class="level4">
 <h4 class="anchored" data-anchor-id="returns-2">Returns:</h4>
-<div class="sourceCode" id="cb6"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_description"</span><span class="fu">:</span> <span class="st">"All causes of death by NUTS 2 regions (ESTAT)"</span><span class="fu">,</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_resource"</span><span class="fu">:</span> <span class="st">"TGS00057"</span><span class="fu">,</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_short_description"</span><span class="fu">:</span> <span class="st">"All causes of death "</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_description"</span><span class="fu">:</span> <span class="st">"At-risk-of-poverty rate by NUTS 2 regions (ESTAT)"</span><span class="fu">,</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_resource"</span><span class="fu">:</span> <span class="st">"TGS00103"</span><span class="fu">,</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_short_description"</span><span class="fu">:</span> <span class="st">"At-risk-of-poverty r"</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_description"</span><span class="fu">:</span> <span class="st">"Available beds in hospitals by NUTS 2 region (ESTAT)"</span><span class="fu">,</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_resource"</span><span class="fu">:</span> <span class="st">"HLTH_RS_BDSRG2"</span><span class="fu">,</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_short_description"</span><span class="fu">:</span> <span class="st">"Available beds in ho"</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_description"</span><span class="fu">:</span> <span class="st">"Available beds in hospitals by NUTS 2 regions (ESTAT)"</span><span class="fu">,</span></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_resource"</span><span class="fu">:</span> <span class="st">"TGS00064"</span><span class="fu">,</span></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_short_description"</span><span class="fu">:</span> <span class="st">"Available beds in ho"</span></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_description"</span><span class="fu">:</span> <span class="st">"Business demography and high growth enterprise by NACE Rev. 2 and NUTS 3 regions (ESTAT)"</span><span class="fu">,</span></span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_resource"</span><span class="fu">:</span> <span class="st">"BD_HGNACE2_R3"</span><span class="fu">,</span></span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_short_description"</span><span class="fu">:</span> <span class="st">"Business demography "</span></span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_description"</span><span class="fu">:</span> <span class="st">"All causes of death by NUTS 2 regions (ESTAT)"</span><span class="fu">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_resource"</span><span class="fu">:</span> <span class="st">"TGS00057"</span><span class="fu">,</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_short_description"</span><span class="fu">:</span> <span class="st">"All causes of death "</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_description"</span><span class="fu">:</span> <span class="st">"At-risk-of-poverty rate by NUTS 2 regions (ESTAT)"</span><span class="fu">,</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_resource"</span><span class="fu">:</span> <span class="st">"TGS00103"</span><span class="fu">,</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_short_description"</span><span class="fu">:</span> <span class="st">"At-risk-of-poverty r"</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_description"</span><span class="fu">:</span> <span class="st">"Available beds in hospitals by NUTS 2 region (ESTAT)"</span><span class="fu">,</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_resource"</span><span class="fu">:</span> <span class="st">"HLTH_RS_BDSRG2"</span><span class="fu">,</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_short_description"</span><span class="fu">:</span> <span class="st">"Available beds in ho"</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_description"</span><span class="fu">:</span> <span class="st">"Available beds in hospitals by NUTS 2 regions (ESTAT)"</span><span class="fu">,</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_resource"</span><span class="fu">:</span> <span class="st">"TGS00064"</span><span class="fu">,</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_short_description"</span><span class="fu">:</span> <span class="st">"Available beds in ho"</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_description"</span><span class="fu">:</span> <span class="st">"Business demography and high growth enterprise by NACE Rev. 2 and NUTS 3 regions (ESTAT)"</span><span class="fu">,</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_resource"</span><span class="fu">:</span> <span class="st">"BD_HGNACE2_R3"</span><span class="fu">,</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_short_description"</span><span class="fu">:</span> <span class="st">"Business demography "</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><em>Note: Only the first five json elements are shown.</em></p>
 <hr>
 </section>
 </section>
 <section id="get_year_nuts_level_from_source" class="level3">
 <h3 class="anchored" data-anchor-id="get_year_nuts_level_from_source">get_year_nuts_level_from_source</h3>
-<p>Returns a list of all geographic levels and years that contain data for the specified data source.</p>
+<p>This endpoint returns a list of all geographic levels and years that contain data for the specified data source.</p>
 <section id="parameters-3" class="level4">
 <h4 class="anchored" data-anchor-id="parameters-3">Parameters:</h4>
 <ul>
@@ -300,42 +302,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="example-call-3" class="level4">
 <h4 class="anchored" data-anchor-id="example-call-3">Example Call:</h4>
-<div class="scrollable-url">
+<div class="wrapped-url">
 <p><a href="https://api.mapineq.org/functions/postgisftw.get_year_nuts_level_from_source/items.json?_resource=BD_HGNACE2_R3&amp;limit=500" target="_blank"> https://api.mapineq.org/functions/postgisftw.get_year_nuts_level_from_source/items.json?_resource=BD_HGNACE2_R3&amp;limit=500 </a></p>
 </div>
 </section>
 <section id="returns-3" class="level4">
 <h4 class="anchored" data-anchor-id="returns-3">Returns:</h4>
 <p>All combinations of geographic levels and years with data in JSON format:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_level"</span><span class="fu">:</span> <span class="st">"0"</span><span class="fu">,</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_year"</span><span class="fu">:</span> <span class="st">"2008"</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_level"</span><span class="fu">:</span> <span class="st">"0"</span><span class="fu">,</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_year"</span><span class="fu">:</span> <span class="st">"2009"</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_level"</span><span class="fu">:</span> <span class="st">"0"</span><span class="fu">,</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_year"</span><span class="fu">:</span> <span class="st">"2010"</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_level"</span><span class="fu">:</span> <span class="st">"0"</span><span class="fu">,</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_year"</span><span class="fu">:</span> <span class="st">"2011"</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_level"</span><span class="fu">:</span> <span class="st">"0"</span><span class="fu">,</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_year"</span><span class="fu">:</span> <span class="st">"2012"</span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_level"</span><span class="fu">:</span> <span class="st">"0"</span><span class="fu">,</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_year"</span><span class="fu">:</span> <span class="st">"2008"</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_level"</span><span class="fu">:</span> <span class="st">"0"</span><span class="fu">,</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_year"</span><span class="fu">:</span> <span class="st">"2009"</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_level"</span><span class="fu">:</span> <span class="st">"0"</span><span class="fu">,</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_year"</span><span class="fu">:</span> <span class="st">"2010"</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_level"</span><span class="fu">:</span> <span class="st">"0"</span><span class="fu">,</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_year"</span><span class="fu">:</span> <span class="st">"2011"</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_level"</span><span class="fu">:</span> <span class="st">"0"</span><span class="fu">,</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"f_year"</span><span class="fu">:</span> <span class="st">"2012"</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><em>Note: Only the first five json elements are shown.</em></p>
 <hr>
 </section>
 </section>
 <section id="get_column_values_source_json" class="level3">
 <h3 class="anchored" data-anchor-id="get_column_values_source_json">get_column_values_source_json</h3>
-<p>Provides a list of all filters that can be applied to a data source along with all possible values for each filter.</p>
+<p>This endpoint provides a list of all filters that can be applied to a data source along with all possible values for each filter.</p>
 <section id="parameters-4" class="level4">
 <h4 class="anchored" data-anchor-id="parameters-4">Parameters:</h4>
 <ul>
@@ -343,219 +345,219 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>source_selections</strong>: JSON containing <strong>year</strong>, <strong>level</strong>, and an empty <strong>selected</strong> array.</li>
 </ul>
 <p><strong>source_selections</strong> is a json formatted piece which contains always “year” ans “level” and a field “selected” which is an array, initially empty:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"year"</span><span class="fu">:</span><span class="st">"2020"</span><span class="fu">,</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"level"</span><span class="fu">:</span><span class="st">"2"</span><span class="fu">,</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"selected"</span><span class="fu">:</span><span class="ot">[]</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"year"</span><span class="fu">:</span><span class="st">"2020"</span><span class="fu">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"level"</span><span class="fu">:</span><span class="st">"2"</span><span class="fu">,</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"selected"</span><span class="fu">:</span><span class="ot">[]</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="example-call-4" class="level4">
 <h4 class="anchored" data-anchor-id="example-call-4">Example Call:</h4>
-<div class="scrollable-url">
+<div class="wrapped-url">
 <p><a href="https://api.mapineq.org/functions/postgisftw.get_column_values_source_json/items.json?_resource=TGS00010&amp;source_selections={&quot;year&quot;:&quot;2020&quot;,&quot;level&quot;:&quot;2&quot;,&quot;selected&quot;:[]}&amp;limit=40" target="_blank"> https://api.mapineq.org/functions/postgisftw.get_column_values_source_json/items.json?_resource=TGS00010&amp;source_selections={“year”:“2020”,“level”:“2”,“selected”:[]}&amp;limit=40 </a></p>
 </div>
 </section>
 <section id="returns-4" class="level4">
 <h4 class="anchored" data-anchor-id="returns-4">Returns:</h4>
 <p>A list of filterable fields in JSON format:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field"</span><span class="fu">:</span> <span class="st">"unit"</span><span class="fu">,</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_label"</span><span class="fu">:</span> <span class="st">"Unit of measure"</span><span class="fu">,</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_values"</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Percentage"</span><span class="fu">,</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"PC"</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field"</span><span class="fu">:</span> <span class="st">"isced11"</span><span class="fu">,</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_label"</span><span class="fu">:</span> <span class="st">"International Standard Classification of Education (ISCED 2011)"</span><span class="fu">,</span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_values"</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"All ISCED 2011 levels"</span><span class="fu">,</span></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"TOTAL"</span></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Less than primary, primary and lower secondary education (levels 0-2)"</span><span class="fu">,</span></span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"ED0-2"</span></span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Upper secondary and post-secondary non-tertiary education (levels 3 and 4)"</span><span class="fu">,</span></span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"ED3_4"</span></span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Tertiary education (levels 5-8)"</span><span class="fu">,</span></span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"ED5-8"</span></span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
-<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Unknown"</span><span class="fu">,</span></span>
-<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"UNK"</span></span>
-<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
-<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"No response"</span><span class="fu">,</span></span>
-<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"NRP"</span></span>
-<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
-<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
-<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field"</span><span class="fu">:</span> <span class="st">"sex"</span><span class="fu">,</span></span>
-<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_label"</span><span class="fu">:</span> <span class="st">"Sex"</span><span class="fu">,</span></span>
-<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_values"</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
-<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Total"</span><span class="fu">,</span></span>
-<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"T"</span></span>
-<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
-<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Males"</span><span class="fu">,</span></span>
-<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"M"</span></span>
-<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
-<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Females"</span><span class="fu">,</span></span>
-<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"F"</span></span>
-<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
-<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
-<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field"</span><span class="fu">:</span> <span class="st">"freq"</span><span class="fu">,</span></span>
-<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_label"</span><span class="fu">:</span> <span class="st">"Time frequency"</span><span class="fu">,</span></span>
-<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_values"</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
-<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Annual"</span><span class="fu">,</span></span>
-<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"A"</span></span>
-<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
-<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
-<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field"</span><span class="fu">:</span> <span class="st">"age"</span><span class="fu">,</span></span>
-<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_label"</span><span class="fu">:</span> <span class="st">"Age class"</span><span class="fu">,</span></span>
-<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_values"</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
-<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"15 years or over"</span><span class="fu">,</span></span>
-<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"Y_GE15"</span></span>
-<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
-<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
-<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
-<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field"</span><span class="fu">:</span> <span class="st">"unit"</span><span class="fu">,</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_label"</span><span class="fu">:</span> <span class="st">"Unit of measure"</span><span class="fu">,</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_values"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Percentage"</span><span class="fu">,</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"PC"</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field"</span><span class="fu">:</span> <span class="st">"isced11"</span><span class="fu">,</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_label"</span><span class="fu">:</span> <span class="st">"International Standard Classification of Education (ISCED 2011)"</span><span class="fu">,</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_values"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"All ISCED 2011 levels"</span><span class="fu">,</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"TOTAL"</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Less than primary, primary and lower secondary education (levels 0-2)"</span><span class="fu">,</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"ED0-2"</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Upper secondary and post-secondary non-tertiary education (levels 3 and 4)"</span><span class="fu">,</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"ED3_4"</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Tertiary education (levels 5-8)"</span><span class="fu">,</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"ED5-8"</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Unknown"</span><span class="fu">,</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"UNK"</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"No response"</span><span class="fu">,</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"NRP"</span></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field"</span><span class="fu">:</span> <span class="st">"sex"</span><span class="fu">,</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_label"</span><span class="fu">:</span> <span class="st">"Sex"</span><span class="fu">,</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_values"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Total"</span><span class="fu">,</span></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"T"</span></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Males"</span><span class="fu">,</span></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"M"</span></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Females"</span><span class="fu">,</span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"F"</span></span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field"</span><span class="fu">:</span> <span class="st">"freq"</span><span class="fu">,</span></span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_label"</span><span class="fu">:</span> <span class="st">"Time frequency"</span><span class="fu">,</span></span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_values"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Annual"</span><span class="fu">,</span></span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"A"</span></span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field"</span><span class="fu">:</span> <span class="st">"age"</span><span class="fu">,</span></span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_label"</span><span class="fu">:</span> <span class="st">"Age class"</span><span class="fu">,</span></span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_values"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
+<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"15 years or over"</span><span class="fu">,</span></span>
+<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"Y_GE15"</span></span>
+<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
+<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
+<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><em>Note: Only the first five json elements are shown.</em></p>
 </section>
 <section id="advanced" class="level4">
 <h4 class="anchored" data-anchor-id="advanced">Advanced</h4>
 <p>Sometimes the filter values you can choose are dependent on the previously chosen values. For example, let’s take a look at the source <strong>Fertility Indicators (DEMO_R_FIND2)</strong>.</p>
 <p>The initial value for sources_selections would not include any “selected” values:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span>   </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>     <span class="dt">"year"</span><span class="fu">:</span><span class="st">"2019"</span><span class="fu">,</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>     <span class="dt">"level"</span><span class="fu">:</span><span class="st">"2"</span><span class="fu">,</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>     <span class="dt">"selected"</span><span class="fu">:</span><span class="ot">[]</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span>   </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>     <span class="dt">"year"</span><span class="fu">:</span><span class="st">"2019"</span><span class="fu">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>     <span class="dt">"level"</span><span class="fu">:</span><span class="st">"2"</span><span class="fu">,</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>     <span class="dt">"selected"</span><span class="fu">:</span><span class="ot">[]</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="example-call-5" class="level4">
 <h4 class="anchored" data-anchor-id="example-call-5">Example call:</h4>
-<div class="scrollable-url">
+<div class="wrapped-url">
 <p><a href="https://api.mapineq.org/functions/postgisftw.get_column_values_source_json/items.json?_resource=DEMO_R_FIND2&amp;source_selections={&quot;year&quot;:&quot;2020&quot;,&quot;level&quot;:&quot;2&quot;,&quot;selected&quot;:[]}&amp;limit=40" target="_blank"> https://api.mapineq.org/functions/postgisftw.get_column_values_source_json/items.json?_resource=DEMO_R_FIND2&amp;source_selections={“year”:“2020”,“level”:“2”,“selected”:[]}&amp;limit=40 </a></p>
 </div>
 </section>
 <section id="result" class="level4">
 <h4 class="anchored" data-anchor-id="result">Result:</h4>
+<div class="sourceCode" id="cb9"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field"</span><span class="fu">:</span> <span class="st">"unit"</span><span class="fu">,</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_label"</span><span class="fu">:</span> <span class="st">"Unit of measure"</span><span class="fu">,</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_values"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Number"</span><span class="fu">,</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"NR"</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Year"</span><span class="fu">,</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"YR"</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field"</span><span class="fu">:</span> <span class="st">"indic_de"</span><span class="fu">,</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_label"</span><span class="fu">:</span> <span class="st">"Demographic indicator"</span><span class="fu">,</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_values"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Total fertility rate"</span><span class="fu">,</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"TOTFERRT"</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Mean age of women at childbirth"</span><span class="fu">,</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"AGEMOTH"</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Median age of women at childbirth"</span><span class="fu">,</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"MEDAGEMOTH"</span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field"</span><span class="fu">:</span> <span class="st">"freq"</span><span class="fu">,</span></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_label"</span><span class="fu">:</span> <span class="st">"Time frequency"</span><span class="fu">,</span></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_values"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Annual"</span><span class="fu">,</span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"A"</span></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><em>Note: Only the first five json elements are shown.</em></p>
+<p>Notice that there are three options for <strong>Demographic Indicator</strong> (Mean age of women at childbirth, Median age of women at childbirth, and Total fertility rate).</p>
+<p>Now, let’s choose “annual” for the unit of measure (i.e.&nbsp;unit=YR). To do tihs, we will revise the parameter <strong>source_selections</strong>:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span>   </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>     <span class="dt">"year"</span><span class="fu">:</span><span class="st">"2019"</span><span class="fu">,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>     <span class="dt">"level"</span><span class="fu">:</span><span class="st">"2"</span><span class="fu">,</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>     <span class="dt">"selected"</span><span class="fu">:</span><span class="ot">[</span><span class="fu">{</span><span class="dt">"field"</span><span class="fu">:</span><span class="st">"unit"</span><span class="fu">,</span><span class="dt">"value"</span><span class="fu">:</span><span class="st">"YR"</span><span class="fu">}</span><span class="ot">]</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This source selection will reduce the values available for the <strong>Demographic Indicator</strong> filter:</p>
+</section>
+<section id="example-call-6" class="level4">
+<h4 class="anchored" data-anchor-id="example-call-6">Example call:</h4>
+<div class="wrapped-url">
+<p><a href="https://api.mapineq.org/functions/postgisftw.get_column_values_source_json/items.json?_resource=DEMO_R_FIND2&amp;source_selections={&quot;year&quot;:&quot;2020&quot;,&quot;level&quot;:&quot;2&quot;,&quot;selected&quot;:[{&quot;field&quot;:&quot;unit&quot;,&quot;value&quot;:&quot;YR&quot;}]}&amp;limit=40" target="_blank"> https://api.mapineq.org/functions/postgisftw.get_column_values_source_json/items.json?_resource=DEMO_R_FIND2&amp;source_selections={“year”:“2020”,“level”:“2”,“selected”:[{“field”:“unit”,“value”:“YR”}]}&amp;limit=40 </a></p>
+</div>
+</section>
+<section id="result-1" class="level4">
+<h4 class="anchored" data-anchor-id="result-1">Result:</h4>
 <div class="sourceCode" id="cb11"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field"</span><span class="fu">:</span> <span class="st">"unit"</span><span class="fu">,</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_label"</span><span class="fu">:</span> <span class="st">"Unit of measure"</span><span class="fu">,</span></span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_values"</span><span class="fu">:</span> <span class="ot">[</span></span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Number"</span><span class="fu">,</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"NR"</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Year"</span><span class="fu">,</span></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"YR"</span></span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field"</span><span class="fu">:</span> <span class="st">"indic_de"</span><span class="fu">,</span></span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_label"</span><span class="fu">:</span> <span class="st">"Demographic indicator"</span><span class="fu">,</span></span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_values"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Year"</span><span class="fu">,</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"YR"</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field"</span><span class="fu">:</span> <span class="st">"indic_de"</span><span class="fu">,</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_label"</span><span class="fu">:</span> <span class="st">"Demographic indicator"</span><span class="fu">,</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_values"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Mean age of women at childbirth"</span><span class="fu">,</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"AGEMOTH"</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span><span class="ot">,</span></span>
 <span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
-<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Total fertility rate"</span><span class="fu">,</span></span>
-<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"TOTFERRT"</span></span>
-<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
-<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Mean age of women at childbirth"</span><span class="fu">,</span></span>
-<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"AGEMOTH"</span></span>
-<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
-<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Median age of women at childbirth"</span><span class="fu">,</span></span>
-<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"MEDAGEMOTH"</span></span>
-<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
-<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
-<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field"</span><span class="fu">:</span> <span class="st">"freq"</span><span class="fu">,</span></span>
-<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_label"</span><span class="fu">:</span> <span class="st">"Time frequency"</span><span class="fu">,</span></span>
-<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_values"</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
-<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Annual"</span><span class="fu">,</span></span>
-<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"A"</span></span>
-<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
-<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
-<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
-<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><em>Note: Only the first five json elements are shown.</em></p>
-<p>Notice that there are three options for <strong>Demographic Indicator</strong> (Mean age of women at childbirth, Median age of women at childbirth, and Total fertility rate).</p>
-<p>Now, let’s choose “annual” for the unit of measure (i.e.&nbsp;unit=YR). To do tihs, we will revise the parameter <strong>source_selections</strong>:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span>   </span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>     <span class="dt">"year"</span><span class="fu">:</span><span class="st">"2019"</span><span class="fu">,</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>     <span class="dt">"level"</span><span class="fu">:</span><span class="st">"2"</span><span class="fu">,</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>     <span class="dt">"selected"</span><span class="fu">:</span><span class="ot">[</span><span class="fu">{</span><span class="dt">"field"</span><span class="fu">:</span><span class="st">"unit"</span><span class="fu">,</span><span class="dt">"value"</span><span class="fu">:</span><span class="st">"YR"</span><span class="fu">}</span><span class="ot">]</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This source selection will reduce the values available for the <strong>Demographic Indicator</strong> filter:</p>
-</section>
-<section id="example-call-6" class="level4">
-<h4 class="anchored" data-anchor-id="example-call-6">Example call:</h4>
-<div class="scrollable-url">
-<p><a href="https://api.mapineq.org/functions/postgisftw.get_column_values_source_json/items.json?_resource=DEMO_R_FIND2&amp;source_selections={&quot;year&quot;:&quot;2020&quot;,&quot;level&quot;:&quot;2&quot;,&quot;selected&quot;:[{&quot;field&quot;:&quot;unit&quot;,&quot;value&quot;:&quot;YR&quot;}]}&amp;limit=40" target="_blank"> https://api.mapineq.org/functions/postgisftw.get_column_values_source_json/items.json?_resource=DEMO_R_FIND2&amp;source_selections={“year”:“2020”,“level”:“2”,“selected”:[{“field”:“unit”,“value”:“YR”}]}&amp;limit=40 </a></p>
-</div>
-</section>
-<section id="result-1" class="level4">
-<h4 class="anchored" data-anchor-id="result-1">Result:</h4>
-<div class="sourceCode" id="cb13"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field"</span><span class="fu">:</span> <span class="st">"unit"</span><span class="fu">,</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_label"</span><span class="fu">:</span> <span class="st">"Unit of measure"</span><span class="fu">,</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_values"</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Year"</span><span class="fu">,</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"YR"</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field"</span><span class="fu">:</span> <span class="st">"indic_de"</span><span class="fu">,</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_label"</span><span class="fu">:</span> <span class="st">"Demographic indicator"</span><span class="fu">,</span></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_values"</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Mean age of women at childbirth"</span><span class="fu">,</span></span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"AGEMOTH"</span></span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Median age of women at childbirth"</span><span class="fu">,</span></span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"MEDAGEMOTH"</span></span>
-<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
-<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
-<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field"</span><span class="fu">:</span> <span class="st">"freq"</span><span class="fu">,</span></span>
-<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_label"</span><span class="fu">:</span> <span class="st">"Time frequency"</span><span class="fu">,</span></span>
-<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_values"</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
-<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Annual"</span><span class="fu">,</span></span>
-<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"A"</span></span>
-<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
-<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
-<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
-<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Median age of women at childbirth"</span><span class="fu">,</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"MEDAGEMOTH"</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field"</span><span class="fu">:</span> <span class="st">"freq"</span><span class="fu">,</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_label"</span><span class="fu">:</span> <span class="st">"Time frequency"</span><span class="fu">,</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"field_values"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"label"</span><span class="fu">:</span> <span class="st">"Annual"</span><span class="fu">,</span></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"value"</span><span class="fu">:</span> <span class="st">"A"</span></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><em>Note: Only the first five json elements are shown.</em></p>
 <p>Notice that there are now only two options for <strong>Demographic Indicator</strong> (Mean age of women at childbirth and Median age of women at childbirth).</p>
 <hr>
@@ -563,7 +565,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="get_x_data" class="level3">
 <h3 class="anchored" data-anchor-id="get_x_data">get_x_data</h3>
-<p>Retrieve data for a specific source.</p>
+<p>With this endpoint, you can retrieve data for a specific source.</p>
 <section id="parameters-5" class="level4">
 <h4 class="anchored" data-anchor-id="parameters-5">Parameters:</h4>
 <ul>
@@ -574,51 +576,51 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="example-call-7" class="level4">
 <h4 class="anchored" data-anchor-id="example-call-7">Example Call:</h4>
-<div class="scrollable-url">
+<div class="wrapped-url">
 <p><a href="https://api.mapineq.org/functions/postgisftw.get_x_data/items.json?_level=2&amp;_year=2018&amp;X_JSON={&quot;source&quot;:&quot;TGS00010&quot;,&quot;conditions&quot;:[{&quot;field&quot;:&quot;isced11&quot;,&quot;value&quot;:&quot;TOTAL&quot;},{&quot;field&quot;:&quot;unit&quot;,&quot;value&quot;:&quot;PC&quot;},{&quot;field&quot;:&quot;age&quot;,&quot;value&quot;:&quot;Y_GE15&quot;},{&quot;field&quot;:&quot;sex&quot;,&quot;value&quot;:&quot;T&quot;},{&quot;field&quot;:&quot;freq&quot;,&quot;value&quot;:&quot;A&quot;}]}&amp;limit=1500" target="_blank"> https://api.mapineq.org/functions/postgisftw.get_x_data/items.json?_level=2&amp;_year=2018&amp;X_JSON={“source”:“TGS00010”,“conditions”:[{“field”:“isced11”,“value”:“TOTAL”},{“field”:“unit”,“value”:“PC”},{“field”:“age”,“value”:“Y_GE15”},{“field”:“sex”,“value”:“T”},{“field”:“freq”,“value”:“A”}]}&amp;limit=1500 </a></p>
 </div>
 </section>
 <section id="returns-5" class="level4">
 <h4 class="anchored" data-anchor-id="returns-5">Returns:</h4>
-<div class="sourceCode" id="cb14"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"best_year"</span><span class="fu">:</span> <span class="st">"2021"</span><span class="fu">,</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AL01"</span><span class="fu">,</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Veri"</span><span class="fu">,</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="kw">null</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"best_year"</span><span class="fu">:</span> <span class="st">"2021"</span><span class="fu">,</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AL02"</span><span class="fu">,</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Qender"</span><span class="fu">,</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="kw">null</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"best_year"</span><span class="fu">:</span> <span class="st">"2021"</span><span class="fu">,</span></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AL03"</span><span class="fu">,</span></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Jug"</span><span class="fu">,</span></span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="kw">null</span></span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"best_year"</span><span class="fu">:</span> <span class="st">"2021"</span><span class="fu">,</span></span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AT11"</span><span class="fu">,</span></span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Burgenland"</span><span class="fu">,</span></span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="fl">4.2</span></span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"best_year"</span><span class="fu">:</span> <span class="st">"2021"</span><span class="fu">,</span></span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AT12"</span><span class="fu">,</span></span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Nieder</span><span class="ch">\u00f6</span><span class="st">sterreich"</span><span class="fu">,</span></span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="fl">3.8</span></span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"best_year"</span><span class="fu">:</span> <span class="st">"2021"</span><span class="fu">,</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AL01"</span><span class="fu">,</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Veri"</span><span class="fu">,</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="kw">null</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"best_year"</span><span class="fu">:</span> <span class="st">"2021"</span><span class="fu">,</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AL02"</span><span class="fu">,</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Qender"</span><span class="fu">,</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="kw">null</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"best_year"</span><span class="fu">:</span> <span class="st">"2021"</span><span class="fu">,</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AL03"</span><span class="fu">,</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Jug"</span><span class="fu">,</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="kw">null</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"best_year"</span><span class="fu">:</span> <span class="st">"2021"</span><span class="fu">,</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AT11"</span><span class="fu">,</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Burgenland"</span><span class="fu">,</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="fl">4.2</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"best_year"</span><span class="fu">:</span> <span class="st">"2021"</span><span class="fu">,</span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AT12"</span><span class="fu">,</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Nieder</span><span class="ch">\u00f6</span><span class="st">sterreich"</span><span class="fu">,</span></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="fl">3.8</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><em>Note: Only the first five json elements are shown.</em></p>
 <hr>
 </section>
 </section>
 <section id="get_xy_data" class="level3">
 <h3 class="anchored" data-anchor-id="get_xy_data">get_xy_data</h3>
-<p>Retrieve data for two sources joined by location.</p>
+<p>This endpoint allows you to retrieve data for two sources joined by location.</p>
 <section id="parameters-6" class="level4">
 <h4 class="anchored" data-anchor-id="parameters-6">Parameters:</h4>
 <ul>
@@ -630,50 +632,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="example-call-8" class="level4">
 <h4 class="anchored" data-anchor-id="example-call-8">Example Call:</h4>
-<div class="scrollable-url">
+<div class="wrapped-url">
 <p><a href="https://api.mapineq.org/functions/postgisftw.get_xy_data/items.json?_level=2&amp;_year=2018&amp;X_JSON={&quot;source&quot;:&quot;TGS00010&quot;,&quot;conditions&quot;:[{&quot;field&quot;:&quot;isced11&quot;,&quot;value&quot;:&quot;TOTAL&quot;},{&quot;field&quot;:&quot;unit&quot;,&quot;value&quot;:&quot;PC&quot;},{&quot;field&quot;:&quot;age&quot;,&quot;value&quot;:&quot;Y_GE15&quot;},{&quot;field&quot;:&quot;sex&quot;,&quot;value&quot;:&quot;T&quot;},{&quot;field&quot;:&quot;freq&quot;,&quot;value&quot;:&quot;A&quot;}]}&amp;Y_JSON={&quot;source&quot;:&quot;DEMO_R_MLIFEXP&quot;,&quot;conditions&quot;:[{&quot;field&quot;:&quot;unit&quot;,&quot;value&quot;:&quot;YR&quot;},{&quot;field&quot;:&quot;age&quot;,&quot;value&quot;:&quot;Y_LT1&quot;},{&quot;field&quot;:&quot;sex&quot;,&quot;value&quot;:&quot;T&quot;},{&quot;field&quot;:&quot;freq&quot;,&quot;value&quot;:&quot;A&quot;}]}&amp;limit=1500" target="_blank"> https://api.mapineq.org/functions/postgisftw.get_xy_data/items.json?_level=2&amp;_year=2018&amp;X_JSON={“source”:“TGS00010”,“conditions”:[{“field”:“isced11”,“value”:“TOTAL”},{“field”:“unit”,“value”:“PC”},{“field”:“age”,“value”:“Y_GE15”},{“field”:“sex”,“value”:“T”},{“field”:“freq”,“value”:“A”}]}&amp;Y_JSON={“source”:“DEMO_R_MLIFEXP”,“conditions”:[{“field”:“unit”,“value”:“YR”},{“field”:“age”,“value”:“Y_LT1”},{“field”:“sex”,“value”:“T”},{“field”:“freq”,“value”:“A”}]}&amp;limit=1500 </a></p>
 </div>
 </section>
 <section id="returns-6" class="level4">
 <h4 class="anchored" data-anchor-id="returns-6">Returns:</h4>
 <p>A list of geographic units with <strong>x</strong> and <strong>y</strong> values:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"best_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AL01"</span><span class="fu">,</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Veri"</span><span class="fu">,</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"y"</span><span class="fu">:</span> <span class="kw">null</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"best_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AL02"</span><span class="fu">,</span></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Qender"</span><span class="fu">,</span></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"y"</span><span class="fu">:</span> <span class="kw">null</span></span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"best_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AL03"</span><span class="fu">,</span></span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Jug"</span><span class="fu">,</span></span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"y"</span><span class="fu">:</span> <span class="kw">null</span></span>
-<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"best_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
-<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AT11"</span><span class="fu">,</span></span>
-<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Burgenland"</span><span class="fu">,</span></span>
-<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="fl">4.2</span><span class="fu">,</span></span>
-<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"y"</span><span class="fu">:</span> <span class="fl">81.5</span></span>
-<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"best_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
-<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AT12"</span><span class="fu">,</span></span>
-<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Nieder</span><span class="ch">\u00f6</span><span class="st">sterreich"</span><span class="fu">,</span></span>
-<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="fl">3.8</span><span class="fu">,</span></span>
-<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"y"</span><span class="fu">:</span> <span class="fl">81.5</span></span>
-<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
-<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"best_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AL01"</span><span class="fu">,</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Veri"</span><span class="fu">,</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"y"</span><span class="fu">:</span> <span class="kw">null</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"best_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AL02"</span><span class="fu">,</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Qender"</span><span class="fu">,</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"y"</span><span class="fu">:</span> <span class="kw">null</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"best_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AL03"</span><span class="fu">,</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Jug"</span><span class="fu">,</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"y"</span><span class="fu">:</span> <span class="kw">null</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"best_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AT11"</span><span class="fu">,</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Burgenland"</span><span class="fu">,</span></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="fl">4.2</span><span class="fu">,</span></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"y"</span><span class="fu">:</span> <span class="fl">81.5</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"best_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AT12"</span><span class="fu">,</span></span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Nieder</span><span class="ch">\u00f6</span><span class="st">sterreich"</span><span class="fu">,</span></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="fl">3.8</span><span class="fu">,</span></span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"y"</span><span class="fu">:</span> <span class="fl">81.5</span></span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><em>Note: Only the first five json elements are shown.</em></p>
 </section>
 </section>

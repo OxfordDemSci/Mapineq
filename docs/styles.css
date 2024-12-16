@@ -18,6 +18,10 @@ main {
     padding-top: 30px;
 }
 
+.sidebar {
+    width: 260px;
+}
+
 .logo {
     display: inline-block;
     vertical-align: -40%;
@@ -42,4 +46,9 @@ main {
 .scrollable-url {
     overflow-x: auto;
     white-space: nowrap;
+}
+
+.wrapped-url {
+    overflow-wrap: break-word;
+    white-space: normal;
 }
