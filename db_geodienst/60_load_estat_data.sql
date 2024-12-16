@@ -5,14 +5,16 @@ $BODY$
 DECLARE
 	rec	RECORD;
 
-	JSON_URL	CONSTANT TEXT := $$curl "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/dataflow/ESTAT/all?detail=allstubs&format=JSON"$$;
-	CAT_DELETE	CONSTANT TEXT := $$DELETE FROM catalogue WHERE provider = %L AND resource = %L $$;
-	CAT_INSERT	CONSTANT TEXT := $$INSERT INTO catalogue VALUES(%L,%L,%L,%L,%L,TRUE,%L, %L) $$;
+	JSON_URL		CONSTANT TEXT := $$curl "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/dataflow/ESTAT/all?detail=allstubs&format=JSON"$$;
+	CAT_DELETE		CONSTANT TEXT := $$DELETE FROM catalogue WHERE provider = %L AND resource = %L $$;
+	CAT_INSERT		CONSTANT TEXT := $$INSERT INTO catalogue (provider, resource, descr, version, url, use, short_descr, query_resource,meta_data_url, web_source_url) VALUES(%L,%L,%L,%L,%L,TRUE,%L, %L, %L, %L) $$;
+	WEB_SOURCE_URL	CONSTANT TEXT := $$https://doi.org/10.2908/%s$$;
+	META_DATA_URL	CONSTANT TEXT := $$https://doi.org/10.2908/%s$$;
 BEGIN
 	SET client_min_messages TO 'warning';
 	CREATE TEMPORARY TABLE IF NOT EXISTS tmpDictionary(id SERIAL, result_json TEXT);
 	TRUNCATE TABLE tmpDictionary;
-	
+	RAISE INFO '% % ', strTable, strUrl;
 	EXECUTE 'copy tmpDictionary(result_json) from program ' || QUOTE_LITERAL(JSON_URL);
 	WITH cte AS
 	(
@@ -35,7 +37,8 @@ BEGIN
 
 	IF rec.resource IS NOT NULL THEN
 		EXECUTE FORMAT(CAT_DELETE, rec.provider, rec.resource);
-		EXECUTE FORMAT(CAT_INSERT, rec.provider, rec.resource, rec.descr,rec.version,strUrl, LEFT(rec.descr,20),rec.resource);
+		RAISE INFO '%', FORMAT(CAT_INSERT, rec.provider, rec.resource, rec.descr,rec.version,strUrl, LEFT(rec.descr,20),rec.resource, FORMAT(WEB_SOURCE_URL,rec.resource), FORMAT(META_DATA_URL,rec.resource));
+		EXECUTE FORMAT(CAT_INSERT, rec.provider, rec.resource, rec.descr,rec.version,strUrl, LEFT(rec.descr,20),rec.resource, FORMAT(WEB_SOURCE_URL,rec.resource), FORMAT(META_DATA_URL,rec.resource));
 	END IF;
 	
 END;
@@ -64,7 +67,7 @@ DECLARE
 	arrDropColumn		TEXT[] := ARRAY['dataflow', 'last_update'];
 	dropColumn			TEXT;
 	
-	URL					CONSTANT TEXT := $$"https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/%s?format=SDMX-CSV"  $$;
+	URL					CONSTANT TEXT := $$https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/%s?format=SDMX-CSV$$;
 
 	CHARDELIMITER		CONSTANT TEXT := ',';
 	TABLE_SCHEMA		CONSTANT TEXT := 'public';
@@ -76,7 +79,7 @@ DECLARE
 	
 	DROP_COLUMN			CONSTANT TEXT := $$ALTER TABLE %I.%I DROP COLUMN IF EXISTS %I $$;
 	GET_COLTYPE			CONSTANT TEXT := $$SELECT %I::%s FROM %I.%I $$;
-	ALTER_COLTYPE		CONSTANT TEXT := $$ ALTER TABLE %I.%I ALTER COLUMN %I TYPE %s USING %I::%s $$;
+	ALTER_COLTYPE		CONSTANT TEXT := $$ALTER TABLE %I.%I ALTER COLUMN %I TYPE %s USING %I::%s $$;
 	QUERY_FREQ			CONSTANT TEXT := $$SELECT DISTINCT freq FROM %I$$;
 BEGIN
 	SET client_min_messages TO ERROR;
@@ -125,7 +128,7 @@ BEGIN
 	
 	
 	EXECUTE FORMAT (INSERT_DATA,TABLE_SCHEMA, strTable, array_to_string(arrCols,CHARDELIMITER));
-	RAISE INFO '% - Data inserted', clock_timestamp();
+	
 	FOREACH dropColumn IN ARRAY arrDropColumn
 	LOOP
 		EXECUTE FORMAT(DROP_COLUMN,TABLE_SCHEMA, strTable, dropColumn);
