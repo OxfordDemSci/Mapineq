@@ -83,7 +83,7 @@ The Mapineq database also include a function to import entire datasets from OECD
      https://sdmx.oecd.org/public/rest/dataflow/OECD.DEV.NPG/DSD_GID@DF_GID_2023/1.0?references=all
      ```  
 
-      This includes the "AgendcyIdentifier" (**OECD.DEV.NPG**) and "DataFlowIdentifier" (**DSD_GID@DF_GID_2023**) that will be used in the next step.
+      This includes the "AgencyIdentifier" (**OECD.DEV.NPG**) and "DataFlowIdentifier" (**DSD_GID@DF_GID_2023**) that will be used in the next step.
 
 3. **Import the Dataset:** Now we can import this dataset directly into the MapIneq database using the following SQL command structure:
 
