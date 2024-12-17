@@ -40,7 +40,11 @@
                         <mat-card-header>
                             <div mat-card-avatar class="example-header-image-{{result.f_provider}}"></div>
                             <mat-card-title>{{result.f_short_description}}</mat-card-title>
-                            <mat-card-subtitle>{{result.f_resource}} from {{result.f_provider}}</mat-card-subtitle>
+                            <mat-card-subtitle> {{result.f_resource}} from {{result.f_provider}}
+                                <a href="{{result.metadataurl}}" target="_blank" title="More information">
+                                   more info
+                                </a>
+                            </mat-card-subtitle>
                         </mat-card-header>
                         <!--
                         <img mat-card-image src="assets/img/preview{{ result.f_levels===null ? 3 : (1 + JSON.parse(result.f_levels)[0]) }}.png" alt="Example map" >
@@ -64,6 +68,7 @@
                                 Available region levels:
                                 <div>{{jsonArrayToString(result.f_levels, ', ')}}</div>
                             </div>
+
                         </mat-card-content>
                         <mat-card-actions align="end">
                             <button mat-stroked-button [routerLink]="'/load/' + result.f_resource"><mat-icon>map</mat-icon> load in interactive map</button>

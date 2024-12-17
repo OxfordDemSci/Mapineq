@@ -62,7 +62,7 @@ export class DatacatalogueComponent implements OnInit {
           } else {
             this.errorMsg = "";
             this.filteredSearchResults = data;
-
+            this.addMetaDataUrl();
           }
           //console.log(this.filteredLocations);
         });
@@ -78,8 +78,17 @@ export class DatacatalogueComponent implements OnInit {
     this.filteredSearchResults = [];
     this.featureService.searchCatalogue('').subscribe((data) => {
       this.filteredSearchResults = data;
+      this.addMetaDataUrl();
     })
   }
+
+  addMetaDataUrl() {
+    this.filteredSearchResults.map((item:any) => {
+      item.metadataurl = 'https://doi.org/10.2908/' + item.f_resource;
+      return item;
+    })
+  }
+
 
   protected readonly Math = Math;
   protected readonly JSON = JSON;
