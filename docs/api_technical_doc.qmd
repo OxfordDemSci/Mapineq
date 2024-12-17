@@ -1,0 +1,366 @@
+---
+title: '<a href="https://mapineq.org"><img src="https://www.mapineq.org/wp-content/themes/mapineq/assets/images/logo_mapineq1.svg" alt="Mapineq" class="logo"></a><br>API Technical Documentation'
+author: "Niek van Ruler, Doug Leasure"
+format: 
+  html:
+    output-file: api_technical_doc.html
+    toc: true
+    theme: darkly
+    css: styles.css
+---
+```{python}
+#| echo: false
+from datetime import datetime
+
+print(datetime.now().strftime("%B %d, %Y"))
+```
+```{python}
+# | include: false
+import requests
+import json
+
+
+def print_json(url):
+    response = requests.get(url)
+    data = response.json()
+    trunc_len = 5
+    json_output = json.dumps(data[0:trunc_len], indent=4)
+    print(f"```json\n{json_output}\n```")
+    if len(data) > trunc_len:
+        print(f"_Note: Only the first {trunc_len} json elements are shown_")
+```
+
+## Introduction
+
+Do you want to use the data from Mapineq in your own application or website? This API technical documentation provides a complete list of API endpoints and their parameters with simple examples for their usage. In this tutorial, we will submit queries to the Mapineq API endpoints in the form of HTTP GET requests, and we will receieve API responses in JSON format containing the data that we requested. 
+
+If you would like an introduction on querying the API from R or Python to retrieve data in the form of data frame objects, please take a look at:  
+- [API Tutorial for R](https://docs.mapineq.org/api_tutorial_R)  
+- [API Tutorial for Python](https://docs.mapineq.org/api_tutorial_python) 
+
+Before we get going, let's first introduce the basic characteristics of the API. The base URL (i.e. hostname) of the Mapineq API is: 
+
+<span style="color:#1abc9c">
+  <strong>api.mapineq.org</strong>
+</span>
+
+The API is a collection "endpoints" that each provide a specific function. The following functions are available:
+
+  - [get_levels](#get_levels)
+  - [get_source_by_nuts_level](#get_source_by_nuts_level)
+  - [get_source_by_year_nuts_level](#get_source_by_year_nuts_level)
+  - [get_year_nuts_level_from_source](#get_year_nuts_level_from_source)
+  - [get_column_values_source_json](#get_column_values_source_json)
+  - [get_x_data](#get_x_data)
+  - [get_xy_data](#get_xy_data)
+
+Each function requires one or more parameters that you must specify. You can build an HTTP GET request by adapting the following URL to identify the **function_name** and **parameter:value** pairs:
+
+<div class="wrapped-url">
+  <span style="color:#1abc9c">
+    https://api.mapineq.org/functions/postgisftw.**function_name**/item.json?**parameter1=value**&**parameter2=value**&limit=1000
+  </span>
+</div>
+
+
+You will replace "function_name" with your chosen function from the list above, and you will replace "parameter=value" with one or more parameters and their values. See the function documentation below for a complete list of parameters required for each function.
+
+> **Note:** Always use the parameter **limit**, otherwise you only get 10 values. Choose a value higher than the number of expected values.
+
+---
+
+## Functions
+
+### get_levels
+
+This endpoint returns of list of geographic levels (i.e. NUTS adminstrative units in Europe) that are available to query.
+
+#### Parameters:
+- None
+
+#### Example Call:
+
+<div class="wrapped-url">
+  <a href="https://api.mapineq.org/functions/postgisftw.get_levels/items.json" target="_blank">
+    https://api.mapineq.org/functions/postgisftw.get_levels/items.json
+  </a>
+</div>
+
+#### Returns:
+
+A list of geographic levels in JSON format:
+
+```{python}
+# | echo: false
+# | output: asis
+print_json(url="https://api.mapineq.org/functions/postgisftw.get_levels/items.json")
+```
+
+---
+
+### get_source_by_nuts_level
+
+This endpoint returns a complete list of available data sources that are available for a specified geographic level.
+
+#### Parameters:  
+
+- **\_level**: (number; 0, 1, 2, 3)
+
+#### Example Call:
+
+<div class="wrapped-url">
+  <a href="https://api.mapineq.org/functions/postgisftw.get_source_by_nuts_level/items.json?_level=2&limit=500" target="_blank">
+    https://api.mapineq.org/functions/postgisftw.get_source_by_nuts_level/items.json?_level=2&limit=500
+  </a>
+</div>
+
+#### Returns:
+
+A list of data sources in JSON format:
+
+```{python}
+# | echo: false
+# | output: asis
+print_json(url='https://api.mapineq.org/functions/postgisftw.get_source_by_nuts_level/items.json?_level=2&limit=500')
+```
+
+
+Notice that a value for **f_resource** is provided for each data set. This resource identifier will be used to query data from a specific data source from API endpoints described below.
+
+---
+
+### get_source_by_year_nuts_level
+
+This endpoint provides a list of available data sources for a specified year and geographic level.
+
+#### Parameters:
+
+- **\_year**
+- **\_level**
+
+#### Example Call:
+
+<div class="wrapped-url">
+  <a href="https://api.mapineq.org/functions/postgisftw.get_source_by_year_nuts_level/items.json?_year=2017&_level=2&limit=500" target="_blank">
+    https://api.mapineq.org/functions/postgisftw.get_source_by_year_nuts_level/items.json?_year=2017&_level=2&limit=500
+  </a>
+</div>
+
+#### Returns:
+
+```{python}
+# | echo: false
+# | output: asis
+print_json(
+    url="https://api.mapineq.org/functions/postgisftw.get_source_by_year_nuts_level/items.json?_year=2017&_level=2&limit=500"
+)
+```
+
+
+---
+
+### get_year_nuts_level_from_source
+
+This endpoint returns a list of all geographic levels and years that contain data for the specified data source.
+
+#### Parameters:
+
+- **\_resource**: Resource identifier (i.e. **f_resource** returned by one of the "get_source" endpoints above)
+
+#### Example Call:
+
+<div class="wrapped-url">
+  <a href="https://api.mapineq.org/functions/postgisftw.get_year_nuts_level_from_source/items.json?_resource=BD_HGNACE2_R3&limit=500" target="_blank">
+    https://api.mapineq.org/functions/postgisftw.get_year_nuts_level_from_source/items.json?_resource=BD_HGNACE2_R3&limit=500
+  </a>
+</div>
+
+
+#### Returns:
+
+All combinations of geographic levels and years with data in JSON format:
+
+```{python}
+# | echo: false
+# | output: asis
+print_json(
+    url="https://api.mapineq.org/functions/postgisftw.get_year_nuts_level_from_source/items.json?_resource=BD_HGNACE2_R3&limit=500"
+)
+```
+
+
+
+---
+
+### get_column_values_source_json
+
+This endpoint provides a list of all filters that can be applied to a data source along with all possible values for each filter. 
+
+#### Parameters:
+
+- **\_resource**: (i.e. **f_resource** returned by one of the "get_source" endpoints above)
+- **source_selections**: JSON containing **year**, **level**, and an empty **selected** array.
+
+**source_selections** is a json formatted piece which contains always "year" ans "level" and a field "selected" which is an array, initially empty:
+
+```json
+{
+  "year":"2020",
+  "level":"2",
+  "selected":[]
+}
+```
+
+#### Example Call:
+
+<div class="wrapped-url">
+  <a href='https://api.mapineq.org/functions/postgisftw.get_column_values_source_json/items.json?_resource=TGS00010&source_selections={"year":"2020","level":"2","selected":[]}&limit=40' target="_blank">
+    https://api.mapineq.org/functions/postgisftw.get_column_values_source_json/items.json?_resource=TGS00010&source_selections={"year":"2020","level":"2","selected":[]}&limit=40
+  </a>
+</div>
+
+#### Returns:
+
+A list of filterable fields in JSON format:
+
+```{python}
+# | echo: false
+# | output: asis
+print_json(
+    url='https://api.mapineq.org/functions/postgisftw.get_column_values_source_json/items.json?_resource=TGS00010&source_selections={"year":"2020","level":"2","selected":[]}&limit=40'
+)
+```
+
+
+
+#### Advanced
+
+Sometimes the filter values you can choose are dependent on the previously chosen values. For example, let's take a look at the source **Fertility Indicators (DEMO_R_FIND2)**.
+
+The initial value for sources_selections would not include any "selected" values:
+ 
+```json
+{   
+     "year":"2019",
+     "level":"2",
+     "selected":[]
+}
+```
+
+#### Example call:
+
+<div class="wrapped-url">
+  <a href='https://api.mapineq.org/functions/postgisftw.get_column_values_source_json/items.json?_resource=DEMO_R_FIND2&source_selections={"year":"2020","level":"2","selected":[]}&limit=40' target="_blank">
+    https://api.mapineq.org/functions/postgisftw.get_column_values_source_json/items.json?_resource=DEMO_R_FIND2&source_selections={"year":"2020","level":"2","selected":[]}&limit=40
+  </a>
+</div>
+
+#### Result:
+
+```{python}
+# | echo: false
+# | output: asis
+print_json(
+    url='https://api.mapineq.org/functions/postgisftw.get_column_values_source_json/items.json?_resource=DEMO_R_FIND2&source_selections={"year":"2020","level":"2","selected":[]}&limit=40'
+)
+```
+
+
+Notice that there are three options for **Demographic Indicator** (Mean age of women at childbirth, Median age of women at childbirth, and Total fertility rate).
+
+Now, let's choose "annual" for the unit of measure (i.e. unit=YR). To do tihs, we will revise the parameter **source_selections**:
+
+```json
+{   
+     "year":"2019",
+     "level":"2",
+     "selected":[{"field":"unit","value":"YR"}]
+}
+```
+
+This source selection will reduce the values available for the **Demographic Indicator** filter:
+
+#### Example call:
+
+<div class="wrapped-url">
+  <a href='https://api.mapineq.org/functions/postgisftw.get_column_values_source_json/items.json?_resource=DEMO_R_FIND2&source_selections={"year":"2020","level":"2","selected":[{"field":"unit","value":"YR"}]}&limit=40' target="_blank">
+    https://api.mapineq.org/functions/postgisftw.get_column_values_source_json/items.json?_resource=DEMO_R_FIND2&source_selections={"year":"2020","level":"2","selected":[{"field":"unit","value":"YR"}]}&limit=40
+  </a>
+</div>
+
+#### Result:
+
+```{python}
+# | echo: false
+# | output: asis
+print_json(
+    url='https://api.mapineq.org/functions/postgisftw.get_column_values_source_json/items.json?_resource=DEMO_R_FIND2&source_selections={"year":"2020","level":"2","selected":[{"field":"unit","value":"YR"}]}&limit=40'
+)
+```
+
+
+Notice that there are now only two options for **Demographic Indicator** (Mean age of women at childbirth and Median age of women at childbirth).
+---
+
+### get_x_data
+
+With this endpoint, you can retrieve data for a specific source.
+
+#### Parameters:
+- **\_level**: Geographic level
+- **\_year**: Year of data
+- **X_JSON**: JSON specifying the source and filters
+
+#### Example Call:
+
+<div class="wrapped-url">
+  <a href='https://api.mapineq.org/functions/postgisftw.get_x_data/items.json?_level=2&_year=2018&X_JSON={"source":"TGS00010","conditions":[{"field":"isced11","value":"TOTAL"},{"field":"unit","value":"PC"},{"field":"age","value":"Y_GE15"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&limit=1500' target="_blank">
+    https://api.mapineq.org/functions/postgisftw.get_x_data/items.json?_level=2&_year=2018&X_JSON={"source":"TGS00010","conditions":[{"field":"isced11","value":"TOTAL"},{"field":"unit","value":"PC"},{"field":"age","value":"Y_GE15"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&limit=1500
+  </a>
+</div>
+
+#### Returns:
+
+```{python}
+# | echo: false
+# | output: asis
+print_json(
+    url='https://api.mapineq.org/functions/postgisftw.get_x_data/items.json?_level=2&_year=2018&X_JSON={"source":"TGS00010","conditions":[{"field":"isced11","value":"TOTAL"},{"field":"unit","value":"PC"},{"field":"age","value":"Y_GE15"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&limit=1500'
+)
+```
+
+
+
+---
+
+### get_xy_data
+
+This endpoint allows you to retrieve data for two sources joined by location.
+
+#### Parameters:
+- **\_level**: Geographic level
+- **\_year**: Year of data
+- **X_JSON**: JSON specifying the first source and filters.
+- **Y_JSON**: JSON specifying the second source and filters.
+
+#### Example Call:
+
+<div class="wrapped-url">
+  <a href='https://api.mapineq.org/functions/postgisftw.get_xy_data/items.json?_level=2&_year=2018&X_JSON={"source":"TGS00010","conditions":[{"field":"isced11","value":"TOTAL"},{"field":"unit","value":"PC"},{"field":"age","value":"Y_GE15"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&Y_JSON={"source":"DEMO_R_MLIFEXP","conditions":[{"field":"unit","value":"YR"},{"field":"age","value":"Y_LT1"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&limit=1500' target="_blank">
+    https://api.mapineq.org/functions/postgisftw.get_xy_data/items.json?_level=2&_year=2018&X_JSON={"source":"TGS00010","conditions":[{"field":"isced11","value":"TOTAL"},{"field":"unit","value":"PC"},{"field":"age","value":"Y_GE15"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&Y_JSON={"source":"DEMO_R_MLIFEXP","conditions":[{"field":"unit","value":"YR"},{"field":"age","value":"Y_LT1"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&limit=1500
+  </a>
+</div>
+
+#### Returns:
+
+A list of geographic units with **x** and **y** values:
+
+```{python}
+# | echo: false
+# | output: asis
+print_json(
+    url='https://api.mapineq.org/functions/postgisftw.get_xy_data/items.json?_level=2&_year=2018&X_JSON={"source":"TGS00010","conditions":[{"field":"isced11","value":"TOTAL"},{"field":"unit","value":"PC"},{"field":"age","value":"Y_GE15"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&Y_JSON={"source":"DEMO_R_MLIFEXP","conditions":[{"field":"unit","value":"YR"},{"field":"age","value":"Y_LT1"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&limit=1500'
+)
+```
+
+
