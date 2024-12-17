@@ -1,0 +1,127 @@
+.map-container {
+  height: var(--page-content-height);
+  z-index: 0;
+}
+
+
+.graph {
+  z-index:9999;
+  width: 400px;
+
+  left:10px;
+  bottom: 10px;
+  position: absolute;
+  background-color: rgba(255, 255, 255, .8);
+  padding: 8px;
+  border-radius: 5px;
+}
+
+.filter {
+  z-index:9998;
+  width: 220px;
+
+  right:10px;
+  top: 300px;
+  position: absolute;
+  background-color: rgba(255, 255, 255, .8);
+
+  border-radius: 5px;
+}
+
+
+.table {
+  z-index:9999;
+  width: 220px;
+
+  right:10px;
+  top: 72px;
+  position: absolute;
+  background-color: rgba(255, 255, 255, .8);
+
+  border-radius: 5px;
+}
+
+.legend {
+
+  z-index:9999;
+  width: 220px;
+
+  right:10px;
+  bottom: 10px;
+  position: absolute;
+  background-color: rgba(255, 255, 255, .8);
+
+  border-radius: 5px;
+
+}
+
+.legenditems {
+  padding: 8px;
+}
+
+.title {
+  background-color: rgb(63, 81, 180);
+  color: white;
+  padding: 4px;
+  font-family: "Roboto Light", Verdana, serif;
+  border-radius: 5px 5px 0 0;
+  -moz-border-radius-topleft: 5px;
+  -moz-border-radius-topright: 5px;
+}
+
+.controls {
+  /* Center child horizontally*/
+  display: flex;
+  justify-content: center;
+  margin-top:4px;
+}
+
+.graphlabel {
+  text-align: left;
+  vertical-align: baseline;
+}
+
+.ol-tooltip {
+  position: absolute;
+  background-color: white;
+  -webkit-filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+  filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #cccccc;
+  bottom: 17px;
+  left: -50px;
+  min-width: 170px;
+}
+.ol-tooltip:after, .ol-tooltip:before {
+  top: 100%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+.ol-tooltip:after {
+  border-top-color: white;
+  border-width: 10px;
+  left: 48px;
+  margin-left: -10px;
+}
+.ol-tooltip:before {
+  border-top-color: #cccccc;
+  border-width: 11px;
+  left: 48px;
+  margin-left: -11px;
+}
+.ol-tooltip p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.mat-icon {
+  vertical-align: middle;
+}
+
+
+
