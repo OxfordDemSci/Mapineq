@@ -62,7 +62,7 @@ export class DatacatalogueComponent implements OnInit {
           } else {
             this.errorMsg = "";
             this.filteredSearchResults = data;
-            this.addMetaDataUrl();
+
           }
           //console.log(this.filteredLocations);
         });
@@ -78,7 +78,6 @@ export class DatacatalogueComponent implements OnInit {
     this.filteredSearchResults = [];
     this.featureService.searchCatalogue('').subscribe((data) => {
       this.filteredSearchResults = data;
-      this.addMetaDataUrl();
     })
   }
 
