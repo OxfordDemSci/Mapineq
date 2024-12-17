@@ -1,8 +1,5 @@
-# Dockerfile used by the mapineq_db container
 FROM postgis/postgis:latest
 
-RUN apt-get update -y
-RUN apt-get -y install curl
+RUN apt-get update && apt-get install -y curl && apt-get clean
 
-CMD ["postgres", "-c", "config_file=/db/postgresql.conf"]
-# CMD ["sleep", "3600"]
+# CMD [ "postgres", "-c", "config_file=/db/postgresql.conf" ]

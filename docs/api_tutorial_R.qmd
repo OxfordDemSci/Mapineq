@@ -1,0 +1,326 @@
+---
+title: '<a href="https://mapineq.org"><img src="https://www.mapineq.org/wp-content/themes/mapineq/assets/images/logo_mapineq1.svg" alt="Mapineq" class="logo"></a><br>A tutorial for using the Mapineq API from R'
+author: "Doug Leasure"
+date: "`r Sys.Date()`"
+format: 
+  html:
+    output-file: api_tutorial_R.html
+    toc: true
+    theme: darkly
+    css: styles.css
+---
+
+## Introduction
+
+The [Mapineq dashboard](https://dashboard.mapineq.org) and [data catalogue](https://dashboard.mapineq.org/datacatalogue) are interactive tools that allow you to explore the Mapineq database and discover data relationships on the map. The dashboard uses the Mapineq API in the background to pull data from the Mapineq database, providing a user-friendly way to explore the database. If you are interested in automating this process or exporting many data sources, then you may benefit from accessing the API directly from your local R or Python console. 
+
+This tutorial demonstrates how to query the Mapineq API using R.  In general terms, an API (Application Programming Interface) is a tool that allows your computer to communicate with a remote server. In this case, we will use it to automate data imports from the MapIneq database server directly into our local R environment.
+
+This tutorial covers the following topics:
+
+1. Fetching a list of data sources available from the MapIneq database for a given geographic level (i.e. NUTS level).
+2. Retrieving a list of years and geographic levels that are available for a data set.
+3. Identifying the data filters that are available for a data set.
+4. Querying data from a single data set.
+5. Querying data from two data sets joined by location.
+
+For additional information about the API, please refer to our [tutorial on using the API from Python](./api_tutorial_python.html) and the complete [technical documentation for the API](https://mapineq.org/data-users). You can also download the [Quarto source code for this tutorial](./api_tutorial_R.qmd) if you prefer to work with it directly in your R development environment.
+
+### Setup
+
+#### Load R Libraries
+
+We begin by loading the R libraries that we need for the tutorial. We use the **httr** and **jsonlite** libraries for API requests and JSON processing, and the **tidyr** library for data wrangling. We will use the **DT** package to produce nice interactive tables, but this is not essential. If these packages are not already installed on your local machine, then you can install them from your R session:
+
+```{r}
+# List of required packages
+required_packages <- c("httr", "jsonlite", "tidyr", "DT")
+
+# Install missing packages
+install.packages(setdiff(required_packages, installed.packages()[, "Package"]))
+```
+
+Now we can load these packages into our R environment:
+```{r} 
+#| warning: false
+
+# required for API queries
+library(httr)
+library(jsonlite)
+
+# required for data wrangling
+library(tidyr)
+
+# optional to nicely format big tables
+library(DT)
+```
+
+
+#### API Base URL
+
+We also need to identify the base URL for the Mapineq API:
+
+```{r}
+url <- "https://api.mapineq.org"
+```
+
+---
+
+What follows is a series of steps to identify a data source and its characteristics and then query data from that source.
+
+## 1. Fetch Sources by NUTS Level
+
+Now, let's get a list of data that are available in the Mapineq database for a given geographic level.  
+
+We will use NUTS administrative units to define geographic levels. NUTS regions are standardised administrative boundaries for Europe. NUTS level-0 are country boundaries, NUTS level-1 are the largest subnational administrative units and NUTS level-3 are the smallest subnational administrative units.
+
+Let's take a look at how to get a list of all data available in the Mapineq database for NUTS level-2. We will do this by querying the Mapineq API endpoint [**get_source_by_nuts_level**](https://www.mapineq.org/data-users/#get_source_by_nuts_level). 
+
+The first step is to select the API endpoint that we want to query and to define our values for its parameters:
+
+```{r} 
+# Identify the API endpoint to query
+endpoint <- "functions/postgisftw.get_source_by_nuts_level/items.json"
+
+# Provide parameters required by the endpoint
+params <- list(
+  `_level` = 2, # define the geographic level (i.e. NUTS level)
+  limit = 500  # limit response to this many data sets
+)
+```
+Notice that we defined the parameters to retrieve the data catalogue for NUTS level-2 and to limit the response to include no more than 500 data sets. 
+
+Now, we are ready to submit our API request:
+
+```{r} 
+# Submit HTTP GET request to query the API
+response <- GET(url = url, path = endpoint, query = params)
+
+if (status_code(response) == 200) {
+  print(response)
+} else {
+  stop(status_code(response))
+}
+```
+
+The API response should have an http status code of 200 which indicates that our API request was successful. The response contains the data list that we want in JSON format, so we now need to do some data wrangling to convert this into a data.frame object. 
+
+```{r} 
+#| warning: false
+
+# Convert JSON to data frame
+df_content <- fromJSON(content(response, "text"))
+
+# Look at the data
+datatable(df_content)
+```
+We now have a nice searchable data frame that we can use to explore the data that are available in the Mapineq database. 
+
+---
+
+## 2. Retrieve Years and NUTS Levels Available for a Data Source
+
+For this step, we will select a single data source that we want to investigate further. Let's look at **At-risk-of-poverty rate by NUTS 2 regions** from EuroStat (ESTAT). You will notice from the data catalogue that we retrieved in the previous step that the resource ID for this data set is **TGS00103** which we will use for our next steps
+
+To retrieve years and NUTS levels that are available for this data source, we will use the API endpoint [get_year_nuts_level_from_source](https://www.mapineq.org/data-users/#get_year_nuts_level_from_source):
+
+```{r}
+#| warning: false
+
+# API endpoint
+endpoint <- "functions/postgisftw.get_year_nuts_level_from_source/items.json"
+
+# Endpoint parameters
+params <- list(
+  `_resource` = "TGS00103"  # resource ID of the data set
+)
+
+# GET request to query API
+response <- GET(url = url, path = endpoint, query = params)
+
+# Check the response status
+if (!status_code(response) == 200) {
+  print(paste("Error:", status_code(response)))
+} else {
+  # API response as data.frame
+  df_content <- fromJSON(content(response, "text"))
+}
+
+# Look at the data
+datatable(df_content)
+```
+The API response provides all of the years and geographic-levels covered by this data set.
+
+---
+
+## 3. Identify Data Filters Available for a Data Source
+
+Many data sets available in the Mapineq database contain various data filters that can be applied to extract the data you are specifically interested in. These filters could include age, sex, education level, etc. Our next step is to identify which filters are avilable for the **At-risk-of-poverty rate by NUTS 2 regions** data that we are investigating.
+
+To identify the filters that are available for this data source, we will use the API endpoint [get_column_values_source_json](https://www.mapineq.org/data-users/#get_column_values_source_json):
+
+```{r}
+# API endpoint
+endpoint <- "functions/postgisftw.get_column_values_source_json/items.json"
+
+# Endpoint parameters
+params <- list(
+  `_resource` = "TGS00103",
+  source_selections = toJSON(list(
+      year = "2020",
+      level = "2", 
+      selected = list()
+    ), auto_unbox = TRUE)
+)
+```
+
+This endpoint requires a **source_selections** that is in JSON format. We implemented this in R by first creating a list object and then converting it to JSON using the **toJSON** function from the **jsonlite** package. Let's take a quick look at what that final JSON parameter looks like: 
+
+```{r}
+print(params[['source_selections']])
+```
+
+Now we are ready to submit our API request: 
+
+```{r}
+#| warning: false
+
+# GET request to query API
+response <- GET(url = url, path = endpoint, query = params)
+
+# Check the response status
+if (!status_code(response) == 200) {
+  print(paste("Error:", status_code(response)))
+} else {
+  # API response as data.frame
+  df_content <- fromJSON(content(response, "text")) %>%
+    unnest_longer(field_values) %>%
+    unnest_wider(field_values)
+}
+```
+The API response contains a more complex JSON object with nested values that our previous API responses did not include. So, we have done a bit of extra data wrangling to get it into a nice data.frame format making use of the **unnest_longer** and **unnest_wider** functions from the **tidyr** package. 
+
+Here is the original nested JSON which contains a named list within each element of the **field_values** column:
+```{r}
+print(prettify(content(response, "text")))
+```
+
+And, here is our nicely formated data frame which splits those elements into two columns:
+```{r}
+# Look at the data
+datatable(df_content)
+```
+This response shows us that there are two filters available for this data source, time frequency and unit of measure. In this case, each filter only contains a single option. The data are provided for an Annual (A) time frequency and the unit of measure is Percentage of total population (PC_POP). 
+
+---
+
+## 4. Query Data for One Data Source
+
+In the previous steps, we (1) identified a data source to query, (2) checked which years and geographic levels are available, and (3) identified the filters available. We will now use this information to retrieve the data that we want from our selected data source, **TGS00103**.
+
+To query data from this data source, we will use the API endpoint [get_x_data](https://www.mapineq.org/data-users/#get_x_data):
+
+```{r}
+# API endpoint
+endpoint <- "functions/postgisftw.get_x_data/items.json"
+
+# Endpoint parameters
+params <- list(
+  `_level` = 2,
+  `_year` = 2018,
+  X_JSON = toJSON(list(
+    source = "TGS00103",
+    conditions = list(
+      list(field = "unit", value = "PC_POP"),
+      list(field = "freq", value = "A")
+    )
+  ), auto_unbox = TRUE),
+  limit = 1500
+)
+```
+Notice that the parameters for this endpoint allow us to specify the geographic level (NUTS-2), the year (2018), and provice a JSON object that specifies the resource ID and filters that we want to use to query data. We have also included a parameter to limit the response to no more than 1,500 data points. 
+
+Now, let's submit the API request and format the response as a data frame:
+
+```{r}
+#| warning: false
+
+# GET request to query API
+response <- GET(url = url, path = endpoint, query = params)
+
+# Check the response status
+if (!status_code(response) == 200) {
+  print(paste("Error:", status_code(response)))
+} else {
+  # API response as data.frame
+  df_content <- fromJSON(content(response, "text"))
+}
+
+datatable(df_content)
+```
+The response includes the data that we have requested in the **x** column along with identifiers including the geographic unit name (geo_name), NUTS ID (geo), and year (best_year). 
+
+
+---
+
+## 5. Query Data from Two Sources Joined by Location
+
+Now we want to repeat the same query from our previous step, but this time we will include a second variable joined to the output by geographic location. We will use **Life expectancy by age, sex, and NUTS 2 region** from EuroStat as our second variable. This data has resource ID **DEMO_R_MLIFEXP**, and we will fill in the correct filters following the steps outlined above: 
+
+```{r}
+#| warning: false
+
+# API endpoint
+endpoint <- "functions/postgisftw.get_xy_data/items.json"
+
+# Endpoint parameters
+params <- list(
+  `_level` = 2,
+  `_year` = 2018,
+  X_JSON = toJSON(
+    list(
+      source = "TGS00103",
+      conditions = list(
+        list(field = "unit", value = "PC_POP"),
+        list(field = "freq", value = "A")
+      )
+    ),
+    auto_unbox = TRUE
+  ),
+  Y_JSON = toJSON(
+    list(
+      source = "DEMO_R_MLIFEXP",
+      conditions = list(
+        list(field = "unit", value = "YR"),
+        list(field = "age", value = "Y_LT1"),
+        list(field = "sex", value = "T"),
+        list(field = "freq", value = "A")
+      )
+    ),
+    auto_unbox = TRUE
+  ),
+  limit = 1500
+)
+
+# GET request to query API
+response <- GET(url = url, path = endpoint, query = params)
+
+# Check the response status
+if (!status_code(response) == 200) {
+  print(paste("Error:", status_code(response)))
+} else {
+  # API response as data.frame
+  df_content <- fromJSON(content(response, "text"))
+}
+
+# View data
+datatable(df_content)
+```
+The **x** column contains the variable defined by the parameter **X_JSON** and the **y** column contains the variable defined by the **Y_JSON** parameter.
+
+---
+
+## Conclusion
+
+This tutorial provided a step-by-step guide to querying the Mapineq API using R. The code examples demonstrate how to retrieve data for various endpoints and how to process the responses into usable formats. For further details, consult the Mapineq API documentation available from [https://mapineq.org/data-users](https://mapineq.org/data-users).
+

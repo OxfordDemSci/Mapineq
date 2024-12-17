@@ -1,8 +1,8 @@
-private/
-out/
+**/private/
+**/wd/
+**/out/
 .idea/
 *.env
-
 #---- R -----#
 
 # History files
@@ -47,7 +47,7 @@ vignettes/*.pdf
 .Renviron
 
 # pkgdown site
-docs/
+#docs/
 
 # translation temp files
 po/*~

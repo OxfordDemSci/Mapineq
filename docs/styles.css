@@ -1,0 +1,54 @@
+body {
+    background-image: url('https://www.mapineq.org/wp-content/themes/mapineq/assets/images/background_gradient_1920x1080.png');
+    background-size: cover;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+main,
+.sidebar {
+    background-color: rgba(39, 58, 87, 0.7);
+    padding: 10px;
+}
+
+main {
+    margin-right: -25px;
+    margin-top: -10px;
+    margin-bottom: -60px;
+    padding-top: 30px;
+}
+
+.sidebar {
+    width: 260px;
+}
+
+.logo {
+    display: inline-block;
+    vertical-align: -40%;
+    margin-right: 5px;
+    height: 55px;
+    width: auto;
+}
+
+.dataTables_wrapper {
+    background-color: rgba(255, 255, 255, 0.7) !important;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.dataTables_scroll {
+    background-color: rgba(255, 255, 255, 0.7) !important;
+    border-radius: 5px;
+    padding: 0px;
+    overflow: hidden;
+}
+
+.scrollable-url {
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.wrapped-url {
+    overflow-wrap: break-word;
+    white-space: normal;
+}
