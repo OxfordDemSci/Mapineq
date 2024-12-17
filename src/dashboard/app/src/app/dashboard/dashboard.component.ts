@@ -500,6 +500,7 @@ export class DashboardComponent implements OnInit{
         // As for making csv format, headers must be
         // separated by comma and pushing it into array
         let displayHeaders = Object.keys(data[0]);
+        displayHeaders[0] = 'selected_year';
         displayHeaders[3] = this.displayObject.tableFields[0].tableDescr;
         displayHeaders[4] = this.displayObject.tableFields[1].tableDescr;
         csvRows.push(displayHeaders.join(','));
@@ -513,7 +514,8 @@ export class DashboardComponent implements OnInit{
             const values = headers.map(e => {
                 return row[e];
             })
-            for (let i = 0; i< values.length; i++) {
+            values[0] = this.displayObject.tableFields[0].tableYear;
+            for (let i = 1; i< values.length; i++) {
                 if (typeof values[i] === 'string') {
                     values[i] = values[i].replaceAll(',', ' ');
                 }
