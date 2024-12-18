@@ -24,7 +24,7 @@ The **open-access API** is available from [https://api.mapineq.org](https://api.
 
 ## Get Involved
 
-We welcome your engagement with the project! If you spot bugs or you would like to request new features or new data, please [raise an issue](https://github.com/OxfordDemSci/MapIneq/issues) in this GitHub repository. If you would like to contribute to the code, please feel free to fork the repository and submit pull requests to merge your innovative solutions to issues back into the `dev` branch of this repository. 
+We welcome your engagement with the project! If you spot bugs or you would like to request new features or new data, please [raise an issue](https://github.com/OxfordDemSci/Mapineq/issues) in this GitHub repository. If you would like to contribute to the code, please feel free to fork the repository and submit pull requests to merge your innovative solutions to issues back into the `dev` branch of this repository. 
 
 It is relatively easy for us to import data from [EuroStat](https://ec.europa.eu/eurostat/databrowser/explore/all/all_themes?lang=en&display=list&sort=category) and [OECD](https://data-explorer.oecd.org/) into MapineqLink. If you find data that you think would be a great addition to MapineqLink, please raise an issue to let us know and be sure to provide a link to the data.
 
@@ -46,7 +46,7 @@ This repository is made available under the terms of a [GNU General Public Licen
 
 ## Suggested Citation
 
-Leasure DR, van Ruler N, de Jong S, Lassche R, Ao X, Lambert T, Schoof G, Mills MM. 2025. Mapineq Link Open Source: Diverse Data for Inequality Action v1.0.0. [https://github.com/OxfordDemSci/MapIneq](https://github.com/OxfordDemSci/MapIneq). doi:XXXX
+Leasure DR, van Ruler N, de Jong S, Lassche R, Ao X, Lambert T, Schoof G, Mills MM. 2025. Mapineq Link Open Source: Diverse Data for Inequality Action v1.0.0. [https://github.com/OxfordDemSci/Mapineq](https://github.com/OxfordDemSci/Mapineq). doi:XXXX
 
 ## Acknowledgements
 This MapIneq project is funded by the European Union’s Horizon Europe Research and Innovation programme (202061645) and the MapineqLink database and dashboard received additional support from the Leverhulme Trust (RC-2018-003) via the [Leverhulme Centre for Demographic Science](https://demography.ox.ac.uk) at the University of Oxford. 
