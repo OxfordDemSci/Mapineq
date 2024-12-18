@@ -1,0 +1,223 @@
+<div class="selection-cell">
+    <mat-card class="example-card mat-app-background">
+        <mat-card-header>
+            <div mat-card-avatar [class]="'selection-cell-header-image-'+tableId.toString()"></div>
+            <mat-card-title>{{tableSelection.tableName}} </mat-card-title>
+            <mat-card-subtitle>{{tableSelection.tableFunction}} ({{(tableId+1)}})</mat-card-subtitle>
+            <!--
+            <mat-card-subtitle>
+                <button mat-stroked-button type="button" [disabled]="!tableSelection.tableSelectionComplete" (click)="showOnlyThisTableOnMap()">
+                    <mat-icon>map</mat-icon> show only this table on map
+                </button>
+            </mat-card-subtitle>
+            -->
+
+        </mat-card-header>
+
+        <mat-card-content>
+            <div>
+                {{tableSelection.tableDescr}}
+            </div>
+
+            <div class="divWhiteSpace"></div>
+
+            <!--div>
+                <button mat-stroked-button (click)="checkByClick()"> huidige waarde 'otherTableSelection' (in console)</button>
+            </div-->
+
+            <!--
+            <div>aantal opties: {{tableSelectOptions.length}}</div>
+            <div class="divWhiteSpace"></div>
+
+            <div>{{tables | json}}</div>
+
+            f_description
+            f_resource
+
+            <mat-form-field>
+                <mat-label>Table</mat-label>
+                <mat-select [(value)]="tableSelection.tableName">
+                    <mat-option>First option</mat-option>
+                    <mat-option [value]="table.f_resource" *ngFor="let table of tables" class="optionTwoLines"><div class="optionLine1">{{table.f_resource}}: </div><div class="optionLine2">{{table.f_description}}</div></mat-option>
+                </mat-select>
+            </mat-form-field>
+            -->
+
+
+            <!--
+            <mat-form-field *ngIf="availableRegionLevels.length > 0  &&  tableSelection.tableYear != '-1'">
+            -->
+            <mat-form-field>
+                <mat-label *ngIf="tableSelection.tableId === 0">Select region Level</mat-label>
+                <!--
+                <mat-select [(value)]="tableSelection.tableRegionLevel" (valueChange)="setTableSources()" [disabled]="tableSelection.tableId === 1  ||  tableSelection.tableName !== ''">
+                <mat-select [(value)]="tableSelection.tableRegionLevel" (valueChange)="regionLevelChanged()" [disabled]="tableSelection.tableId === 1">
+                -->
+                <mat-select *ngIf="tableSelection.tableId === 0" [(value)]="tableSelection.tableRegionLevel" (valueChange)="regionLevelChanged()">
+                    <!--mat-option value="-1">--clear--</mat-option-->
+                    <mat-option [value]="regionLevel" *ngFor="let regionLevel of availableRegionLevels">{{regionLevel}} - <i>{{regionLevelsText[regionLevel]}}</i></mat-option>
+                </mat-select>
+                <mat-hint *ngIf="tableSelection.tableId === 0">0: countries / 1: large regions / 2: base regions / 3: small regions</mat-hint>
+
+                <mat-label *ngIf="tableSelection.tableId === 1">Region Level</mat-label>
+                <input matInput type="text" *ngIf="tableSelection.tableId === 1" readonly [value]="(tableSelection.tableRegionLevel !== '-1' ? tableSelection.tableRegionLevel : '')" [disabled]="true">
+                <mat-hint *ngIf="tableSelection.tableId === 1">(filled automatically)</mat-hint>
+            </mat-form-field>
+
+
+
+            <!--
+            input attributes:
+                       [disabled]="tableSelectOptions.length === 0"
+
+            -->
+            <mat-form-field *ngIf="tableSelection.tableRegionLevel !== '-1'">
+                <mat-label>Select table ({{tableSelectOptions.length}} options)</mat-label>
+                <input type="text"
+                       [placeholder]="'Select table \'' + tableSelection.tableFunction + '\' (' + (tableId+1).toString() + ')'"
+                       aria-label="Select table"
+                       matInput
+                       [formControl]="tableSelectFormControl"
+                       [matAutocomplete]="auto"
+                       [value]="tableSelection.tableName"
+                >
+                <!--mat-hint>{{tableSelection.tableDescr}}</mat-hint-->
+                <button mat-icon-button matSuffix type="button" [disabled]="this.tableSelection.tableName === ''" color="primary" (click)="tableSelectClearSelectedOption(auto)" [attr.aria-label]="'Clear'"><mat-icon>backspace</mat-icon></button>
+                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="tableSelectOption($event.option.value)" [displayWith]="displayTableSelectOption">
+                    <mat-option *ngFor="let option of tableSelectFilteredOptions | async" [value]="option">
+                        <div class="optionLine1">{{option.f_description}}</div>
+                        <div class="optionLine2">{{option.f_resource}}</div>
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-hint  *ngIf="this.tableSelection.tableName !== ''">This table is available at region level(s): {{availableRegionLevelsForTable}}</mat-hint>
+            </mat-form-field>
+
+
+            <!--
+            <mat-form-field *ngIf="availableYears.length > 0">
+            -->
+            <mat-form-field *ngIf="availableYears.length > 0">
+                <mat-label *ngIf="tableSelection.tableId === 0">Select year</mat-label>
+                <!--
+                <mat-select [(value)]="tableSelection.tableYear" (valueChange)="setAvailableRegionLevelsForYear()" [disabled]="tableSelection.tableId === 1"> --><!--  [disabled]="tableSelection.tableId === 1" -->
+                <!--
+                <mat-select [(value)]="tableSelection.tableYear" (valueChange)="getFieldsForTableForYearAndRegionLevel()" [disabled]="tableSelection.tableId === 1"> --> <!--  [disabled]="tableSelection.tableId === 1" -->
+                <mat-select *ngIf="tableSelection.tableId === 0" [(value)]="tableSelection.tableYear" (valueChange)="getFieldsForTableForYearAndRegionLevel()">
+                    <!--mat-option value="-1">--clear--</mat-option-->
+                    <mat-option [value]="year" *ngFor="let year of availableYears">{{year}}</mat-option>
+                </mat-select>
+
+                <mat-label *ngIf="tableSelection.tableId === 1">Year</mat-label>
+                <input matInput type="text" *ngIf="tableSelection.tableId === 1" readonly [value]="(tableSelection.tableYear !== '-1' ? tableSelection.tableYear : '')" [disabled]="true">
+                <mat-hint  *ngIf="tableSelection.tableId === 1">(filled automatically)</mat-hint>
+            </mat-form-field>
+            <div *ngIf="availableYears.length > 0"><div class="textSmall">Available years: <i>{{availableYears.join(', ')}}</i></div><div class="divWhiteSpace"></div></div>
+
+
+            <!--
+            <mat-form-field *ngIf="availableRegionLevels.length > 0  &&  tableSelection.tableYear != '-1'">
+                <mat-label>Select Region Level</mat-label>
+                <mat-select [(value)]="tableSelection.tableRegionLevel" (valueChange)="getFieldsForTableForYearAndRegionLevel()" [disabled]="tableSelection.tableId === 1">
+                    <mat-option [value]="regionLevel" *ngFor="let regionLevel of availableRegionLevels">{{regionLevel}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            -->
+
+            <div *ngIf="availableColumnValues.length > 0">
+                <b>Value filters</b>
+                &nbsp;
+                <button mat-stroked-button (click)="tableSelectClearChosenColumnValues()"><mat-icon>filter_alt_off</mat-icon> clear value filters</button>
+            </div>
+            <div class="divWhiteSpace"></div>
+
+
+            <mat-form-field *ngFor="let columnValue of availableColumnValues; let partId = index;">
+                <mat-label>{{ (tableSelection.tableColumnValues[columnValue.field] === '' ? 'Select ' : '') + columnValue.field_label }}</mat-label>
+                <!-- mat-select [(value)]="selectedColumnValues[columnValue.field]" -->
+                <!-- mat-select [(value)]="tableSelection.tableColumnValues[columnValue.field]" (valueChange)="checkTableValueSelectionComplete()" -->
+
+                <!--
+                OLD VERSION:
+                <mat-select [(value)]="tableSelection.tableColumnValues[columnValue.field]" (valueChange)="changedColumnValue(columnValue.field)">
+                    <mat-option [value]="partValue.value" *ngFor="let partValue of columnValue.field_values">{{partValue.label}}</mat-option>
+                </mat-select>
+                <button mat-icon-button matSuffix *ngIf="!availableColumnValuesWithInitiallyOneChoice.includes(columnValue.field)" type="button" color="primary" (click)="tableSelectClearChosenColumnValue(columnValue.field)" [attr.aria-label]="'Refresh/Clear'" [disabled]="tableSelection.tableColumnValues[columnValue.field] === ''"><mat-icon>replay</mat-icon></button>
+                -->
+
+
+
+
+                <!-- NEW VERSION: -->
+                <!--
+                <mat-select *ngIf="tableSelection.tableColumnValues[columnValue.field] === ''  ||  columnValue.field_values.length > 1" [(value)]="tableSelection.tableColumnValues[columnValue.field]" (valueChange)="changedColumnValue(columnValue.field)">
+                -->
+                <mat-select *ngIf="tableSelection.tableColumnValues[columnValue.field] === ''" [(value)]="tableSelection.tableColumnValues[columnValue.field]" (valueChange)="changedColumnValue(columnValue.field)">
+                    <mat-option [value]="partValue.value" *ngFor="let partValue of columnValue.field_values">{{partValue.label}}</mat-option>
+                </mat-select>
+
+                <!--
+                <input matInput type="hidden" *ngIf="tableSelection.tableColumnValues[columnValue.field] !== ''  &&  columnValue.field_values.length === 1" readonly [value]="tableSelection.tableColumnValues[columnValue.field]">
+                -->
+                <input matInput type="hidden" *ngIf="tableSelection.tableColumnValues[columnValue.field] !== ''" readonly [value]="tableSelection.tableColumnValues[columnValue.field]">
+
+                <!--
+                <span *ngIf="tableSelection.tableColumnValues[columnValue.field] !== ''  &&  columnValue.field_values.length === 1">
+                -->
+                <span *ngIf="tableSelection.tableColumnValues[columnValue.field] !== ''">
+                    <!-- -->
+                    <span *ngFor="let partValue of columnValue.field_values">
+                        <input matInput type="text" *ngIf="tableSelection.tableColumnValues[columnValue.field] === partValue.value" readonly [value]="partValue.label">
+                    </span>
+                    <!-- -->
+                    <!--
+                    <input matInput type="text" *ngFor="let partValue of columnValue.field_values" readonly [value]="partValue.label">
+                    -->
+                </span>
+                <button mat-icon-button matSuffix type="button" *ngIf="!availableColumnValuesWithInitiallyOneChoice.includes(columnValue.field)  &&  tableSelection.tableColumnValues[columnValue.field] !== ''" type="button" color="primary" (click)="tableSelectClearChosenColumnValue(columnValue.field)" [attr.aria-label]="'Clear'"><mat-icon>backspace</mat-icon></button>
+
+            </mat-form-field>
+
+
+
+            <!-- div class="json_preview">
+                <pre>{{tableSelection.tableColumnValues | json}}</pre>
+            </div -->
+
+
+            <!-- div>alle waarden geselecteerd? <b>{{( (Object.values(tableSelection.tableColumnValues).length === availableColumnValues.length  &&  !(Object.values(tableSelection.tableColumnValues).includes(""))   &&  Object.values(tableSelection.tableColumnValues).length > 0 ) ? 'JA': 'NEE')}}</b></div -->
+            <!--
+            <div>Selection complete? <b>{{ (tableSelection.tableSelectionComplete ? 'YES' : 'no') }}</b></div>
+            -->
+
+
+            <!--
+            <button mat-stroked-button type="button" [disabled]="!tableSelection.tableSelectionComplete" (click)="showOnlyThisTableOnMap()" class="buttonFullWidth">
+                <mat-icon>map</mat-icon> show only this table on map
+            </button>
+            -->
+
+
+            <!--
+            <div *ngIf="tableSelection.tableSelectionComplete">
+              <button mat-stroked-button type="button" (click)="showOnlyThisTableOnMap()">
+                <mat-icon>map</mat-icon> show only this table on map
+              </button>
+
+            </div>
+            <br/>
+            <div  *ngIf="tableSelection.tableSelectionComplete && tableId===1 && inputOtherTableSelection.tableSelectionComplete === true">
+              <button mat-raised-button type="button" (click)="showBivariateMap()" color="primary">
+                <mat-icon>scatter_plot</mat-icon>Bivariate map
+              </button>
+            </div>
+            -->
+            <!--div class="json_preview">
+                <pre>{{availableColumnValues | json}}</pre>
+            </div-->
+
+        </mat-card-content>
+
+        <!--div class="selection-cell-map"><div class="selection-cell-map-container" [id]="('map_' + tableId.toString())"></div></div-->
+
+    </mat-card>
+</div>

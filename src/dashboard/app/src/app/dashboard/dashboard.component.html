@@ -1,0 +1,153 @@
+<div class="version_update" *ngIf="versionChecker.showUpdateDiv" xmlns="http://www.w3.org/1999/html">
+    <div class="buttonsCentered version_bold" id="updateVersion">New version available:<br>{{versionChecker.appVersionAndBuildLatest}}<br><button mat-raised-button color="primary" aria-label="Update to newest version" (click)="versionChecker.updateAppVersionAndBuild()"><mat-icon>update</mat-icon> update to newest version</button></div>
+    <div class="buttonsCentered version_small" id="currentVersion">Current version: {{versionChecker.appVersionAndBuildCurrent}}</div>
+</div>
+<div class="pageContainerDivNoPadding">
+
+    <mat-drawer-container id="matDrawerContainer" class="container-main" autosize  hasBackdrop="false">
+
+        <!-- PANEL PART -->
+        <mat-drawer #drawer class="container-panel mat-app-background" mode="side" position="start" id="drawerRight" [(opened)]="panelOpen" (openedChange)="panelLeftStatusChange()">
+
+            <div id="drawer_selection_part">
+
+                <div class="selection-table">
+                    <!--
+                    <app-select-table-value *ngFor="let tableSelection of displayObject.tableFields; let tableId = index;" [inputTableSelection]="tableSelection" [inputTableId]="tableId"></app-select-table-value>
+                    -->
+
+                    <!--
+                    <div class="leftPanelTopButtons">
+                        <button [disabled]="checkShowOnMapDisabled()" mat-stroked-button color="primary" aria-label="TEST" (click)="showBivariateMap()">
+                            <mat-icon>map</mat-icon> Show on map
+                        </button>
+                    -->
+
+                        <!--
+                        <a [disabled]="displayObject.displayData.length < 1" mat-stroked-button type="button" (click)="downloadCSV()" download="download.csv" [href]="downloadUrl">
+                        -->
+                    <!--
+                        <a [disabled]="displayData?.length < 1" mat-stroked-button type="button" (click)="downloadCSV()" download="download.csv" [href]="downloadUrl">
+                            <mat-icon>download</mat-icon>Download csv
+                        </a>
+                    -->
+
+                        <!--
+                        <button *ngIf="useCase > -1" mat-stroked-button aria-label="Clear case study" routerLink="/">
+                            <mat-icon>delete</mat-icon> clear case study
+                        </button>
+                        -->
+                    <!--
+                    </div>
+                    -->
+
+                    <div *ngIf="useCase > -1" class="useCaseInfo">
+                        <!--
+                        <div>
+                            Use case {{useCase}}: "<b>{{useCaseDescr}}</b>" (variant {{useCaseVariant}})
+                        </div>
+                        <div [innerHTML]="useCaseDescrLong"></div>
+                        -->
+
+                        <div class="divCentered">
+                            <span class="textWithMiniFabButton">Showing case study {{useCase}} </span>
+                            <button mat-mini-fab color="primary" aria-label="Clear case study" routerLink="/" matTooltip="Clear case study" class="textWithMiniFabButton"><mat-icon>clear</mat-icon></button>
+                            <!--
+                            <button mat-raised-button aria-label="Clear case study" routerLink="/">
+                                <mat-icon>delete</mat-icon> clear case study
+                            </button>
+                            -->
+                        </div>
+                    </div>
+
+                    <!-- div>
+                        <mat-card>
+                            <mat-form-field>
+                                <mat-label>Case study</mat-label>
+                                <mat-select [(value)]="useCase" (valueChange)="updateUseCase()">
+                                    <mat-option value="-1">CLEAR</mat-option>
+                                    @for (option of [1,2,3,4,5,6]; track option) {
+                                        <mat-option [value]="option">Case study {{option}}</mat-option>
+                                    }
+                                </mat-select>
+                            </mat-form-field>
+                        </mat-card>
+                        {{useCase}}
+                    </div -->
+
+
+                    <!--
+                    Toevoegen onderstaande regel in witte stuk onder inputTableId=0 zorgt voor eindeloos flikkeren van tabel-selecties ...
+                                            [inputOtherTableSelection]="displayObject.tableFields[1]"
+                    -->
+                    <app-select-table-value [inputTableSelection]="displayObject.tableFields[0]"
+                                            [inputTableId]="0"
+                                            [inputUseCase]="useCase" [inputUseCaseData]="useCaseData"
+                                            [region]="displayObject.tableFields[0].tableRegionLevel"
+
+                                            (updateTableValueFromSelect)="updateTableFieldFromSelect($event)"  >
+                    </app-select-table-value>
+                    <app-select-table-value *ngIf="displayObject.tableFields.length > 1" [inputTableSelection]="displayObject.tableFields[1]"
+                                            [inputTableId]="1"
+                                            [inputUseCase]="useCase" [inputUseCaseData]="useCaseData"
+                                            [inputOtherTableSelection]="displayObject.tableFields[0]"
+                                            (updateTableValueFromSelect)="updateTableFieldFromSelect($event)"  >
+                    </app-select-table-value>
+                </div>
+
+                <!--
+                <div *ngIf="displayObject.displayData.length > 1" class="buttonsMargin">
+                    <a mat-raised-button type="button" (click)="downloadCSV()" color="secondary" download="download.csv" [href]="downloadUrl">
+                        <mat-icon>download</mat-icon>Download csv
+                    </a>
+                </div>
+                -->
+
+                <div class="json_preview" *ngIf="showDevInfo">
+                    <pre>{{displayObject | json}}</pre>
+                </div>
+
+            </div>
+            <div id="drawer_button_part">
+                <div class="buttonsNoDistanceBetween" *ngIf="displayObject.formType === 'bivariate'">
+                    <!--
+                    <button [disabled]="!displayObject.tableFields[0].tableSelectionComplete" mat-stroked-button color="primary" aria-label="TEST" (click)="updateTableFieldFromSelect(displayObject.tableFields[0])" class="buttonHalfWidth">
+                    -->
+                    <button [disabled]="!displayObject.tableFields[0].tableSelectionComplete" mat-stroked-button color="primary" aria-label="TEST" (click)="showUnivariateMap(0)" class="buttonHalfWidth">
+                        <mat-icon>map</mat-icon> Show <i>only Predictor</i> on map
+                    </button>
+                    <button [disabled]="!displayObject.tableFields[1].tableSelectionComplete" mat-stroked-button color="primary" aria-label="TEST" (click)="showUnivariateMap(1)" class="buttonHalfWidth">
+                        <mat-icon>map</mat-icon> Show <i>only Outcome </i> on map
+                    </button><br>
+                    <button [disabled]="checkShowOnMapDisabled()" mat-stroked-button color="primary" aria-label="TEST" (click)="showBivariateMap()" class="buttonFullWidth">
+                        <mat-icon>map</mat-icon> Show bivariate data on map
+                    </button><br>
+                </div>
+                <div class="buttonsNoDistanceBetween" *ngIf="displayObject.formType === 'choropleth'">
+                    <button [disabled]="!displayObject.tableFields[0].tableSelectionComplete" mat-stroked-button color="primary" aria-label="TEST" (click)="showUnivariateMap(0)" class="buttonFullWidth">
+                        <mat-icon>map</mat-icon> Show data on map
+                    </button><br>
+                </div>
+                <a [disabled]="displayData?.length < 1" mat-stroked-button type="button" color="primary" (click)="downloadCSV()" [download]="downloadFileName" [href]="downloadUrl" class="buttonFullWidth">
+                    <mat-icon>download</mat-icon>Download mapped data as csv
+                </a>
+
+            </div>
+
+        </mat-drawer>
+
+        <!-- OUTSIDE PANEL PART -->
+        <mat-drawer-content id="matDrawerContent">
+            <div class="panelToggleContainerLeft">
+                <button (click)="panelToggle()" class="panelToggleContainerButtonLeft"  *ngIf="panelOpen"></button>
+                <button (click)="panelToggle()" class="panelToggleContainerButtonRight" *ngIf="!panelOpen"></button>
+            </div>
+            <div class="drawerContentMapContainer">
+              <app-result-map [inputDisplayObject]="displayObject" [inputDisplayData]="displayData" [inputDisplayDataUpdated]="displayDataUpdated"></app-result-map>
+            </div>
+        </mat-drawer-content>
+
+
+    </mat-drawer-container>
+
+</div>
