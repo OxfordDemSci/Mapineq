@@ -1,0 +1,11 @@
+AuthType Basic
+AuthName "Prototype Mapineq"
+AuthUserFile /var/www/html/mapineq_dashboard_dev/.htpasswd
+Require valid-user
+
+RewriteEngine On
+# RewriteBase /APP_DIR_NAME_ON_SERVER
+RewriteRule ^index\.html$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . ./index.html [L]
