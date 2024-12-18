@@ -11,7 +11,7 @@ services:
     volumes:
       - mapineq-db:/db/data
       - ./postgresql.conf:/db/postgresql.conf
-      - ./scripts/:/docker-entrypoint-initdb.d/
+      - ./db-init/:/docker-entrypoint-initdb.d/
     ports:
       - "5432:5432"
     command: [ "postgres", "-c", "config_file=/db/postgresql.conf" ]
