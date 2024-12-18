@@ -1,14 +1,19 @@
 #!/bin/bash
 
 # creates a local backup of remote SQL database using the pg_dump utility
-# restore using:  pg_restore -Fc --clean --host=localhost --username=postgres --dbname=dgg /research/backup/mapineq_db/mapineq.dump
+# restore using:  pg_restore -Fc --clean --host=db_host --username=db_user --dbname=db_database /backup/mapineq.dump
 
 # backup directory
-base_dir=~/home/doug/ndph/J/backup/mapineq_db
+base_dir=$1
 past_backups=($(ls ${base_dir}))
 current_date=$(date +"%Y%m%d")
 backup_dir=${base_dir}/${current_date}
 dump_file=${backup_dir}/mapineq.dump
+
+# database details
+db_host=$2
+db_user=$3
+db_database=$4
 
 # make directory
 mkdir -p ${backup_dir}
@@ -18,7 +23,7 @@ log_file=${backup_dir}/log.txt
 printf "[`date +'%Y-%m-%d %H:%M:%S'`] ${dump_file}\n" >> ${log_file}
 
 # remote dump
-/usr/lib/postgresql/15/bin/pg_dump -h 15.236.82.244 -U postgres -Fc mapineq > ${dump_file}
+pg_dump -h ${db_host} -U ${db_user} -Fc ${db_database} > ${dump_file}
 
 # compress
 printf "[`date +'%Y-%m-%d %H:%M:%S'`] Compressing (gzip)\n" >> ${log_file}
