@@ -1,0 +1,70 @@
+<html>
+
+<head>
+
+<title>TEST map and filter null vs zero values</title>
+
+
+
+<script>
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+
+
+	runTest();
+}); // END EVENT  'DOMContentLoaded'
+
+
+function runTest() {
+	console.log('runTest() ...');
+	
+	let regionValues = [{x: 0}, {x: null}, {x: "0"}, {x: 1}, {x: -1}, {x: 0.001}, {x: -0.001}, {x: 0.0}, {x: 00}];
+	
+	console.log('number / string / string double quotes	:', 0, '0', "0");
+	
+	
+	console.log(' = = = = TEST 1: ', regionValues, regionValues.map((item) => Number(item.x)).filter(Number) );
+	console.log(' = = = = TEST 2: ', regionValues, regionValues.map((item) =>
+	{
+		console.log('item.x:', item.x, Number(item.x), Number(0), Number(null), item.x === null, item.x !== null, null !== null);
+		item.x;
+	}).filter(Number));
+	
+	console.log(' = = = = TEST 3: ', regionValues, regionValues.map((item) => Number(item.x)).filter( mappedValue => {mappedValue !== null}) );
+	console.log(' = = = = TEST 4: ', regionValues, regionValues.map((item) => Number(item.x)) );
+	console.log(' = = = = TEST 5: ', regionValues, regionValues.map((item) => Number(item.x).toString()) );
+	console.log(' = = = = TEST 6: ', regionValues, regionValues.map((item) => Number(item.x).toString()).filter( mappedValue => {mappedValue !== null}) );
+
+
+	console.log(' = = = = TEST 7: ', regionValues, regionValues.map((item) => item.x) );
+	console.log(' = = = = TEST 8: ', 
+		regionValues, 
+		regionValues.map((item) => item.x ).filter(
+		//regionValues.map((item) => Number(item.x) ).filter(
+				mappedValue => {
+					console.log('check:', typeof(mappedValue), Number(mappedValue), mappedValue === null, mappedValue === 0);
+					if (mappedValue === 0) {
+						return '0';
+					} else {
+						return mappedValue;
+					}
+				}		
+			)
+	);
+	console.log(' = = = = TEST 9: ', regionValues, regionValues.map( (item) => item.x ).filter( mappedValue => (mappedValue === 0 ? '0' : mappedValue) ) );
+
+} // END FUNCTION runTest
+
+
+
+</script>
+
+
+
+</head>
+<body>
+<h1>TEST map and filter null vs zero values</h1>
+
+</body>
