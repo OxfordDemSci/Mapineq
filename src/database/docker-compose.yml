@@ -1,29 +1,21 @@
-version: "3.3"
-
 services:
 
   mapineq_postgres:
     container_name: mapineq_db
-    build: ./sql/
-    image: mapineq_postgis
+    image: mapineq_postgres
     env_file: .env
     shm_size: '1gb'
     build:
       dockerfile: ./Dockerfile
-      context: ./sql/
+      context: ./
     volumes:
       - mapineq-db:/db/data
-      - ./sql/postgresql.conf:/db/postgresql.conf
-      - ./sql/init_data:/var/lib/postgresql/init_data
-      - ./sql/db-init.sh:/docker-entrypoint-initdb.d/db-init.sh
-    networks:
-      - mapineq_net
+      - ./postgresql.conf:/db/postgresql.conf
+      - ./scripts/:/docker-entrypoint-initdb.d/
     ports:
       - "5432:5432"
+    command: [ "postgres", "-c", "config_file=/db/postgresql.conf" ]
     restart: unless-stopped
 
 volumes:
   mapineq-db:
-
-networks:
-  mapineq_net:
