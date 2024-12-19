@@ -1,4 +1,4 @@
-# Mapineq Link: Diverse Data for Inequality Action
+# Mapineq Link: Spatial Data for Inequality Research
 
 ![Mapineq logo](./mapineq_logo_bw_rgb.png)
 
@@ -46,7 +46,7 @@ This repository is made available under the terms of a [GNU General Public Licen
 
 ## Suggested Citation
 
-Leasure DR, van Ruler N, de Jong S, Lassche R, Ao X, Lambert T, Schoof G, Mills MM. 2025. Mapineq Link Open Source: Diverse Data for Inequality Action v1.0.0. [https://github.com/OxfordDemSci/Mapineq](https://github.com/OxfordDemSci/Mapineq). doi:XXXX
+Leasure DR, van Ruler N, de Jong S, Lassche R, Ao X, Lambert T, Schoof G, Mills MM. 2025. Mapineq Link: Spatial Data for Inequality Research, v1.0.0. [https://github.com/OxfordDemSci/Mapineq](https://github.com/OxfordDemSci/Mapineq). doi:XXXX
 
 ## Acknowledgements
 This MapIneq project is funded by the European Union’s Horizon Europe Research and Innovation programme (202061645) and the MapineqLink database and dashboard received additional support from the Leverhulme Trust (RC-2018-003) via the [Leverhulme Centre for Demographic Science](https://demography.ox.ac.uk) at the University of Oxford. 
