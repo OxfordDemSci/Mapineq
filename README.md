@@ -1,4 +1,4 @@
-# Mapineq Link Open Source: Diverse Data for Inequality Action
+# Mapineq Link: Diverse Data for Inequality Action
 
 ![Mapineq logo](./mapineq_logo_bw_rgb.png)
 
