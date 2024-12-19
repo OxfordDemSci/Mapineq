@@ -2,6 +2,7 @@ export class DisplayTableValueObject {
     tableId: number;
     tableName: string;
     tableDescr: string;
+    tableShortDescr: string;
     tableFunction: string;
     tableYear: string;
     tableRegionLevel: string;
@@ -19,6 +20,7 @@ export class DisplayTableValueObject {
         this.tableId = index;
         this.tableName = '';
         this.tableDescr = '';
+        this.tableShortDescr = '';
         this.tableFunction = '';
         this.tableYear = '-1';
         this.tableRegionLevel = '-1';

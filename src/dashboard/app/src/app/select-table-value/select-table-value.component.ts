@@ -453,7 +453,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     this.tableSelection.tableName = selectedOption.f_resource;
     this.tableSelection.tableDescr = selectedOption.f_description;
-
+    this.tableSelection.tableShortDescr = selectedOption.f_short_description;
     this.tableSelection.lastTableName = this.tableSelection.tableName;
 
     // this.emitChangeTableValue();
