@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build src/dashboard/app --file Dockerfile --tag registry.webhosting.rug.nl/mapineq/mapineqfrontend:latest
+      run: docker build ./src/dashboard/app --file Dockerfile --tag registry.webhosting.rug.nl/mapineq/mapineqfrontend:latest
     - name: push image to registry
       run: |
           docker login -u p149377  -p ${{ secrets.REGISTRY_PASSWORD }}
