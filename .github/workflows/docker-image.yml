@@ -18,5 +18,5 @@ jobs:
       run: docker build ./src/dashboard/app --tag registry.webhosting.rug.nl/mapineq/mapineqfrontend:latest
     - name: push image to registry
       run: |
-          docker login -u p149377  -p ${{ secrets.REGISTRY_PASSWORD }}
+          docker login -u p149377  -p ${{ secrets.REGISTRY_PASSWORD }} registry.webhosting.rug.nl
           docker push registry.webhosting.rug.nl/mapineq/mapineqfrontend:latest
