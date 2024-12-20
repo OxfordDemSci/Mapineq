@@ -1,13 +1,11 @@
 name: Build Docker image and push to registry
 
 on:
- 
   push:
     branches: [ "dev" ]
   
 
 jobs:
-
   build:
 
     runs-on: ubuntu-latest
