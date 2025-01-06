@@ -48,9 +48,6 @@
             </div>
             <div id="drawer_button_part">
                 <div class="buttonsNoDistanceBetween" *ngIf="displayObject.formType === 'bivariate'">
-                    <!--
-                    <button [disabled]="!displayObject.tableFields[0].tableSelectionComplete" mat-stroked-button color="primary" aria-label="TEST" (click)="updateTableFieldFromSelect(displayObject.tableFields[0])" class="buttonHalfWidth">
-                    -->
                     <button [disabled]="!displayObject.tableFields[0].tableSelectionComplete" mat-stroked-button color="primary" aria-label="Show only Predictor on map" (click)="showUnivariateMap(0)" class="buttonHalfWidth">
                         <mat-icon>map</mat-icon> Show <i>only Predictor</i> on map
                     </button>

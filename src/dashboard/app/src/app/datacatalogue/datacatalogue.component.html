@@ -46,12 +46,8 @@
                                 </a>
                             </mat-card-subtitle>
                         </mat-card-header>
-                        <!--
-                        <img mat-card-image src="assets/img/preview{{ result.f_levels===null ? 3 : (1 + JSON.parse(result.f_levels)[0]) }}.png" alt="Example map" >
-                        -->
                         <img mat-card-image src="assets/img/preview_level_{{ getMaxRegionLevel(result.f_levels) }}.png" alt="Max level ({{getMaxRegionLevel(result.f_levels)}}) example map" >
                         <mat-card-content class="mat_card_content">
-                            <!--div>{{ result.f_levels===null ? 99999 : (JSON.parse(result.f_levels)[0]) }} - {{getMaxRegionLevel(result.f_levels)}}</div -->
 
                             <div>
                                 {{result.f_description}}
