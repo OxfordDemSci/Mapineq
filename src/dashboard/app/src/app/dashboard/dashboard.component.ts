@@ -203,20 +203,11 @@ export class DashboardComponent implements OnInit{
         this.dashboardFeatureService.getUseCase(this.useCase).subscribe((data) => {
             console.log('showUseCase()', this.useCase, this.useCaseVariant, data);
             if (data[0].f_parameters !== null) {
-                /*   SJO dd 20241129
-                console.log('number of variants: ', JSON.parse(data[0].f_parameters).length);
-                */
                 console.log('number of variants: ', data[0].f_parameters.length);
 
-                /* SJO dd 20241129
-                if (this.useCaseVariant >= JSON.parse(data[0].f_parameters).length) {
-                */
                 if (this.useCaseVariant >= data[0].f_parameters.length) {
                     this.useCaseVariant = 0;
                 }
-                /*  SJO dd 20241129
-                this.useCaseData = JSON.parse(data[0].f_parameters)[this.useCaseVariant];
-                */
                 this.useCaseData = data[0].f_parameters[this.useCaseVariant];
 
             }
@@ -230,16 +221,6 @@ export class DashboardComponent implements OnInit{
 
             document.getElementById('mapTitle').innerHTML = this.useCaseDescr;
             document.getElementById('mapSubTitle').innerHTML = this.useCaseDescrLong;
-
-            // console.log('data[0].f_parameters=', JSON.parse(data[0].f_parameters));
-
-            //this.displayObject.tableFields = JSON.parse(data[0].f_parameters);
-            //this.displayObject = new DisplayObject({displayType: 'bivariate', formType: "bivariate",
-            //    numberTableFields: 2,tableFields:JSON.parse(data[0].f_parameters)});
-
-            // this.updateTableFieldFromSelect(JSON.parse(data[0].f_parameters)[0])
-            // this.displayObject.displayTableId = 0;
-            // this.updateTableFieldFromSelect(JSON.parse(data[0].f_parameters)[1])
 
 
         });
@@ -326,7 +307,6 @@ export class DashboardComponent implements OnInit{
                 this.collectDataForSelection(tableId);
                 // SJOERD: tijdelijk UIT gezet
             } else {
-                // this.displayObject['displayData'] = [];
                 this.displayData = [];
                 this.displayDataUpdated = !this.displayDataUpdated;
             }
@@ -423,7 +403,6 @@ export class DashboardComponent implements OnInit{
                         //console.log('before abc    NET VOOR AANROEP getXYData (bivariate versie)');
                         this.dashboardFeatureService.getXYData(this.displayObject.tableFields[0].tableRegionLevel, this.displayObject.tableFields[0].tableYear, JSON.stringify(x_json), JSON.stringify(y_json)).subscribe(data => {
                             //console.log('before abc    A. DISPLAY DATA COLLECTED! (bivariate)', data);
-                            // this.displayObject['displayData'] = data;
                             this.displayData = data;
                             this.displayDataUpdated = !this.displayDataUpdated;
                         });
@@ -445,7 +424,6 @@ export class DashboardComponent implements OnInit{
                         console.log('NET VOOR AANROEP getXData (UNI versie)');
                         this.dashboardFeatureService.getXData(this.displayObject.tableFields[tableId].tableRegionLevel, this.displayObject.tableFields[tableId].tableYear, JSON.stringify(x_json)).subscribe(data => {
                             //console.log('before abc    B. DISPLAY DATA COLLECTED! (univariate)', data);
-                            // this.displayObject['displayData'] = data;
                             this.displayData = data;
                             this.displayDataUpdated = !this.displayDataUpdated;
                         });
@@ -469,7 +447,6 @@ export class DashboardComponent implements OnInit{
     downloadCSV() {
 
         //this.displayObject.displayData;
-        // let csv = this.createCSV(this.displayObject.displayData);
         let csv = this.createCSV(this.displayData);
         const blob = new Blob([csv], { type: 'text/csv' });
 

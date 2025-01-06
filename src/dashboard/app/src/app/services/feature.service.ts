@@ -9,7 +9,6 @@ import config from '../../assets/config.json';
 })
 export class FeatureService {
 
-  // https://mapineqfeatures.web.rug.nl/collections/pgtileserv.nrbirths/items.json?filter=NUTS_ID=%27NL12%27&properties=year,entity&limit=100
   baseUrl: string = '';
 
 
@@ -101,21 +100,6 @@ export class FeatureService {
         }),
         catchError(this.handleError('search', 'ERROR')))
 
-    /*
-    if (use_case > -1) {
-      return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_year_use_case/items.json?_use_case=${use_case}&limit=500`).pipe(
-          tap((result) => {
-            //console.log(result);
-          }),
-          catchError(this.handleError('search', 'ERROR')))
-    } else {
-      return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_year_use_case/items.json?limit=500`).pipe(
-          tap((result) => {
-            //console.log(result);
-          }),
-          catchError(this.handleError('search', 'ERROR')))
-    }
-    */
   }
 
 
@@ -180,10 +164,6 @@ export class FeatureService {
       catchError(this.handleError('search', 'ERROR')))
   }
 
-  //https://mapineqfeatures.web.rug.nl/functions/postgisftw.get_xy_data/items.json?_level=2&_year=2016&X_JSON=%20{%20%22source%22:%20%22DEMO_R_MAGEC%22,%20%22conditions%22:%20[%20{%22field%22:%22unit%22,%22value%22:%22NR%22},%20{%22field%22:%22sex%22,%22value%22:%22M%22},%20{%22field%22:%22freq%22,%22value%22:%22A%22},%20{%22field%22:%22age%22,%22value%22:%22TOTAL%22}%20]%20}&Y_JSON=%20{%22source%22:%20%22DEMO_R_FIND2%22,%20%22conditions%22:%20[%20{%22field%22%20:%20%22unit%22,%20%22value%22%20:%20%22NR%22},%20{%22field%22%20:%20%22freq%22,%20%22value%22%20:%20%22A%22},%20{%22field%22%20:%20%22indic_de%22,%20%22value%22%20:%20%22TOTFERRT%22}%20]%20}&limit=1500
-  //    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_xy_data/items.json?_level=2&_year=2016&X_JSON=%20{%20%22source%22:%20%22DEMO_R_MAGEC%22,%20%22conditions%22:%20[%20{%22field%22:%22unit%22,%22value%22:%22NR%22},%20{%22field%22:%22sex%22,%22value%22:%22M%22},%20{%22field%22:%22freq%22,%22value%22:%22A%22},%20{%22field%22:%22age%22,%22value%22:%22TOTAL%22}%20]%20}&Y_JSON=%20{%22source%22:%20%22DEMO_R_FIND2%22,%20%22conditions%22:%20[%20{%22field%22%20:%20%22unit%22,%20%22value%22%20:%20%22NR%22},%20{%22field%22%20:%20%22freq%22,%20%22value%22%20:%20%22A%22},%20{%22field%22%20:%20%22indic_de%22,%20%22value%22%20:%20%22TOTFERRT%22}%20]%20}&limit=1500`).pipe(
-  //Unemployment Life expectancy
-  //https://mapineqfeatures.web.rug.nl/functions/postgisftw.get_xy_data/items.json?_level=2&_year=2018&X_JSON={%22source%22:%22TGS00010%22,%22conditions%22:[{%22field%22:%22isced11%22,%22value%22:%22TOTAL%22},{%22field%22:%22unit%22,%22value%22:%22PC%22},{%22field%22:%22age%22,%22value%22:%22Y_GE15%22},{%22field%22:%22sex%22,%22value%22:%22T%22},{%22field%22:%22freq%22,%22value%22:%22A%22}]}&Y_JSON={%22source%22:%22DEMO_R_MLIFEXP%22,%22conditions%22:[{%22field%22:%22unit%22,%22value%22:%22YR%22},{%22field%22:%22age%22,%22value%22:%22Y_LT1%22},{%22field%22:%22sex%22,%22value%22:%22T%22},{%22field%22:%22freq%22,%22value%22:%22A%22}]}&limit=1500
   public getRealXYData(): Observable<any> {
     return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_xy_data/items.json?_level=2&_year=2018&X_JSON={%22source%22:%22TGS00010%22,%22conditions%22:[{%22field%22:%22isced11%22,%22value%22:%22TOTAL%22},{%22field%22:%22unit%22,%22value%22:%22PC%22},{%22field%22:%22age%22,%22value%22:%22Y_GE15%22},{%22field%22:%22sex%22,%22value%22:%22T%22},{%22field%22:%22freq%22,%22value%22:%22A%22}]}&Y_JSON={%22source%22:%22DEMO_R_MLIFEXP%22,%22conditions%22:[{%22field%22:%22unit%22,%22value%22:%22YR%22},{%22field%22:%22age%22,%22value%22:%22Y_LT1%22},{%22field%22:%22sex%22,%22value%22:%22T%22},{%22field%22:%22freq%22,%22value%22:%22A%22}]}&limit=2500`).pipe(
         tap((result) => {

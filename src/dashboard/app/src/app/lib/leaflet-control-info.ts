@@ -8,21 +8,6 @@ export class LeafletControlInfo extends L.Control  {
 
 
     override onAdd(map: L.Map): any {
-        /* /
-        const mapSelectInformation = L.DomUtil.create('div') as HTMLDivElement;
-        mapSelectInformation.id = 'map_selectinformation_div';
-        mapSelectInformation.style.width = '400px';
-        mapSelectInformation.style.border = '1px solid rgba(255, 255, 255, 1)';
-        mapSelectInformation.style.cursor = 'default';
-        mapSelectInformation.style.padding = '10px';
-        mapSelectInformation.style.backgroundColor = 'rgba(255,255,255,0.85)';
-        mapSelectInformation.style.borderRadius = '5px';
-
-        L.DomEvent
-            .addListener(mapSelectInformation, 'contextmenu mousedown click dblclick', L.DomEvent.stopPropagation);
-
-        return mapSelectInformation;
-        /* */
 
         const mapInfo = L.DomUtil.create('div') as HTMLDivElement;
         mapInfo.id = 'map_info_div';
