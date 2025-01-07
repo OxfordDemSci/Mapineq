@@ -1,78 +1,21 @@
-version: "3.3"
-
 services:
-
-#  mapineq_nginx:
-#    container_name: mapineq_web
-#    image: nginx:latest
-#    volumes:
-#      - type: bind
-#        source: ./www/conf.d/nginx.conf
-#        target: /etc/nginx/conf.d/nginx.conf
-#      - type: bind
-#        source: ./www/public_html/
-#        target: /var/www/public_html/
-#    ports:
-#      - "80:80"
-#      - "443:443"
-#    networks:
-#      - mapineq_net
-#    depends_on:
-#      - mapineq_flask
-#    restart: unless-stopped
-
-
-#  mapineq_flask:
-#    container_name: mapineq_api
-#    env_file: .env
-#    build: ./api/
-#    command: gunicorn --config gunicorn.config.py wsgi:app
-#    # command: python3 -m flask run --host=0.0.0.0
-#    volumes:
-#      - type: bind
-#        source: ./api/app/static/docs.html
-#        target: /app/static/docs.html
-#    depends_on:
-#      - mapineq_postgres
-#    networks:
-#      - mapineq_net
-#    ports:
-#      - "5000:5000"
-#      - "8000:8000"
-#    restart: unless-stopped
-
-
-#  mapineq_memcached:
-#    container_name: mapineq_cache
-#    image: memcached:latest
-#    networks:
-#      - mapineq_net
-#    ports:
-#      - "11211:11211"
-#    restart: unless-stopped
 
   mapineq_postgres:
     container_name: mapineq_db
-    build: ./sql/
-    image: mapineq_postgis
+    image: mapineq_postgres
     env_file: .env
     shm_size: '1gb'
     build:
       dockerfile: ./Dockerfile
-      context: ./sql/
+      context: ./
     volumes:
       - mapineq-db:/db/data
-      - ./sql/postgresql.conf:/db/postgresql.conf
-      - ./sql/init_data:/var/lib/postgresql/init_data
-      - ./sql/db-init.sh:/docker-entrypoint-initdb.d/db-init.sh
-    networks:
-      - mapineq_net
+      - ./postgresql.conf:/db/postgresql.conf
+      - ./db-init/:/docker-entrypoint-initdb.d/
     ports:
       - "5432:5432"
+    command: [ "postgres", "-c", "config_file=/db/postgresql.conf" ]
     restart: unless-stopped
 
 volumes:
   mapineq-db:
-
-networks:
-  mapineq_net:
