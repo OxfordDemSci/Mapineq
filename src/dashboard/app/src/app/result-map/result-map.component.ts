@@ -335,8 +335,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
         let dataHtml = '';
         if (this.inputDisplayObject.displayType === 'bivariate') {
-            dataHtml += this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr) + ': ' + (regionValues.x ?? 'NO DATA').toString() + '<br>';
-            dataHtml += this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr) + ': ' + (regionValues.y ?? 'NO DATA').toString() + '<br>';
+            dataHtml += this.inputDisplayObject.tableFields[0].tableShortDescr + ': ' + (regionValues.x ?? 'NO DATA').toString() + '<br>';
+            dataHtml += this.inputDisplayObject.tableFields[1].tableShortDescr + ': ' + (regionValues.y ?? 'NO DATA').toString() + '<br>';
         } else {
             /* /
             if (event.layer.properties['nuts_id'] === 'NO042') {
@@ -450,8 +450,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
             this.plotData();
             this.childGraph.ScatterPlot({
-                'xlabel': this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr),
-                'ylabel': this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr), 'xydata': this.xydata
+                'xlabel': this.inputDisplayObject.tableFields[0].tableShortDescr,
+                'ylabel': this.inputDisplayObject.tableFields[1].tableShortDescr, 'xydata': this.xydata
             });
             this.setInfoSelections();
         } else {
@@ -478,10 +478,10 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
         html += '<tr>';
         if (this.displayInfo(0)) {
-            html += '<th>' + this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr) + '<br><i>' + this.inputDisplayObject.tableFields[0].tableName + '</i> (' + this.inputDisplayObject.tableFields[0].tableYear + ')</th>'
+            html += '<th>' + this.inputDisplayObject.tableFields[0].tableShortDescr + '<br><i>' + this.inputDisplayObject.tableFields[0].tableName + '</i> (' + this.inputDisplayObject.tableFields[0].tableYear + ')</th>'
         }
         if (this.displayInfo(1)) {
-            html += '<th>' + this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr) + '<br><i>' + this.inputDisplayObject.tableFields[1].tableName + '</i> (' + this.inputDisplayObject.tableFields[1].tableYear + ')</th>'
+            html += '<th>' + this.inputDisplayObject.tableFields[1].tableShortDescr + '<br><i>' + this.inputDisplayObject.tableFields[1].tableName + '</i> (' + this.inputDisplayObject.tableFields[1].tableYear + ')</th>'
         }
         html += '</tr>';
 
@@ -787,8 +787,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
         this.setLegend({
             'type': 'bivariate',
-            'xlabel': this.inputDisplayObject.tableFields[0].tableDescr,
-            'ylabel': this.inputDisplayObject.tableFields[1].tableDescr
+            'xlabel': this.inputDisplayObject.tableFields[0].tableShortDescr,
+            'ylabel': this.inputDisplayObject.tableFields[1].tableShortDescr
         });
 
         //console.log('nuts_ids not found', unknown);
@@ -829,8 +829,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
                 if (popupdata[properties['nuts_id']] != 'null') {
                     entity2 = popupdata[properties['nuts_id']].y;
                 }
-                content += '<div>' + this.legendLabel(this.inputDisplayObject.tableFields[0].tableDescr) + ':' + entity1 + '</div>';
-                content += '<div>' + this.legendLabel(this.inputDisplayObject.tableFields[1].tableDescr) + ':' + entity2 + '</div>';
+                content += '<div>' + this.inputDisplayObject.tableFields[0].tableShortDescr + ':' + entity1 + '</div>';
+                content += '<div>' + this.inputDisplayObject.tableFields[1].tableShortDescr  + ':' + entity2 + '</div>';
                 this.regionsLayer.setFeatureStyle(properties['nuts_id'], {
                     default: {
                         weight: 3,
@@ -996,7 +996,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
                 blockPath.setAttributeNS(null, 'fill', colorsBivariate[y.toString() + x.toString()]);
                 blockPath.setAttributeNS(null, 'd', path);
                 blockPath.setAttributeNS(null, 'title',
-                    formatString(titlesBivariate[x.toString() + y.toString()], this.legendLabel(info.xlabel), this.legendLabel(info.ylabel)));
+                    formatString(titlesBivariate[x.toString() + y.toString()], info.xlabel, info.ylabel));
 
                 blockPath.addEventListener('click', this.legendBlockMouseOver);
                 blockPath.addEventListener('mouseover', this.legendBlockMouseOver);
@@ -1029,7 +1029,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         textPredictor.setAttributeNS(null, 'font-weight', 'bold');
         textPredictor.setAttributeNS(null, 'font-size', '12px');
         textPredictor.setAttributeNS(null, 'transform', 'rotate(-45, ' + Math.floor(3 * svgWidth / 4).toString() + ', ' + Math.floor(3 * svgHeight / 4).toString() + ')');
-        textPredictor.innerHTML = this.legendLabel(info.xlabel) + ' &#11166;';
+        textPredictor.innerHTML = info.xlabel + ' &#11166;';
 
         let textOutcome = document.createElementNS(xmlns, 'text');
         containerSvg.appendChild(textOutcome);
@@ -1040,7 +1040,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         textOutcome.setAttributeNS(null, 'font-weight', 'bold');
         textOutcome.setAttributeNS(null, 'font-size', '12px');
         textOutcome.setAttributeNS(null, 'transform', 'rotate(45, ' + Math.floor(1 * svgWidth / 4).toString() + ', ' + Math.floor(3 * svgHeight / 4).toString() + ')');
-        textOutcome.innerHTML = '&#11164; ' + this.legendLabel(info.ylabel);
+        textOutcome.innerHTML = '&#11164; ' + info.ylabel;
 
 
         let textExplain0 = document.createElementNS(xmlns, 'text');
@@ -1106,7 +1106,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
         let legendValueDescrLine = document.createElement('div');
         this.mapLegendDiv.appendChild(legendValueDescrLine);
-        legendValueDescrLine.innerHTML = this.legendLabel(this.inputDisplayObject.tableFields[this.inputDisplayObject.displayTableId].tableDescr) + ':';
+        legendValueDescrLine.innerHTML = this.inputDisplayObject.tableFields[this.inputDisplayObject.displayTableId].tableShortDescr + ':';
         legendValueDescrLine.style.fontWeight = 'bold';
         legendValueDescrLine.style.marginBottom = '0.5em';
 
@@ -1189,6 +1189,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             label = textparts[0] + ' ' + textparts[1].replace('by', '');
         }
         return label;
+        //return this.displayInfo[0].
     }
 
 

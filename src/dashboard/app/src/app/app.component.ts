@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router, Event, NavigationStart, NavigationEnd, NavigationError} from "@angular/router";
+import {AppVersionAndBuildChecker} from "./lib/app-version-and-build-checker";
 
 @Component({
   selector: 'app-root',
@@ -11,6 +12,8 @@ export class AppComponent implements OnInit {
   currentRoute: string
 
   routePageTitles: any;
+
+  versionChecker: AppVersionAndBuildChecker;
 
   constructor(private router: Router) {
     this.currentRoute = '/';
@@ -44,6 +47,7 @@ export class AppComponent implements OnInit {
         console.log('NavigationError: ', event.error);
       }
     });
+    this.versionChecker = new AppVersionAndBuildChecker();
   } // END FUNCTION constructor
 
 
