@@ -24,11 +24,15 @@ The **open-access API** is available from [https://api.mapineq.org](https://api.
 
 ## Get Involved
 
-We welcome your engagement with the project! If you spot bugs or you would like to request new features or new data, please [raise an issue](https://github.com/OxfordDemSci/Mapineq/issues) in this GitHub repository. If you would like to contribute to the code, please feel free to fork the repository and submit pull requests to merge your innovative solutions to issues back into the `dev` branch of this repository. 
+We welcome your engagement with the project! If you spot bugs or you would like to request new features or new data, please [raise an issue](https://github.com/OxfordDemSci/Mapineq/issues) in this GitHub repository. If you would like to contribute to the code, please feel free to fork the repository and submit pull requests to help us resolve issues (please submit pull requests to merge into the `dev` branch of this repository). 
 
-It is relatively easy for us to import data from [EuroStat](https://ec.europa.eu/eurostat/databrowser/explore/all/all_themes?lang=en&display=list&sort=category) and [OECD](https://data-explorer.oecd.org/) into MapineqLink. If you find data that you think would be a great addition to MapineqLink, please raise an issue to let us know and be sure to provide a link to the data.
+It is relatively easy for us to import data from [EuroStat](https://ec.europa.eu/eurostat/databrowser/explore/all/all_themes?lang=en&display=list&sort=category) and [OECD](https://data-explorer.oecd.org/) into MapineqLink. If you find data that you think would be a good addition to MapineqLink, please raise an issue to let us know and be sure to provide a link to the data.
 
-If you have a great idea for other data (e.g. remote sensing, digital traces, geospatial), then please raise an issue to let us know, and we will work together to integrate these data sources where possible. Note: We can only integrate data with a license permitting this use and that contain no personal data.
+If you have an idea for other data (e.g. remote sensing, digital traces, geospatial), then please raise an issue to let us know, and we will work together to integrate these data sources where possible. Note: We can only integrate data with a license permitting this use and that contain no personal data.
+
+Here are some projects from the wider Mapineq community that you may find useful:  
+- **mapineqr**: An R package to access data from the Mapineq API and dashboard ([Kotov 2024a](https://github.com/e-kotov/mapineqr))
+- **mapineqpy**: A Python package to access data from the Mapineq API and dashboard ([Kotov 2024b](https://github.com/e-kotov/mapineqpy))
 
 ## Repository Structure
 
@@ -50,3 +54,9 @@ Leasure DR, van Ruler N, de Jong S, Lassche R, Ao X, Lambert T, Schoof G, Mills 
 
 ## Acknowledgements
 The MapIneq project is funded by the European Union’s Horizon Europe Research and Innovation programme (202061645) and the MapineqLink database and dashboard received additional support from the Leverhulme Trust (RC-2018-003) via the Leverhulme Centre for Demographic Science at the University of Oxford. Code development was a joint effort between the [Leverhulme Centre for Demographic Science](https://demography.ox.ac.uk) at the University of Oxford and [Geodienst](https://www.rug.nl/society-business/center-for-information-technology/research/services/gis/) at the University of Groningen.
+
+## Citations
+
+Kotov E. (2024a). mapineqr. Access Mapineq inequality indicators via API. doi:10.32614/CRAN.package.mapineqr [https://doi.org/10.32614/CRAN.package.mapineqr](https://doi.org/10.32614/CRAN.package.mapineqr), [https://github.com/e-kotov/mapineqr](https://github.com/e-kotov/mapineqr).  
+
+Kotov E. (2024b). mapineqpy: A Python package for accessing Mapineq API data. Available at: [https://github.com/e-kotov/mapineqpy](https://github.com/e-kotov/mapineqpy)
