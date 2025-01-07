@@ -623,6 +623,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.tableSelection.tableColumnValues = {};
 
 
+    document.getElementById('divTableDescr_' + this.tableSelection.tableId.toString()).classList.add('divLoading');
+
     this.tableSelection.lastTableYear = this.tableSelection.tableYear;
 
 
@@ -743,6 +745,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     // this.tableSelection.tableColumnValues = {};
     // this.emitChangeTableValue();
 
+    document.getElementById('divTableDescr_' + this.tableSelection.tableId.toString()).classList.add('divLoading');
+
     let sourceSelectionJson = {};
     sourceSelectionJson['year'] = this.tableSelection.tableYear;
     sourceSelectionJson['level'] = this.tableSelection.tableRegionLevel;
@@ -800,6 +804,9 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
   checkTableValueSelectionComplete() {
     //console.log('checkTableValueSelectionComplete() ...', this.tableSelection.tableId);
+
+    document.getElementById('divTableDescr_' + this.tableSelection.tableId.toString()).classList.remove('divLoading');
+
 
     this.tableSelection.checkSelectionComplete();
     if (this.tableSelection.tableSelectionComplete) {
