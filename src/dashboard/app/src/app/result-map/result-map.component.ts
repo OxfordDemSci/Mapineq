@@ -947,10 +947,15 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
         let textPredictor = document.createElementNS(xmlns, 'text');
         containerSvg.appendChild(textPredictor);
+        /*
         textPredictor.setAttributeNS(null, 'x', Math.floor(3 * svgWidth / 4).toString());
         textPredictor.setAttributeNS(null, 'y', Math.floor(3 * svgHeight / 4 - 20).toString());
-        textPredictor.setAttributeNS(null, 'fill', '#000000');
         textPredictor.setAttributeNS(null, 'text-anchor', 'middle');
+        */
+        textPredictor.setAttributeNS(null, 'x', Math.floor(2 * svgWidth / 4 + 10).toString());
+        textPredictor.setAttributeNS(null, 'y', Math.floor(3 * svgHeight / 4 - 20).toString());
+        textPredictor.setAttributeNS(null, 'text-anchor', 'start');
+        textPredictor.setAttributeNS(null, 'fill', '#000000');
         textPredictor.setAttributeNS(null, 'font-weight', 'bold');
         textPredictor.setAttributeNS(null, 'font-size', '12px');
         textPredictor.setAttributeNS(null, 'transform', 'rotate(-45, ' + Math.floor(3 * svgWidth / 4).toString() + ', ' + Math.floor(3 * svgHeight / 4).toString() + ')');
@@ -958,10 +963,15 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
         let textOutcome = document.createElementNS(xmlns, 'text');
         containerSvg.appendChild(textOutcome);
+        /*
         textOutcome.setAttributeNS(null, 'x', Math.floor(1 * svgWidth / 4).toString());
         textOutcome.setAttributeNS(null, 'y', Math.floor(3 * svgHeight / 4 - 20).toString());
-        textOutcome.setAttributeNS(null, 'fill', '#000000');
         textOutcome.setAttributeNS(null, 'text-anchor', 'middle');
+        */
+        textOutcome.setAttributeNS(null, 'x', Math.floor(2 * svgWidth / 4 - 10).toString());
+        textOutcome.setAttributeNS(null, 'y', Math.floor(3 * svgHeight / 4 - 20).toString());
+        textOutcome.setAttributeNS(null, 'text-anchor', 'end');
+        textOutcome.setAttributeNS(null, 'fill', '#000000');
         textOutcome.setAttributeNS(null, 'font-weight', 'bold');
         textOutcome.setAttributeNS(null, 'font-size', '12px');
         textOutcome.setAttributeNS(null, 'transform', 'rotate(45, ' + Math.floor(1 * svgWidth / 4).toString() + ', ' + Math.floor(3 * svgHeight / 4).toString() + ')');
