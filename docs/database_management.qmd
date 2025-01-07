@@ -125,9 +125,10 @@ datatable(df[,c("geo", "obsTime", "obsValue", "unit", "freq", "network_type", "d
 **Note:** Columns not shown: id, geo_source
 
 There are a few required columns:  
-- geo: The NUTS region ID which is required to spatially join with other data and to display on the map. The NUTS region ID encodes the geographic level as well. ISO-2 country codes are national level (NUTS-0), one additional numeric digit indicates NUTS-1, two numeric digits indicate NUTS-2, and three numeric digits indicate NUTS-3.
-- obsTime: The year or other time identifier.
-- obsValue: The observed value which, in this case, contains Ookla internet speeds summarised for each NUTS region.
+
+- **geo:** The NUTS region ID which is required to spatially join with other data and to display on the map. The NUTS region ID encodes the geographic level as well. ISO-2 country codes are national level (NUTS-0), one additional numeric digit indicates NUTS-1, two numeric digits indicate NUTS-2, and three numeric digits indicate NUTS-3.  
+- **obsTime:** The year or other time identifier.  
+- **obsValue:** The observed value which, in this case, contains Ookla internet speeds summarised for each NUTS region.
 
 All other columns (excluding **id**) will be made available as data filters in the Mapineq dashboard. 
 
