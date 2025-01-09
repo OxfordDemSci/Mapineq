@@ -457,8 +457,10 @@ export class DashboardComponent implements OnInit{
 
         let save_date = new Date();
 
-        let save_date_string = save_date.getFullYear() + '' + ('00' + (save_date.getMonth() + 1)).substr(-2) + '' + ('00' + save_date.getDate()).substr(-2);
-        save_date_string += '_' + ('00' + save_date.getHours()).substr(-2) + '' + ('00' + save_date.getMinutes()).substr(-2) + '' + ('00' + save_date.getSeconds()).substr(-2);
+        let save_date_string = save_date.getFullYear() + '' + ('00' + (save_date.getMonth() + 1)).slice(-2) + '' + ('00' +
+            save_date.getDate()).slice(-2);
+        save_date_string += '_' + ('00' + save_date.getHours()).slice(-2) + '' + ('00' + save_date.getMinutes()).slice(-2) + '' +
+            ('00' + save_date.getSeconds()).slice(-2);
 
         this.downloadFileName = save_date_string + '_mapineq_data.csv';
 
