@@ -10,10 +10,11 @@
 
         </span>
 
-        <span title="{{versionChecker.appVersionAndBuildCurrent}}" (click)="showAppVersionAndBuildInfoDialog()">{{title}} <mat-icon class="matIconInTextLower">warning_amber</mat-icon>&nbsp;
+        <span>{{title}} <mat-icon class="matIconInTextLower">warning_amber</mat-icon>&nbsp;
             <span class="textTiny">Alpha version: use for evaluation purposes only.</span>
         </span>
-        <span class="example-fill-remaining-space"></span>
+        <span class="toolbar-spacer"></span>
+        <button mat-icon-button [title]="versionChecker.appVersionAndBuildCurrent" (click)="showAppVersionAndBuildInfoDialog()"><mat-icon>info_outline</mat-icon></button>
     </mat-toolbar-row>
 </mat-toolbar>
 <!--
