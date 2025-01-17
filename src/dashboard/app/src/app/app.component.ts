@@ -17,8 +17,16 @@ export class AppComponent implements AfterViewInit {
 
   versionChecker: AppVersionAndBuildChecker;
 
+  versionCheckerDialogProcessing: boolean;
+
   constructor(public dialog: MatDialog, private router: Router) {
     this.currentRoute = '/';
+
+    this.versionCheckerDialogProcessing = false;
+
+    this.versionChecker = new AppVersionAndBuildChecker();
+
+
 
     this.routePageTitles = {
       '': 'Mapineq interactive map', // mss niet nodig, alleen na update /?t=... komt dan natuurlijk niet voor
@@ -50,7 +58,6 @@ export class AppComponent implements AfterViewInit {
         console.log('NavigationError: ', event.error);
       }
     });
-    this.versionChecker = new AppVersionAndBuildChecker();
   } // END FUNCTION constructor
 
 
@@ -74,7 +81,7 @@ export class AppComponent implements AfterViewInit {
 
     this.versionChecker.checkAppVersionsAndBuilds()
         .then( () => {
-          if (this.versionChecker.showUpdateDiv) {
+          if (this.versionChecker.showUpdateDiv  &&  !this.versionCheckerDialogProcessing) {
             this.showAppVersionAndBuildInfoDialog();
           }
         });
@@ -83,12 +90,18 @@ export class AppComponent implements AfterViewInit {
 
   showAppVersionAndBuildInfoDialog(): void {
 
-    this.versionChecker.checkAppVersionsAndBuilds()
-        .then( () => {
+    if (!this.versionCheckerDialogProcessing) {
+
+      this.versionCheckerDialogProcessing = true;
+
+      this.versionChecker.checkAppVersionsAndBuilds()
+        .then(() => {
+
+          this.versionCheckerDialogProcessing = false;
 
           let dialogData = {
             title: 'App version and build',
-            content: 'some text with<br>html<ul><li>aaa</li><li>bbb</li></ul>',
+            content: 'App version and build checked ...',
             data: this.versionChecker
           }
 
@@ -110,6 +123,7 @@ export class AppComponent implements AfterViewInit {
           });
         });
 
+    }
   } // END FUNCTION showAppVersionAndBuildInfoDialog
 
 

@@ -14,7 +14,7 @@
             <span class="textTiny">Alpha version: use for evaluation purposes only.</span>
         </span>
         <span class="toolbar-spacer"></span>
-        <button mat-icon-button [title]="versionChecker.appVersionAndBuildCurrent" (click)="showAppVersionAndBuildInfoDialog()"><mat-icon>info_outline</mat-icon></button>
+        <button mat-icon-button [title]="versionChecker.appVersionAndBuildCurrent" (click)="showAppVersionAndBuildInfoDialog()"><mat-icon>{{versionCheckerDialogProcessing ? 'hourglass_empty' : 'info_outline'}}</mat-icon></button>
     </mat-toolbar-row>
 </mat-toolbar>
 <!--

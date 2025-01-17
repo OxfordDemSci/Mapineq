@@ -90,7 +90,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
   ngOnInit(): void {
-    console.log('ngOnInit() ... ');
+    console.log('ngOnInit() select-table-value.component.ts ... tableId: ', this.inputTableId);
 
 
 
@@ -100,12 +100,17 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.otherTableSelection = this.inputOtherTableSelection;
 
     //console.log('before abc ngOnInit ...', this.tableSelection.tableId);
-    this.setAvailableRegionLevels();
+
+    // this.setAvailableRegionLevels();
+    setTimeout( () => {
+      // little timeout to make sure this.tableSelect
+      this.setAvailableRegionLevels();
+    }, 500);
 
 
     // this.setTableSources(); // KAN UIT?
 
-    this.componentInitiated = true;
+    // this.componentInitiated = true;
   } // END FUNCTION ngOnInit
 
   ngAfterViewInit() {
@@ -192,14 +197,18 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   } // END FUNCTION initTableValueMap
 
   setAvailableRegionLevels() {
+    console.log('- setAvailableRegionLevels(), tableId:', this.tableId, ', inputUseCase: ', this.inputUseCase.toString(),  ', inputUseCaseData.length: ',  this.inputUseCaseData.length.toString(), ' - - - - -');
+
+    // here instead of in ngOnInit ...
+    this.componentInitiated = true;
 
     this.featureService.getNutsLevels(this.inputUseCase).subscribe( data => {
-      // console.log('A setAvailableRegionLevels(), usecase/data:', this.inputUseCase, data);
+      console.log('A setAvailableRegionLevels(), usecase/data:', this.inputUseCase, data);
       this.availableRegionLevels = data.map((item) => {return item.f_level;});
       // this.availableRegionLevels = ['0', '1', '2', '3'].slice().reverse();
 
       if (this.inputUseCase > -1  &&  this.inputUseCaseData.length > 0) {
-        //console.log('B setAvailableRegionLevels(), ', this.inputTableId, this.inputUseCaseData[this.inputTableId].tableRegionLevel, this.availableRegionLevels);
+        console.log('B setAvailableRegionLevels(), ', this.inputTableId, this.inputUseCaseData[this.inputTableId].tableRegionLevel, this.availableRegionLevels);
 
         if ( this.availableRegionLevels.includes(this.inputUseCaseData[this.inputTableId].tableRegionLevel) ) {
           this.tableSelection.tableRegionLevel = this.inputUseCaseData[this.inputTableId].tableRegionLevel;
