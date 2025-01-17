@@ -629,9 +629,11 @@ DECLARE
 						%s 
 						ORDER BY
 							field_value
-						)
-						SELECT
-							jsonb_agg(JSONB_BUILD_OBJECT('value',value,'label', CASE WHEN label = '' THEN value ELSE COALESCE(label, value) END)) AS field_values
+						),
+						cte_ordered AS
+						(SELECT
+							value,
+							CASE WHEN label = '' THEN value ELSE COALESCE(label, value) END as label
 						FROM
 							cte
 							INNER JOIN website.catalogue_field_value_description d
@@ -639,7 +641,13 @@ DECLARE
 						WHERE
 							provider = %L
 							AND (resource = %L OR resource IS NULL)
-							AND field = %L $$;		
+							AND field = %L
+						ORDER BY 
+							website.catalogue_field_value_order(provider,resource,field,value))
+						SELECT
+							jsonb_agg(JSONB_BUILD_OBJECT('value',value,'label', CASE WHEN label = '' THEN value ELSE COALESCE(label, value) END)) AS field_values
+						FROM 
+							cte_ordered	$$;		
 	WHEREPART		CONSTANT TEXT := ' %I = %L ';
 
 	VALUES_OPTIONS	CONSTANT TEXT := $$
@@ -704,7 +712,7 @@ BEGIN
 		EXECUTE FORMAT(VALUES_OPTIONS, _use_case, _resource) INTO bValueOptions;
 		RAISE INFO '%', bValueOptions;
 	END IF;
-	RAISE INFO '%', FORMAT(LOOP_QUERY,strProvider, strQueryResource, _resource);
+	
 	FOR recField IN EXECUTE FORMAT(LOOP_QUERY,strProvider, strQueryResource, _resource)
 	LOOP
 		strQuery := FORMAT(VALUES_QUERY,recField.column_name, strQueryResource, strWhere, strProvider, _resource,  recField.column_name);
@@ -715,7 +723,7 @@ BEGIN
 				strQuery := strQuery || FORMAT(OPTIONS_EXTRA,recCaseOptions.column_values );
 			END IF;	
 		END IF;
-		
+		RAISE INFO '%', strQuery;
 		EXECUTE strQuery INTO recValue;
 		field			= recField.column_name::TEXT;
 		field_label		= recField.label::TEXT;
@@ -732,12 +740,14 @@ DROP FUNCTION IF EXISTS postgisftw.get_xy_data(INT, INT, JSONB, JSONB);
 CREATE OR REPLACE FUNCTION postgisftw.get_xy_data(_level INTEGER, _year INTEGER, X_JSON JSONB, Y_JSON JSONB)
 RETURNS TABLE
 (
-	geo			TEXT,
-	geo_name	TEXT,
-	best_year	TEXT,
-	x			DOUBLE PRECISION,
-	y			DOUBLE PRECISION
-	
+	geo				TEXT,
+	geo_name		TEXT,	
+	geo_year		TEXT,
+	geo_source		TEXT,
+	predictor_year	TEXT,
+	outcome_year	TEXT,
+	x				DOUBLE PRECISION,
+	y				DOUBLE PRECISION
 )
 AS
 $BODY$
@@ -760,7 +770,10 @@ BEGIN
 	SELECT 
 		f_nuts_id,
 		nuts_name,
-		best_year::TEXT,
+		best_year::TEXT			AS geo_year,
+		'NUTS'::TEXT 			AS geo_source,
+		_year::TEXT				AS predictor_year,
+		_year::TEXT				AS outcome_year,
 		x.f_value::DOUBLE PRECISION,
 		y.f_value::DOUBLE PRECISION
 	FROM 
@@ -778,10 +791,13 @@ DROP FUNCTION IF EXISTS postgisftw.get_x_data(INT, INT, JSONB);
 CREATE OR REPLACE FUNCTION postgisftw.get_x_data(_level INTEGER, _year INTEGER, X_JSON JSONB)
 RETURNS TABLE
 (
-	geo			TEXT,
-	geo_name	TEXT,	
-	best_year	TEXT,
-	x			DOUBLE PRECISION
+	geo				TEXT,
+	geo_name		TEXT,	
+	geo_year		TEXT,
+	geo_source		TEXT,
+	predictor_year	TEXT,
+	outcome_year	TEXT,
+	x				DOUBLE PRECISION
 )
 AS
 $BODY$
@@ -800,7 +816,10 @@ BEGIN
 	SELECT 
 		f_nuts_id,
 		nuts_name,
-		best_year::TEXT,
+		best_year::TEXT AS geo_year,
+		'NUTS'::TEXT 	AS geo_source,
+		_year::TEXT		AS predictor_year,
+		_year::TEXT		AS outcome_year,
 		x.f_value::DOUBLE PRECISION
 	FROM 
 		areas.get_nuts_areas(best_year,_level)
