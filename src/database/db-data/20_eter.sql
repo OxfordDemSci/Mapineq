@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS eter
 
 --Add an entry to the catalogue table.
 --Check upfromt if the entry is not already there.
+DELETE FROM public.catalogue WHERE resource = 'eter';
 INSERT INTO public.catalogue(
         resource, 
         use, 
@@ -51,6 +52,20 @@ SELECT
     category
 FROM
 	eter;
+
+--Define order of drop-down items in filters
+DELETE FROM website.catalogue_field_value_description_order WHERE resource = 'eter';
+INSERT INTO website.catalogue_field_value_description_order(provider, resource, field, order_json)
+VALUES
+(
+'European Higher Education Sector Observatory',
+'eter',
+'category',
+'{
+"top": ["All"],
+"bulk": "asc"
+}'
+)
 
 --Fill some tables with information. Just run these procedures. The procedure first removes the records for the table and then add new records, so it can be run again if needed.
 CALL website.fill_resource_years('eter');
