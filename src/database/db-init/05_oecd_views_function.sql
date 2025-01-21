@@ -7,12 +7,16 @@ DECLARE
 	arrColumns			TEXT[];
 	bGeo				BOOLEAN := FALSE;
 	bTime				BOOLEAN := FALSE;
+	bFieldValueExists	BOOLEAN;
 	UPDATE_CATALOGUE	CONSTANT TEXT := $$UPDATE catalogue SET query_resource = 'vw_%s' WHERE resource = %L AND provider = 'OECD'$$;
 	CLEAR_CATALOGUE		CONSTANT TEXT := $$UPDATE catalogue SET query_resource = NULL WHERE resource = %L AND provider = 'OECD'$$;	
 	DROP_VIEW			CONSTANT TEXT := $$DROP VIEW IF EXISTS vw_%s$$;
 	COLUMN_AS			CONSTANT TEXT := $$ %I AS %I$$;
 	COLUMN_VIEW 		CONSTANT TEXT := $$%I$$;
 	CREATE_VIEW			CONSTANT TEXT := $$CREATE VIEW vw_%s AS SELECT %s FROM %I$$;
+
+	FIELD_VALUE_EXISTS	CONSTANT TEXT := $$SELECT EXISTS (SELECT 1 FROM %1$I WHERE %2$I IS NOT NULL AND LENGTH(%2$I) >0) $$;
+	
 BEGIN
 	SET client_min_messages = WARNING;
 	FOR rec in
@@ -41,7 +45,10 @@ BEGIN
 			arrColumns := ARRAY_APPEND(arrColumns,FORMAT(COLUMN_AS, rec.column_name,'obsTime'));
 			bTime := TRUE;
 		ELSE
-			arrColumns := ARRAY_APPEND(arrColumns,FORMAT(COLUMN_VIEW,rec.column_name));
+			EXECUTE FORMAT(FIELD_VALUE_EXISTS, strTable, rec.column_name) INTO bFieldValueExists;
+			IF bFieldValueExists  THEN
+				arrColumns := ARRAY_APPEND(arrColumns,FORMAT(COLUMN_VIEW,rec.column_name));
+			END IF;		
 		END IF;
 		IF rec.last_column THEN		
 			EXECUTE FORMAT(DROP_VIEW,LOWER(rec.table_name));

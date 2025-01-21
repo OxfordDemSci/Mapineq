@@ -47,26 +47,30 @@ DROP FUNCTION IF EXISTS areas.get_nuts_areas(INT, INT);
 CREATE OR REPLACE FUNCTION areas.get_nuts_areas(intYear INTEGER, intLevel	INTEGER DEFAULT NULL)
 RETURNS TABLE
 	(
-		f_nuts_id		TEXT,
-		cntr_code		TEXT, 
-		nuts_name		TEXT, 
-		country_name	TEXT,
-		levl_code		INTEGER, 
-		geom			GEOMETRY(MultiPolygon,4326)
+		f_nuts_id				TEXT,
+		cntr_code				TEXT, 
+		nuts_name				TEXT, 
+		country_name			TEXT,
+		country_name_english	TEXT,
+		levl_code				INTEGER, 
+		geom					GEOMETRY(MultiPolygon,4326)
 	)
 AS
 $BODY$
 DECLARE
 	activeMapYear	INTEGER;
 	
-	QUERY			CONSTANT TEXT := $$SELECT l.nuts_id, l.cntr_code, l.%1$s, c.%1$s, l.levl_code, l.geom 
+	QUERY			CONSTANT TEXT := $$SELECT l.nuts_id, l.cntr_code, l.%1$s, c.%1$s, g.country,l.levl_code, l.geom 
 										FROM areas.nuts_%2$s l 
 											INNER JOIN areas.nuts_%2$s c 
-												ON l.cntr_code = c.cntr_code AND c.levl_code = 0 %s$$;
+												ON l.cntr_code = c.cntr_code AND c.levl_code = 0 
+											INNER JOIN areas.nuts_gadm ng 
+												ON c.cntr_code = nuts_code
+											INNER JOIN areas.gadm_0 g
+												ON gid_0 = gadm_code%s$$;
 	LEVEL_SELECT	CONSTANT TEXT := $$ WHERE l.levl_code = %1$L OR %1$L IS NULL $$;
 BEGIN
 	activeMapYear = areas.get_preferred_nuts_year(intYear);
-	
 	RETURN QUERY EXECUTE FORMAT(QUERY,CASE WHEN activeMapYear = 2003 THEN 'nuts_name' ELSE 'name_latn' END,activeMapYear  , FORMAT(LEVEL_SELECT, intLevel));
 END;
 $BODY$
@@ -89,7 +93,8 @@ BEGIN
 		ST_AsMVTGeom(ST_Transform(n.geom, 3857), bounds.geom) AS geom,
         f_nuts_id AS nuts_id, 
 		nuts_name,
-		country_name
+		country_name,
+		country_name_english
       FROM 
 			bounds, 
 			areas.get_nuts_areas(year, intLevel) n
