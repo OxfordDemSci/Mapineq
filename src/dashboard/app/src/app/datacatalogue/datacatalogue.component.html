@@ -1,7 +1,9 @@
+<!--
 <div class="version_update" *ngIf="versionChecker.showUpdateDiv" xmlns="http://www.w3.org/1999/html">
     <div class="buttonsCentered version_bold" id="updateVersion">New version available:<br>{{versionChecker.appVersionAndBuildLatest}}<br><button mat-raised-button color="primary" aria-label="Update to newest version" (click)="versionChecker.updateAppVersionAndBuild()"><mat-icon>update</mat-icon> update to newest version</button></div>
     <div class="buttonsCentered version_small" id="currentVersion">Current version: {{versionChecker.appVersionAndBuildCurrent}}</div>
 </div>
+-->
 <div class="datacatalogueDiv">
 
         <div class="content">
@@ -46,12 +48,8 @@
                                 </a>
                             </mat-card-subtitle>
                         </mat-card-header>
-                        <!--
-                        <img mat-card-image src="assets/img/preview{{ result.f_levels===null ? 3 : (1 + JSON.parse(result.f_levels)[0]) }}.png" alt="Example map" >
-                        -->
                         <img mat-card-image src="assets/img/preview_level_{{ getMaxRegionLevel(result.f_levels) }}.png" alt="Max level ({{getMaxRegionLevel(result.f_levels)}}) example map" >
                         <mat-card-content class="mat_card_content">
-                            <!--div>{{ result.f_levels===null ? 99999 : (JSON.parse(result.f_levels)[0]) }} - {{getMaxRegionLevel(result.f_levels)}}</div -->
 
                             <div>
                                 {{result.f_description}}

@@ -2,12 +2,6 @@ import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewC
 // import 'leaflet/dist/leaflet.js';
 import * as L from "leaflet";
 
-/*
-// import 'leaflet-easyprint/dist/bundle.js';
-// import 'leaflet-easyprint';
-// import easyPrint from "leaflet-easyprint";
-import 'leaflet-easyprint';
-*/
 
 import 'leaflet.vectorgrid/dist/Leaflet.VectorGrid.bundled.js';
 
@@ -59,13 +53,7 @@ const colorsBivariate = {
     '11': '#e8e8e8', '12': '#e4acac', '13': '#c85a5a',
 }
 
-/*
-const titlesBivariate = {
-  '31': 'high {0}, low {1}', '32': 'high {0}, medium {1}', '33': 'high {0} and {1}',
-  '21': 'medium {0}, low {1}', '22': 'medium {0} and {1}', '23': 'medium {0}, high {1}',
-  '11': 'low {0} and {1}', '12': 'low {0}, medium {1}', '13': 'low {0}, high {1}',
-}
-*/
+
 const titlesBivariate = {
     '31': '{0}: HIGH   | {1}: LOW', '32': '{0}: HIGH   | {1}: MEDIUM', '33': '{0}: HIGH   | {1}: HIGH',
     '21': '{0}: MEDIUM | {1}: LOW', '22': '{0}: MEDIUM | {1}: MEDIUM', '23': '{0}: MEDIUM | {1}: HIGH',
@@ -168,13 +156,6 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         // console.log('ngAfterViewInit() ...');
 
         this.initResultMap();
-        /*
-        this.featureService.getRealXYData().subscribe((data) => {
-          //console.log('data=', data);
-          this.xydata = data;
-          this.plotData();
-        });
-        */
 
     } // END FUNCTION ngAfterViewInit
 
@@ -190,15 +171,18 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         //     });
         // this.map.addLayer(this.layerMapOSM);
 
+        let CartoDB_DarkMatterNoLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 20
+        });
+
         let Esri_WorldGrayCanvas = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
             attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
             maxZoom: 16
         });
         this.map.addLayer(Esri_WorldGrayCanvas);
 
-        /*
-        new LeafletControlLegend({position: 'bottomright'}).addTo(this.map);
-        */
         new LeafletControlLegend({position: 'bottomleft'}).addTo(this.map);
         this.mapLegendDiv = document.getElementById('map_legend_div');
 
@@ -206,15 +190,12 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         let mapGraphControl = new LeafletControlGraph({position: 'topright'}).addTo(this.map);
         mapGraphControl.addToggleButton(this.toggleMapGraph.bind(this));
 
-        // console.log('id=', graph.getContainer().id);
-        // this.mapGraphDiv = document.getElementById(graph.getContainer().id);
         this.mapGraphContainer = document.getElementById('map_graph_div');
         this.mapGraphDiv = document.getElementById('map_graph_div_graph');
         this.mapGraphDiv.innerHTML += '<canvas id="myChart" width="400px" height="400px"></canvas>';
 
 
         let mapInfoControl = new LeafletControlInfo({position: 'topright'}).addTo(this.map);
-        //this.mapInfoDiv = document.getElementById(mapInfoControl.getContainer().id);
         mapInfoControl.addToggleButton(this.toggleMapInfo.bind(this));
         this.mapInfoContainer = document.getElementById('map_info_div');
         this.mapInfoDiv = document.getElementById('map_info_div_info');
@@ -223,14 +204,10 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         this.hideMapGraph();
         this.hideMapInfo();
 
-        /*
-        new LeafletControlWatermark().addTo(this.map);
-        */
         new LeafletControlWatermark({position: 'bottomright'}).addTo(this.map);
 
 
         let mapButtonsDivLeft = new LeafletControlMapButtonsLeft().addTo(this.map);
-        // mapButtonsDivLeft.addButton(this.testToggle.bind(this), {id: 'mbl_0', mat_icon: 'near_me_disabled', title: 'start/stop navigatie', toggle: ['near_me', 'near_me_disabled']});
         mapButtonsDivLeft.addButton(this.zoomMapToFit.bind(this), {
             id: 'button_zoom_fit',
             class: 'map_button_zoom_fit',
@@ -243,13 +220,6 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             title: 'Save map as image'
         });
 
-        /*
-        mapButtonsDivLeft.addButton(this.consoleLogData.bind(this), {
-            id: 'button_zoom_fit',
-            mat_icon: 'terminal',
-            title: 'Log data in console ...'
-        });
-        */
         //this.addMouseClick();
         this.map.fitBounds(L.latLng(53.238, 6.536).toBounds(3000000));
     } // END FUNCTION initResultMap
@@ -415,8 +385,6 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         // console.log('changeResultMap() ...', this.displayType);
 
         // console.log(this.inputDisplayObject.tableFields[0].tableYear + ' ' + this.inputDisplayObject.tableFields[0].tableRegionLevel);
-        // if (valueCurrent === true) {
-        // this.xydata = this.inputDisplayObject.displayData;
         this.xydata = this.inputDisplayData;
 
 
@@ -429,8 +397,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         // if (this.inputDisplayObject.displayData.length > 0) {
         if (this.inputDisplayData.length > 0) {
             // this.regionsLayer = RegionsLayer.getLayer(this.inputDisplayObject.tableFields[0].tableRegionLevel, this.inputDisplayObject.tableFields[0].tableYear);
-            console.log('Check selected year/best year:', this.inputDisplayObject.tableFields[0].tableYear, '/', this.inputDisplayData[0].best_year);
-            this.regionsLayer = RegionsLayer.getLayer(this.inputDisplayObject.tableFields[0].tableRegionLevel, this.inputDisplayData[0].best_year);
+            console.log('Check selected year/best year:', this.inputDisplayObject.tableFields[0].tableYear, '/', this.inputDisplayData[0].geo_year);
+            this.regionsLayer = RegionsLayer.getLayer(this.inputDisplayObject.tableFields[0].tableRegionLevel, this.inputDisplayData[0].geo_year);
             if (typeof this.map !== 'undefined') {
                 //console.log('ADD regionsLayer');
                 this.map.addLayer(this.regionsLayer);
@@ -478,10 +446,12 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
         html += '<tr>';
         if (this.displayInfo(0)) {
-            html += '<th>' + this.inputDisplayObject.tableFields[0].tableShortDescr + '<br><i>' + this.inputDisplayObject.tableFields[0].tableName + '</i> (' + this.inputDisplayObject.tableFields[0].tableYear + ')</th>'
+            html += '<th>' + this.inputDisplayObject.tableFields[0].tableShortDescr + '<br><i>' + this.inputDisplayObject.tableFields[0].tableName +
+                '</i> (' + this.inputDisplayObject.tableFields[0].tableYear + ')</th>'
         }
         if (this.displayInfo(1)) {
-            html += '<th>' + this.inputDisplayObject.tableFields[1].tableShortDescr + '<br><i>' + this.inputDisplayObject.tableFields[1].tableName + '</i> (' + this.inputDisplayObject.tableFields[1].tableYear + ')</th>'
+            html += '<th>' + this.inputDisplayObject.tableFields[1].tableShortDescr + '<br><i>' + this.inputDisplayObject.tableFields[1].tableName +
+                '</i> (' + this.inputDisplayObject.tableFields[1].tableYear + ')</th>'
         }
         html += '</tr>';
 
@@ -575,12 +545,6 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             for (let i = 0; i < zoomButtons.length; i++) {
                 zoomButtons[i].setAttribute('data-html2canvas-ignore', 'true');
             }
-            /* /
-            let attributionDivs = document.getElementsByClassName('leaflet-control-attribution');
-            for (let i = 0; i < attributionDivs.length; i++) {
-                attributionDivs[i].setAttribute('data-html2canvas-ignore', 'true');
-            }
-            /* */
             document.getElementById('button_zoom_fit').setAttribute('data-html2canvas-ignore', 'true');
             document.getElementById('button_screenshot').setAttribute('data-html2canvas-ignore', 'true');
             document.getElementById('map_graph_div_toggle').setAttribute('data-html2canvas-ignore', 'true');
@@ -611,27 +575,6 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
 
         }
-        /*
-        let customSize = {
-            width: document.getElementById('resultMap').offsetWidth,
-            height: document.getElementById('resultMap').offsetHeight,
-            className: "doesnt-matter",
-            name: "doesnt-matter"
-        };
-
-        console.log('just before (L as any).easyPrint / L.easyPrint ...');
-        let printPlugin = (L as any).easyPrint({
-        // @ts-ignore
-        //let printPlugin = L.easyPrint({
-            hidden: true,
-            exportOnly: true,
-            hideControlContainer: false,
-            hideClasses: ['leaflet-control-zoom', 'map_button', 'map_button_mat_icon', 'graphToggleContainerRight', 'panelToggleContainerRight'],
-            sizeModes: [customSize]
-        }).addTo(this.map);
-
-        printPlugin.printMap(customSize.name, time_string+'_mapineq');
-        */
 
     } // END FUNCTION saveMapToImage
 
@@ -670,12 +613,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
     changeMapStyleUnivariate(mapdata: any) {
         let unknown = [];
-        /* /
-        let xdata = this.xydata.map((item: any) => Number(item.x)).filter(Number);
-        /* */
         let xdata = this.xydata.map((item: any) => item.x).filter( mappedValue => (mappedValue === 0 ? '0' : mappedValue) );
-        /* */
-        // console.log('UNI xdata:', xdata);
         let xmax = Math.max(...xdata);
         let xmin = Math.min(...xdata);
         console.log('changeMapStyleUnivariate() xmin/xmax:', xmin, xmax, this.xydata.filter( item => item.geo === 'NO042'));
@@ -690,11 +628,6 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
                 unknown.push(properties['nuts_id']);
             }
 
-            /*
-            if (properties['nuts_id'] == 'UKM61') {
-                console.log('UKM61', entity1, mapdata[properties['nuts_id']], mapdata[properties['nuts_id']].x, +mapdata[properties['nuts_id']].x);
-            }
-            */
 
             let fillColor = this.getColorUnivariate(entity1, xmin, xmax);
             return {
@@ -1022,10 +955,15 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
         let textPredictor = document.createElementNS(xmlns, 'text');
         containerSvg.appendChild(textPredictor);
+        /*
         textPredictor.setAttributeNS(null, 'x', Math.floor(3 * svgWidth / 4).toString());
         textPredictor.setAttributeNS(null, 'y', Math.floor(3 * svgHeight / 4 - 20).toString());
-        textPredictor.setAttributeNS(null, 'fill', '#000000');
         textPredictor.setAttributeNS(null, 'text-anchor', 'middle');
+        */
+        textPredictor.setAttributeNS(null, 'x', Math.floor(2 * svgWidth / 4 + 10).toString());
+        textPredictor.setAttributeNS(null, 'y', Math.floor(3 * svgHeight / 4 - 20).toString());
+        textPredictor.setAttributeNS(null, 'text-anchor', 'start');
+        textPredictor.setAttributeNS(null, 'fill', '#000000');
         textPredictor.setAttributeNS(null, 'font-weight', 'bold');
         textPredictor.setAttributeNS(null, 'font-size', '12px');
         textPredictor.setAttributeNS(null, 'transform', 'rotate(-45, ' + Math.floor(3 * svgWidth / 4).toString() + ', ' + Math.floor(3 * svgHeight / 4).toString() + ')');
@@ -1033,10 +971,15 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
         let textOutcome = document.createElementNS(xmlns, 'text');
         containerSvg.appendChild(textOutcome);
+        /*
         textOutcome.setAttributeNS(null, 'x', Math.floor(1 * svgWidth / 4).toString());
         textOutcome.setAttributeNS(null, 'y', Math.floor(3 * svgHeight / 4 - 20).toString());
-        textOutcome.setAttributeNS(null, 'fill', '#000000');
         textOutcome.setAttributeNS(null, 'text-anchor', 'middle');
+        */
+        textOutcome.setAttributeNS(null, 'x', Math.floor(2 * svgWidth / 4 - 10).toString());
+        textOutcome.setAttributeNS(null, 'y', Math.floor(3 * svgHeight / 4 - 20).toString());
+        textOutcome.setAttributeNS(null, 'text-anchor', 'end');
+        textOutcome.setAttributeNS(null, 'fill', '#000000');
         textOutcome.setAttributeNS(null, 'font-weight', 'bold');
         textOutcome.setAttributeNS(null, 'font-size', '12px');
         textOutcome.setAttributeNS(null, 'transform', 'rotate(45, ' + Math.floor(1 * svgWidth / 4).toString() + ', ' + Math.floor(3 * svgHeight / 4).toString() + ')');

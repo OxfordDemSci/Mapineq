@@ -90,13 +90,9 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
   ngOnInit(): void {
-    console.log('ngOnInit() ... ');
+    console.log('ngOnInit() select-table-value.component.ts ... tableId: ', this.inputTableId);
 
-    /*
-    this.featureService.getNutsAreas(2).subscribe((data) => {
 
-    });
-    */
 
 
     this.tableId = this.inputTableId;
@@ -104,12 +100,17 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.otherTableSelection = this.inputOtherTableSelection;
 
     //console.log('before abc ngOnInit ...', this.tableSelection.tableId);
-    this.setAvailableRegionLevels();
+
+    // this.setAvailableRegionLevels();
+    setTimeout( () => {
+      // little timeout to make sure this.tableSelect
+      this.setAvailableRegionLevels();
+    }, 500);
 
 
     // this.setTableSources(); // KAN UIT?
 
-    this.componentInitiated = true;
+    // this.componentInitiated = true;
   } // END FUNCTION ngOnInit
 
   ngAfterViewInit() {
@@ -144,8 +145,6 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       if (propName === 'inputOtherTableSelection' && valueCurrent  &&  this.componentInitiated) {
       // if (propName === 'inputOtherTableSelection' && valueCurrent  &&  this.componentInitiated  &&  this.inputUseCase === -1) {
         // console.log('ngOnChanges(), "inputOtherTableSelection":', valueCurrent);
-        // this.otherTableSelection = new DisplayTableValueObject(this.inputOtherTableSelection);
-
 
         //console.log('before abc - ngOnChanges(), "inputOtherTableSelection" CHECK:', this.inputTableId, this.inputUseCase, this.useCaseOtherTableLoaded, this.inputOtherTableSelection.tableName, this.tableSelection.tableName);
         if (this.inputUseCase === -1  ||  this.useCaseOtherTableLoaded < 3) {
@@ -198,23 +197,18 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   } // END FUNCTION initTableValueMap
 
   setAvailableRegionLevels() {
+    console.log('- setAvailableRegionLevels(), tableId:', this.tableId, ', inputUseCase: ', this.inputUseCase.toString(),  ', inputUseCaseData.length: ',  this.inputUseCaseData.length.toString(), ' - - - - -');
+
+    // here instead of in ngOnInit ...
+    this.componentInitiated = true;
 
     this.featureService.getNutsLevels(this.inputUseCase).subscribe( data => {
-      // console.log('A setAvailableRegionLevels(), usecase/data:', this.inputUseCase, data);
-      // this.availableRegionLevels = data;
-      // this.availableRegionLevels = data.map((item) => {return item.f_year;});
+      console.log('A setAvailableRegionLevels(), usecase/data:', this.inputUseCase, data);
       this.availableRegionLevels = data.map((item) => {return item.f_level;});
-      /*
-      data.forEach( dataObject => {
-        if (typeof dataObject.f_year !== 'undefined') {
-          this.availableRegionLevels.push(dataObject.f_year);
-        }
-      })
-      */
       // this.availableRegionLevels = ['0', '1', '2', '3'].slice().reverse();
 
       if (this.inputUseCase > -1  &&  this.inputUseCaseData.length > 0) {
-        //console.log('B setAvailableRegionLevels(), ', this.inputTableId, this.inputUseCaseData[this.inputTableId].tableRegionLevel, this.availableRegionLevels);
+        console.log('B setAvailableRegionLevels(), ', this.inputTableId, this.inputUseCaseData[this.inputTableId].tableRegionLevel, this.availableRegionLevels);
 
         if ( this.availableRegionLevels.includes(this.inputUseCaseData[this.inputTableId].tableRegionLevel) ) {
           this.tableSelection.tableRegionLevel = this.inputUseCaseData[this.inputTableId].tableRegionLevel;
@@ -407,14 +401,9 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
 
-    // this.emitChangeTableValue(); // KAN DEZE ERUIT????
 
   } // END FUNCTION setTableSources
 
-  /*
-  f_description
-  f_resource
-  */
 
   private filterTableSelectOptions(value: any): any[] {
     // console.log('filterTableSelectOptions(), value:', value, (typeof value));
@@ -486,19 +475,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
       this.availableRegionLevelsForTable.sort();
 
-      // if (this.tableSelection.tableId === 1) {
-      //   this.setAvailableRegionLevelsForYear();
-      // }
     });
 
-    /*
-    this.featureService.getColumnValuesBySource(this.tableSelection.tableName, 2012, 0).subscribe( data => {
-      console.log('getColumnValuesBySource()', this.tableSelection.tableName, data);
-    });
-    */
-
-    //this.responseVal = Object(this.myControl.value).id;
-    //this.okClick();
 
     if (this.tableSelection.tableId === 1) {
       // this.checkTableValueSelectionComplete(); // SJO 20240903 DEZE MSS OVERBODIG?
@@ -576,11 +554,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
   emitChangeTableValue() {
     // console.log('emitChangeTableValue() .. id:', this.tableSelection.tableId);
-    // console.log('VOOR ' + this.tableSelection.tableId.toString(), this.tableSelection);
-    // this.tableSelection = new DisplayTableValueObject(this.tableSelection);
-    // console.log('ERNA ' + this.tableSelection.tableId.toString(), this.tableSelection);
     this.updateTableValueFromSelect.emit(this.tableSelection);
-    // this.updateTableValueFromSelect.emit(new DisplayTableValueObject(this.tableSelection));
   }
 
 
@@ -595,7 +569,6 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       if (row.f_level === this.tableSelection.tableRegionLevel  &&  !this.availableYears.includes(row.f_year)) {
         this.availableYears.push(row.f_year);
       }
-      // console.log('- ', row.f_year, row.f_level);
     })
 
     this.availableYears.sort();
@@ -659,6 +632,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.tableSelection.tableColumnValues = {};
 
 
+    document.getElementById('divTableDescr_' + this.tableSelection.tableId.toString()).classList.add('divLoading');
+
     this.tableSelection.lastTableYear = this.tableSelection.tableYear;
 
 
@@ -684,9 +659,6 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       data.forEach( row => {
         console.log('data.forEach, row:', row);
         let jsonToPush = row;
-        /*  SJO dd 20241129
-        jsonToPush.field_values = JSON.parse(jsonToPush.field_values);
-        */
 
         // console.log('jsonToPush:' ,jsonToPush);
         // this.selectedColumnValues[jsonToPush.field] = '';
@@ -696,28 +668,6 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
           this.availableColumnValuesWithInitiallyOneChoice.push(jsonToPush.field);
         } else {
 
-          /*
-          if (Object.values(this.tableSelection.lastSelections).length > 0) {
-            // console.log('lastSelections:', this.tableSelection.tableId, this.tableSelection.lastSelections, this.tableSelection.tableColumnValues, jsonToPush.field, jsonToPush.field_values);
-            console.log('lastSelections A:', this.tableSelection.tableId, this.tableSelection.lastSelections, jsonToPush.field, jsonToPush.field_values);
-
-            // let lastValue = this.tableSelection.lastSelections
-            if ( Object.keys(this.tableSelection.lastSelections).includes(jsonToPush.field) ) {
-              console.log('lastSelections B:', this.tableSelection.tableId, this.tableSelection.lastSelections[jsonToPush.field], jsonToPush.field, jsonToPush.field_values);
-
-              // let lastSelectionFieldValue = jsonToPush.field_values.filter(field_value => {return field_value.value === this.tableSelection.lastSelections[jsonToPush.field]});
-              // console.log('lastSections C:', lastSelectionFieldValue);
-
-              console.log('lastSections C:', jsonToPush.field_values.map(field_value => {return field_value.value;}).includes(this.tableSelection.lastSelections[jsonToPush.field]) );
-              // als bovenstaande true is, dan kan deze waarde gezet worden ...
-
-              if (jsonToPush.field_values.map(field_value => {return field_value.value;}).includes(this.tableSelection.lastSelections[jsonToPush.field])) {
-                console.log('lastSections D')
-                this.tableSelection.tableColumnValues[jsonToPush.field] = this.tableSelection.lastSelections[jsonToPush.field];
-              }
-            }
-          }
-          */
 
           if (Object.values(this.tableSelection.lastSelections).length > 0  &&
               Object.keys(this.tableSelection.lastSelections).includes(jsonToPush.field)  &&
@@ -804,6 +754,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     // this.tableSelection.tableColumnValues = {};
     // this.emitChangeTableValue();
 
+    document.getElementById('divTableDescr_' + this.tableSelection.tableId.toString()).classList.add('divLoading');
+
     let sourceSelectionJson = {};
     sourceSelectionJson['year'] = this.tableSelection.tableYear;
     sourceSelectionJson['level'] = this.tableSelection.tableRegionLevel;
@@ -824,9 +776,6 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
       data.forEach( row => {
         let jsonToPush = row;
-        /*  SJO dd 20241129
-        jsonToPush.field_values = JSON.parse(jsonToPush.field_values);
-        */
 
         if (jsonToPush.field_values.length === 1) {
           this.tableSelection.tableColumnValues[jsonToPush.field] = jsonToPush.field_values[0].value;
@@ -838,26 +787,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
       this.checkTableValueSelectionComplete();
 
-      /*
-      this.availableColumnValues = [];
-      // this.selectedColumnValues = new Array(data.length).fill('');
-      data.forEach( row => {
-        let jsonToPush = row;
-        jsonToPush.field_values = JSON.parse(jsonToPush.field_values);
 
-        // console.log('jsonToPush:' ,jsonToPush);
-        // this.selectedColumnValues[jsonToPush.field] = '';
-
-        if (jsonToPush.field_values.length === 1) {
-          this.tableSelection.tableColumnValues[jsonToPush.field] = jsonToPush.field_values[0].value;
-        } else {
-          this.tableSelection.tableColumnValues[jsonToPush.field] = '';
-        }
-
-        this.availableColumnValues.push(jsonToPush);
-
-      });
-      */
     });
 
   } // END FUNCTION getFilteredFieldsForTableForYearAndRegionLevel
@@ -884,6 +814,9 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   checkTableValueSelectionComplete() {
     //console.log('checkTableValueSelectionComplete() ...', this.tableSelection.tableId);
 
+    document.getElementById('divTableDescr_' + this.tableSelection.tableId.toString()).classList.remove('divLoading');
+
+
     this.tableSelection.checkSelectionComplete();
     if (this.tableSelection.tableSelectionComplete) {
       this.fillSelections();
@@ -899,10 +832,6 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   } // END FUNCTION checkByClick
 
 
-  // dit hieronder kan waarschijnlijk weer weg als Object.values() niet in html wordt gebruikt ...
-  /*
-  protected readonly Object = Object;
-  */
 
   showBivariateMap() {
     this.emitChangeTableValue();

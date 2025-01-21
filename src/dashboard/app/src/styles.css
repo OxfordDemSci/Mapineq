@@ -80,6 +80,9 @@ body {
     z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
 }
 
+.toolbar-spacer {
+  flex: 1 1 auto;
+}
 
 
 
@@ -319,6 +322,53 @@ div.buttonsMargin {
     font-style: italic;
     /*text-align: center;*/
 }
+
+
+
+
+/* ======================================= */
+/* LOADING DIV STYLE */
+
+div.divLoading:after {
+    position: absolute;
+    z-index: 10000;
+    position: absolute;
+    top: calc(50% - 50px);
+    left: calc(50% - 50px);
+    width: 100px;
+    height: 100px;
+    /*
+    background: rgba(255, 255, 255, 0.5);
+    */
+    background-image: url('assets/img/map_app_icon.svg');
+    background-size: cover;
+    content: "";
+    /*
+    border: 20px solid rgba(192, 192, 192, 1);
+    border-radius: 50%;
+    border-top: 20px solid var(--color-toolbar);
+    */
+    /* Safari */
+    -webkit-animation: divLoadingSpin  1.5s linear infinite;
+    animation: divLoadingSpin 1.5s linear infinite;
+
+}
+/* Safari */
+@-webkit-keyframes divLoadingSpin {
+    0% { -webkit-transform: rotate(0deg); }
+    25% { -webkit-transform: rotate(45deg); }
+    75% { -webkit-transform: rotate(-45deg); }
+    100% { -webkit-transform: rotate(0deg); }
+}
+@keyframes divLoadingSpin {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(45deg); }
+    75% { transform: rotate(-45deg); }
+    100% { transform: rotate(0deg); }
+}
+
+/* ======================================= */
+
 
 
 /* SIDE NAVE STYLING */

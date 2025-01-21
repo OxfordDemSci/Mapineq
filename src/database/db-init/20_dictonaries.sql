@@ -140,11 +140,8 @@ $BODY$
 LANGUAGE PLPGSQL;
 
 
-
--- CALL website.fill_catalogue_field_value_description();
-
-DROP PROCEDURE IF EXISTS website.estat_import_dictinary(TEXT);
-CREATE OR REPLACE PROCEDURE website.estat_import_dictinary(strDict TEXT)
+DROP PROCEDURE IF EXISTS website.estat_import_dictionary(TEXT);
+CREATE OR REPLACE PROCEDURE website.estat_import_dictionary(strDict TEXT)
 AS
 $BODY$
 DECLARE
@@ -153,45 +150,50 @@ DECLARE
 	INSERT_FIELD_DESCRIPTION	CONSTANT TEXT := $$INSERT INTO website.catalogue_field_description VALUES ('ESTAT', NULL, %L, %L) $$;
 	DELETE_FIELD_VALUE			CONSTANT TEXT := $$DELETE FROM website.catalogue_field_value_description WHERE provider = 'ESTAT' AND field = %L $$;
 	INSERT_FIELD_VALUE			CONSTANT TEXT := $$INSERT INTO website.catalogue_field_value_description 
+													WITH cte AS
+													(
+														SELECT 
+															jj->'category'->'label' AS label_json
+													    FROM 
+															tmpJSON
+													) 
 													SELECT
 														'ESTAT',
 														NULL,
 														%L,
-														j ->> 'Notation',
-														j ->> 'Label'
+														key, 
+													    value
 													FROM
-														(SELECT jsonb_array_elements(jj::JSONB -> 'concepts') AS j FROM tmpJSON) as foo;$$;
-	
-	URL							CONSTANT TEXT := $$curl "https://dd.eionet.europa.eu/vocabulary/eurostat/%s/json"  $$;
-	COPY_OPTIONS				CONSTANT TEXT := $$ WITH csv  DELIMITER E'\007' ESCAPE  E'\'' QUOTE  E'\'' $$;
+														cte,
+														jsonb_each_text(label_json);$$;
+	URL							CONSTANT TEXT := $$curl "https://ec.europa.eu/eurostat/api/dissemination/sdmx/3.0/structure/codelist/ESTAT/%s/?format=json" | sed 's/"/\\"/g' $$;
+
 BEGIN
+	strDict := LOWER(strDict);
 	SET client_min_messages TO 'warning';
-	CREATE TEMPORARY TABLE IF NOT EXISTS tmpDictionary(id SERIAL, result_json TEXT);
-	TRUNCATE TABLE tmpDictionary;
 	
-	EXECUTE 'copy tmpDictionary(result_json) from program ' || QUOTE_LITERAL(FORMAT(URL, strDict)) || COPY_OPTIONS;
-	CREATE TEMPORARY TABLE IF NOT EXISTS tmpJSON (jj JSONB);
+	CREATE TEMPORARY TABLE IF NOT EXISTS tmpJSON(jj JSONB);
 	TRUNCATE TABLE tmpJSON;
-	INSERT INTO tmpJSON 
-	SELECT 
-		(string_agg(result_json,''))::JSONB jj 
-	FROM 
-		tmpDictionary ;
+	
+	EXECUTE 'copy tmpJSON(jj) from program ' || QUOTE_LITERAL(FORMAT(URL, UPPER(strDict)));
 
 	EXECUTE FORMAT(DELETE_FIELD_DESCRIPTION, strDict);
-
 	SELECT
-		TRIM(both '"' from (jj -> '@context' -> 'Label')::TEXT)
+		jj ->> 'label'
 	INTO
 		field_description
 	FROM
 		tmpJSON;
-	EXECUTE FORMAT (INSERT_FIELD_DESCRIPTION,strDict, field_description) ;
-	
+		
+	RAISE INFO '%',  FORMAT (INSERT_FIELD_DESCRIPTION,strDict, field_description) ;	
+
+	IF field_description IS NULL THEN
+		RETURN;
+	END IF;
+	EXECUTE FORMAT (INSERT_FIELD_DESCRIPTION,strDict, field_description) ;	
+
 	EXECUTE FORMAT(DELETE_FIELD_VALUE, strDict);
-	
 	EXECUTE FORMAT (INSERT_FIELD_VALUE,strDict);
-	
 END;
 $BODY$
 LANGUAGE PLPGSQL;
@@ -204,7 +206,7 @@ DECLARE
 	rec			RECORD;	
 	aantal		INTEGER;
 	i			INTEGER := 0;
-	QUERY		CONSTANT TEXT := $$CALL  website.estat_import_dictinary(%L)$$;
+	QUERY		CONSTANT TEXT := $$CALL  website.estat_import_dictionary(%L)$$;
 	
 BEGIN	
 	FOR rec IN 
