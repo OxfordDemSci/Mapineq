@@ -1,0 +1,8 @@
+
+#version_dialog_content {
+    color: rgba(0,0,0,1) !important;
+}
+
+.version_dialog_small {
+    font-size: 75%;
+}

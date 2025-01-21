@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ResultMapComponent} from "../result-map/result-map.component";
-import {AppVersionAndBuildChecker} from "../lib/app-version-and-build-checker";
+// import {AppVersionAndBuildChecker} from "../lib/app-version-and-build-checker";
 import {DisplayObject} from "../lib/display-object";
 import {DisplayTableValueObject} from "../lib/display-table-value-object";
 import {FeatureService} from "../services/feature.service";
@@ -13,7 +13,7 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class DashboardComponent implements OnInit{
 
-    versionChecker: AppVersionAndBuildChecker;
+    // versionChecker: AppVersionAndBuildChecker;
 
 
     @ViewChild(ResultMapComponent) childResultMap: ResultMapComponent;
@@ -55,7 +55,7 @@ export class DashboardComponent implements OnInit{
 
     ngOnInit(): void {
 
-        this.versionChecker = new AppVersionAndBuildChecker();
+        // this.versionChecker = new AppVersionAndBuildChecker();
         this.panelOpen = true;
 
         // this start values for formType (& displayType) should be set according to use-case ...

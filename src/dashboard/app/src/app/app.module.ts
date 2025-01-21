@@ -27,6 +27,8 @@ import { DatacatalogueComponent } from './datacatalogue/datacatalogue.component'
 import {MatGridList, MatGridTile} from "@angular/material/grid-list";
 import {MatDivider} from "@angular/material/divider";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {DialogAppVersionAndBuildInfo} from "./lib/dialog-app-version-and-build-info.component";
+import {MatDialogModule} from "@angular/material/dialog";
 
 
 @NgModule({
@@ -36,7 +38,8 @@ import {MatTooltipModule} from "@angular/material/tooltip";
         SelectTableValueComponent,
         ResultMapComponent,
         GraphComponent,
-        DatacatalogueComponent
+        DatacatalogueComponent,
+        DialogAppVersionAndBuildInfo
     ],
     imports: [
         BrowserModule,
@@ -66,7 +69,8 @@ import {MatTooltipModule} from "@angular/material/tooltip";
         MatGridList,
         MatGridTile,
         MatDivider,
-        MatTooltipModule
+        MatTooltipModule,
+        MatDialogModule
     ],
     providers: [
     provideAnimationsAsync(), provideHttpClient()

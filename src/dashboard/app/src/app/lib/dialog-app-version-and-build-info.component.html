@@ -1,0 +1,25 @@
+<h1 mat-dialog-title>{{data.title}}</h1>
+<mat-dialog-content class="mat-typography" xmlns="http://www.w3.org/1999/html">
+    <div id="version_dialog_content">
+        <div class="version_dialog_small">
+            <div>Latest version:<br><i>{{data.data.appVersionAndBuildLatest}}</i></div>
+            <div>Current version:<br><i>{{data.data.appVersionAndBuildCurrent}}</i></div>
+        </div>
+
+        <div class="divWhiteSpace"></div>
+
+        <div *ngIf="data.data.showUpdateDiv">
+            Please update the app by clicking <i>Update</i>-button below.
+        </div>
+
+        <div *ngIf="!data.data.showUpdateDiv">
+            You are up to date.
+        </div>
+
+    </div>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button (click)="onCancelClick()" *ngIf="data.data.showUpdateDiv">Cancel</button>
+    <button mat-button (click)="onOkClick(data)" cdkFocusInitial>{{data.data.showUpdateDiv ? 'Update' : 'OK'}}</button>
+</mat-dialog-actions>

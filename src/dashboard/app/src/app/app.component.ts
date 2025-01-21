@@ -1,13 +1,15 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {Router, Event, NavigationStart, NavigationEnd, NavigationError} from "@angular/router";
 import {AppVersionAndBuildChecker} from "./lib/app-version-and-build-checker";
+import {DialogAppVersionAndBuildInfo} from "./lib/dialog-app-version-and-build-info.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements AfterViewInit {
   title = 'Mapineq interactive map';
   currentRoute: string
 
@@ -15,8 +17,16 @@ export class AppComponent implements OnInit {
 
   versionChecker: AppVersionAndBuildChecker;
 
-  constructor(private router: Router) {
+  versionCheckerDialogProcessing: boolean;
+
+  constructor(public dialog: MatDialog, private router: Router) {
     this.currentRoute = '/';
+
+    this.versionCheckerDialogProcessing = false;
+
+    this.versionChecker = new AppVersionAndBuildChecker();
+
+
 
     this.routePageTitles = {
       '': 'Mapineq interactive map', // mss niet nodig, alleen na update /?t=... komt dan natuurlijk niet voor
@@ -39,6 +49,7 @@ export class AppComponent implements OnInit {
         // console.log('***** new route:', event.urlAfterRedirects);
         this.currentRoute = event.urlAfterRedirects;
         this.setAppPageTitle();
+        this.checkAppVersionAndBuild();
       }
 
       if (event instanceof NavigationError) {
@@ -47,7 +58,6 @@ export class AppComponent implements OnInit {
         console.log('NavigationError: ', event.error);
       }
     });
-    this.versionChecker = new AppVersionAndBuildChecker();
   } // END FUNCTION constructor
 
 
@@ -66,12 +76,66 @@ export class AppComponent implements OnInit {
     this.title = this.routePageTitles[currentRouteClean];
   } // END FUNCTION setAppPageTitle
 
+  checkAppVersionAndBuild() {
+    console.log('checkAppVersionAndBuild() ...');
 
-  ngOnInit(): void {
+    this.versionChecker.checkAppVersionsAndBuilds()
+        .then( () => {
+          if (this.versionChecker.showUpdateDiv  &&  !this.versionCheckerDialogProcessing) {
+            this.showAppVersionAndBuildInfoDialog();
+          }
+        });
+  } // END FUNCTION checkAppVersionAndBuild
+
+
+  showAppVersionAndBuildInfoDialog(): void {
+
+    if (!this.versionCheckerDialogProcessing) {
+
+      this.versionCheckerDialogProcessing = true;
+
+      this.versionChecker.checkAppVersionsAndBuilds()
+        .then(() => {
+
+          this.versionCheckerDialogProcessing = false;
+
+          let dialogData = {
+            title: 'App version and build',
+            content: 'App version and build checked ...',
+            data: this.versionChecker
+          }
+
+          const appVersionAndBuildInfoDialogRef = this.dialog.open(DialogAppVersionAndBuildInfo, {data: dialogData});
+
+          appVersionAndBuildInfoDialogRef.afterClosed().subscribe(result => {
+            console.log('appVersionAndBuildInfoDialogRef.afterClosed(), result: ', result);
+
+            if (typeof result === 'undefined') {
+              console.log(' APP VERSION AND BUILD INFO DIALOG closed without result(?)');
+            } else {
+              console.log(' APP VERSION AND BUILD INFO DIALOG result: ', result);
+
+              if (result.data.showUpdateDiv) {
+                this.versionChecker.updateAppVersionAndBuild();
+              }
+
+            }
+          });
+        });
+
+    }
+  } // END FUNCTION showAppVersionAndBuildInfoDialog
+
+
+  // ngOnInit(): void {
+  // } // END FUNCTION ngOnInit
+
+  ngAfterViewInit(): void {
     //console.log('ngOnInit() app.component.ts');
     this.setAppHeight();
     this.setAppPageTitle();
-  } // END FUNCTION ngOnInit
+    this.checkAppVersionAndBuild();
+  } // END FUNCTION ngAfterViewInit
 
   onAppResize(): void {
     // console.log('onAppResize() called ...');

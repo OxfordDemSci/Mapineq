@@ -7,7 +7,7 @@
     "DASHBOARD start + browser": "ng serve --open",
     "setup test": "node update_config_json.js test",
     "setup productie": "node update_config_json.js productie",
-    "DASHBOARD build DEV + base=href": "node update_app_version_and_build.js  &&  ng build --configuration production --base-href /mapineq_dashboard_dev/",
+    "DASHBOARD build DEV + base=href": "node update_app_version_and_build.js  &&  ng build --configuration production --base-href /mapineq_dashboard_dev/  &&  node update_copy_dev_ht_files.js",
     "DASHBOARD build TST + base=href": "node update_app_version_and_build.js  &&  ng build --configuration production --base-href /mapineq_dashboard_tst/",
     "DASHBOARD build-prod ROOT": "node update_app_version_and_build.js  &&  ng build --configuration production",
     "DASHBOARD build-prod + base=href": "node update_app_version_and_build.js  &&  ng build --configuration production --base-href /dashboard/",
