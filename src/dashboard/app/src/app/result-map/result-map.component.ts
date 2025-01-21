@@ -397,8 +397,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
         // if (this.inputDisplayObject.displayData.length > 0) {
         if (this.inputDisplayData.length > 0) {
             // this.regionsLayer = RegionsLayer.getLayer(this.inputDisplayObject.tableFields[0].tableRegionLevel, this.inputDisplayObject.tableFields[0].tableYear);
-            console.log('Check selected year/best year:', this.inputDisplayObject.tableFields[0].tableYear, '/', this.inputDisplayData[0].best_year);
-            this.regionsLayer = RegionsLayer.getLayer(this.inputDisplayObject.tableFields[0].tableRegionLevel, this.inputDisplayData[0].best_year);
+            console.log('Check selected year/best year:', this.inputDisplayObject.tableFields[0].tableYear, '/', this.inputDisplayData[0].geo_year);
+            this.regionsLayer = RegionsLayer.getLayer(this.inputDisplayObject.tableFields[0].tableRegionLevel, this.inputDisplayData[0].geo_year);
             if (typeof this.map !== 'undefined') {
                 //console.log('ADD regionsLayer');
                 this.map.addLayer(this.regionsLayer);
@@ -446,10 +446,12 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
 
         html += '<tr>';
         if (this.displayInfo(0)) {
-            html += '<th>' + this.inputDisplayObject.tableFields[0].tableShortDescr + '<br><i>' + this.inputDisplayObject.tableFields[0].tableName + '</i> (' + this.inputDisplayObject.tableFields[0].tableYear + ')</th>'
+            html += '<th>' + this.inputDisplayObject.tableFields[0].tableShortDescr + '<br><i>' + this.inputDisplayObject.tableFields[0].tableName +
+                '</i> (' + this.inputDisplayObject.tableFields[0].tableYear + ')</th>'
         }
         if (this.displayInfo(1)) {
-            html += '<th>' + this.inputDisplayObject.tableFields[1].tableShortDescr + '<br><i>' + this.inputDisplayObject.tableFields[1].tableName + '</i> (' + this.inputDisplayObject.tableFields[1].tableYear + ')</th>'
+            html += '<th>' + this.inputDisplayObject.tableFields[1].tableShortDescr + '<br><i>' + this.inputDisplayObject.tableFields[1].tableName +
+                '</i> (' + this.inputDisplayObject.tableFields[1].tableYear + ')</th>'
         }
         html += '</tr>';
 
