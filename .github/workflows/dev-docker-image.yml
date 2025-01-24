@@ -1,4 +1,4 @@
-name: Build Docker image and push to registry
+name: Build dev Docker image and push to registry
 
 on:
   workflow_dispatch:
@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build ./src/dashboard/app --tag registry.webhosting.rug.nl/mapineq/${{ github.ref_name }}mapineqfrontend:latest
+      run: docker build ./src/dashboard/app --tag registry.webhosting.rug.nl/mapineq/${{ github.ref_name }}mapineqfrontend:latest -f Dockerfiledev
     - name: push image to registry
       run: |
           docker login -u p149377  -p ${{ secrets.REGISTRY_PASSWORD }} registry.webhosting.rug.nl
