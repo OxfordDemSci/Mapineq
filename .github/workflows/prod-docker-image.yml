@@ -1,0 +1,21 @@
+name: Build production Docker image and push to registry
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build ./src/dashboard/app --tag registry.webhosting.rug.nl/mapineq/${{ github.ref_name }}mapineqfrontend:latest
+    - name: push image to registry
+      run: |
+          docker login -u p149377  -p ${{ secrets.REGISTRY_PASSWORD }} registry.webhosting.rug.nl
+          docker push registry.webhosting.rug.nl/mapineq/${{ github.ref_name }}mapineqfrontend:latest

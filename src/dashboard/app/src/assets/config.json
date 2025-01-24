@@ -1,4 +1,4 @@
 {
-  "featureServer": "https://mapineqfeatures.web.rug.nl/",
-  "tileServer": "https://mapineqtiles.web.rug.nl/"
+  "featureServer": "https://testmapineqfeatures.web.rug.nl/",
+  "tileServer": "https://testmapineqtiles.web.rug.nl/"
 }
