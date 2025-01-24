@@ -173,7 +173,7 @@ export class FeatureService {
   }
 
   public getXYData(regionLevel: string, year: string, selectionJsonX: string, selectionJsonY: string): Observable<any> {
-    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_xy_data/items.json?_level=${regionLevel}&_year=${year}&X_JSON=${selectionJsonX}&Y_JSON=${selectionJsonY}&limit=2500`).pipe(
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_xy_data/items.json?_level=${regionLevel}&_predictor_year=${year}&_outcome_year=${year}&X_JSON=${selectionJsonX}&Y_JSON=${selectionJsonY}&limit=2500`).pipe(
         tap((result) => {
           //console.log(result);
         }),

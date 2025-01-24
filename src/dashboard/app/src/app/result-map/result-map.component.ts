@@ -325,7 +325,8 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             /* */
             dataHtml += this.legendLabel(this.inputDisplayObject.tableFields[this.inputDisplayObject.displayTableId].tableDescr) + ': ' + (regionValues.x ?? 'NO DATA').toString() + '<br>';
         }
-        dataHtml += '<br><i>Country: ' + lowerCaseAllWordsExceptFirstLetters(event.layer.properties['country_name']) + '</i>';
+        dataHtml += '<br><i>Country: ' + lowerCaseAllWordsExceptFirstLetters(event.layer.properties['country_name_english'])
+            + ' (' + lowerCaseAllWordsExceptFirstLetters(event.layer.properties['country_name'])  + ')</i>';
 
         // const regionLabel = (this.inputDisplayObject.tableFields[0].tableRegionLevel !== '0') ? event.layer.properties['country_name'] + ', ' + event.layer.properties['nuts_id'] :  event.layer.properties['nuts_id']
         const regionLabel = (this.inputDisplayObject.tableFields[0].tableRegionLevel !== '0') ? event.layer.properties['nuts_id'] :  event.layer.properties['nuts_id']
