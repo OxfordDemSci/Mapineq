@@ -181,7 +181,7 @@ export class ResultMapComponent implements OnInit, AfterViewInit, OnChanges {
             attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
             maxZoom: 16
         });
-        this.map.addLayer(Esri_WorldGrayCanvas);
+        this.map.addLayer(CartoDB_DarkMatterNoLabels);
 
         new LeafletControlLegend({position: 'bottomleft'}).addTo(this.map);
         this.mapLegendDiv = document.getElementById('map_legend_div');
