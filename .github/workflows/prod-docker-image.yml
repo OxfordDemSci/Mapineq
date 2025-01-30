@@ -1,4 +1,4 @@
-name: Build Docker image and push to registry
+name: Build production Docker image and push to registry
 
 on:
   workflow_dispatch:

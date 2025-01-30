@@ -10,14 +10,7 @@ const routes: Routes = [
   // { path: 'load/:table/:minlevel/:maxlevel', component: DashboardComponent },
   { path: 'load/:table', component: DashboardComponent },
   { path: 'datacatalogue', component: DatacatalogueComponent },
-  /*
-  {
-    path: 'datacatalogue',
-    redirectTo: '/mapineq_dashboard_tst',
-    pathMatch: 'prefix'
-  },
 
-  */
   { path: '**', component: DashboardComponent },
 ];
 

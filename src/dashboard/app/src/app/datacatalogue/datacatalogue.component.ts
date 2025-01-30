@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl} from "@angular/forms";
 import {FeatureService} from "../services/feature.service";
 import {debounceTime, distinctUntilChanged, filter, finalize, switchMap, tap} from "rxjs";
-import {AppVersionAndBuildChecker} from "../lib/app-version-and-build-checker";
+// import {AppVersionAndBuildChecker} from "../lib/app-version-and-build-checker";
 
 @Component({
   selector: 'app-datacatalogue',
@@ -11,7 +11,7 @@ import {AppVersionAndBuildChecker} from "../lib/app-version-and-build-checker";
 })
 export class DatacatalogueComponent implements OnInit {
 
-  versionChecker: AppVersionAndBuildChecker;
+  // versionChecker: AppVersionAndBuildChecker;
 
   isLoading = false;
   errorMsg!: string;
@@ -32,7 +32,7 @@ export class DatacatalogueComponent implements OnInit {
 
   ngOnInit() {
 
-    this.versionChecker = new AppVersionAndBuildChecker();
+    // this.versionChecker = new AppVersionAndBuildChecker();
 
     this.searchResultsCtrl.valueChanges
         .pipe(
