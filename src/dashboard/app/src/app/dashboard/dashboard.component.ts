@@ -479,9 +479,13 @@ export class DashboardComponent implements OnInit{
         // As for making csv format, headers must be
         // separated by comma and pushing it into array
         let displayHeaders = Object.keys(data[0]);
+        if (this.displayObject.displayType == 'univariate') {
+            displayHeaders[5] = this.displayObject.tableFields[this.displayObject.displayTableId].tableDescr.replaceAll(',', ' ');
+        } else {
+            displayHeaders[6] = this.displayObject.tableFields[0].tableDescr.replaceAll(',', ' ');
+            displayHeaders[7] = this.displayObject.tableFields[1].tableDescr.replaceAll(',', ' ');
+        }
 
-        displayHeaders[6] = this.displayObject.tableFields[0].tableDescr.replaceAll(',', ' ');
-        displayHeaders[7] = this.displayObject.tableFields[1].tableDescr.replaceAll(',', ' ');
         csvRows.push(displayHeaders.join(','));
 
         // Pushing Object values into the array with
