@@ -65,7 +65,7 @@ Each function requires one or more parameters that you must specify. You can bui
 
 You will replace "function_name" with your chosen function from the list above, and you will replace "parameter=value" with one or more parameters and their values. See the function documentation below for a complete list of parameters required for each function.
 
-> **Note:** Always use the parameter **limit**, otherwise you only get 10 values. Choose a value higher than the number of expected values.
+> **Note:** Always use the parameter **limit**, otherwise you only get 10 items. Choose a value higher than the number of expected items.
 
 > **Note:** The API has a maximum of 10k items to return
 ---
