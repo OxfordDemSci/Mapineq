@@ -339,15 +339,16 @@ This endpoint allows you to retrieve data for two sources joined by location.
 
 #### Parameters:
 - **\_level**: Geographic level
-- **\_year**: Year of data
+- **\_predictor_year**: Year of predictor (X) data
+- **\_outcome_year**: Year of outcome (Y) data
 - **X_JSON**: JSON specifying the first source and filters.
 - **Y_JSON**: JSON specifying the second source and filters.
 
 #### Example Call:
 
 <div class="wrapped-url">
-  <a href='https://api.mapineq.org/functions/postgisftw.get_xy_data/items.json?_level=2&_year=2018&X_JSON={"source":"TGS00010","conditions":[{"field":"isced11","value":"TOTAL"},{"field":"unit","value":"PC"},{"field":"age","value":"Y_GE15"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&Y_JSON={"source":"DEMO_R_MLIFEXP","conditions":[{"field":"unit","value":"YR"},{"field":"age","value":"Y_LT1"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&limit=1500' target="_blank">
-    https://api.mapineq.org/functions/postgisftw.get_xy_data/items.json?_level=2&_year=2018&X_JSON={"source":"TGS00010","conditions":[{"field":"isced11","value":"TOTAL"},{"field":"unit","value":"PC"},{"field":"age","value":"Y_GE15"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&Y_JSON={"source":"DEMO_R_MLIFEXP","conditions":[{"field":"unit","value":"YR"},{"field":"age","value":"Y_LT1"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&limit=1500
+  <a href='https://api.mapineq.org/functions/postgisftw.get_xy_data/items.json?_level=2&_predictor_year=2018&_outcome_year=2018&X_JSON={"source":"TGS00010","conditions":[{"field":"isced11","value":"TOTAL"},{"field":"unit","value":"PC"},{"field":"age","value":"Y_GE15"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&Y_JSON={"source":"DEMO_R_MLIFEXP","conditions":[{"field":"unit","value":"YR"},{"field":"age","value":"Y_LT1"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&limit=1500' target="_blank">
+    https://api.mapineq.org/functions/postgisftw.get_xy_data/items.json?_level=2&_predictor_year=2018&_outcome_year=2018&X_JSON={"source":"TGS00010","conditions":[{"field":"isced11","value":"TOTAL"},{"field":"unit","value":"PC"},{"field":"age","value":"Y_GE15"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&Y_JSON={"source":"DEMO_R_MLIFEXP","conditions":[{"field":"unit","value":"YR"},{"field":"age","value":"Y_LT1"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&limit=1500
   </a>
 </div>
 
@@ -359,7 +360,7 @@ A list of geographic units with **x** and **y** values:
 # | echo: false
 # | output: asis
 print_json(
-    url='https://api.mapineq.org/functions/postgisftw.get_xy_data/items.json?_level=2&_year=2018&X_JSON={"source":"TGS00010","conditions":[{"field":"isced11","value":"TOTAL"},{"field":"unit","value":"PC"},{"field":"age","value":"Y_GE15"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&Y_JSON={"source":"DEMO_R_MLIFEXP","conditions":[{"field":"unit","value":"YR"},{"field":"age","value":"Y_LT1"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&limit=1500'
+    url='https://api.mapineq.org/functions/postgisftw.get_xy_data/items.json?_level=2&_predictor_year=2018&_outcome_year=2018&X_JSON={"source":"TGS00010","conditions":[{"field":"isced11","value":"TOTAL"},{"field":"unit","value":"PC"},{"field":"age","value":"Y_GE15"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&Y_JSON={"source":"DEMO_R_MLIFEXP","conditions":[{"field":"unit","value":"YR"},{"field":"age","value":"Y_LT1"},{"field":"sex","value":"T"},{"field":"freq","value":"A"}]}&limit=1500'
 )
 ```
 
