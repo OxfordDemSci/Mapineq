@@ -276,7 +276,8 @@ endpoint <- "functions/postgisftw.get_xy_data/items.json"
 # Endpoint parameters
 params <- list(
   `_level` = 2,
-  `_year` = 2018,
+  `_predictor_year` = 2018,
+  `_outcome_year` = 2018,
   X_JSON = toJSON(
     list(
       source = "TGS00103",
@@ -323,4 +324,3 @@ The **x** column contains the variable defined by the parameter **X_JSON** and t
 ## Conclusion
 
 This tutorial provided a step-by-step guide to querying the Mapineq API using R. The code examples demonstrate how to retrieve data for various endpoints and how to process the responses into usable formats. For further details, consult the Mapineq API documentation available from [https://mapineq.org/data-users](https://mapineq.org/data-users).
-
