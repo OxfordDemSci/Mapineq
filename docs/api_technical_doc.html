@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.39">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -64,7 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="api_technical_doc_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="api_technical_doc_files/libs/quarto-html/anchor.min.js"></script>
 <link href="api_technical_doc_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="api_technical_doc_files/libs/quarto-html/quarto-syntax-highlighting-dark-d166b450ba5a8e9f7a0ab969bf6592c1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="api_technical_doc_files/libs/quarto-html/quarto-syntax-highlighting-dark-8ea72dc5fed832574809a9c94082fbbb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="api_technical_doc_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="api_technical_doc_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="api_technical_doc_files/libs/bootstrap/bootstrap-207e17f1a70ca2c9891d2c9981023b9d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
@@ -122,9 +122,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div id="1af0cb3e" class="cell" data-execution_count="1">
+<div id="8db1677b" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-stdout">
-<pre><code>January 21, 2025</code></pre>
+<pre><code>January 30, 2025</code></pre>
 </div>
 </div>
 <section id="introduction" class="level2">
@@ -152,6 +152,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>You will replace “function_name” with your chosen function from the list above, and you will replace “parameter=value” with one or more parameters and their values. See the function documentation below for a complete list of parameters required for each function.</p>
 <blockquote class="blockquote">
 <p><strong>Note:</strong> Always use the parameter <strong>limit</strong>, otherwise you only get 10 values. Choose a value higher than the number of expected values.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p><strong>Note:</strong> The API has a maximum of 10k items to return</p>
 </blockquote>
 <hr>
 </section>
@@ -581,51 +584,46 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="returns-5">Returns:</h4>
 <div class="sourceCode" id="cb12"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AL01"</span><span class="fu">,</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Veri"</span><span class="fu">,</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_source"</span><span class="fu">:</span> <span class="st">"NUTS"</span><span class="fu">,</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_year"</span><span class="fu">:</span> <span class="st">"2021"</span><span class="fu">,</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"outcome_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"predictor_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="kw">null</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"data_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AL01"</span><span class="fu">,</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Veri"</span><span class="fu">,</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_source"</span><span class="fu">:</span> <span class="st">"NUTS"</span><span class="fu">,</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_year"</span><span class="fu">:</span> <span class="st">"2021"</span><span class="fu">,</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="kw">null</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"data_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AL02"</span><span class="fu">,</span></span>
 <span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Qender"</span><span class="fu">,</span></span>
 <span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_source"</span><span class="fu">:</span> <span class="st">"NUTS"</span><span class="fu">,</span></span>
 <span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_year"</span><span class="fu">:</span> <span class="st">"2021"</span><span class="fu">,</span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"outcome_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"predictor_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="kw">null</span></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AL03"</span><span class="fu">,</span></span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Jug"</span><span class="fu">,</span></span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_source"</span><span class="fu">:</span> <span class="st">"NUTS"</span><span class="fu">,</span></span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_year"</span><span class="fu">:</span> <span class="st">"2021"</span><span class="fu">,</span></span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"outcome_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"predictor_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
-<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="kw">null</span></span>
-<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AT11"</span><span class="fu">,</span></span>
-<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Burgenland"</span><span class="fu">,</span></span>
-<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_source"</span><span class="fu">:</span> <span class="st">"NUTS"</span><span class="fu">,</span></span>
-<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_year"</span><span class="fu">:</span> <span class="st">"2021"</span><span class="fu">,</span></span>
-<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"outcome_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
-<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"predictor_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
-<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="fl">4.2</span></span>
-<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
-<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AT12"</span><span class="fu">,</span></span>
-<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Nieder</span><span class="ch">\u00f6</span><span class="st">sterreich"</span><span class="fu">,</span></span>
-<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_source"</span><span class="fu">:</span> <span class="st">"NUTS"</span><span class="fu">,</span></span>
-<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_year"</span><span class="fu">:</span> <span class="st">"2021"</span><span class="fu">,</span></span>
-<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"outcome_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
-<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"predictor_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
-<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="fl">3.8</span></span>
-<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
-<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="kw">null</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"data_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AL03"</span><span class="fu">,</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Jug"</span><span class="fu">,</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_source"</span><span class="fu">:</span> <span class="st">"NUTS"</span><span class="fu">,</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_year"</span><span class="fu">:</span> <span class="st">"2021"</span><span class="fu">,</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="kw">null</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"data_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AT11"</span><span class="fu">,</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Burgenland"</span><span class="fu">,</span></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_source"</span><span class="fu">:</span> <span class="st">"NUTS"</span><span class="fu">,</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_year"</span><span class="fu">:</span> <span class="st">"2021"</span><span class="fu">,</span></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="fl">4.2</span></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"data_year"</span><span class="fu">:</span> <span class="st">"2018"</span><span class="fu">,</span></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo"</span><span class="fu">:</span> <span class="st">"AT12"</span><span class="fu">,</span></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_name"</span><span class="fu">:</span> <span class="st">"Nieder</span><span class="ch">\u00f6</span><span class="st">sterreich"</span><span class="fu">,</span></span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_source"</span><span class="fu">:</span> <span class="st">"NUTS"</span><span class="fu">,</span></span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"geo_year"</span><span class="fu">:</span> <span class="st">"2021"</span><span class="fu">,</span></span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"x"</span><span class="fu">:</span> <span class="fl">3.8</span></span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><em>Note: Only the first 5 json elements are shown</em></p>
 <hr>
 </section>
