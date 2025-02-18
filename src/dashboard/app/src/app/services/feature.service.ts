@@ -172,6 +172,7 @@ export class FeatureService {
         catchError(this.handleError('search', 'ERROR')))
   }
 
+  /* SJOERD
   public getXYData(regionLevel: string, year: string, selectionJsonX: string, selectionJsonY: string): Observable<any> {
     return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_xy_data/items.json?_level=${regionLevel}&_predictor_year=${year}&_outcome_year=${year}&X_JSON=${selectionJsonX}&Y_JSON=${selectionJsonY}&limit=2500`).pipe(
         tap((result) => {
@@ -179,7 +180,14 @@ export class FeatureService {
         }),
         catchError(this.handleError('search', 'ERROR')))
   } // END FUNCTION getXYData
-
+  */
+  public getXYData(regionLevel: string, yearX: string, yearY: string, selectionJsonX: string, selectionJsonY: string): Observable<any> {
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_xy_data/items.json?_level=${regionLevel}&_predictor_year=${yearX}&_outcome_year=${yearY}&X_JSON=${selectionJsonX}&Y_JSON=${selectionJsonY}&limit=2500`).pipe(
+      tap((result) => {
+        //console.log(result);
+      }),
+      catchError(this.handleError('search', 'ERROR')))
+  } // END FUNCTION getXYData
 
   public getXData(regionLevel: string, year: string, selectionJsonX: string): Observable<any> {
     return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_x_data/items.json?_level=${regionLevel}&_year=${year}&X_JSON=${selectionJsonX}&limit=2500`).pipe(

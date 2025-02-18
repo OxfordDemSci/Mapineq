@@ -61,7 +61,12 @@
                 </mat-select>
 
                 <mat-label *ngIf="tableSelection.tableId === 1">Year</mat-label>
+                <!--
                 <input matInput type="text" *ngIf="tableSelection.tableId === 1" readonly [value]="(tableSelection.tableYear !== '-1' ? tableSelection.tableYear : '')" [disabled]="true">
+                -->
+                <mat-select *ngIf="tableSelection.tableId === 1" [(value)]="tableSelection.tableYear" (valueChange)="checkTableValueSelectionComplete()">
+                  <mat-option [value]="year" *ngFor="let year of availableYears">{{year}}</mat-option>
+                </mat-select>
                 <mat-hint  *ngIf="tableSelection.tableId === 1">(filled automatically)</mat-hint>
             </mat-form-field>
             <div *ngIf="availableYears.length > 0"><div class="textSmall">Available years: <i>{{availableYears.join(', ')}}</i></div><div class="divWhiteSpace"></div></div>

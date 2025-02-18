@@ -401,7 +401,7 @@ export class DashboardComponent implements OnInit{
                         y_json['conditions'] = y_conditions;
 
                         //console.log('before abc    NET VOOR AANROEP getXYData (bivariate versie)');
-                        this.dashboardFeatureService.getXYData(this.displayObject.tableFields[0].tableRegionLevel, this.displayObject.tableFields[0].tableYear, JSON.stringify(x_json), JSON.stringify(y_json)).subscribe(data => {
+                        this.dashboardFeatureService.getXYData(this.displayObject.tableFields[0].tableRegionLevel, this.displayObject.tableFields[0].tableYear, this.displayObject.tableFields[1].tableYear, JSON.stringify(x_json), JSON.stringify(y_json)).subscribe(data => {
                             //console.log('before abc    A. DISPLAY DATA COLLECTED! (bivariate)', data);
                             this.displayData = data;
                             this.displayDataUpdated = !this.displayDataUpdated;
