@@ -258,9 +258,12 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
   setTableSources() {
-    // console.log('vlak voor getSources, tableId:', this.tableId);
+    //console.log('vlak voor getSources, tableId:', this.tableId);
 
+    /*
     if (this.tableId === 0) {
+    */
+    if (true) {
       // this.featureService.getAllSources().subscribe((data) => {
       this.featureService.getResourceByNutsLevel(this.tableSelection.tableRegionLevel, this.inputUseCase).subscribe((data) => {
         // this.tables = data;
@@ -341,7 +344,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
       });
-    } else if (this.tableId === 1) {
+    } /* else if (this.tableId === 1) {
       // getSourcesByYearAndNutsLevel year & nuts level
       // console.log('getSourcesByYearAndNutsLevel(), try get values:', this.otherTableSelection.tableYear, this.otherTableSelection.tableRegionLevel);
       this.featureService.getSourcesByYearAndNutsLevel(this.otherTableSelection.tableYear, this.otherTableSelection.tableRegionLevel, this.inputUseCase).subscribe((data) => {
@@ -418,7 +421,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
       });
     }
-
+    */
 
 
 
@@ -467,6 +470,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     // this.emitChangeTableValue();
 
+
+    /*
     if (this.tableSelection.tableId !== 1) {
       this.tableSelection.tableYear = '';
       // this.tableSelection.tableRegionLevel = '';
@@ -474,14 +479,21 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       this.tableSelection.tableYear = this.otherTableSelection.tableYear;
       this.tableSelection.tableRegionLevel = this.otherTableSelection.tableRegionLevel;
     }
+    */
+    // this.tableSelection.tableYear = '';
+    if (this.tableSelection.tableId === 1) {
+      this.tableSelection.tableRegionLevel = this.otherTableSelection.tableRegionLevel;
+    }
 
     this.availableYearsAndRegionLevels = [];
     this.availableYears = [];
+
     // this.availableRegionLevels = [];
 
     // console.log('before this.featureService.getInfoByReSource()', this.tableSelection.tableId, this.tableSelection.tableName);
     this.featureService.getInfoByReSource(this.tableSelection.tableName, this.inputUseCase).subscribe( data => {
       this.availableYearsAndRegionLevels = data;
+      console.log('SJOERD 0001', this.tableSelection.tableId);
       this.setAvailableYears();
 
       // console.log('REFRESH available region levels for selected table ... ... ... ... ... ');
@@ -512,7 +524,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   tableSelectClearSelectedOption(autoComplete) {
     //console.log('before abc tableSelectClearSelectedOption() ...', this.inputTableId);
 
-
+    console.log('SJOERD 0004', this.tableSelection.tableId, 'last:', this.tableSelection.lastTableYear, 'new/current:', this.tableSelection.tableYear)
     this.tableSelection.tableName = '';
     this.tableSelection.tableDescr = '';
     this.tableSelection.tableYear = '-1';
@@ -594,7 +606,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.availableYears.sort();
     this.availableYears.reverse();
 
-
+    console.log('SJOERD 0002', this.tableSelection.tableId, 'last:', this.tableSelection.lastTableYear, 'new/current:', this.tableSelection.tableYear);
     if (this.tableSelection.lastTableYear !== ''  &&  this.availableYears.includes(this.tableSelection.lastTableYear)) {
       this.tableSelection.tableYear = this.tableSelection.lastTableYear;
       this.getFieldsForTableForYearAndRegionLevel();
@@ -633,6 +645,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.availableRegionLevels.sort();
     this.availableRegionLevels.reverse();
 
+    // SJOERD: 20250219 waarom dit alleen bij 1?
     if (this.tableSelection.tableId === 1) {
       this.getFieldsForTableForYearAndRegionLevel();
     }
@@ -654,6 +667,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     document.getElementById('divTableDescr_' + this.tableSelection.tableId.toString()).classList.add('divLoading');
 
+    console.log('SJOERD 0003', this.tableSelection.tableId, 'last:', this.tableSelection.lastTableYear, 'new/current:', this.tableSelection.tableYear);
     this.tableSelection.lastTableYear = this.tableSelection.tableYear;
 
 
