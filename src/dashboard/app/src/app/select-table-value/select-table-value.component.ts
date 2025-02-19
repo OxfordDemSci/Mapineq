@@ -179,7 +179,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       }
 
       if (propName === 'region'  &&  this.componentInitiated) {
-        //console.log('********** change in', propName, changes[propName].currentValue, changes[propName].previousValue);
+        console.log('********** change in', propName, changes[propName].currentValue, changes[propName].previousValue);
         this.tableId = 0;
         //console.log('before abc - ngOnChanges(), "region":', valueCurrent, ' inputTableId', this.inputTableId, this.componentInitiated, this.inputUseCaseData);
         this.setTableSources();
@@ -493,7 +493,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     // console.log('before this.featureService.getInfoByReSource()', this.tableSelection.tableId, this.tableSelection.tableName);
     this.featureService.getInfoByReSource(this.tableSelection.tableName, this.inputUseCase).subscribe( data => {
       this.availableYearsAndRegionLevels = data;
-      console.log('SJOERD 0001', this.tableSelection.tableId);
+      console.log('SJOERD 0001', this.tableSelection.tableId, 'last:', this.tableSelection.lastTableYear, 'new/current:', this.tableSelection.tableYear);
       this.setAvailableYears();
 
       // console.log('REFRESH available region levels for selected table ... ... ... ... ... ');
@@ -682,6 +682,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     let selectedJson = []
     sourceSelectionJson['selected'] = selectedJson;
 
+    console.log('SJOERD 0003-1', this.tableSelection.tableId);
     this.featureService.getColumnValuesBySourceJson(this.tableSelection.tableName, JSON.stringify(sourceSelectionJson), this.inputUseCase).subscribe( data => {
       // this.featureService.getColumnValuesBySource(this.tableSelection.tableName, this.tableSelection.tableYear, this.tableSelection.tableRegionLevel).subscribe( data => {
       // console.log('getColumnValuesBySource()', this.tableSelection.tableName, this.tableSelection.tableYear, this.tableSelection.tableRegionLevel, data);
@@ -690,59 +691,72 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       this.availableColumnValuesWithInitiallyOneChoice = [];
       this.availableColumnValuesManuallyChanged = [];
       // this.selectedColumnValues = new Array(data.length).fill('');
+
+      console.log('data:', data.length.toString(), JSON.stringify(data));
+
+
+
       data.forEach( row => {
-        // console.log('data.forEach, row:', row);
+        console.log('data.forEach, row:', this.tableSelection.tableId, row);
         let jsonToPush = row;
 
         // console.log('jsonToPush:' ,jsonToPush);
         // this.selectedColumnValues[jsonToPush.field] = '';
 
-        if (jsonToPush.field_values.length === 1) {
-          this.tableSelection.tableColumnValues[jsonToPush.field] = jsonToPush.field_values[0].value;
-          this.availableColumnValuesWithInitiallyOneChoice.push(jsonToPush.field);
-        } else {
-
-
-          if (Object.values(this.tableSelection.lastSelections).length > 0  &&
-              Object.keys(this.tableSelection.lastSelections).includes(jsonToPush.field)  &&
-              jsonToPush.field_values.map(field_value => {return field_value.value;}).includes(this.tableSelection.lastSelections[jsonToPush.field])
-              ) {
-            // this field was in previous selection ...
-            this.tableSelection.tableColumnValues[jsonToPush.field] = this.tableSelection.lastSelections[jsonToPush.field];
+        if (jsonToPush.field_values !== null) {
+          if (jsonToPush.field_values.length === 1) {
+            this.tableSelection.tableColumnValues[jsonToPush.field] = jsonToPush.field_values[0].value;
+            this.availableColumnValuesWithInitiallyOneChoice.push(jsonToPush.field);
           } else {
 
-            // CHECK if use case, otherwise return empty
-            if (this.inputUseCase > -1) {
-              // console.log('USE CASE, ', this.inputTableId, jsonToPush.field, jsonToPush.field_values, this.inputUseCaseData.filter(tableObject => {return tableObject.tableName === this.tableSelection.tableName})[0] );
-              let useCaseTableInfo = this.inputUseCaseData.filter(tableObject => {
-                return tableObject.tableName === this.tableSelection.tableName
-              })[0];
-              if (typeof useCaseTableInfo !== 'undefined') {
-                // console.log('USE CASE TABLE FIELD VALUE', useCaseTableInfo.tableColumnValues[jsonToPush.field], jsonToPush.field_values.map(field => {return field.value;}));
-                if (jsonToPush.field_values.map(field => {
-                  return field.value;
-                }).includes(useCaseTableInfo.tableColumnValues[jsonToPush.field])) {
-                  this.tableSelection.tableColumnValues[jsonToPush.field] = useCaseTableInfo.tableColumnValues[jsonToPush.field];
+
+            if (Object.values(this.tableSelection.lastSelections).length > 0 &&
+              Object.keys(this.tableSelection.lastSelections).includes(jsonToPush.field) &&
+              jsonToPush.field_values.map(field_value => {
+                return field_value.value;
+              }).includes(this.tableSelection.lastSelections[jsonToPush.field])
+            ) {
+              // this field was in previous selection ...
+              this.tableSelection.tableColumnValues[jsonToPush.field] = this.tableSelection.lastSelections[jsonToPush.field];
+            } else {
+
+              // CHECK if use case, otherwise return empty
+              if (this.inputUseCase > -1) {
+                // console.log('USE CASE, ', this.inputTableId, jsonToPush.field, jsonToPush.field_values, this.inputUseCaseData.filter(tableObject => {return tableObject.tableName === this.tableSelection.tableName})[0] );
+                let useCaseTableInfo = this.inputUseCaseData.filter(tableObject => {
+                  return tableObject.tableName === this.tableSelection.tableName
+                })[0];
+                if (typeof useCaseTableInfo !== 'undefined') {
+                  // console.log('USE CASE TABLE FIELD VALUE', useCaseTableInfo.tableColumnValues[jsonToPush.field], jsonToPush.field_values.map(field => {return field.value;}));
+                  if (jsonToPush.field_values.map(field => {
+                    return field.value;
+                  }).includes(useCaseTableInfo.tableColumnValues[jsonToPush.field])) {
+                    this.tableSelection.tableColumnValues[jsonToPush.field] = useCaseTableInfo.tableColumnValues[jsonToPush.field];
+                  } else {
+                    this.tableSelection.tableColumnValues[jsonToPush.field] = '';
+                  }
                 } else {
                   this.tableSelection.tableColumnValues[jsonToPush.field] = '';
                 }
               } else {
                 this.tableSelection.tableColumnValues[jsonToPush.field] = '';
               }
-            } else {
-              this.tableSelection.tableColumnValues[jsonToPush.field] = '';
-            }
 
+            }
           }
         }
 
         this.availableColumnValues.push(jsonToPush);
 
       });
+
+      console.log('SJOERD 0003a', this.tableSelection.tableId);
       this.fillSelections();
 
+      console.log('SJOERD 0003b', this.tableSelection.tableId);
       this.checkTableValueSelectionComplete();
 
+      console.log('SJOERD 0003c', this.tableSelection.tableId);
     });
 
 
