@@ -168,7 +168,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
         //console.log('before abc - ngOnChanges(), "inputOtherTableSelection" CHECK:', this.inputTableId, this.inputUseCase, this.useCaseOtherTableLoaded, this.inputOtherTableSelection.tableName, this.tableSelection.tableName);
         if (this.inputUseCase === -1  ||  this.useCaseOtherTableLoaded < 3) {
-          //console.log('before abc - ngOnChanges(), "inputOtherTableSelection", inputTableId', this.inputTableId, this.componentInitiated, this.inputOtherTableSelection.tableName, this.tableSelection.tableName, this.inputUseCaseData);
+          console.log('before abc - ngOnChanges(), "inputOtherTableSelection", inputTableId', this.inputTableId, this.componentInitiated, this.inputOtherTableSelection.tableName, this.tableSelection.tableName, this.inputUseCaseData);
           this.otherTableSelection = this.inputOtherTableSelection;
           this.setTableSources();
           this.useCaseOtherTableLoaded++;
@@ -179,7 +179,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       }
 
       if (propName === 'region'  &&  this.componentInitiated) {
-        console.log('********** change in', propName, changes[propName].currentValue, changes[propName].previousValue);
+        console.log('********** change in', propName, changes[propName].currentValue, changes[propName].previousValue, this.tableSelection.tableId, this.tableId);
         this.tableId = 0;
         //console.log('before abc - ngOnChanges(), "region":', valueCurrent, ' inputTableId', this.inputTableId, this.componentInitiated, this.inputUseCaseData);
         this.setTableSources();
@@ -243,12 +243,16 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
   regionLevelChanged() {
+    console.log('SJOERD regionLevelChanged() ...', this.tableSelection.tableId, this.tableId, (this.tableSelection.tableId === 0 ? 'LEFT' : 'RIGHT'));
 
+    // HIERONDER WSS ook iets doen in geval van tableId === 1, obv regionAanpassing (in predictor)
     if (this.tableId === 0) {
       // this.tableSelection.tableRegionLevel = this.otherTableSelection.tableRegionLevel;
       // this.otherTableSelection.tableRegionLevel = this.tableSelection.tableRegionLevel;
       this.tableSelection.tableName = ''; // necessary to clear table if data unavailable for chosen level
       this.updateTableValueFromSelect.emit(this.tableSelection);
+
+      //this.otherTableSelection.tableRegionLevel = this.tableSelection.tableRegionLevel;
 
     }
 
@@ -260,12 +264,13 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   setTableSources() {
     //console.log('vlak voor getSources, tableId:', this.tableId);
 
+    console.log('setTableSources() ...', this.tableSelection.tableId);
     /*
     if (this.tableId === 0) {
     */
     if (true) {
       // this.featureService.getAllSources().subscribe((data) => {
-      this.featureService.getResourceByNutsLevel(this.tableSelection.tableRegionLevel, this.inputUseCase).subscribe((data) => {
+      this.featureService.getResourceByNutsLevel(this.tableSelection.tableRegionLevel, this.inputUseCase, this.tableSelection.tableId).subscribe((data) => {
         // this.tables = data;
         this.tableSelectOptions = data;
 
@@ -495,7 +500,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     // console.log('before this.featureService.getInfoByReSource()', this.tableSelection.tableId, this.tableSelection.tableName);
     this.featureService.getInfoByReSource(this.tableSelection.tableName, this.inputUseCase).subscribe( data => {
       this.availableYearsAndRegionLevels = data;
-      console.log('SJOERD 0001', this.tableSelection.tableId, 'last:', this.tableSelection.lastTableYear, 'new/current:', this.tableSelection.tableYear);
+      // console.log('SJOERD 0001', this.tableSelection.tableId, 'last:', this.tableSelection.lastTableYear, 'new/current:', this.tableSelection.tableYear);
       this.setAvailableYears();
 
       // console.log('REFRESH available region levels for selected table ... ... ... ... ... ');
@@ -528,7 +533,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   tableSelectClearSelectedOption(autoComplete) {
     //console.log('before abc tableSelectClearSelectedOption() ...', this.inputTableId);
 
-    console.log('SJOERD 0004', this.tableSelection.tableId, 'last:', this.tableSelection.lastTableYear, 'new/current:', this.tableSelection.tableYear)
+    // console.log('SJOERD 0004', this.tableSelection.tableId, 'last:', this.tableSelection.lastTableYear, 'new/current:', this.tableSelection.tableYear)
     this.tableSelection.tableName = '';
     this.tableSelection.tableDescr = '';
     this.tableSelection.tableYear = '-1';
@@ -610,7 +615,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.availableYears.sort();
     this.availableYears.reverse();
 
-    console.log('SJOERD 0002', this.tableSelection.tableId, 'last:', this.tableSelection.lastTableYear, 'new/current:', this.tableSelection.tableYear);
+    // console.log('SJOERD 0002', this.tableSelection.tableId, 'last:', this.tableSelection.lastTableYear, 'new/current:', this.tableSelection.tableYear);
     if (this.tableSelection.lastTableYear !== ''  &&  this.availableYears.includes(this.tableSelection.lastTableYear)) {
       this.tableSelection.tableYear = this.tableSelection.lastTableYear;
       this.getFieldsForTableForYearAndRegionLevel();
@@ -634,6 +639,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     // console.log('availableYears: ', this.availableYears);
   } // END FUNCTION setAvailableYears
 
+  /*
   setAvailableRegionLevelsForYear() {
     // console.log('setAvailableRegionLevelsForYear(), year:', this.tableSelection.tableYear);
 
@@ -656,6 +662,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     // console.log('availableRegionLevels: ', this.availableRegionLevels);
   } // END FUNCTION setAvailableRegionLevelsForYear
+  */
 
 
   getFieldsForTableForYearAndRegionLevel() {
@@ -671,7 +678,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     document.getElementById('divTableDescr_' + this.tableSelection.tableId.toString()).classList.add('divLoading');
 
-    console.log('SJOERD 0003', this.tableSelection.tableId, 'last:', this.tableSelection.lastTableYear, 'new/current:', this.tableSelection.tableYear);
+    // console.log('SJOERD 0003', this.tableSelection.tableId, 'last:', this.tableSelection.lastTableYear, 'new/current:', this.tableSelection.tableYear);
     this.tableSelection.lastTableYear = this.tableSelection.tableYear;
 
 
@@ -686,7 +693,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     let selectedJson = []
     sourceSelectionJson['selected'] = selectedJson;
 
-    console.log('SJOERD 0003-1', this.tableSelection.tableId);
+    // console.log('SJOERD 0003-1', this.tableSelection.tableId);
     this.featureService.getColumnValuesBySourceJson(this.tableSelection.tableName, JSON.stringify(sourceSelectionJson), this.inputUseCase).subscribe( data => {
       // this.featureService.getColumnValuesBySource(this.tableSelection.tableName, this.tableSelection.tableYear, this.tableSelection.tableRegionLevel).subscribe( data => {
       // console.log('getColumnValuesBySource()', this.tableSelection.tableName, this.tableSelection.tableYear, this.tableSelection.tableRegionLevel, data);
@@ -754,13 +761,13 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
       });
 
-      console.log('SJOERD 0003a', this.tableSelection.tableId);
+      // console.log('SJOERD 0003a', this.tableSelection.tableId);
       this.fillSelections();
 
-      console.log('SJOERD 0003b', this.tableSelection.tableId);
+      // console.log('SJOERD 0003b', this.tableSelection.tableId);
       this.checkTableValueSelectionComplete();
 
-      console.log('SJOERD 0003c', this.tableSelection.tableId);
+      // console.log('SJOERD 0003c', this.tableSelection.tableId);
     });
 
 

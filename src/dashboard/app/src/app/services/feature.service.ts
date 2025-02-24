@@ -105,8 +105,9 @@ export class FeatureService {
 
   //postgisftw.get_source_by_nuts_level
   // IN BIVARIATE CASE: PREDICTOR
-  public getResourceByNutsLevel(nutslevel: string, use_case: number): Observable<any> {
-    let parameters = this.getParameters(`_level=${nutslevel}&limit=2500`, use_case, '&_function=Predictor');
+  public getResourceByNutsLevel(nutslevel: string, use_case: number, tableId = 0): Observable<any> {
+    // let parameters = this.getParameters(`_level=${nutslevel}&limit=2500`, use_case, '&_function=Predictor');
+    let parameters = this.getParameters(`_level=${nutslevel}&limit=2500`, use_case, '&_function=' + (tableId === 0 ? 'Predictor' : 'Outcome') );
     return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_source_by_nuts_level/items.json?${parameters}`).pipe(
       tap((result) => {
         //console.log(result);
