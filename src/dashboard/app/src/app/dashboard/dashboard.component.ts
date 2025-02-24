@@ -279,10 +279,12 @@ export class DashboardComponent implements OnInit{
 
             if (tableField.tableId === 0 && this.displayObject.formType === 'bivariate') {
                 this.displayObject.tableFields[1].tableRegionLevel = this.displayObject.tableFields[0].tableRegionLevel;
+                /* 20250224 TURN OFF DIFFERENT YEARS, because outcome year not depending on predictor year anymore /
                 this.displayObject.tableFields[1].tableYear = this.displayObject.tableFields[0].tableYear;
                 if (this.displayObject.tableFields[0].tableName === '') {
                     this.displayObject.tableFields[1].tableName = '';
                 }
+                /* */
             }
 
             // console.log('CHECK HIER???');

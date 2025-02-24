@@ -481,9 +481,11 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     }
     */
     // this.tableSelection.tableYear = '';
+    /* 20250224 TURN OFF DIFFERENT YEARS, UNNECESSARY CODE??? /
     if (this.tableSelection.tableId === 1) {
       this.tableSelection.tableRegionLevel = this.otherTableSelection.tableRegionLevel;
     }
+    /* */
 
     this.availableYearsAndRegionLevels = [];
     this.availableYears = [];
@@ -510,10 +512,12 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     });
 
 
+    /* 20250224 TURN OFF DIFFERENT YEARS, because year might not be known yet, because not depending on predictor year ... /
     if (this.tableSelection.tableId === 1) {
       // this.checkTableValueSelectionComplete(); // SJO 20240903 DEZE MSS OVERBODIG?
       this.getFieldsForTableForYearAndRegionLevel();
     }
+    /* */
 
     this.emitChangeTableValue();
 
@@ -585,7 +589,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
   emitChangeTableValue() {
-    // console.log('emitChangeTableValue() .. id:', this.tableSelection.tableId);
+    console.log('emitChangeTableValue() .. id:', this.tableSelection.tableId, (this.tableSelection.tableId === 0 ? 'LEFT' : 'RIGHT'));
     this.updateTableValueFromSelect.emit(this.tableSelection);
   }
 
@@ -692,7 +696,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       this.availableColumnValuesManuallyChanged = [];
       // this.selectedColumnValues = new Array(data.length).fill('');
 
-      console.log('data:', data.length.toString(), JSON.stringify(data));
+      // console.log('data:', data.length.toString(), JSON.stringify(data));
 
 
 
