@@ -249,8 +249,17 @@ export class DashboardComponent implements OnInit{
         }
     } // END FUNCTION panelLeftStatusChange
 
+    updateRegionLevelFromSelect(regionLevel: any) {
+      // console.log('* * * updateRegionLevelFromSelect() ...', regionLevel, typeof regionLevel);
+
+      this.displayObject.tableFields[0].tableRegionLevel = regionLevel;
+
+    } // END FUNCTION updateRegionLevelFromSelect
+
 
     updateTableFieldFromSelect(tableField: DisplayTableValueObject) {
+        // console.log(' * * * ' + tableField.tableId.toString() + ' updateTableFieldFromSelect() ... ');
+
         let tableId = tableField.tableId;
 
         let showOnlyOneTableId = -1;
@@ -259,6 +268,7 @@ export class DashboardComponent implements OnInit{
 
 
         if (this.displayObject.numberTableFields > 1  &&  tableField.tableShowOnlyThisTable) {
+            // console.log(' * * * ' + tableId.toString() + ' AAA');
             if (tableField.tableSelectionComplete) {
                 console.log('show only table ', tableField.tableId);
                 showOnlyOneTableId = tableField.tableId;
@@ -273,6 +283,7 @@ export class DashboardComponent implements OnInit{
 
 
         } else {
+            // console.log(' * * * ' + tableId.toString() + ' BBB');
 
             this.displayObject.displayType = this.displayObject.formType;
             this.displayObject.displayTableId = -1;
@@ -305,6 +316,8 @@ export class DashboardComponent implements OnInit{
             }
 
             // console.log(' - - doCollectDataForSelection ???');
+            // console.log(' * * * ' + tableId.toString() + ' CCC', doCollectDataForSelection);
+
             if (doCollectDataForSelection) {
                 this.collectDataForSelection(tableId);
                 // SJOERD: tijdelijk UIT gezet
@@ -362,7 +375,7 @@ export class DashboardComponent implements OnInit{
 
 
     collectDataForSelection(tableId = 0) {
-        console.log('CALLED collectDataForSelection() ... ', tableId);
+        console.log(' **  **  **  CALLED collectDataForSelection() ... ', tableId, (tableId === 0 ? 'LEFT' : 'RIGHT'));
 
         // if (this.displayObject.displayType === 'bivariate'  &&  this.displayObject.tableFields.length > 1  &&  tableId === 0) {
         if (tableId === 999) {

@@ -26,6 +26,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
   @Output() updateTableValueFromSelect = new EventEmitter();
 
+  @Output() updateRegionLevelFromSelect = new EventEmitter();
+
   intervalTimers: any[];
 
   componentInitiated: boolean;
@@ -100,6 +102,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
     this.tableId = this.inputTableId;
+
     this.tableSelection = this.inputTableSelection;
     this.otherTableSelection = this.inputOtherTableSelection;
 
@@ -118,11 +121,11 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       console.log('Case study ' + this.inputUseCase.toString() + ', start interval ...', this.tableId, this.inputUseCaseData.length);
       this.intervalTimers['regionLevels_' + this.tableId.toString()] = setInterval( () => {
         if (this.inputUseCaseData.length > 0) {
-          console.log(' ... GO!!', this.tableId);
+          console.log(' - Case study ... GO!!', this.tableId);
           this.setAvailableRegionLevels();
           clearInterval(this.intervalTimers['regionLevels_' + this.tableId.toString()]);
         } else {
-          console.log(' ... WAIT', this.tableId);
+          console.log(' - Case study ... WAIT', this.tableId);
         }
       }, 100);
     }
@@ -155,13 +158,16 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       }
       */
 
+      /* SJOERD
       if (propName === 'inputTableSelection' && valueCurrent) {
         // DEZE REGEL HIERONDER MISTE ...
         //console.log('before abc - ngOnChanges(), "inputTableSelection":', this.tableSelection.tableId);
         this.tableSelection = this.inputTableSelection;
         // this.checkTableValueSelectionComplete(); // deze _hier_ aanroepen zorgt dat hij blijft checken en niet (kaart) plot
       }
+      */
 
+      /* SJOERD
       if (propName === 'inputOtherTableSelection' && valueCurrent  &&  this.componentInitiated) {
       // if (propName === 'inputOtherTableSelection' && valueCurrent  &&  this.componentInitiated  &&  this.inputUseCase === -1) {
         // console.log('ngOnChanges(), "inputOtherTableSelection":', valueCurrent);
@@ -177,10 +183,15 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
           this.useCaseOtherTableLoaded = 0; // SJO 20240909
         }
       }
+      */
 
       if (propName === 'region'  &&  this.componentInitiated) {
-        console.log('********** change in', propName, changes[propName].currentValue, changes[propName].previousValue, this.tableSelection.tableId, this.tableId);
+        // console.log('********** change in', propName, changes[propName].currentValue, changes[propName].previousValue, this.tableSelection.tableId, (this.tableSelection.tableId === 0 ? 'LEFT' : 'RIGHT'), this.componentInitiated, this.tableId);
+        /* SJOERD
         this.tableId = 0;
+        */
+        this.tableSelection.tableRegionLevel = changes[propName].currentValue;
+
         //console.log('before abc - ngOnChanges(), "region":', valueCurrent, ' inputTableId', this.inputTableId, this.componentInitiated, this.inputUseCaseData);
         this.setTableSources();
         // console.log('this.tableSelection.tableName=' + this.tableSelection.tableName)
@@ -243,20 +254,25 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
   regionLevelChanged() {
-    console.log('SJOERD regionLevelChanged() ...', this.tableSelection.tableId, this.tableId, (this.tableSelection.tableId === 0 ? 'LEFT' : 'RIGHT'));
+    // console.log('SJOERD regionLevelChanged() ...', this.tableSelection.tableId, this.tableId, (this.tableSelection.tableId === 0 ? 'LEFT' : 'RIGHT'));
 
     // HIERONDER WSS ook iets doen in geval van tableId === 1, obv regionAanpassing (in predictor)
     if (this.tableId === 0) {
       // this.tableSelection.tableRegionLevel = this.otherTableSelection.tableRegionLevel;
       // this.otherTableSelection.tableRegionLevel = this.tableSelection.tableRegionLevel;
+      /* SJOERD
       this.tableSelection.tableName = ''; // necessary to clear table if data unavailable for chosen level
       this.updateTableValueFromSelect.emit(this.tableSelection);
+      */
+      this.updateRegionLevelFromSelect.emit(this.tableSelection.tableRegionLevel);
 
       //this.otherTableSelection.tableRegionLevel = this.tableSelection.tableRegionLevel;
 
     }
 
+    /* SJOERD
     this.setTableSources();
+    */
 
   } // END FUNCTION regionLevelChanged
 
@@ -264,11 +280,19 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   setTableSources() {
     //console.log('vlak voor getSources, tableId:', this.tableId);
 
-    console.log('setTableSources() ...', this.tableSelection.tableId);
+    console.log('setTableSources() ...', this.tableSelection.tableId, (this.tableSelection.tableId === 0 ? 'LEFT' : 'RIGHT'));
     /*
     if (this.tableId === 0) {
     */
     if (true) {
+
+      /* SJOERD */
+      this.tableSelectClearSelectedOption();
+      // this.tableSelection.tableName = '';
+      // this.tableSelection.tableColumnValues = {};
+      // this.tableSelection.Selections = {};
+      /* */
+
       // this.featureService.getAllSources().subscribe((data) => {
       this.featureService.getResourceByNutsLevel(this.tableSelection.tableRegionLevel, this.inputUseCase, this.tableSelection.tableId).subscribe((data) => {
         // this.tables = data;
@@ -281,13 +305,19 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
             map(value => this.filterTableSelectOptions(value || '')),
         );
         if (this.region !== '') {
-          // console.log('this.region', this.region);
+          // console.log('this.region', this.region, this.tableSelection.tableName, this.tableSelection.lastTableName);
+          /* SJOERD
           if (this.availableTableNames.includes(this.tableSelection.tableName)) {
+          */
+          if (this.availableTableNames.includes(this.tableSelection.lastTableName)) {
             // console.log('TABLENAME setten', this.inputTableId);
             // this.tableSelection.tableName = this.inputUseCaseData[this.inputTableId].tableName;
 
             let selectedTableObject = this.tableSelectOptions.filter( tableObject => {
+              /* SJOERD
               return tableObject.f_resource === this.tableSelection.tableName;
+              */
+              return tableObject.f_resource === this.tableSelection.lastTableName;
             })
 
             //console.log('before abc A - selectedTableObject: ', this.tableSelection.tableId, selectedTableObject);
@@ -530,7 +560,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
 
-  tableSelectClearSelectedOption(autoComplete) {
+  tableSelectClearSelectedOption(autoComplete = null) {
     //console.log('before abc tableSelectClearSelectedOption() ...', this.inputTableId);
 
     // console.log('SJOERD 0004', this.tableSelection.tableId, 'last:', this.tableSelection.lastTableYear, 'new/current:', this.tableSelection.tableYear)
@@ -548,10 +578,12 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     // this.selectedColumnValues = {};
 
 
-    // console.log('CHECK: ', autoComplete.options);
-    autoComplete.options.forEach( option => {
-      option.deselect();
-    });
+    if (autoComplete !== null) {
+      // console.log('CHECK: ', autoComplete.options);
+      autoComplete.options.forEach(option => {
+        option.deselect();
+      });
+    }
 
     this.tableSelectFormControl.reset('');
 
@@ -594,7 +626,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
   emitChangeTableValue() {
-    console.log('emitChangeTableValue() .. id:', this.tableSelection.tableId, (this.tableSelection.tableId === 0 ? 'LEFT' : 'RIGHT'));
+    // console.log('emitChangeTableValue() .. id:', this.tableSelection.tableId, (this.tableSelection.tableId === 0 ? 'LEFT' : 'RIGHT'));
     this.updateTableValueFromSelect.emit(this.tableSelection);
   }
 
@@ -708,7 +740,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
 
       data.forEach( row => {
-        console.log('data.forEach, row:', this.tableSelection.tableId, row);
+        // console.log('data.forEach, row:', this.tableSelection.tableId, row);
         let jsonToPush = row;
 
         // console.log('jsonToPush:' ,jsonToPush);
