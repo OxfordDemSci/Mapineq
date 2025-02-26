@@ -18,13 +18,51 @@
                 <mat-form-field style="width:600px;" appearance="outline" floatLabel="always" class="form-field-white-background" #matFormFieldElement>
                     <mat-label>{{placeHolder}}</mat-label>
                     <input matInput [value]="searchText"
-                           [formControl]="searchResultsCtrl" placeholder="for datasets"  #inputElement>
+                           [formControl]="searchResultsCtrl" [placeholder]="placeHolder"  #inputElement>
 
                     <button matSuffix mat-icon-button aria-label="Clear" (click)="clearSelection()">
                         <mat-icon>close</mat-icon>
                     </button>
 
                 </mat-form-field>
+
+
+                <br>
+
+
+              <!--
+
+                <div>{{randomTags | json}}</div>
+                <div>{{allTags | json}}</div>
+
+                  <br>
+              <mat-form-field class="example-chip-list">
+              -->
+              <mat-form-field  style="width:600px;" appearance="outline" floatLabel="always">
+                <mat-label>Tags</mat-label>
+                <mat-chip-grid #chipGrid aria-label="Tags filter">
+                  @for (fruit of fruits; track fruit) {
+                    <mat-chip-row (removed)="remove(fruit)">
+                      {{fruit}}
+                      <button matChipRemove [attr.aria-label]="'remove ' + fruit">
+                        <mat-icon>cancel</mat-icon>
+                      </button>
+                    </mat-chip-row>
+                  }
+                </mat-chip-grid>
+                <input placeholder="add tag ..." #fruitInput [formControl]="fruitCtrl"
+                       [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
+                       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                       (matChipInputTokenEnd)="add($event)"/>
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                  @for (fruit of filteredFruits | async; track fruit) {
+                    <mat-option [value]="fruit">{{fruit}}</mat-option>
+                  }
+                </mat-autocomplete>
+              </mat-form-field>
+
+                <br>
+                <br>
 
                 <ng-container *ngIf="errorMsg; else elseTemplate">
                     {{errorMsg}}
@@ -56,15 +94,21 @@
                             </div>
 
                             <div>
-                                Available years:
-                                <div>
-                                    {{jsonArrayToString(result.f_years, ', ')}}
-                                </div>
+                                Tags:
+                                <div>{{jsonArrayToString(getOneOrToRandomTags(), ', ')}}</div>
                             </div>
+
 
                             <div>
                                 Available region levels:
                                 <div>{{jsonArrayToString(result.f_levels, ', ')}}</div>
+                            </div>
+
+                            <div>
+                                Available years:
+                                <div>
+                                    {{jsonArrayToString(result.f_years, ', ')}}
+                                </div>
                             </div>
 
                         </mat-card-content>

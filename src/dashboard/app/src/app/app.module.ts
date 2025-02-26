@@ -29,6 +29,7 @@ import {MatDivider} from "@angular/material/divider";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {DialogAppVersionAndBuildInfo} from "./lib/dialog-app-version-and-build-info.component";
 import {MatDialogModule} from "@angular/material/dialog";
+import {MatChipGrid, MatChipInput, MatChipRow, MatChipsModule} from "@angular/material/chips";
 
 
 @NgModule({
@@ -41,37 +42,38 @@ import {MatDialogModule} from "@angular/material/dialog";
         DatacatalogueComponent,
         DialogAppVersionAndBuildInfo
     ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        MatToolbarModule,
-        MatMenuModule,
-        MatIconModule,
-        MatButtonModule,
-        MatCardModule,
-        MatSidenavModule,
-        ServiceWorkerModule.register('ngsw-worker.js', {
-            enabled: !isDevMode(),
-            // Register the ServiceWorker as soon as the application is stable
-            // or after 30 seconds (whichever comes first).
-            registrationStrategy: 'registerWhenStable:30000'
-        }),
-        MatInputModule,
-        MatOptionModule,
-        MatSelectModule,
-        MatAutocompleteModule,
-        MatFormFieldModule,
-        ReactiveFormsModule,
-        FormsModule,
-        MatIconModule,
-        NgForOf,
-        NgOptimizedImage,
-        MatGridList,
-        MatGridTile,
-        MatDivider,
-        MatTooltipModule,
-        MatDialogModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    MatToolbarModule,
+    MatMenuModule,
+    MatIconModule,
+    MatButtonModule,
+    MatCardModule,
+    MatSidenavModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
+    MatInputModule,
+    MatOptionModule,
+    MatSelectModule,
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatIconModule,
+    NgForOf,
+    NgOptimizedImage,
+    MatGridList,
+    MatGridTile,
+    MatDivider,
+    MatTooltipModule,
+    MatDialogModule,
+    MatChipsModule
+  ],
     providers: [
     provideAnimationsAsync(), provideHttpClient()
   ],
