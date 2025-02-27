@@ -70,15 +70,20 @@ export class DatacatalogueComponent implements OnInit {
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
 
-    // Add our fruit
-    if (value) {
+    // Add our fruit (only if selectable option)
+    if (value  &&  this.allFruits.includes(value)) {
       this.fruits.push(value);
+
+      const index = this.allFruits.indexOf(value);
+      this.allFruits.splice(index, 1);
+
+      // Clear the input value
+      event.chipInput!.clear();
+
+      this.fruitCtrl.setValue(null);
+
     }
 
-    // Clear the input value
-    event.chipInput!.clear();
-
-    this.fruitCtrl.setValue(null);
   }
 
   remove(fruit: string): void {
@@ -88,11 +93,25 @@ export class DatacatalogueComponent implements OnInit {
       this.fruits.splice(index, 1);
 
       this.announcer.announce(`Removed ${fruit}`);
+
+      // add to allFruits again
+      this.allFruits.push(fruit);
+      this.allFruits.sort();
+
+      // this.fruitInput.nativeElement.value = '';
+      // this.fruitCtrl.setValue(null);
+      // reload suggestions
+      this.fruitCtrl.setValue(this.fruitInput.nativeElement.value);
+
     }
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
     this.fruits.push(event.option.viewValue);
+    if (this.allFruits.includes(event.option.viewValue)) {
+      const index = this.allFruits.indexOf(event.option.viewValue);
+      this.allFruits.splice(index, 1);
+    }
     this.fruitInput.nativeElement.value = '';
     this.fruitCtrl.setValue(null);
   }

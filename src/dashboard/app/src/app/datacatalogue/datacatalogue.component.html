@@ -30,12 +30,15 @@
                 <br>
 
 
-              <!--
-
+                <!--
                 <div>{{randomTags | json}}</div>
-                <div>{{allTags | json}}</div>
+                <div>{{allFruits | json}}</div>
 
-                  <br>
+                <br>
+                -->
+
+
+              <!--
               <mat-form-field class="example-chip-list">
               -->
               <mat-form-field  style="width:600px;" appearance="outline" floatLabel="always">
@@ -54,7 +57,7 @@
                        [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                        (matChipInputTokenEnd)="add($event)"/>
-                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption (optionSelected)="selected($event)">
                   @for (fruit of filteredFruits | async; track fruit) {
                     <mat-option [value]="fruit">{{fruit}}</mat-option>
                   }
