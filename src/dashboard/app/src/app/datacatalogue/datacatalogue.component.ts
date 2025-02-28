@@ -44,7 +44,7 @@ export class DatacatalogueComponent implements OnInit {
   separatorKeysCodes: number[] = [ENTER, COMMA];
   fruitCtrl = new FormControl('');
   filteredFruits: Observable<string[]>;
-  fruits: string[] = ['health'];
+  fruits: string[] = []; // ['health'];
   // allFruits: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
 
   @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
@@ -55,9 +55,11 @@ export class DatacatalogueComponent implements OnInit {
     // this.filteredSearchResults = [];
     this.initData();
 
-    this.randomTags = ['death', 'work', 'traffic', 'government', 'demography', 'nature', 'historic', 'yearly'];
+    this.randomTags = ['death', 'work', 'traffic', 'government', 'demography', 'nature', 'historic', 'yearly', 'two words'];
 
-    this.allFruits = this.randomTags.slice().sort();
+    this.allFruits = this.randomTags.slice();
+    this.allFruits.push('health');
+    this.allFruits.sort();
 
 
     this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
@@ -161,7 +163,7 @@ export class DatacatalogueComponent implements OnInit {
           }
           //console.log(this.filteredLocations);
         });
-  }
+  } // END FUNCTION ngOnInit
 
   clearSelection() {
     this.searchResultsCtrl.setValue('');
