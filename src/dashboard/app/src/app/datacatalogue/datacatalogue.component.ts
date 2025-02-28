@@ -33,39 +33,34 @@ export class DatacatalogueComponent implements OnInit {
   searchText: string = 'xxxxxx';
 
 
-  randomTags: any;
-  allFruits: any;
+  tagsRandomArray: any;
+  tagsAll: any;
+  tagsSelectable: any;
   // filteredOptions: Observable<string[]>;
 
-
-
-
-
-  separatorKeysCodes: number[] = [ENTER, COMMA];
-  fruitCtrl = new FormControl('');
-  filteredFruits: Observable<string[]>;
-  fruits: string[] = []; // ['health'];
+  tagsSeparatorKeyCodes: number[] = [ENTER, COMMA];
+  tagsFormControl = new FormControl('');
+  tagsFiltered: Observable<string[]>;
+  tagsSelected: string[] = []; // ['health'];
   // allFruits: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
 
-  @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
+  @ViewChild('tagsInput') tagsInput: ElementRef<HTMLInputElement>;
 
-  announcer = inject(LiveAnnouncer);
+  tagsAnnouncer = inject(LiveAnnouncer);
 
   constructor(private featureService: FeatureService) {
     // this.filteredSearchResults = [];
     this.initData();
 
-    this.randomTags = ['death', 'work', 'traffic', 'government', 'demography', 'nature', 'historic', 'yearly', 'two words'];
+    this.tagsRandomArray = ['death', 'work', 'traffic', 'government', 'demography', 'nature', 'historic', 'yearly', 'two words'];
 
-    this.allFruits = this.randomTags.slice();
-    this.allFruits.push('health');
-    this.allFruits.sort();
+    this.tagsAll = this.tagsRandomArray.slice();
+    this.tagsAll.push('health');
+    this.tagsAll.sort();
+
+    this.tagsSelectable = this.tagsAll.slice();
 
 
-    this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
-      startWith(null),
-      map((fruit: string | null) => (fruit ? this._filter(fruit) : this.allFruits.slice())),
-    );
 
   }
 
@@ -73,55 +68,55 @@ export class DatacatalogueComponent implements OnInit {
     const value = (event.value || '').trim();
 
     // Add our fruit (only if selectable option)
-    if (value  &&  this.allFruits.includes(value)) {
-      this.fruits.push(value);
+    if (value  &&  this.tagsSelectable.includes(value)) {
+      this.tagsSelected.push(value);
 
-      const index = this.allFruits.indexOf(value);
-      this.allFruits.splice(index, 1);
+      const index = this.tagsSelectable.indexOf(value);
+      this.tagsSelectable.splice(index, 1);
 
       // Clear the input value
       event.chipInput!.clear();
 
-      this.fruitCtrl.setValue(null);
+      this.tagsFormControl.setValue(null);
 
     }
 
   }
 
   remove(fruit: string): void {
-    const index = this.fruits.indexOf(fruit);
+    const index = this.tagsSelected.indexOf(fruit);
 
     if (index >= 0) {
-      this.fruits.splice(index, 1);
+      this.tagsSelected.splice(index, 1);
 
-      this.announcer.announce(`Removed ${fruit}`);
+      this.tagsAnnouncer.announce(`Removed ${fruit}`);
 
       // add to allFruits again
-      this.allFruits.push(fruit);
-      this.allFruits.sort();
+      this.tagsSelectable.push(fruit);
+      this.tagsSelectable.sort();
 
-      // this.fruitInput.nativeElement.value = '';
-      // this.fruitCtrl.setValue(null);
+      // this.tagsInput.nativeElement.value = '';
+      // this.tagsFormControl.setValue(null);
       // reload suggestions
-      this.fruitCtrl.setValue(this.fruitInput.nativeElement.value);
+      this.tagsFormControl.setValue(this.tagsInput.nativeElement.value);
 
     }
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.fruits.push(event.option.viewValue);
-    if (this.allFruits.includes(event.option.viewValue)) {
-      const index = this.allFruits.indexOf(event.option.viewValue);
-      this.allFruits.splice(index, 1);
+    this.tagsSelected.push(event.option.viewValue);
+    if (this.tagsSelectable.includes(event.option.viewValue)) {
+      const index = this.tagsSelectable.indexOf(event.option.viewValue);
+      this.tagsSelectable.splice(index, 1);
     }
-    this.fruitInput.nativeElement.value = '';
-    this.fruitCtrl.setValue(null);
+    this.tagsInput.nativeElement.value = '';
+    this.tagsFormControl.setValue(null);
   }
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
 
-    return this.allFruits.filter(fruit => fruit.toLowerCase().includes(filterValue));
+    return this.tagsSelectable.filter(tag => tag.toLowerCase().includes(filterValue));
   }
 
 
@@ -163,6 +158,14 @@ export class DatacatalogueComponent implements OnInit {
           }
           //console.log(this.filteredLocations);
         });
+
+    this.tagsFiltered = this.tagsFormControl.valueChanges.pipe(
+      startWith(null),
+      map((fruit: string | null) => (fruit ? this._filter(fruit) : this.tagsSelectable.slice())),
+    );
+
+    // this.add('health')
+
   } // END FUNCTION ngOnInit
 
   clearSelection() {
@@ -227,12 +230,12 @@ export class DatacatalogueComponent implements OnInit {
   getOneOrToRandomTags() {
     // console.log();
 
-    this.shuffle(this.randomTags);
+    this.shuffle(this.tagsRandomArray);
 
     let tmpTags = ['health'];
     let nmbrTags = Math.round(1 + Math.random());
     for (let i = 0; i < nmbrTags; i++) {
-      tmpTags.push(this.randomTags[i]);
+      tmpTags.push(this.tagsRandomArray[i]);
     }
     return tmpTags;
   }

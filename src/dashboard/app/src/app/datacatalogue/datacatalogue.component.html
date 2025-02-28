@@ -44,7 +44,7 @@
               <mat-form-field  style="width:600px;" appearance="outline" floatLabel="always">
                 <mat-label>Tags</mat-label>
                 <mat-chip-grid #chipGrid aria-label="Tags filter">
-                  @for (fruit of fruits; track fruit) {
+                  @for (fruit of tagsSelected; track fruit) {
                     <mat-chip-row (removed)="remove(fruit)">
                       {{fruit}}
                       <button matChipRemove [attr.aria-label]="'remove ' + fruit">
@@ -53,13 +53,13 @@
                     </mat-chip-row>
                   }
                 </mat-chip-grid>
-                <input placeholder="add tag ..." #fruitInput [formControl]="fruitCtrl"
+                <input placeholder="add tags ..." #tagsInput [formControl]="tagsFormControl"
                        [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
-                       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                       [matChipInputSeparatorKeyCodes]="tagsSeparatorKeyCodes"
                        (matChipInputTokenEnd)="add($event)"/>
                 <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption (optionSelected)="selected($event)">
-                  @for (fruit of filteredFruits | async; track fruit) {
-                    <mat-option [value]="fruit">{{fruit}}</mat-option>
+                  @for (tag of tagsFiltered | async; track tag) {
+                    <mat-option [value]="tag">{{tag}}</mat-option>
                   }
                 </mat-autocomplete>
               </mat-form-field>
