@@ -1,4 +1,4 @@
-import {Component, ElementRef, inject, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, inject, OnInit, ViewChild} from '@angular/core';
 
 import {FormControl} from "@angular/forms";
 import {FeatureService} from "../services/feature.service";
@@ -19,7 +19,7 @@ import {AsyncPipe} from '@angular/common';
   templateUrl: './datacatalogue.component.html',
   styleUrl: './datacatalogue.component.css'
 })
-export class DatacatalogueComponent implements OnInit {
+export class DatacatalogueComponent implements OnInit, AfterViewInit {
 
   // versionChecker: AppVersionAndBuildChecker;
 
@@ -41,7 +41,7 @@ export class DatacatalogueComponent implements OnInit {
   tagsSeparatorKeyCodes: number[] = [ENTER, COMMA];
   tagsFormControl = new FormControl('');
   tagsFiltered: Observable<string[]>;
-  tagsSelected: string[] = []; // ['health'];
+  tagsSelected: any; // string[] = []; // ['health'];
   // allFruits: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
 
   @ViewChild('tagsInput') tagsInput: ElementRef<HTMLInputElement>;
@@ -50,9 +50,9 @@ export class DatacatalogueComponent implements OnInit {
 
   constructor(private featureService: FeatureService) {
     // this.filteredSearchResults = [];
-    this.initData();
 
-    this.tagsRandomArray = ['death', 'work', 'traffic', 'government', 'demography', 'nature', 'historic', 'yearly', 'two words'];
+    this.tagsSelected = [];
+    this.tagsRandomArray = ['death', 'work', 'traffic', 'government', 'demography', 'nature', 'historic', 'yearly', 'two words', 'France'];
 
     this.tagsAll = this.tagsRandomArray.slice();
     this.tagsAll.push('health');
@@ -60,64 +60,12 @@ export class DatacatalogueComponent implements OnInit {
 
     this.tagsSelectable = this.tagsAll.slice();
 
+    this.initData();
 
 
-  }
 
-  add(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
+  } // END CONSTRUCTOR
 
-    // Add our fruit (only if selectable option)
-    if (value  &&  this.tagsSelectable.includes(value)) {
-      this.tagsSelected.push(value);
-
-      const index = this.tagsSelectable.indexOf(value);
-      this.tagsSelectable.splice(index, 1);
-
-      // Clear the input value
-      event.chipInput!.clear();
-
-      this.tagsFormControl.setValue(null);
-
-    }
-
-  }
-
-  remove(fruit: string): void {
-    const index = this.tagsSelected.indexOf(fruit);
-
-    if (index >= 0) {
-      this.tagsSelected.splice(index, 1);
-
-      this.tagsAnnouncer.announce(`Removed ${fruit}`);
-
-      // add to allFruits again
-      this.tagsSelectable.push(fruit);
-      this.tagsSelectable.sort();
-
-      // this.tagsInput.nativeElement.value = '';
-      // this.tagsFormControl.setValue(null);
-      // reload suggestions
-      this.tagsFormControl.setValue(this.tagsInput.nativeElement.value);
-
-    }
-  }
-
-  selected(event: MatAutocompleteSelectedEvent): void {
-    this.tagsSelected.push(event.option.viewValue);
-    if (this.tagsSelectable.includes(event.option.viewValue)) {
-      const index = this.tagsSelectable.indexOf(event.option.viewValue);
-      this.tagsSelectable.splice(index, 1);
-    }
-    this.tagsInput.nativeElement.value = '';
-    this.tagsFormControl.setValue(null);
-  }
-
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    return this.tagsSelectable.filter(tag => tag.toLowerCase().includes(filterValue));
-  }
 
 
   //https://stackoverflow.com/questions/70875775/angular-autocomplete-loading-from-api-reactivity
@@ -161,12 +109,113 @@ export class DatacatalogueComponent implements OnInit {
 
     this.tagsFiltered = this.tagsFormControl.valueChanges.pipe(
       startWith(null),
-      map((fruit: string | null) => (fruit ? this._filter(fruit) : this.tagsSelectable.slice())),
+      map((fruit: string | null) => (fruit ? this._tagsFilter(fruit) : this.tagsSelectable.slice())),
     );
 
     // this.add('health')
 
   } // END FUNCTION ngOnInit
+
+  ngAfterViewInit(): void {
+
+    this.tagsAdd('health');
+    this.tagsAdd('death');
+    this.tagsAdd('France');
+
+  } // END FUNCTION ngAfterViewInit
+
+
+  /* tags function  START */
+
+  tagsFormAddChipEvent(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    this.tagsAdd(value);
+    /*
+    // Add our fruit (only if selectable option)
+    if (value  &&  this.tagsSelectable.includes(value)) {
+      this.tagsSelected.push(value);
+
+      const index = this.tagsSelectable.indexOf(value);
+      this.tagsSelectable.splice(index, 1);
+
+      // Clear the input value
+      event.chipInput!.clear();
+
+      this.tagsFormControl.setValue(null);
+
+    }
+    */
+
+  } // END FUNCTION tagsFormAddChipEvent
+
+  tagsAdd(tag: string): void {
+    console.log('tagsAdd() ...', tag, this.tagsSelectable.includes(tag));
+
+    // Add our fruit (only if selectable option)
+    if (tag  &&  this.tagsSelectable.includes(tag)) {
+      this.tagsSelected.push(tag);
+
+      const index = this.tagsSelectable.indexOf(tag);
+      this.tagsSelectable.splice(index, 1);
+
+      // Clear the input value
+      // event.chipInput!.clear();
+      this.tagsInput.nativeElement.value = '';
+
+      this.tagsFormControl.setValue(null);
+
+    }
+  } // END FUNCTION tagsAdd
+
+
+  tagsRemove(tag: string): void {
+    const index = this.tagsSelected.indexOf(tag);
+
+    if (index >= 0) {
+      this.tagsSelected.splice(index, 1);
+
+      this.tagsAnnouncer.announce(`Removed ${tag}`);
+
+      // add to allFruits again
+      this.tagsSelectable.push(tag);
+      this.tagsSelectable.sort();
+
+      // this.tagsInput.nativeElement.value = '';
+      // this.tagsFormControl.setValue(null);
+      // reload suggestions
+      this.tagsFormControl.setValue(this.tagsInput.nativeElement.value);
+
+    }
+  } // END FUNCTION tagsRemove
+
+  // tagsFormAddChipEvent
+  tagsFormAutocompleteSelectedEvent(event: MatAutocompleteSelectedEvent): void {
+    const value = (event.option.viewValue || '').trim();
+
+    this.tagsAdd(value);
+
+    /*
+    if (this.tagsSelectable.includes(event.option.viewValue)) {
+      this.tagsSelected.push(event.option.viewValue);
+      const index = this.tagsSelectable.indexOf(event.option.viewValue);
+      this.tagsSelectable.splice(index, 1);
+      this.tagsInput.nativeElement.value = '';
+      this.tagsFormControl.setValue(null);
+    }
+    */
+  } // END FUNCTION tagsFormAutocompleteSelectedEvent
+
+  private _tagsFilter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.tagsSelectable.filter(tag => tag.toLowerCase().includes(filterValue));
+  } // END FUNCTION _tagsFilter
+
+  /* tags function  END */
+
+
+
 
   clearSelection() {
     this.searchResultsCtrl.setValue('');
