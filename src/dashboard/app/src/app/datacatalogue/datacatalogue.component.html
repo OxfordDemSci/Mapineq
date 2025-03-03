@@ -18,7 +18,7 @@
                 <mat-form-field style="width:600px;" appearance="outline" floatLabel="always" class="form-field-white-background" #matFormFieldElement>
                     <mat-label>{{placeHolder}}</mat-label>
                     <input matInput [value]="searchText"
-                           [formControl]="searchResultsCtrl" [placeholder]="placeHolder"  #inputElement>
+                           [formControl]="searchResultsCtrl" placeholder=""  #inputElement>
 
                     <button matSuffix mat-icon-button aria-label="Clear" (click)="clearSelection()">
                         <mat-icon>close</mat-icon>
@@ -42,7 +42,7 @@
               <mat-form-field class="example-chip-list">
               -->
               <mat-form-field  style="width:600px;" appearance="outline" floatLabel="always">
-                <mat-label>Tags</mat-label>
+                <mat-label>Filter by tags</mat-label>
                 <mat-chip-grid #chipGrid aria-label="Tags filter">
                   @for (tag of tagsSelected; track tag) {
                     <mat-chip-row (removed)="tagsRemove(tag)">
@@ -53,7 +53,7 @@
                     </mat-chip-row>
                   }
                 </mat-chip-grid>
-                <input placeholder="add tags ..." #tagsInput [formControl]="tagsFormControl"
+                <input placeholder="" #tagsInput [formControl]="tagsFormControl"
                        [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
                        [matChipInputSeparatorKeyCodes]="tagsSeparatorKeyCodes"
                        (matChipInputTokenEnd)="tagsFormAddChipEvent($event)"/>

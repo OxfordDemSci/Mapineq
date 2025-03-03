@@ -27,7 +27,7 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
   errorMsg!: string;
   searchResult: any;
   filteredSearchResults: any;
-  placeHolder: string = 'Words in title or description';
+  placeHolder: string = 'Search title and description';
   searchResultsCtrl = new FormControl();
   minLengthTerm = 2;
   searchText: string = 'xxxxxx';
