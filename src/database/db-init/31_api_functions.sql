@@ -1,5 +1,74 @@
-DROP FUNCTION IF EXISTS postgisftw.search_sources(TEXT);
-CREATE OR REPLACE FUNCTION postgisftw.search_sources(_search_string TEXT DEFAULT NULL)
+DROP FUNCTION IF EXISTS postgisftw.get_tag(TEXT, INTEGER, TEXT);
+
+CREATE OR REPLACE FUNCTION postgisftw.get_tag(_resource TEXT DEFAULT NULL, _use_case INTEGER DEFAULT NULL, _function TEXT DEFAULT NULL)
+RETURNS TABLE
+	(
+		f_id			INTEGER,
+		f_description	TEXT
+	)
+AS
+$BODY$
+DECLARE
+	caseTables		TEXT[] 	:= NULL;
+	bCaseOptions	BOOLEAN := FALSE;
+BEGIN
+	SELECT 
+		case_options IS NOT NULL 
+	INTO
+		bCaseOptions
+	FROM 
+		website.use_cases 
+	WHERE 
+		use_case = _use_case;
+
+	IF bCaseOptions THEN
+		WITH cte AS
+		(
+			SELECT
+				jsonb_array_elements(case_options) AS j
+			FROM
+				website.use_cases
+			WHERE
+				use_case = _use_case
+		)
+		SELECT 
+			ARRAY_AGG(j ->> 'tableName')  
+		INTO
+			caseTables
+		FROM 
+			cte
+		WHERE
+			 (j ->> 'tableFunction' = _function OR _function IS NULL);
+	END IF;	
+	
+	RETURN QUERY
+	SELECT DISTINCT
+		ct.id,
+		ct.descr
+	FROM
+		website.catalogue_tag ct
+		LEFT JOIN website.resource_tag rt
+			ON ct.id = rt.tag_id
+	WHERE
+		(
+			rt.resource = ANY(caseTables)
+			OR (caseTables IS NULL AND(_use_case IS NULL OR NOT bCaseOptions))
+		)
+		AND
+		(
+			_resource IS NULL
+			OR resource ILIKE _resource
+		)
+	ORDER BY
+		ct.descr;
+END;
+$BODY$
+LANGUAGE PLPGSQL STABLE;
+
+DROP FUNCTION IF EXISTS postgisftw.search_sources(text);
+
+DROP FUNCTION IF EXISTS postgisftw.search_sources(TEXT, TEXT, BOOLEAN);
+CREATE OR REPLACE FUNCTION postgisftw.search_sources(_search_string TEXT DEFAULT NULL, _tag TEXT DEFAULT NULL, _match_all_tags BOOLEAN DEFAULT TRUE)
 RETURNS TABLE
 (
 	f_provider			TEXT,
@@ -14,16 +83,21 @@ RETURNS TABLE
 	f_license			TEXT,
 	f_query_resource	TEXT,
 	f_years				JSONB,
-	f_levels			JSONB
+	f_levels			JSONB,
+	f_all_tags			JSONB,
+	f_matching_tags		JSONB
 )
 AS
 $BODY$
 DECLARE
-	rec	RECORD;
 	strQuery	TEXT;
+	tagTables	TEXT[] := NULL;
 BEGIN
-	RETURN QUERY 
-	EXECUTE FORMAT ($$SELECT
+	IF _tag IS NOT NULL THEN
+		SELECT * FROM website.get_resources_by_tag(_tag, _match_all_tags) INTO tagTables;
+	END IF;
+	
+	strQuery := FORMAT($$SELECT DISTINCT
 		provider,
 		c.resource,
 		descr,
@@ -35,15 +109,27 @@ BEGIN
     	web_source_url,
 		license,
 		query_resource,
-		(SELECT json_agg(year) FROM website.resource_years r WHERE r.resource = c.resource )::JSONB,
-		(SELECT json_agg(level) FROM website.resource_nuts_levels r WHERE r.resource = c.resource )::JSONB
+		(SELECT JSONB_AGG(DISTINCT year) FROM website.resource_year_nuts_levels r WHERE r.resource = c.resource),
+		(SELECT JSONB_AGG(DISTINCT level) FROM website.resource_year_nuts_levels r WHERE r.resource = c.resource),
+		(SELECT JSONB_AGG(DISTINCT f_description) FROM postgisftw.get_tag(c.resource)),
+		TO_JSONB(ARRAY(SELECT DISTINCT f_description FROM postgisftw.get_tag(c.resource) INTERSECT SELECT unnest(STRING_TO_ARRAY(%3$L,','))))
 	FROM
 		website.vw_data_tables c
+		INNER JOIN website.resource_year_nuts_levels r
+			ON c.resource = r.resource
 	WHERE
-		provider || c.resource || descr || short_descr ILIKE '%%%s%%'$$,_search_string) ;
+		provider || c.resource || descr || short_descr ILIKE '%%%1$s%%'
+		AND (
+				c.resource = ANY(%2$L)
+				OR %2$L IS NULL
+			)
+			$$,_search_string, tagTables, _tag) ;
+
+	RETURN QUERY EXECUTE strQuery;
 END;
 $BODY$
 LANGUAGE PLPGSQL;
+
 
 DROP FUNCTION IF EXISTS postgisftw.get_use_cases(INTEGER);
 CREATE OR REPLACE FUNCTION postgisftw.get_use_cases(_use_case INTEGER DEFAULT NULL)
@@ -160,73 +246,6 @@ BEGIN
 			level DESC;
 	END IF;
 		
-END;
-$BODY$
-LANGUAGE PLPGSQL STABLE;
-
-DROP FUNCTION IF EXISTS postgisftw.get_tag(TEXT, INTEGER, TEXT);
-
-CREATE OR REPLACE FUNCTION postgisftw.get_tag(_resource TEXT DEFAULT NULL, _use_case INTEGER DEFAULT NULL, _function TEXT DEFAULT NULL)
-RETURNS TABLE
-	(
-		f_id			INTEGER,
-		f_description	TEXT
-	)
-AS
-$BODY$
-DECLARE
-	caseTables		TEXT[] 	:= NULL;
-	bCaseOptions	BOOLEAN := FALSE;
-BEGIN
-	SELECT 
-		case_options IS NOT NULL 
-	INTO
-		bCaseOptions
-	FROM 
-		website.use_cases 
-	WHERE 
-		use_case = _use_case;
-
-	IF bCaseOptions THEN
-		WITH cte AS
-		(
-			SELECT
-				jsonb_array_elements(case_options) AS j
-			FROM
-				website.use_cases
-			WHERE
-				use_case = _use_case
-		)
-		SELECT 
-			ARRAY_AGG(j ->> 'tableName')  
-		INTO
-			caseTables
-		FROM 
-			cte
-		WHERE
-			 (j ->> 'tableFunction' = _function OR _function IS NULL);
-	END IF;	
-	
-	RETURN QUERY
-	SELECT DISTINCT
-		ct.id,
-		ct.descr
-	FROM
-		website.catalogue_tag ct
-		LEFT JOIN website.resource_tag rt
-			ON ct.id = rt.tag_id
-	WHERE
-		(
-			rt.resource = ANY(caseTables)
-			OR (caseTables IS NULL AND(_use_case IS NULL OR NOT bCaseOptions))
-		)
-		AND
-		(
-			_resource IS NULL
-			OR resource ILIKE _resource
-		)
-	ORDER BY
-		ct.descr;
 END;
 $BODY$
 LANGUAGE PLPGSQL STABLE;
@@ -871,6 +890,46 @@ BEGIN
 		'NUTS'::TEXT 	AS geo_source,
 		_year::TEXT		AS predictor_year,
 		_year::TEXT		AS outcome_year,
+		x.f_value::DOUBLE PRECISION
+	FROM 
+		areas.get_nuts_areas(best_year,_level)
+		LEFT JOIN  tmpSource_x  AS x
+			ON f_nuts_id = x.f_geo;
+END;
+$BODY$
+LANGUAGE PLPGSQL;
+
+DROP FUNCTION IF EXISTS postgisftw.get_x_data_new(INT, INT, JSONB);
+CREATE OR REPLACE FUNCTION postgisftw.get_x_data_new(_level INTEGER, _year INTEGER, X_JSON JSONB)
+RETURNS TABLE
+(
+	geo				TEXT,
+	geo_name		TEXT,	
+	geo_year		TEXT,
+	geo_source		TEXT,
+	data_year		TEXT,
+	x				DOUBLE PRECISION
+)
+AS
+$BODY$
+DECLARE 
+	best_year	INTEGER;
+BEGIN
+	CREATE TEMPORARY TABLE IF NOT EXISTS tmpSource_x AS 
+	SELECT * FROM website.get_data_source_level_year (_year, X_JSON) WITH NO DATA;
+	TRUNCATE TABLE tmpSource_x;
+	INSERT INTO tmpSource_x SELECT * FROM website.get_data_source_level_year (_year, X_JSON);
+	CALL areas.get_nuts_codes(X_JSON ->> 'source', _level,'tmpSource_x' );
+
+	SELECT * FROM areas.get_x_data_map_year(_level, _year, X_JSON ) INTO best_year;
+	
+	RETURN QUERY
+	SELECT 
+		f_nuts_id,
+		nuts_name,
+		best_year::TEXT AS geo_year,
+		'NUTS'::TEXT 	AS geo_source,
+		_year::TEXT		AS data_year,
 		x.f_value::DOUBLE PRECISION
 	FROM 
 		areas.get_nuts_areas(best_year,_level)

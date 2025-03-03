@@ -88,9 +88,9 @@ END;
 $BODY$
 LANGUAGE PLPGSQL;
 
-DROP FUNCTION IF EXISTS website.get_resources_by_tag(TEXT);
+DROP FUNCTION IF EXISTS website.get_resources_by_tag(TEXT, BOOLEAN);
 
-CREATE OR REPLACE FUNCTION website.get_resources_by_tag(strTag TEXT)
+CREATE OR REPLACE FUNCTION website.get_resources_by_tag(strTag TEXT, bMatchAll BOOLEAN DEFAULT TRUE)
 RETURNS TEXT[] 
 AS
 $BODY$
@@ -101,24 +101,25 @@ DECLARE
 			(SELECT 
 				DISTINCT resource 
 			 FROM  
-			 	website.resource_tag 
+				website.resource_tag rt
+				INNER JOIN website.catalogue_tag ct
+					ON ct.id = tag_id
 			 WHERE 
-			 	tag_id IN (%1$s) 
+			 	ct.descr = ANY (STRING_TO_ARRAY(%1$L,',')) 
 			 GROUP BY 
 			 	resource 
 			 HAVING 
-			 	COUNT(*) = ARRAY_LENGTH(STRING_TO_ARRAY(%1$L,','),1))
+			 	COUNT(*) = ARRAY_LENGTH(STRING_TO_ARRAY(%1$L,','),1)
+				 OR %2$s = 0)
+				 
 		SELECT
 			ARRAY_AGG(resource) 
 		FROM	
 			cte $$;
 BEGIN
 	
-	EXECUTE FORMAT (QUERY, strTag) INTO retArray;
+	EXECUTE FORMAT (QUERY, strTag, bMatchAll::INTEGER) INTO retArray;
 	RETURN retArray;
 END;
 $BODY$
 LANGUAGE PLPGSQL;
-
-
-
