@@ -26,6 +26,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
   @Output() updateTableValueFromSelect = new EventEmitter();
 
+  intervalTimers: any[];
+
   componentInitiated: boolean;
 
   useCaseOtherTableLoaded: number;
@@ -86,6 +88,8 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
     this.availableColumnValuesManuallyChanged = [];
     // this.selectedColumnValues = {};
 
+    this.intervalTimers = [];
+
   } // END CONSTRUCTOR
 
 
@@ -101,11 +105,27 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     //console.log('before abc ngOnInit ...', this.tableSelection.tableId);
 
+    /*
     // this.setAvailableRegionLevels();
     setTimeout( () => {
       // little timeout to make sure this.tableSelect
       this.setAvailableRegionLevels();
     }, 500);
+    */
+    if (this.inputUseCase < 0) {
+      this.setAvailableRegionLevels();
+    } else {
+      console.log('Case study ' + this.inputUseCase.toString() + ', start interval ...', this.tableId, this.inputUseCaseData.length);
+      this.intervalTimers['regionLevels_' + this.tableId.toString()] = setInterval( () => {
+        if (this.inputUseCaseData.length > 0) {
+          console.log(' ... GO!!', this.tableId);
+          this.setAvailableRegionLevels();
+          clearInterval(this.intervalTimers['regionLevels_' + this.tableId.toString()]);
+        } else {
+          console.log(' ... WAIT', this.tableId);
+        }
+      }, 100);
+    }
 
 
     // this.setTableSources(); // KAN UIT?
@@ -197,18 +217,18 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
   } // END FUNCTION initTableValueMap
 
   setAvailableRegionLevels() {
-    console.log('- setAvailableRegionLevels(), tableId:', this.tableId, ', inputUseCase: ', this.inputUseCase.toString(),  ', inputUseCaseData.length: ',  this.inputUseCaseData.length.toString(), ' - - - - -');
+    //console.log('- setAvailableRegionLevels(), tableId:', this.tableId, ', inputUseCase: ', this.inputUseCase.toString(),  ', inputUseCaseData.length: ',  this.inputUseCaseData.length.toString(), ' - - - - -');
 
     // here instead of in ngOnInit ...
     this.componentInitiated = true;
 
     this.featureService.getNutsLevels(this.inputUseCase).subscribe( data => {
-      console.log('A setAvailableRegionLevels(), usecase/data:', this.inputUseCase, data);
+      //console.log('A setAvailableRegionLevels(), usecase/data:', this.inputUseCase, data);
       this.availableRegionLevels = data.map((item) => {return item.f_level;});
       // this.availableRegionLevels = ['0', '1', '2', '3'].slice().reverse();
 
       if (this.inputUseCase > -1  &&  this.inputUseCaseData.length > 0) {
-        console.log('B setAvailableRegionLevels(), ', this.inputTableId, this.inputUseCaseData[this.inputTableId].tableRegionLevel, this.availableRegionLevels);
+        //console.log('B setAvailableRegionLevels(), ', this.inputTableId, this.inputUseCaseData[this.inputTableId].tableRegionLevel, this.availableRegionLevels);
 
         if ( this.availableRegionLevels.includes(this.inputUseCaseData[this.inputTableId].tableRegionLevel) ) {
           this.tableSelection.tableRegionLevel = this.inputUseCaseData[this.inputTableId].tableRegionLevel;
@@ -580,7 +600,7 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
       this.getFieldsForTableForYearAndRegionLevel();
     } else {
       if (this.inputUseCase > -1 && this.inputTableId === 0) {
-        console.log('CHECK YEAR: ', this.inputUseCaseData[this.inputTableId]);
+        // console.log('CHECK YEAR: ', this.inputUseCaseData[this.inputTableId]);
         if (this.availableYears.includes(this.inputUseCaseData[this.inputTableId].tableYear)) {
           this.tableSelection.tableYear = this.inputUseCaseData[this.inputTableId].tableYear;
           this.getFieldsForTableForYearAndRegionLevel();
@@ -650,14 +670,14 @@ export class SelectTableValueComponent implements OnInit, AfterViewInit, OnChang
 
     this.featureService.getColumnValuesBySourceJson(this.tableSelection.tableName, JSON.stringify(sourceSelectionJson), this.inputUseCase).subscribe( data => {
       // this.featureService.getColumnValuesBySource(this.tableSelection.tableName, this.tableSelection.tableYear, this.tableSelection.tableRegionLevel).subscribe( data => {
-      console.log('getColumnValuesBySource()', this.tableSelection.tableName, this.tableSelection.tableYear, this.tableSelection.tableRegionLevel, data);
+      // console.log('getColumnValuesBySource()', this.tableSelection.tableName, this.tableSelection.tableYear, this.tableSelection.tableRegionLevel, data);
 
       this.availableColumnValues = [];
       this.availableColumnValuesWithInitiallyOneChoice = [];
       this.availableColumnValuesManuallyChanged = [];
       // this.selectedColumnValues = new Array(data.length).fill('');
       data.forEach( row => {
-        console.log('data.forEach, row:', row);
+        // console.log('data.forEach, row:', row);
         let jsonToPush = row;
 
         // console.log('jsonToPush:' ,jsonToPush);
