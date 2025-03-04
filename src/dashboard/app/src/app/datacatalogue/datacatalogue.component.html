@@ -6,73 +6,116 @@
 -->
 <div class="datacatalogueDiv">
 
-        <div class="content">
+  <div class="content">
+    <div>
+      <h1>Data catalogue</h1>
+
+      <p>
+        Search for datasets in the Mapineq database, searchterms are for example: Unemployment, Fertility, Urban green
+        area
+      </p>
+      <br/>
+
+      <mat-form-field style="width:600px;" appearance="outline" floatLabel="always" class="form-field-white-background"
+                      #matFormFieldElement>
+        <mat-label>{{ placeHolder }}</mat-label>
+        <input matInput [value]="searchText"
+               [formControl]="searchResultsCtrl" placeholder="" #inputElement>
+
+        <button matSuffix mat-icon-button aria-label="Clear" (click)="clearSelection()">
+          <mat-icon>close</mat-icon>
+        </button>
+
+      </mat-form-field>
+
+      <br>
+
+      <!-- div>
+        {{ tagsAll | json }}
+      </div>
+      <br -->
+
+      <mat-form-field  style="width:600px;" appearance="outline" floatLabel="always">
+        <mat-label>Filter by tags</mat-label>
+        <mat-chip-grid #chipGrid aria-label="Tags filter">
+          @for (tag of tagsSelected; track tag) {
+            <mat-chip-row (removed)="tagsRemove(tag)">
+              {{tag}}
+              <button matChipRemove [attr.aria-label]="'remove ' + tag">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip-row>
+          }
+        </mat-chip-grid>
+        <input placeholder="" #tagsInput [formControl]="tagsFormControl"
+               [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
+               [matChipInputSeparatorKeyCodes]="tagsSeparatorKeyCodes"
+               (matChipInputTokenEnd)="tagsFormAddChipEvent($event)"/>
+        <!--
+        <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption (optionSelected)="tagsFormAutocompleteSelectedEvent($event)">
+        -->
+        <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption (optionSelected)="tagsFormAutocompleteSelectedEvent($event)">
+          @for (tag of tagsFiltered | async; track tag) {
+            <mat-option [value]="tag">{{tag}}</mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <br>
+      <br>
+
+      <ng-container *ngIf="errorMsg; else elseTemplate">
+        {{ errorMsg }}
+      </ng-container>
+      <ng-template #elseTemplate>
+
+      </ng-template>
+      <div>
+        {{ filteredSearchResults.length }} Dataset(s) available
+      </div>
+    </div>
+    <section class="card-container">
+      <div class="cardbox" *ngFor="let result of filteredSearchResults">
+        <mat-card class="example-card" appearance="outlined">
+          <mat-card-header>
+            <div mat-card-avatar class="example-header-image-{{result.f_provider}}"></div>
+            <mat-card-title>{{ result.f_short_description }}</mat-card-title>
+            <mat-card-subtitle> {{ result.f_resource }} from {{ result.f_provider }}
+              <a *ngIf="result.f_meta_data_url" href="{{result.f_meta_data_url}}" target="_blank"
+                 title="More information">
+                more info
+              </a>
+            </mat-card-subtitle>
+          </mat-card-header>
+          <img mat-card-image src="assets/img/preview_level_{{ getMaxRegionLevel(result.f_levels) }}.png"
+               alt="Max level ({{getMaxRegionLevel(result.f_levels)}}) example map">
+          <mat-card-content class="mat_card_content">
+
             <div>
-                <h1>Data catalogue</h1>
-
-                <p>
-                    Search for datasets in the Mapineq database, searchterms are for example: Unemployment, Fertility, Urban green area
-                </p>
-                <br/>
-
-                <mat-form-field style="width:600px;" appearance="outline" floatLabel="always" class="form-field-white-background" #matFormFieldElement>
-                    <mat-label>{{placeHolder}}</mat-label>
-                    <input matInput [value]="searchText"
-                           [formControl]="searchResultsCtrl" placeholder="for datasets"  #inputElement>
-
-                    <button matSuffix mat-icon-button aria-label="Clear" (click)="clearSelection()">
-                        <mat-icon>close</mat-icon>
-                    </button>
-
-                </mat-form-field>
-
-                <ng-container *ngIf="errorMsg; else elseTemplate">
-                    {{errorMsg}}
-                </ng-container>
-                <ng-template #elseTemplate>
-
-                </ng-template>
-                <div>
-                    {{ filteredSearchResults.length }} Dataset(s) available
-                </div>
+              {{ result.f_description }}
             </div>
-            <section class="card-container">
-                <div class="cardbox" *ngFor="let result of filteredSearchResults" >
-                    <mat-card class="example-card" appearance="outlined">
-                        <mat-card-header>
-                            <div mat-card-avatar class="example-header-image-{{result.f_provider}}"></div>
-                            <mat-card-title>{{result.f_short_description}}</mat-card-title>
-                            <mat-card-subtitle> {{result.f_resource}} from {{result.f_provider}}
-                                <a *ngIf="result.f_meta_data_url" href="{{result.f_meta_data_url}}" target="_blank" title="More information">
-                                   more info
-                                </a>
-                            </mat-card-subtitle>
-                        </mat-card-header>
-                        <img mat-card-image src="assets/img/preview_level_{{ getMaxRegionLevel(result.f_levels) }}.png" alt="Max level ({{getMaxRegionLevel(result.f_levels)}}) example map" >
-                        <mat-card-content class="mat_card_content">
 
-                            <div>
-                                {{result.f_description}}
-                            </div>
+            <div>
+              Available years:
+              <div>
+                {{ jsonArrayToString(result.f_years, ', ') }}
+              </div>
+            </div>
 
-                            <div>
-                                Available years:
-                                <div>
-                                    {{jsonArrayToString(result.f_years, ', ')}}
-                                </div>
-                            </div>
+            <div>
+              Available region levels:
+              <div>{{ jsonArrayToString(result.f_levels, ', ') }}</div>
+            </div>
 
-                            <div>
-                                Available region levels:
-                                <div>{{jsonArrayToString(result.f_levels, ', ')}}</div>
-                            </div>
-
-                        </mat-card-content>
-                        <mat-card-actions align="end">
-                            <button mat-stroked-button [routerLink]="'/load/' + result.f_resource"><mat-icon>map</mat-icon> load in interactive map</button>
-                        </mat-card-actions>
-                    </mat-card>
-                </div>
-            </section>
-        </div>
+          </mat-card-content>
+          <mat-card-actions align="end">
+            <button mat-stroked-button [routerLink]="'/load/' + result.f_resource">
+              <mat-icon>map</mat-icon>
+              load in interactive map
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </section>
+  </div>
 </div>

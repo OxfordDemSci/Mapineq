@@ -29,6 +29,7 @@ import {MatDivider} from "@angular/material/divider";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {DialogAppVersionAndBuildInfo} from "./lib/dialog-app-version-and-build-info.component";
 import {MatDialogModule} from "@angular/material/dialog";
+import {MatChipsModule} from "@angular/material/chips";
 
 
 @NgModule({
@@ -70,7 +71,8 @@ import {MatDialogModule} from "@angular/material/dialog";
         MatGridTile,
         MatDivider,
         MatTooltipModule,
-        MatDialogModule
+        MatDialogModule,
+        MatChipsModule,
     ],
     providers: [
     provideAnimationsAsync(), provideHttpClient()

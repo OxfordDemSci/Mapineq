@@ -200,11 +200,20 @@ export class FeatureService {
 
   public searchCatalogue(searchtext: string): Observable<any> {
     return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.search_sources/items.json?_search_string=${searchtext}&limit=2500`).pipe(
-        tap((result) => {
-          //console.log(result);
-        }),
-        catchError(this.handleError('search', 'ERROR')))
+      tap((result) => {
+        //console.log(result);
+      }),
+      catchError(this.handleError('search', 'ERROR')))
   }
+
+  public getCatalogueTags(): Observable<any> {
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_tag/items.json?limit=2500`).pipe(
+      tap((result) => {
+        //console.log(result);
+      }),
+      catchError(this.handleError('search', 'ERROR')))
+  } // END FUNCTION getCatalogueTags
+
 
 
   handleError<T>(operation = 'operation', result?: T) {
