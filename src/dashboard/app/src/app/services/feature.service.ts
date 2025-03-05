@@ -198,6 +198,7 @@ export class FeatureService {
         catchError(this.handleError('search', 'ERROR')))
   } // END FUNCTION getXData
 
+  /*
   public searchCatalogue(searchtext: string): Observable<any> {
     return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.search_sources/items.json?_search_string=${searchtext}&limit=2500`).pipe(
       tap((result) => {
@@ -205,6 +206,15 @@ export class FeatureService {
       }),
       catchError(this.handleError('search', 'ERROR')))
   }
+  */
+  public searchCatalogue(searchtext: string, tagsArray: string[] = []): Observable<any> {
+    let tagsString = tagsArray.join(',');
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.search_sources/items.json?_search_string=${searchtext}&_tag=${tagsString}&_match_all_tags=true&limit=2500`).pipe(
+      tap((result) => {
+        //console.log(result);
+      }),
+      catchError(this.handleError('search', 'ERROR')))
+  } // END FUNCTION searchCatalogue
 
   public getCatalogueTags(): Observable<any> {
     return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_tag/items.json?limit=2500`).pipe(

@@ -19,7 +19,10 @@
       <mat-form-field style="width:600px;" appearance="outline" floatLabel="always" class="form-field-white-background"
                       #matFormFieldElement>
         <mat-label>{{ placeHolder }}</mat-label>
+        <!--
         <input matInput [value]="searchText"
+        -->
+        <input matInput
                [formControl]="searchResultsCtrl" placeholder="" #inputElement>
 
         <button matSuffix mat-icon-button aria-label="Clear" (click)="clearSelection()">
@@ -96,15 +99,21 @@
             </div>
 
             <div>
-              Available years:
-              <div>
-                {{ jsonArrayToString(result.f_years, ', ') }}
-              </div>
+              Tags:
+              <div [innerHTML]="'<b>' + jsonArrayToString(result.f_all_tags || null, '</b>, <b>') + '</b>'"></div>
             </div>
+
 
             <div>
               Available region levels:
               <div>{{ jsonArrayToString(result.f_levels, ', ') }}</div>
+            </div>
+
+            <div>
+              Available years:
+              <div>
+                {{ jsonArrayToString(result.f_years, ', ') }}
+              </div>
             </div>
 
           </mat-card-content>

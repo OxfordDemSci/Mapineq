@@ -20,12 +20,16 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
 
   isLoading = false;
   errorMsg!: string;
+  /*
   searchResult: any;
+  */
   filteredSearchResults: any;
   placeHolder: string = 'Search title and description';
   searchResultsCtrl = new FormControl();
   minLengthTerm = 2;
+  /*
   searchText: string = 'xxxxxx';
+  */
 
 
   tagsAll: any;
@@ -69,7 +73,12 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
               this.filteredSearchResults = [];
               this.isLoading = true;
             }),
+            /*
             switchMap(value => this.featureService.searchCatalogue(value)
+            switchMap(value => this.featureService.searchCatalogue(value)
+            switchMap(value => this.featureService.searchCatalogue(this.searchResultsCtrl.getRawValue(), this.tagsSelected)
+            */
+            switchMap(value => this.searchDataCatalogue()
                 .pipe(
                     finalize(() => {
                       this.isLoading = false
@@ -106,6 +115,46 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
 
 
   } // END FUNCTION ngAfterViewInit
+
+
+  /*
+  searchDataCatalogue() {
+    this.filteredSearchResults = [];
+    this.featureService.searchCatalogue(this.searchResultsCtrl.getRawValue(), this.tagsSelected).subscribe((data) => {
+      this.filteredSearchResults = data;
+    })
+  } // END FUNCTION searchDataCatalogue
+  */
+  searchDataCatalogue() {
+    console.log('searchDataCatalogue() ...', this.searchResultsCtrl.getRawValue(), this.tagsSelected);
+    return this.featureService.searchCatalogue(this.searchResultsCtrl.getRawValue(), this.tagsSelected);
+  } // END FUNCTION searchDataCatalogue
+
+  getFilteredSearchResultsDataCatalogue() {
+    this.filteredSearchResults = [];
+    this.searchDataCatalogue().subscribe((data) => {
+      this.filteredSearchResults = data;
+    })
+  } // END FUNCTION getFilteredSearchResultsDataCatalogue
+
+
+  clearSelection() {
+    this.searchResultsCtrl.setValue('');
+    this.initData();
+    // this.selectedLocationName = '';
+  } // END FUNCTION clearSelection
+
+  initData(): void {
+    this.filteredSearchResults = [];
+    this.searchResultsCtrl.setValue('');
+    /*
+    this.featureService.searchCatalogue('', this.tagsSelected).subscribe((data) => {
+      this.filteredSearchResults = data;
+    })
+    */
+    this.getFilteredSearchResultsDataCatalogue();
+  } // END FUNCTION initData
+
 
 
   /* tags function  START */
@@ -167,6 +216,7 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
 
       this.tagsFormControl.setValue(null);
 
+      this.getFilteredSearchResultsDataCatalogue();
     }
   } // END FUNCTION tagsAdd
 
@@ -187,6 +237,8 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
       // this.tagsFormControl.setValue(null);
       // reload suggestions
       this.tagsFormControl.setValue(this.tagsInput.nativeElement.value);
+
+      this.getFilteredSearchResultsDataCatalogue();
 
     }
   } // END FUNCTION tagsRemove
@@ -220,20 +272,6 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
 
 
 
-  clearSelection() {
-    this.searchResultsCtrl.setValue('');
-    this.initData();
-    // this.selectedLocationName = '';
-  }
-
-
-
-  initData(): void {
-    this.filteredSearchResults = [];
-    this.featureService.searchCatalogue('').subscribe((data) => {
-      this.filteredSearchResults = data;
-    })
-  }
 
   addMetaDataUrl() {
     this.filteredSearchResults.map((item:any) => {
