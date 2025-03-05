@@ -4,10 +4,13 @@
     <div class="buttonsCentered version_small" id="currentVersion">Current version: {{versionChecker.appVersionAndBuildCurrent}}</div>
 </div>
 -->
+<!--
 <div class="datacatalogueDiv">
+-->
+<div class="pageContainerDiv">
 
-  <div class="content">
-    <div>
+  <div class="data-catalogue-page-content">
+    <div class="data-catalogue-search-form">
       <h1>Data catalogue</h1>
 
       <p>
@@ -16,8 +19,10 @@
       </p>
       <br/>
 
-      <mat-form-field style="width:600px;" appearance="outline" floatLabel="always" class="form-field-white-background"
-                      #matFormFieldElement>
+      <!--
+      <mat-form-field style="width:600px;" appearance="outline" floatLabel="always" class="form-field-white-background" #matFormFieldElement>
+      -->
+      <mat-form-field appearance="outline" floatLabel="always" class="form-field-white-background" #matFormFieldElement>
         <mat-label>Search title and description</mat-label>
         <!--
         <input matInput [value]="searchText"
@@ -38,7 +43,10 @@
       </div>
       <br -->
 
-      <mat-form-field  style="width:600px;" appearance="outline" floatLabel="always">
+      <!--
+      <mat-form-field style="width:600px;" appearance="outline" floatLabel="always">
+      -->
+      <mat-form-field appearance="outline" floatLabel="always">
         <mat-label>Filter by tags</mat-label>
         <mat-chip-grid #chipGrid aria-label="Tags filter">
           @for (tag of tagsSelected; track tag) {
@@ -74,14 +82,14 @@
 
       </ng-template>
       <div>
-        {{ filteredSearchResults.length }} Dataset(s) available
+        {{ dataCatalogueSearchResults.length }} Dataset(s) available
       </div>
     </div>
-    <section class="card-container">
-      <div class="cardbox" *ngFor="let result of filteredSearchResults">
-        <mat-card class="example-card" appearance="outlined">
+    <section class="data-catalogue-search-results-container">
+      <div class="data-catalogue-search-result-div" *ngFor="let result of dataCatalogueSearchResults">
+        <mat-card class="data-catalogue-search-result-card" appearance="outlined">
           <mat-card-header>
-            <div mat-card-avatar class="example-header-image-{{result.f_provider}}"></div>
+            <div mat-card-avatar class="data-catalogue-search-result-card-header-image-{{result.f_provider}}"></div>
             <mat-card-title>{{ result.f_short_description }}</mat-card-title>
             <mat-card-subtitle> {{ result.f_resource }} from {{ result.f_provider }}
               <a *ngIf="result.f_meta_data_url" href="{{result.f_meta_data_url}}" target="_blank"

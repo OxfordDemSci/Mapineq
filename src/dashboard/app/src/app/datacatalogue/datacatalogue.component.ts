@@ -34,7 +34,7 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
   /*
   searchResult: any;
   */
-  filteredSearchResults: any;
+  dataCatalogueSearchResults: any;
   /*
   placeHolder: string = 'Search title and description';
   */
@@ -57,7 +57,7 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
   tagsAnnouncer = inject(LiveAnnouncer);
 
   constructor(private featureService: FeatureService) {
-    this.filteredSearchResults = [];
+    this.dataCatalogueSearchResults = [];
 
     this.tagsSelected = [];
     this.tagsSelectable = [];
@@ -120,7 +120,7 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
         debounceTime(700),
         tap(() => {
           this.errorMsg = "";
-          this.filteredSearchResults = [];
+          this.dataCatalogueSearchResults = [];
           this.isLoading = true;
         }),
         /*
@@ -140,10 +140,10 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
         //console.log('data', data);
         if (data == 'ERROR') {
           //this.errorMsg = data['Error'];
-          this.filteredSearchResults= [];
+          this.dataCatalogueSearchResults= [];
         } else {
           this.errorMsg = "";
-          this.filteredSearchResults = data;
+          this.dataCatalogueSearchResults = data;
 
         }
         //console.log(this.filteredLocations);
@@ -173,9 +173,9 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
   } // END FUNCTION searchDataCatalogue
 
   getFilteredSearchResultsDataCatalogue() {
-    this.filteredSearchResults = [];
+    this.dataCatalogueSearchResults = [];
     this.searchDataCatalogue().subscribe((data) => {
-      this.filteredSearchResults = data;
+      this.dataCatalogueSearchResults = data;
     })
   } // END FUNCTION getFilteredSearchResultsDataCatalogue
 
@@ -191,7 +191,7 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
   } // END FUNCTION clearSelection
 
   initTextSearch(searchText = ''): void {
-    this.filteredSearchResults = [];
+    this.dataCatalogueSearchResults = [];
     this.textSearchFormControl.setValue(searchText);
     /*
     this.featureService.searchCatalogue('', this.tagsSelected).subscribe((data) => {
@@ -359,7 +359,7 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
 
 
   addMetaDataUrl() {
-    this.filteredSearchResults.map((item:any) => {
+    this.dataCatalogueSearchResults.map((item:any) => {
       item.metadataurl = 'https://doi.org/10.2908/' + item.f_resource;
       return item;
     })

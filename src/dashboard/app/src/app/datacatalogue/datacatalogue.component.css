@@ -1,47 +1,62 @@
-.example-card {
-    max-width: 400px;
-    align-self: start;
+
+
+.data-catalogue-page-content {
+  position: relative;
+  padding-bottom: 60px;
+  /*
+  max-width: 1300px;
+  */
+  max-width: 1232px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.example-header-image-ESTAT {
-    background-image: url('../../assets/img/eurostat.png');
-    background-size: cover;
+.data-catalogue-search-form {
+  /* /
+  background-color: rgba(255,0,0,0.25);
+  /* */
 }
 
-.example-header-image-OECD {
-    background-image: url('../../assets/img/oecd.png');
-    background-size: cover;
+.data-catalogue-search-results-container {
+  /* /
+  background-color: rgba(255,255,0,0.25);
+  /* */
+  align-items: start;
+  display: grid;
+  grid-gap: 16px;
+  grid-template-columns: repeat(auto-fit, 400px);
+  /*
+  justify-content: center;
+  */
+  justify-content: left;
+  margin: 0 16px 0 -16px;
 }
 
-.example-header-image-OXFORD {
-    background-image: url('../../assets/img/oxford.jpg');
-    background-size: cover;
+.data-catalogue-search-result-div {
+  display: inline-block;
+  padding: 1rem;
+  width: 100%;
+  position: relative;
+  max-width: 580px;
 }
 
-
-
-.content {
-    position: relative;
-    padding-bottom: 60px;
-    max-width: 1300px;
-    margin-left: auto;
-    margin-right: auto;
+.data-catalogue-search-result-card {
+  max-width: min(400px, calc(100vw - 2em));
+  align-self: start;
 }
 
-.card-container {
-    align-items: start;
-    display: grid;
-    grid-gap: 16px;
-    grid-template-columns: repeat(auto-fit, 400px);
-    justify-content: center;
+.data-catalogue-search-result-card-header-image-ESTAT {
+  background-image: url('../../assets/img/eurostat.png');
+  background-size: cover;
 }
 
-.cardbox {
-    display: inline-block;
-    padding: 1rem;
-    width: 100%;
-    position: relative;
-    max-width: 580px;
+.data-catalogue-search-result-card-header-image-OECD {
+  background-image: url('../../assets/img/oecd.png');
+  background-size: cover;
 }
 
+.data-catalogue-search-result-card-header-image-OXFORD {
+  background-image: url('../../assets/img/oxford.jpg');
+  background-size: cover;
+}
 
