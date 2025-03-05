@@ -18,12 +18,12 @@
 
       <mat-form-field style="width:600px;" appearance="outline" floatLabel="always" class="form-field-white-background"
                       #matFormFieldElement>
-        <mat-label>{{ placeHolder }}</mat-label>
+        <mat-label>Search title and description</mat-label>
         <!--
         <input matInput [value]="searchText"
         -->
         <input matInput
-               [formControl]="searchResultsCtrl" placeholder="" #inputElement>
+               [formControl]="textSearchFormControl" placeholder="" #inputElement>
 
         <button matSuffix mat-icon-button aria-label="Clear" (click)="clearSelection()">
           <mat-icon>close</mat-icon>

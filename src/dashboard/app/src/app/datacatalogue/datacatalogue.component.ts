@@ -1,7 +1,18 @@
 import {AfterViewInit, Component, ElementRef, inject, OnInit, ViewChild} from '@angular/core';
 import {FormControl} from "@angular/forms";
 import {FeatureService} from "../services/feature.service";
-import {debounceTime, distinctUntilChanged, filter, finalize, Observable, switchMap, tap, map, startWith} from "rxjs";
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  finalize,
+  Observable,
+  switchMap,
+  tap,
+  map,
+  startWith,
+  Subscription, first
+} from "rxjs";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {MatChipInputEvent} from "@angular/material/chips";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
@@ -24,9 +35,11 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
   searchResult: any;
   */
   filteredSearchResults: any;
+  /*
   placeHolder: string = 'Search title and description';
-  searchResultsCtrl = new FormControl();
-  minLengthTerm = 2;
+  */
+  textSearchFormControl = new FormControl();
+  textSearchMinStringLength = 0; // 2;
   /*
   searchText: string = 'xxxxxx';
   */
@@ -44,15 +57,38 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
   tagsAnnouncer = inject(LiveAnnouncer);
 
   constructor(private featureService: FeatureService) {
-    // this.filteredSearchResults = [];
+    this.filteredSearchResults = [];
 
     this.tagsSelected = [];
     this.tagsSelectable = [];
 
-    this.getAllTags();
+    this.tagsAll = [];
+    this.getAllTags().then( (data => {
+      console.log('getAllTags response:', data);
+      this.tagsAll = data;
 
-    this.initData();
-  }
+      this.tagsSelectable = this.tagsAll.slice();
+      this.initTagsFormControl();
+
+      this.initTextSearchFormControl();
+      // this.initTextSearch('death');
+      this.initTextSearch();
+      // this.getFilteredSearchResultsDataCatalogue(); // also triggered by above initTextSearch() if text value length > textSearchMinStringLength
+
+      /*
+      //this.tagsAdd('census', false);
+      this.tagsAddInitial('census');
+      this.initTextSearch('death');
+      */
+
+      //this.tagsAdd('census'); // note: with only tag as parameter, only to be used AFTER initTextSearch() has been called at least once
+
+
+    }));
+
+
+
+  } // END CONSTRUCTOR
 
 
   //https://stackoverflow.com/questions/70875775/angular-autocomplete-loading-from-api-reactivity
@@ -61,54 +97,60 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
 
     // this.versionChecker = new AppVersionAndBuildChecker();
 
-    this.searchResultsCtrl.valueChanges
-        .pipe(
-            filter(res => {
-              return res !== null && res.length >= this.minLengthTerm
-            }),
-            distinctUntilChanged(),
-            debounceTime(700),
-            tap(() => {
-              this.errorMsg = "";
-              this.filteredSearchResults = [];
-              this.isLoading = true;
-            }),
-            /*
-            switchMap(value => this.featureService.searchCatalogue(value)
-            switchMap(value => this.featureService.searchCatalogue(value)
-            switchMap(value => this.featureService.searchCatalogue(this.searchResultsCtrl.getRawValue(), this.tagsSelected)
-            */
-            switchMap(value => this.searchDataCatalogue()
-                .pipe(
-                    finalize(() => {
-                      this.isLoading = false
-                    }),
-                )
-            )
-        )
-        .subscribe((data: any) => {
-          //console.log('data', data);
-          if (data == 'ERROR') {
-            //this.errorMsg = data['Error'];
-            this.filteredSearchResults= [];
-          } else {
-            this.errorMsg = "";
-            this.filteredSearchResults = data;
+    // this.initTextSearchFormControl();
 
-          }
-          //console.log(this.filteredLocations);
-        });
-
-    // this.initTagsAutocomplete();
+    // this.initTagsFormControl();
 
   } // END FUNCTION ngOnInit
 
-  initTagsAutocomplete() {
+  initTagsFormControl() {
     this.tagsFiltered = this.tagsFormControl.valueChanges.pipe(
       startWith(''),
       map((fruit: string | null) => (fruit ? this._tagsFilter(fruit) : this.tagsSelectable.slice())),
     );
-  } // END FUNCTION initTagsAutocomplete
+  } // END FUNCTION initTagsFormControl
+
+  initTextSearchFormControl() {
+    this.textSearchFormControl.valueChanges
+      .pipe(
+        filter(res => {
+          return res !== null && res.length >= this.textSearchMinStringLength
+        }),
+        distinctUntilChanged(),
+        debounceTime(700),
+        tap(() => {
+          this.errorMsg = "";
+          this.filteredSearchResults = [];
+          this.isLoading = true;
+        }),
+        /*
+        switchMap(value => this.featureService.searchCatalogue(value)
+        switchMap(value => this.featureService.searchCatalogue(value)
+        switchMap(value => this.featureService.searchCatalogue(this.searchResultsCtrl.getRawValue(), this.tagsSelected)
+        */
+        switchMap(value => this.searchDataCatalogue()
+          .pipe(
+            finalize(() => {
+              this.isLoading = false
+            }),
+          )
+        )
+      )
+      .subscribe((data: any) => {
+        //console.log('data', data);
+        if (data == 'ERROR') {
+          //this.errorMsg = data['Error'];
+          this.filteredSearchResults= [];
+        } else {
+          this.errorMsg = "";
+          this.filteredSearchResults = data;
+
+        }
+        //console.log(this.filteredLocations);
+      });
+  } // END FUNCTION initTextSearchFormControl
+
+
 
 
   ngAfterViewInit(): void {
@@ -126,8 +168,8 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
   } // END FUNCTION searchDataCatalogue
   */
   searchDataCatalogue() {
-    console.log('searchDataCatalogue() ...', this.searchResultsCtrl.getRawValue(), this.tagsSelected);
-    return this.featureService.searchCatalogue(this.searchResultsCtrl.getRawValue(), this.tagsSelected);
+    console.log('searchDataCatalogue() - searchText, tags:', this.textSearchFormControl.getRawValue(), this.tagsSelected);
+    return this.featureService.searchCatalogue(this.textSearchFormControl.getRawValue(), this.tagsSelected);
   } // END FUNCTION searchDataCatalogue
 
   getFilteredSearchResultsDataCatalogue() {
@@ -139,39 +181,70 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
 
 
   clearSelection() {
+    /*
     this.searchResultsCtrl.setValue('');
-    this.initData();
+    */
+    this.initTextSearch();
+
+    this.getFilteredSearchResultsDataCatalogue();
     // this.selectedLocationName = '';
   } // END FUNCTION clearSelection
 
-  initData(): void {
+  initTextSearch(searchText = ''): void {
     this.filteredSearchResults = [];
-    this.searchResultsCtrl.setValue('');
+    this.textSearchFormControl.setValue(searchText);
     /*
     this.featureService.searchCatalogue('', this.tagsSelected).subscribe((data) => {
       this.filteredSearchResults = data;
     })
     */
+    /*
     this.getFilteredSearchResultsDataCatalogue();
-  } // END FUNCTION initData
+    */
+  } // END FUNCTION initTextSearch
 
 
 
   /* tags function  START */
 
-  getAllTags(): void {
-    this.tagsAll = [];
+  getAllTags() {
+    // this.tagsAll = [];
+    let tagsList = [];
+
+    // return new Promise( (resolve, reject) => {
+    return new Promise( (resolve) => {
+      this.featureService.getCatalogueTags()
+        .subscribe( (data) => {
+          data.forEach( dataItem => {
+            // this.tagsAll.push(dataItem.f_description);
+            tagsList.push(dataItem.f_description);
+          });
+          tagsList.sort();
+
+          resolve(tagsList);
+        } /*, () => {
+          reject([]);
+        }*/);
+    });
+
+    /*
     this.featureService.getCatalogueTags().subscribe( (data) => {
       console.log('getCatalogueTags() ...', data);
       data.forEach( dataItem => {
-        this.tagsAll.push(dataItem.f_description);
+        // this.tagsAll.push(dataItem.f_description);
+        tagsList.push(dataItem.f_description);
       });
-      this.tagsAll.sort();
-      this.tagsSelectable = this.tagsAll.slice();
+      tagsList.sort();
 
-      this.initTagsAutocomplete();
+      return tagsList;
+      //
+      //this.tagsAll.sort();
+      //this.tagsSelectable = this.tagsAll.slice();
 
+      //this.initTagsAutocomplete();
+      //
     })
+    */
   } // END FUNCTION getAllTags
 
 
@@ -182,6 +255,9 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
     const value = (event.value || '').trim();
 
     this.tagsAdd(value);
+
+    // this.getFilteredSearchResultsDataCatalogue();
+
     /*
     // Add our fruit (only if selectable option)
     if (value  &&  this.tagsSelectable.includes(value)) {
@@ -200,8 +276,8 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
 
   } // END FUNCTION tagsFormAddChipEvent
 
-  tagsAdd(tag: string): void {
-    console.log('tagsAdd() ...', tag, this.tagsSelectable.includes(tag), this.tagsSelectable);
+  tagsAdd(tag: string, doSearch: boolean = true): void {
+    // console.log('tagsAdd() ...', tag, this.tagsSelectable.includes(tag), this.tagsSelectable);
 
     // Add our fruit (only if selectable option)
     if (tag  &&  this.tagsSelectable.includes(tag)) {
@@ -216,12 +292,19 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
 
       this.tagsFormControl.setValue(null);
 
-      this.getFilteredSearchResultsDataCatalogue();
+      if (doSearch) {
+        this.getFilteredSearchResultsDataCatalogue();
+      }
     }
   } // END FUNCTION tagsAdd
 
+  tagsAddInitial(tag: string) {
+    this.tagsAdd(tag, false);
+  } // END FUNCTION tagsAddInitial
 
   tagsRemove(tag: string): void {
+    // console.log('tagsRemove() ...', tag, this.tagsSelected.includes(tag), this.tagsSelected);
+
     const index = this.tagsSelected.indexOf(tag);
 
     if (index >= 0) {
@@ -248,6 +331,8 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
     const value = (event.option.viewValue || '').trim();
 
     this.tagsAdd(value);
+
+    // this.getFilteredSearchResultsDataCatalogue();
 
     /*
     if (this.tagsSelectable.includes(event.option.viewValue)) {
