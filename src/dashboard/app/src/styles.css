@@ -45,7 +45,7 @@ body {
     --app-panel-left-width: calc(min(80%, var(--app-panel-left-number-selects) * var(--app-panel-left-one-select-width) ));
 
     --side-bar-button-part-height: 120px; /* 84px; */
-    --side-bar-selection-part-height: calc(var(--page-content-height) - var(--side-bar-button-part-height));
+    --side-bar-selection-part-height: calc(var(--page-content-height) - var(--side-bar-button-part-height) - 2em);
 
     /*
     --mat-sidenav-container-background-color: yellow !important;
@@ -225,7 +225,7 @@ h2 {
 
 .linkLook, .linkLook:visited {
     text-decoration: underline;
-    color: #dc002d;
+    color: var(--color-toolbar);
     cursor: pointer;
 }
 
@@ -510,6 +510,10 @@ div.divLoading:after {
     padding: 5px;
 }
 
+.interpretingTipsDiv {
+  height: 2em;
+  text-align: center;
+}
 
 
 /* RESULT MAP */
@@ -803,3 +807,72 @@ tbody tr:nth-child(odd) {
 .leaflet-control-easyPrint {
     display: none !important;
 }
+
+
+
+/* DATA CATALOGUE */
+
+
+
+.data-catalogue-page-content {
+  position: relative;
+  padding-bottom: 60px;
+  /*
+  max-width: 1300px;
+  max-width: 1232px;
+  */
+  max-width: 1232px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.data-catalogue-search-form {
+  /* /
+  background-color: rgba(255,0,0,0.25);
+  /* */
+}
+
+.data-catalogue-search-results-container {
+  /* /
+  background-color: rgba(255,255,0,0.25);
+  /* */
+  align-items: start;
+  display: grid;
+  grid-gap: 16px;
+  grid-template-columns: repeat(auto-fit, 400px);
+  /*
+  justify-content: center;
+  */
+  justify-content: left;
+  margin: 0 16px 0 -16px;
+}
+
+.data-catalogue-search-result-div {
+  display: inline-block;
+  padding: 1rem;
+  width: 100%;
+  position: relative;
+  max-width: 580px;
+}
+
+.data-catalogue-search-result-card {
+  max-width: min(400px, calc(100vw - 2em));
+  align-self: start;
+}
+
+.data-catalogue-search-result-card-header-image-ESTAT {
+  background-image: url('assets/img/eurostat.png');
+  background-size: cover;
+}
+
+.data-catalogue-search-result-card-header-image-OECD {
+  background-image: url('assets/img/oecd.png');
+  background-size: cover;
+}
+
+.data-catalogue-search-result-card-header-image-OXFORD {
+  background-image: url('assets/img/oxford.jpg');
+  background-size: cover;
+}
+
+

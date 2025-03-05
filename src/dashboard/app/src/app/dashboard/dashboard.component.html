@@ -57,6 +57,9 @@
 
             </div>
             <div id="drawer_button_part">
+                <div class="interpretingTipsDiv">
+                  <a href="https://www.mapineq.org/interpreting-data/" target="_blank" class="linkLook">Tips for interpreting this data</a>
+                </div>
                 <div class="buttonsNoDistanceBetween" *ngIf="displayObject.formType === 'bivariate'">
                     <button [disabled]="!displayObject.tableFields[0].tableSelectionComplete" mat-stroked-button color="primary" aria-label="Show only Predictor on map" (click)="showUnivariateMap(0)" class="buttonHalfWidth">
                         <mat-icon>map</mat-icon> Show <i>only Predictor</i> on map

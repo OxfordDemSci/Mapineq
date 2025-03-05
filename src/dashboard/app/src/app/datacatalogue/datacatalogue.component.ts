@@ -211,6 +211,9 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
     // this.tagsAll = [];
     let tagsList = [];
 
+    /*
+    https://forum.ionicframework.com/t/promise-returning-subscription-how-to-wait-for-data-before-proceding/184421/3
+    */
     // return new Promise( (resolve, reject) => {
     return new Promise( (resolve) => {
       this.featureService.getCatalogueTags()
