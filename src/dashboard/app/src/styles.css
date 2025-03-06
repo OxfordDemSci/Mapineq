@@ -880,4 +880,10 @@ tbody tr:nth-child(odd) {
   background-size: cover;
 }
 
-
+.data-catalogue-search-result-table-descr {
+  height: 3.5em;
+  overflow-y: auto;
+  /*
+  background-color: rgba(128,128,128,0.05);
+  */
+}

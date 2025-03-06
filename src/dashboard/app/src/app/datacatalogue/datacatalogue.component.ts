@@ -73,6 +73,8 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
       this.initTextSearchFormControl();
       // this.initTextSearch('death');
       this.initTextSearch();
+      // this.initTextSearch('Graduates by');
+      // this.initTextSearch('Noautonomous');
       // this.getFilteredSearchResultsDataCatalogue(); // also triggered by above initTextSearch() if text value length > textSearchMinStringLength
 
       /*
@@ -380,11 +382,13 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
   getMaxRegionLevel(jsonArray: any) {
     // console.log('getMAxRegionLevel()', jsonArray);
     // let actualLevelsArray = JSON.parse(jsonArray);
-    let actualLevelsArray = jsonArray;
+    // let actualLevelsArray = jsonArray;
 
-    if (actualLevelsArray === null  ||  actualLevelsArray.length === 0) {
+    // if (actualLevelsArray === null  ||  actualLevelsArray.length === 0) {
+    if (jsonArray === null  ||  jsonArray.length === 0) {
       return '';
     } else {
+      let actualLevelsArray = jsonArray.slice();
       actualLevelsArray.sort().reverse();
       return actualLevelsArray[0].toString();
     }
@@ -395,16 +399,52 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
   jsonArrayToString(jsonArray: any, joinString: string) {
     // console.log('jsonArrayToString()', jsonArray, joinString);
     // let actualArray = JSON.parse(jsonArray);
-    let actualArray = jsonArray;
+    // let actualArray = jsonArray;
 
-    if (actualArray === null) {
+    // if (actualArray === null) {
+    if (jsonArray === null) {
       return '-none-';
     } else {
+      let actualArray = jsonArray.slice();
       actualArray.sort();
       return actualArray.join(joinString);
     }
 
   } // END FUNCTION jsonArrayToString
+
+  jsonYearsArrayToString(jsonArray: any) {
+    // console.log('jsonArrayToString()', jsonArray, joinString);
+    // let actualArray = JSON.parse(jsonArray);
+    // let actualArray = jsonArray;
+
+    // if (actualArray === null) {
+    if (jsonArray === null) {
+      return '-none-';
+    } else {
+      let actualArray = jsonArray.slice();
+      actualArray.sort();
+      let returnString = '';
+      actualArray.forEach( (year, index) => {
+        if (index === 0) {
+          returnString += year;
+        } else {
+          // console.log(' - ', year, index, Number(actualArray[(index - 1)]) + 1)
+          if (Number(year) > Number(actualArray[(index - 1)]) + 1) {
+            returnString += ', ' + year;
+          } else {
+            // console.log(' - ', year, index, (actualArray.length - 1), (Number(year) + 1),  Number(actualArray[(index + 1)]) );
+
+            if (index === (actualArray.length - 1)  ||  (Number(year) + 1) < Number(actualArray[(index + 1)])) {
+              returnString += '-' + year;
+            }
+          }
+        }
+      })
+      return returnString;
+      // return actualArray.join(', ');
+    }
+
+  } // END FUNCTION jsonYearsArrayToString
 
 
 }

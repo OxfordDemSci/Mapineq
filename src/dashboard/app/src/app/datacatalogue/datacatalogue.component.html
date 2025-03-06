@@ -102,7 +102,8 @@
                alt="Max level ({{getMaxRegionLevel(result.f_levels)}}) example map">
           <mat-card-content class="mat_card_content">
 
-            <div>
+
+            <div class="data-catalogue-search-result-table-descr">
               {{ result.f_description }}
             </div>
 
@@ -120,7 +121,11 @@
             <div>
               Available years:
               <div>
+                <!-- --
                 {{ jsonArrayToString(result.f_years, ', ') }}
+                <br>
+                !-- -->
+                {{ jsonYearsArrayToString(result.f_years) }}
               </div>
             </div>
 
