@@ -22,7 +22,7 @@
       <!--
       <mat-form-field style="width:600px;" appearance="outline" floatLabel="always" class="form-field-white-background" #matFormFieldElement>
       -->
-      <mat-form-field appearance="outline" floatLabel="always" class="form-field-white-background" #matFormFieldElement>
+      <mat-form-field class="data-catalogue-form-field" appearance="outline" floatLabel="always" #matFormFieldElement>
         <mat-label>Search title and description</mat-label>
         <!--
         <input matInput [value]="searchText"
@@ -46,7 +46,7 @@
       <!--
       <mat-form-field style="width:600px;" appearance="outline" floatLabel="always">
       -->
-      <mat-form-field appearance="outline" floatLabel="always">
+      <mat-form-field class="data-catalogue-form-field" appearance="outline" floatLabel="always">
         <mat-label>Filter by tags</mat-label>
         <mat-chip-grid #chipGrid aria-label="Tags filter">
           @for (tag of tagsSelected; track tag) {

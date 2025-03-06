@@ -510,9 +510,10 @@ div.divLoading:after {
     padding: 5px;
 }
 
-.interpretingTipsDiv {
+.interpretingDataLinkDiv {
   height: 2em;
   text-align: center;
+  padding-top: 0.5em;
 }
 
 
@@ -830,6 +831,10 @@ tbody tr:nth-child(odd) {
   /* /
   background-color: rgba(255,0,0,0.25);
   /* */
+}
+
+.data-catalogue-form-field {
+  max-width: 816px;
 }
 
 .data-catalogue-search-results-container {

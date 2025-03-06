@@ -57,9 +57,6 @@
 
             </div>
             <div id="drawer_button_part">
-                <div class="interpretingTipsDiv">
-                  <a href="https://www.mapineq.org/interpreting-data/" target="_blank" class="linkLook">Tips for interpreting this data</a>
-                </div>
                 <div class="buttonsNoDistanceBetween" *ngIf="displayObject.formType === 'bivariate'">
                     <button [disabled]="!displayObject.tableFields[0].tableSelectionComplete" mat-stroked-button color="primary" aria-label="Show only Predictor on map" (click)="showUnivariateMap(0)" class="buttonHalfWidth">
                         <mat-icon>map</mat-icon> Show <i>only Predictor</i> on map
@@ -79,6 +76,9 @@
                 <a [disabled]="displayData?.length < 1" mat-stroked-button type="button" color="primary" (click)="downloadCSV()" [download]="downloadFileName" [href]="downloadUrl" class="buttonFullWidth">
                     <mat-icon>download</mat-icon>Download mapped data as csv
                 </a>
+              <div class="interpretingDataLinkDiv">
+                <a href="https://www.mapineq.org/interpreting-data/" target="_blank" class="linkLook">Info about interpreting this data <mat-icon class="matIconInText">open_in_new</mat-icon></a>
+              </div>
 
             </div>
 
