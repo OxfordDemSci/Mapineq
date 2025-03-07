@@ -30,6 +30,7 @@
         <input matInput
                [formControl]="textSearchFormControl" placeholder="" #inputElement>
 
+        <mat-icon matPrefix class="data-catalogue-form-field-icon-dimmed">search</mat-icon>
         <button matSuffix mat-icon-button aria-label="Clear" (click)="clearSelection()">
           <mat-icon>close</mat-icon>
         </button>
@@ -46,7 +47,7 @@
       <!--
       <mat-form-field style="width:600px;" appearance="outline" floatLabel="always">
       -->
-      <mat-form-field class="data-catalogue-form-field" appearance="outline" floatLabel="always">
+      <mat-form-field class="data-catalogue-form-field data-catalogue-form-field-chips-and-autocomplete" appearance="outline" floatLabel="always">
         <mat-label>Filter by tag(s)</mat-label>
         <mat-chip-grid #chipGrid aria-label="Tags filter">
           @for (tag of tagsSelected; track tag) {
@@ -62,6 +63,7 @@
                [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
                [matChipInputSeparatorKeyCodes]="tagsSeparatorKeyCodes"
                (matChipInputTokenEnd)="tagsFormAddChipEvent($event)"/>
+        <mat-icon matPrefix class="data-catalogue-form-field-icon-dimmed">new_label</mat-icon>
         <!--
         <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption (optionSelected)="tagsFormAutocompleteSelectedEvent($event)">
         -->

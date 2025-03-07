@@ -837,6 +837,35 @@ tbody tr:nth-child(odd) {
   max-width: 816px;
 }
 
+.data-catalogue-form-field-icon-dimmed {
+  color: rgba(128,128,128,1);
+}
+
+
+/*
+.data-catalogue-form-field-chips-and-autocomplete .mat-mdc-form-field-icon-prefix {
+  background-color: rgba(255,0,0,0.25);
+  padding: 3em 4px 0 0;
+}
+*/
+/* */
+.data-catalogue-form-field-chips-and-autocomplete .mat-mdc-form-field-icon-prefix {
+  /*
+  background-color: rgba(255,0,0,0.25);
+  */
+  position: absolute;
+  bottom: 1em;
+
+}
+.data-catalogue-form-field-chips-and-autocomplete .mat-mdc-form-field-infix {
+  /*
+  background-color: rgba(255,255,0,0.25);
+  */
+  margin-left: 52px;
+}
+/* */
+
+
 .data-catalogue-search-results-container {
   /* /
   background-color: rgba(255,255,0,0.25);
