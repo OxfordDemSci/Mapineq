@@ -307,7 +307,7 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
     this.tagsAdd(tag, false);
   } // END FUNCTION tagsAddInitial
 
-  tagsRemove(tag: string): void {
+  tagsRemove(tag: string, doSearch: boolean = true): void {
     // console.log('tagsRemove() ...', tag, this.tagsSelected.includes(tag), this.tagsSelected);
 
     const index = this.tagsSelected.indexOf(tag);
@@ -326,10 +326,24 @@ export class DatacatalogueComponent implements OnInit, AfterViewInit {
       // reload suggestions
       this.tagsFormControl.setValue(this.tagsInput.nativeElement.value);
 
-      this.getFilteredSearchResultsDataCatalogue();
+      if (doSearch) {
+        this.getFilteredSearchResultsDataCatalogue();
+      }
 
     }
   } // END FUNCTION tagsRemove
+
+  tagsRemoveAll() {
+    // console.log('tagsRemoveAll() ...', this.tagsSelected);
+    let tagsToRemove = this.tagsSelected.slice();
+    if (tagsToRemove.length > 0) {
+      tagsToRemove.forEach(tag => {
+        this.tagsRemove(tag, false);
+      });
+      this.getFilteredSearchResultsDataCatalogue();
+    }
+  } // END FUNCTION tagsRemoveAll
+
 
   // tagsFormAddChipEvent
   tagsFormAutocompleteSelectedEvent(event: MatAutocompleteSelectedEvent): void {

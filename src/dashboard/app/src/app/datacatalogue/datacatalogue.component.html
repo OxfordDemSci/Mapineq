@@ -31,8 +31,8 @@
                [formControl]="textSearchFormControl" placeholder="" #inputElement>
 
         <mat-icon matPrefix class="data-catalogue-form-field-icon-dimmed">search</mat-icon>
-        <button matSuffix mat-icon-button aria-label="Clear" (click)="clearSelection()">
-          <mat-icon>close</mat-icon>
+        <button matSuffix mat-icon-button aria-label="Clear search text" (click)="clearSelection()" color="primary" [disabled]="textSearchFormControl.getRawValue().length === 0">
+          <mat-icon>backspace</mat-icon>
         </button>
 
       </mat-form-field>
@@ -72,6 +72,10 @@
             <mat-option [value]="tag">{{tag}}</mat-option>
           }
         </mat-autocomplete>
+        <button matSuffix mat-icon-button aria-label="Clear ALL tags" (click)="tagsRemoveAll()" color="primary" [disabled]="tagsSelected.length === 0">
+          <mat-icon>backspace</mat-icon>
+        </button>
+
       </mat-form-field>
 
       <br>
