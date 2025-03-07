@@ -47,7 +47,7 @@
       <mat-form-field style="width:600px;" appearance="outline" floatLabel="always">
       -->
       <mat-form-field class="data-catalogue-form-field" appearance="outline" floatLabel="always">
-        <mat-label>Filter by tags</mat-label>
+        <mat-label>Filter by tag(s)</mat-label>
         <mat-chip-grid #chipGrid aria-label="Tags filter">
           @for (tag of tagsSelected; track tag) {
             <mat-chip-row (removed)="tagsRemove(tag)">
@@ -109,7 +109,7 @@
 
             <div>
               Tags:
-              <div [innerHTML]="'<b>' + jsonArrayToString(result.f_all_tags || null, '</b>, <b>') + '</b>'"></div>
+              <div [innerHTML]="'' + jsonArrayToString(result.f_all_tags || null, ', ') + '</b>'"></div>
             </div>
 
 
