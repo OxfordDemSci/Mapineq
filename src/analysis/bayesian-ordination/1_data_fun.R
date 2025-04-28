@@ -98,7 +98,7 @@ get_data <- function(resource, year, level, x_specs) {
           df_content <- df_content %>%
             as_tibble() %>%
             mutate(
-              indicator = resource,
+              resource = resource,
               geo_level = level,
               data_year = year
             ) %>%
@@ -216,7 +216,7 @@ expand_catalogue <- function(catalogue) {
     mutate(
       combos = map(
         filter_values,
-        ~ cross_df(.x) # returns a tibble with columns named by the fields
+        ~ do.call(tidyr::expand_grid, .x) # returns a tibble with columns named by the fields
       )
     ) %>%
     select(-filters_json, -filters, -filter_values) %>%

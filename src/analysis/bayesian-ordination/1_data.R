@@ -84,12 +84,7 @@ if (TEST) {
 # get data for all items in the catalogue
 results <- catalogue_data(catalogue_expanded[i_select, ], year, level)
 
-dat <- bind_rows(results) 
-# TODO: Troubleshoot bind_rows() with columns of different sizes
-# ! Tibble columns must have compatible sizes.
-# • Size 332: Columns `TGS00058`, `TGS00059`, `EDUC_UOE_ENRA13`, `HLTH_CD_YPERRTO`, `ookla`, and 6 more.
-# • Size 334: Columns `TGS00064`, `EDAT_LFSE_33`, `DEMO_R_FIND2`, `TEPSR_LM220`, `DEMO_R_MINFIND`, and 5 more.
-# ℹ Only values of size one are recycled.
+dat <- bind_rows(results)
 
 # save to disk
 write.csv(dat, file.path(outdir, "data.csv"), row.names = FALSE)
