@@ -18,7 +18,6 @@ keep_resources <- c(
   "pm25", # air particulates
   "ookla", # internet speed
   "TGS00050", # internet usage
-  "RD_E_GERDREG", # gross domestic expenditure on R&D
   "TGS00064", # hospital beds
   "HLTH_RS_BDSNS", # care beds
   "TGS00058", # cancer deaths
@@ -30,6 +29,7 @@ keep_resources <- c(
   "EDUC_UOE_ENRA13", # distribution of students among education types
   "TGS00109", # tertiary educational attainment
   "EDAT_LFS_9918", # educational attainment
+  "RD_E_GERDREG", # gross domestic expenditure on R&D
   "TEPSR_LM220", # gender employment gap
   "YTH_EMPL_110", # youth unemployment
   "TGS00010", # employment rate
@@ -39,6 +39,14 @@ keep_resources <- c(
   "DEMO_R_FIND2" # fertility indicators
 )
 #----------------------#
+
+# install libraries (if needed)
+required_packages <- c("dplyr", "tidyr")
+install.packages(setdiff(required_packages, installed.packages()[, "Package"]))
+
+# load libraries
+library(dplyr)
+library(tidyr)
 
 # load functions
 source(file.path(getwd(), "src", "analysis", "bayesian-ordination", "1_data_fun.R"))
@@ -82,12 +90,25 @@ if (TEST) {
 }
 
 # get data for all items in the catalogue
-results <- catalogue_data(catalogue_expanded[i_select, ], year, level)
+data_list <- catalogue_data(catalogue_expanded[i_select, ], year, level)
+data_raw <- bind_rows(data_list)
 
-dat <- bind_rows(results)
+# create variable names
+data_raw <- variable_names_fast(data_raw)
+
+vars <- sort(unique(data_raw$variable_name))
+length(vars)
+
+# wide-format data
+data_wide <- wide_catalogue_data(data_raw)
+
+# drop locations with no data
+rows_no_data <- apply(data_wide[,vars], 1, function(x) all(is.na(x)))
+data_wide <- data_wide[!rows_no_data, ]
 
 # save to disk
-write.csv(dat, file.path(outdir, "data.csv"), row.names = FALSE)
+write.csv(data_raw, file.path(outdir, "data_raw.csv"), row.names = FALSE)
+write.csv(data_wide, file.path(outdir, "data_wide.csv"), row.names = FALSE)
 write.csv(data_catalogue, file.path(outdir, "catalogue.csv"), row.names = FALSE)
 write.csv(catalogue_expanded, file.path(outdir, "catalogue_expanded.csv"), row.names = FALSE)
 write.csv(filter_dictionary, file.path(outdir, "filter_dictionary.csv"), row.names = FALSE)

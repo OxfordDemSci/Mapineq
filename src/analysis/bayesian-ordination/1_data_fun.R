@@ -256,7 +256,7 @@ catalogue_data <- function(catalogue, year, level) {
       conditions = conditions
     )
 
-    results[[resource]] <- get_data(
+    results[[paste0(resource, "_", i)]] <- get_data(
       resource = resource,
       year = year,
       level = level,
@@ -267,4 +267,75 @@ catalogue_data <- function(catalogue, year, level) {
   end_time <- Sys.time()
   message("Time elapsed: ", round(end_time - start_time, 2))
   return(results)
+}
+
+# create variable names based on resource/filter combinations
+variable_names <- function(dat){
+  filter_pos <- (which(names(dat) == "geo_level") + 1):ncol(dat)
+  filter_names <- names(dat)[filter_pos]
+
+  result <- dat |>
+    rowwise() |>
+    mutate(
+      variable_name = {
+        row_vals <- as.list(cur_data()) # grab every column in this row
+        parts <- c(as.character(row_vals$resource))
+        for (nm in filter_names) {
+          val <- row_vals[[nm]]
+          if (!is.na(val)) {
+            parts <- c(parts, paste0(nm, "=", as.character(val)))
+          }
+        }
+        paste(parts, collapse = "|")
+      }
+    ) |>
+    ungroup()
+
+  return(result)
+}
+
+variable_names_fast <- function(dat){
+  # 1) identify the filter columns
+  pos_geo     <- which(names(dat) == "geo_level")
+  filter_cols <- names(dat)[(pos_geo + 1):ncol(dat)]
+
+  dat %>%
+    # 2) for each filter column, build "col=val" or NA
+    mutate(
+      across(
+        all_of(filter_cols),
+        ~ ifelse(is.na(.), 
+                 NA_character_, 
+                 paste0(cur_column(), "=", as.character(.))
+        ),
+        .names = "tmp_{col}"
+      )
+    ) %>%
+    # 3) unite resource + all tmp_* into one string, dropping NAs
+    unite(
+      col       = "variable_name",
+      c("resource", paste0("tmp_", filter_cols)),
+      sep       = "|",
+      na.rm     = TRUE
+    )
+}
+
+# catalogue data to wide format
+wide_catalogue_data <- function(dat) {
+
+  if (!"variable_name" %in% names(dat)){
+    dat <- variable_names(dat)
+  }
+  
+  keep_cols <- c("data_year", "geo", "geo_name", "geo_source", "geo_year")
+
+  result <- dat |>
+    select(all_of(keep_cols), variable_name, value) |>
+    pivot_wider(
+      id_cols = all_of(keep_cols),
+      names_from = variable_name,
+      values_from = value
+    )
+  
+  return(result)
 }
