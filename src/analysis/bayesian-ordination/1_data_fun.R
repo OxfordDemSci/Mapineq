@@ -225,6 +225,39 @@ expand_catalogue <- function(catalogue) {
   return(result)
 }
 
+# create variable names based on resource/filter combinations
+variable_names <- function(dat){
+  pos_geo     <- which(names(dat) == "data_year")
+  filter_cols <- names(dat)[(pos_geo + 1):ncol(dat)]
+
+  dat %>%
+    # long variable names
+    mutate(
+      resource = f_resource,
+      across(
+        all_of(filter_cols),
+        ~ ifelse(is.na(.), 
+                 NA_character_, 
+                 paste0(cur_column(), "=", as.character(.))
+        ),
+        .names = "tmp_{col}"
+      )
+    ) %>%
+    unite(
+      col = "variable_name_long",
+      c("resource", paste0("tmp_", filter_cols)),
+      sep = "|",
+      na.rm = TRUE
+    ) %>% 
+    # short variable names
+    group_by(f_resource) %>%
+    mutate(
+      variable_name = paste0(f_resource, "_", row_number())
+    ) %>%
+    ungroup() %>%
+    select(variable_name, variable_name_long, f_resource, f_short_description, f_description, everything())
+}
+
 # retrieve data for all rows of an expanded catalogue
 catalogue_data <- function(catalogue, year, level) {
   results <- list()
@@ -239,6 +272,8 @@ catalogue_data <- function(catalogue, year, level) {
   for (i in 1:nrow(catalogue)) {
     setTxtProgressBar(pb, i)
     resource <- catalogue$f_resource[i]
+    variable_name <- catalogue$variable_name[i]
+    variable_name_long <- catalogue$variable_name_long[i]
 
     row_filters <- unlist(as.vector(catalogue[i, filters]))
     row_filters <- row_filters[!is.na(row_filters)]
@@ -256,68 +291,23 @@ catalogue_data <- function(catalogue, year, level) {
       conditions = conditions
     )
 
-    results[[paste0(resource, "_", i)]] <- get_data(
+    i_data <- get_data(
       resource = resource,
       year = year,
       level = level,
       x_specs = x_specs
     )
+
+    i_data$variable_name <- variable_name
+    i_data$variable_name_long <- variable_name_long
+    
+    results[[variable_name]] <- i_data |> 
+      select(variable_name, variable_name_long, everything())
   }
   close(pb)
   end_time <- Sys.time()
   message("Time elapsed: ", round(end_time - start_time, 2))
   return(results)
-}
-
-# create variable names based on resource/filter combinations
-variable_names <- function(dat){
-  filter_pos <- (which(names(dat) == "geo_level") + 1):ncol(dat)
-  filter_names <- names(dat)[filter_pos]
-
-  result <- dat |>
-    rowwise() |>
-    mutate(
-      variable_name = {
-        row_vals <- as.list(cur_data()) # grab every column in this row
-        parts <- c(as.character(row_vals$resource))
-        for (nm in filter_names) {
-          val <- row_vals[[nm]]
-          if (!is.na(val)) {
-            parts <- c(parts, paste0(nm, "=", as.character(val)))
-          }
-        }
-        paste(parts, collapse = "|")
-      }
-    ) |>
-    ungroup()
-
-  return(result)
-}
-
-variable_names_fast <- function(dat){
-  # 1) identify the filter columns
-  pos_geo     <- which(names(dat) == "geo_level")
-  filter_cols <- names(dat)[(pos_geo + 1):ncol(dat)]
-
-  dat %>%
-    # 2) for each filter column, build "col=val" or NA
-    mutate(
-      across(
-        all_of(filter_cols),
-        ~ ifelse(is.na(.), 
-                 NA_character_, 
-                 paste0(cur_column(), "=", as.character(.))
-        ),
-        .names = "tmp_{col}"
-      )
-    ) %>%
-    # 3) unite resource + all tmp_* into one string, dropping NAs
-    unite(
-      col       = "variable_name",
-      c("resource", paste0("tmp_", filter_cols)),
-      sep       = "|",
-      na.rm     = TRUE
-    )
 }
 
 # catalogue data to wide format

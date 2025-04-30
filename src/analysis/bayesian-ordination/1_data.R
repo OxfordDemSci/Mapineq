@@ -82,6 +82,9 @@ filter_dictionary <- filter_labels(data_catalogue)
 # expand catalogue to include all combinations of filters
 catalogue_expanded <- expand_catalogue(data_catalogue)
 
+# create variable names
+catalogue_expanded <- variable_names(catalogue_expanded)
+
 # reduce for testing
 if (TEST) {
   i_select <- sample(x = 1:nrow(catalogue_expanded), size = min(nrow(catalogue_expanded), n_test))
@@ -90,20 +93,37 @@ if (TEST) {
 }
 
 # get data for all items in the catalogue
-data_list <- catalogue_data(catalogue_expanded[i_select, ], year, level)
+data_list <- catalogue_data(
+  catalogue = catalogue_expanded[i_select, ], 
+  year = year, 
+  level = level)
 data_raw <- bind_rows(data_list)
-
-# create variable names
-data_raw <- variable_names_fast(data_raw)
-
-vars <- sort(unique(data_raw$variable_name))
-length(vars)
 
 # wide-format data
 data_wide <- wide_catalogue_data(data_raw)
 
+# variable names
+vars_df <- data_raw |>
+  select(variable_name, variable_name_long, resource) |>
+  distinct() |>
+  left_join(
+    catalogue |> 
+      rename(
+        resource = f_resource,
+        description = f_description,
+        short_description = f_short_description
+      ) |> 
+      select(resource, short_description, description)
+  ) |> 
+  mutate(
+    select_y = 1,
+    select_x = 0
+  )
+
+
 # drop locations with no data
-rows_no_data <- apply(data_wide[,vars], 1, function(x) all(is.na(x)))
+vars <- unique(vars_df$variable_name)
+rows_no_data <- apply(data_wide[, vars], 1, function(x) all(is.na(x)))
 data_wide <- data_wide[!rows_no_data, ]
 
 # save to disk
@@ -112,3 +132,4 @@ write.csv(data_wide, file.path(outdir, "data_wide.csv"), row.names = FALSE)
 write.csv(data_catalogue, file.path(outdir, "catalogue.csv"), row.names = FALSE)
 write.csv(catalogue_expanded, file.path(outdir, "catalogue_expanded.csv"), row.names = FALSE)
 write.csv(filter_dictionary, file.path(outdir, "filter_dictionary.csv"), row.names = FALSE)
+write.csv(vars_df, file.path(outdir, "variable_selection.csv"), row.names = FALSE)
