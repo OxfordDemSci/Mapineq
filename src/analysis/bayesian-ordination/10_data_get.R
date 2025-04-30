@@ -49,10 +49,10 @@ library(dplyr)
 library(tidyr)
 
 # load functions
-source(file.path(getwd(), "src", "analysis", "bayesian-ordination", "1_data_fun.R"))
+source(file.path(getwd(), "src", "analysis", "bayesian-ordination", "10_data_fun.R"))
 
 # directories
-outdir <- file.path(getwd(), "wd", "out", "bayesian-ordination", "data")
+outdir <- file.path(getwd(), "wd", "out", "bayesian-ordination", "data_get")
 dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
 
 # get mapineq data catalogue
@@ -60,13 +60,13 @@ data_catalogue <- get_catalogue(level)
 
 # drop resources
 if (length(drop_resources) > 0) {
-  data_catalogue <- data_catalogue |>
+  data_catalogue <- data_catalogue %>%
     filter(!f_resource %in% drop_resources)
 }
 
 # keep resources
 if (length(keep_resources) > 0) {
-  data_catalogue <- data_catalogue |>
+  data_catalogue <- data_catalogue %>%
     filter(f_resource %in% keep_resources)
 }
 
@@ -83,7 +83,15 @@ filter_dictionary <- filter_labels(data_catalogue)
 catalogue_expanded <- expand_catalogue(data_catalogue)
 
 # create variable names
-catalogue_expanded <- variable_names(catalogue_expanded)
+catalogue_expanded <- variable_names(
+  dat = catalogue_expanded |> 
+    rename(
+      resource = f_resource,
+      short_description = f_short_description,
+      description = f_description
+    ), 
+  filter_cols = unique(filter_dictionary$field)
+)
 
 # reduce for testing
 if (TEST) {
@@ -99,27 +107,37 @@ data_list <- catalogue_data(
   level = level)
 data_raw <- bind_rows(data_list)
 
+data_raw <- data_raw %>%
+  left_join(
+    data_catalogue |>
+      rename(
+        resource = f_resource,
+        short_description = f_short_description,
+        description = f_description
+      ) |>
+      select(resource, short_description, description)
+  )
+
 # wide-format data
 data_wide <- wide_catalogue_data(data_raw)
 
-# variable names
-vars_df <- data_raw |>
-  select(variable_name, variable_name_long, resource) |>
-  distinct() |>
+# variable selection
+vars_df <- data_raw %>%
+  select(variable_name, variable_name_long, resource) %>%
+  distinct() %>%
   left_join(
-    catalogue |> 
+    catalogue %>% 
       rename(
         resource = f_resource,
         description = f_description,
         short_description = f_short_description
-      ) |> 
+      ) %>% 
       select(resource, short_description, description)
-  ) |> 
+  ) %>% 
   mutate(
     select_y = 1,
     select_x = 0
   )
-
 
 # drop locations with no data
 vars <- unique(vars_df$variable_name)

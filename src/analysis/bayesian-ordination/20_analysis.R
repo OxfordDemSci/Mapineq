@@ -16,13 +16,13 @@ future::plan("multicore")
 # source(file.path(getwd(), "src", "analysis", "bayesian-ordination", "2_analysis_fun.R"))
 
 # directories
-datadir <- file.path(getwd(), "wd", "out", "bayesian-ordination", "data")
+datdir <- file.path(getwd(), "wd", "out", "bayesian-ordination", "data")
 outdir <- file.path(getwd(), "wd", "out", "bayesian-ordination", "analysis")
 dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
 
 # load data
-dat <- read.csv(file.path(datadir, "data_wide.csv"), check.names = FALSE)
-var_select <- read.csv(file.path(datadir, "variable_selection.csv"))
+dat <- read.csv(file.path(datdir, "data_wide.csv"), check.names = FALSE)
+var_select <- read.csv(file.path(datdir, "variable_selection.csv"))
 
 # define latent variables
 lava_econ <- c(

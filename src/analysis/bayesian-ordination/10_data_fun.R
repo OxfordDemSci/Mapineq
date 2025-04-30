@@ -27,7 +27,7 @@ get_catalogue <- function(level) {
     print(paste("Error:", status_code(response)))
   } else {
     df_content <- jsonlite::fromJSON(content(response, "text", encoding = "UTF-8"))
-    df_content <- df_content |>
+    df_content <- df_content %>%
       mutate(geo_level = level)
     return(df_content)
   }
@@ -48,7 +48,7 @@ get_years <- function(resource) {
     print(paste("Error:", status_code(response)))
   } else {
     df_content <- fromJSON(content(response, "text", encoding = "UTF-8"))
-    df_content <- df_content |>
+    df_content <- df_content %>%
       mutate(data_year = year)
     return(df_content)
   }
@@ -150,8 +150,8 @@ catalogue_for_year <- function(catalogue, year) {
       keepers <- c(keepers, resource)
     }
   }
-  result <- catalogue |>
-    filter(f_resource %in% keepers) |>
+  result <- catalogue %>%
+    filter(f_resource %in% keepers) %>%
     mutate(data_year = year)
   return(result)
 }
@@ -226,7 +226,39 @@ expand_catalogue <- function(catalogue) {
 }
 
 # create variable names based on resource/filter combinations
-variable_names <- function(dat){
+variable_names <- function(dat, filter_cols){
+
+  dat %>%
+    # long variable names
+    mutate(
+      across(
+        all_of(filter_cols),
+        ~ ifelse(is.na(.), 
+                 NA_character_, 
+                 paste0(cur_column(), "=", as.character(.))
+        ),
+        .names = "tmp_{col}"
+      )
+    ) %>%
+    mutate(
+      variable_resource = resource
+    ) %>%
+    unite(
+      col = "variable_name_long",
+      c("variable_resource", paste0("tmp_", filter_cols)),
+      sep = "|",
+      na.rm = TRUE
+    ) %>% 
+    # short variable names
+    group_by(resource) %>%
+    mutate(
+      variable_name = paste0(resource, "_", row_number())
+    ) %>%
+    ungroup() %>%
+    select(variable_name, variable_name_long, resource, short_description, description, everything())
+}
+
+variable_names_raw <- function(dat){
   pos_geo     <- which(names(dat) == "data_year")
   filter_cols <- names(dat)[(pos_geo + 1):ncol(dat)]
 
@@ -300,8 +332,10 @@ catalogue_data <- function(catalogue, year, level) {
 
     i_data$variable_name <- variable_name
     i_data$variable_name_long <- variable_name_long
+    i_data$short_description <- catalogue$short_description[i]
+    i_data$description <- catalogue$description[i]
     
-    results[[variable_name]] <- i_data |> 
+    results[[variable_name]] <- i_data %>% 
       select(variable_name, variable_name_long, everything())
   }
   close(pb)
@@ -319,8 +353,8 @@ wide_catalogue_data <- function(dat) {
   
   keep_cols <- c("data_year", "geo", "geo_name", "geo_source", "geo_year")
 
-  result <- dat |>
-    select(all_of(keep_cols), variable_name, value) |>
+  result <- dat %>%
+    select(all_of(keep_cols), variable_name, value) %>%
     pivot_wider(
       id_cols = all_of(keep_cols),
       names_from = variable_name,
