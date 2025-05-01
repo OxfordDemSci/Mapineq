@@ -2,17 +2,13 @@
 rm(list = ls())
 gc()
 
-#---- USER OPTIONS ----#
-#----------------------#
-
 # install libraries (if needed)
-required_packages <- c("dplyr", "tidyr", "rlang")
+required_packages <- c("dplyr", "tidyr")
 install.packages(setdiff(required_packages, installed.packages()[, "Package"]))
 
 # load libraries
 library(dplyr)
 library(tidyr)
-library(rlang)
 
 # load functions
 source(file.path(getwd(), "src", "analysis", "bayesian-ordination", "10_data_fun.R"))
@@ -25,6 +21,7 @@ dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
 # load data
 data_raw <- read.csv(file.path(datdir, "data_raw.csv"))
 filter_dictionary <- read.csv(file.path(datdir, "filter_dictionary.csv"))
+data_catalogue <- read.csv(file.path(datdir, "catalogue.csv"))
 
 # filters
 filter_names <- unique(filter_dictionary$field)
@@ -54,13 +51,28 @@ data_ratio <- data_raw %>%
 data_raw_derive <- bind_rows(data_raw, data_ratio)
 
 
+#---- post-process derived data ----#
 
-
-# add variable names to derived data (potentially revising old variable names)
+# add variable names (potentially revising old variable names)
 data_raw_derive <- variable_names(
   dat = data_raw_derive,
   filter_cols = filter_names
 )
 
-# save to disk
+# transform to wide-format
+data_wide <- data_wide(
+  dat = data_raw_derive, 
+  drop_rows = TRUE
+)
+
+# create variable selection spreadsheet
+vars_df <- variable_select(
+  dat = data_raw_derive,
+  catalogue = data_catalogue
+)
+
+
+#---- save to disk ----#
 write.csv(data_raw_derive, file.path(outdir, "data_raw.csv"), row.names = FALSE)
+write.csv(data_wide, file.path(outdir, "data_wide.csv"), row.names = FALSE)
+write.csv(vars_df, file.path(outdir, "variable_selection.csv"), row.names = FALSE)

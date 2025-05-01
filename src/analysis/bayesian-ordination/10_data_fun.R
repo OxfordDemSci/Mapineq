@@ -28,7 +28,8 @@ get_catalogue <- function(level) {
   } else {
     df_content <- jsonlite::fromJSON(content(response, "text", encoding = "UTF-8"))
     df_content <- df_content %>%
-      mutate(geo_level = level)
+      mutate(geo_level = level) %>%
+      select(f_resource, geo_level, f_short_description, f_description)
     return(df_content)
   }
 }
@@ -152,7 +153,8 @@ catalogue_for_year <- function(catalogue, year) {
   }
   result <- catalogue %>%
     filter(f_resource %in% keepers) %>%
-    mutate(data_year = year)
+    mutate(data_year = year) %>%
+    select(f_resource, geo_level, data_year, f_short_description, f_description, everything())
   return(result)
 }
 
@@ -226,61 +228,28 @@ expand_catalogue <- function(catalogue) {
 }
 
 # create variable names based on resource/filter combinations
-variable_names <- function(dat, filter_cols){
-
+variable_names <- function(dat, filter_cols) {
   dat %>%
     # long variable names
     mutate(
       across(
         all_of(filter_cols),
-        ~ ifelse(is.na(.), 
-                 NA_character_, 
-                 paste0(cur_column(), "=", as.character(.))
+        ~ ifelse(is.na(.),
+          NA_character_,
+          paste0(cur_column(), "=", as.character(.))
         ),
         .names = "tmp_{col}"
       )
     ) %>%
     mutate(
-      variable_resource = resource
+      variable_resource = f_resource
     ) %>%
     unite(
       col = "variable_name_long",
       c("variable_resource", paste0("tmp_", filter_cols)),
       sep = "|",
       na.rm = TRUE
-    ) %>% 
-    # short variable names
-    group_by(resource) %>%
-    mutate(
-      variable_name = paste0(resource, "_", row_number())
     ) %>%
-    ungroup() %>%
-    select(variable_name, variable_name_long, resource, short_description, description, everything())
-}
-
-variable_names_raw <- function(dat){
-  pos_geo     <- which(names(dat) == "data_year")
-  filter_cols <- names(dat)[(pos_geo + 1):ncol(dat)]
-
-  dat %>%
-    # long variable names
-    mutate(
-      resource = f_resource,
-      across(
-        all_of(filter_cols),
-        ~ ifelse(is.na(.), 
-                 NA_character_, 
-                 paste0(cur_column(), "=", as.character(.))
-        ),
-        .names = "tmp_{col}"
-      )
-    ) %>%
-    unite(
-      col = "variable_name_long",
-      c("resource", paste0("tmp_", filter_cols)),
-      sep = "|",
-      na.rm = TRUE
-    ) %>% 
     # short variable names
     group_by(f_resource) %>%
     mutate(
@@ -291,13 +260,8 @@ variable_names_raw <- function(dat){
 }
 
 # retrieve data for all rows of an expanded catalogue
-catalogue_data <- function(catalogue, year, level) {
+catalogue_data <- function(catalogue, filter_cols, year, level) {
   results <- list()
-
-  filters <- names(catalogue) %>%
-    {
-      .[(which(. == "data_year") + 1):length(.)]
-    }
 
   pb <- txtProgressBar(min = 1, max = nrow(catalogue), style = 3)
   start_time <- Sys.time()
@@ -307,7 +271,7 @@ catalogue_data <- function(catalogue, year, level) {
     variable_name <- catalogue$variable_name[i]
     variable_name_long <- catalogue$variable_name_long[i]
 
-    row_filters <- unlist(as.vector(catalogue[i, filters]))
+    row_filters <- unlist(as.vector(catalogue[i, filter_cols]))
     row_filters <- row_filters[!is.na(row_filters)]
 
     conditions <- list()
@@ -332,10 +296,10 @@ catalogue_data <- function(catalogue, year, level) {
 
     i_data$variable_name <- variable_name
     i_data$variable_name_long <- variable_name_long
-    i_data$short_description <- catalogue$short_description[i]
-    i_data$description <- catalogue$description[i]
-    
-    results[[variable_name]] <- i_data %>% 
+    i_data$f_short_description <- catalogue$f_short_description[i]
+    i_data$f_description <- catalogue$f_description[i]
+
+    results[[variable_name]] <- i_data %>%
       select(variable_name, variable_name_long, everything())
   }
   close(pb)
@@ -345,12 +309,13 @@ catalogue_data <- function(catalogue, year, level) {
 }
 
 # catalogue data to wide format
-wide_catalogue_data <- function(dat) {
-
-  if (!"variable_name" %in% names(dat)){
+data_wide <- function(dat, drop_rows = TRUE) {
+  if (!"variable_name" %in% names(dat)) {
     dat <- variable_names(dat)
   }
-  
+
+  vars <- unique(dat$variable_name)
+
   keep_cols <- c("data_year", "geo", "geo_name", "geo_source", "geo_year")
 
   result <- dat %>%
@@ -360,6 +325,27 @@ wide_catalogue_data <- function(dat) {
       names_from = variable_name,
       values_from = value
     )
-  
+
+  if (drop_rows) {
+    rows_no_data <- apply(result[, vars], 1, function(x) all(is.na(x)))
+    result <- result[!rows_no_data, ]
+  }
+
+  return(result)
+}
+
+# variable selection spreadsheet
+variable_select <- function(dat, catalogue) {
+  result <- dat %>%
+    select(variable_name, variable_name_long, f_resource) %>%
+    distinct() %>%
+    left_join(
+      catalogue %>%
+        select(f_resource, f_short_description, f_description)
+    ) %>%
+    mutate(
+      select_y = 1,
+      select_x = 0
+    )
   return(result)
 }

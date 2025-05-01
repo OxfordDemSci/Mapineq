@@ -7,7 +7,7 @@ gc()
 
 #---- USER OPTIONS ----#
 TEST <- FALSE
-n_test <- 100
+n_test <- 10
 
 year <- 2020
 level <- 2
@@ -78,19 +78,15 @@ data_catalogue <- catalogue_filters(data_catalogue, year, level)
 
 # filter labels
 filter_dictionary <- filter_labels(data_catalogue)
+filter_cols <- unique(filter_dictionary$field)
 
 # expand catalogue to include all combinations of filters
 catalogue_expanded <- expand_catalogue(data_catalogue)
 
 # create variable names
 catalogue_expanded <- variable_names(
-  dat = catalogue_expanded |> 
-    rename(
-      resource = f_resource,
-      short_description = f_short_description,
-      description = f_description
-    ), 
-  filter_cols = unique(filter_dictionary$field)
+  dat = catalogue_expanded,
+  filter_cols = filter_cols
 )
 
 # reduce for testing
@@ -102,52 +98,24 @@ if (TEST) {
 
 # get data for all items in the catalogue
 data_list <- catalogue_data(
-  catalogue = catalogue_expanded[i_select, ], 
-  year = year, 
-  level = level)
+  catalogue = catalogue_expanded[i_select, ],
+  filter_cols = filter_cols,
+  year = year,
+  level = level
+)
+
+# bind data together
 data_raw <- bind_rows(data_list)
 
 data_raw <- data_raw %>%
   left_join(
     data_catalogue |>
-      rename(
-        resource = f_resource,
-        short_description = f_short_description,
-        description = f_description
-      ) |>
-      select(resource, short_description, description)
+      select(f_resource, f_short_description, f_description)
   )
 
-# wide-format data
-data_wide <- wide_catalogue_data(data_raw)
-
-# variable selection
-vars_df <- data_raw %>%
-  select(variable_name, variable_name_long, resource) %>%
-  distinct() %>%
-  left_join(
-    catalogue %>% 
-      rename(
-        resource = f_resource,
-        description = f_description,
-        short_description = f_short_description
-      ) %>% 
-      select(resource, short_description, description)
-  ) %>% 
-  mutate(
-    select_y = 1,
-    select_x = 0
-  )
-
-# drop locations with no data
-vars <- unique(vars_df$variable_name)
-rows_no_data <- apply(data_wide[, vars], 1, function(x) all(is.na(x)))
-data_wide <- data_wide[!rows_no_data, ]
 
 # save to disk
 write.csv(data_raw, file.path(outdir, "data_raw.csv"), row.names = FALSE)
-write.csv(data_wide, file.path(outdir, "data_wide.csv"), row.names = FALSE)
 write.csv(data_catalogue, file.path(outdir, "catalogue.csv"), row.names = FALSE)
 write.csv(catalogue_expanded, file.path(outdir, "catalogue_expanded.csv"), row.names = FALSE)
 write.csv(filter_dictionary, file.path(outdir, "filter_dictionary.csv"), row.names = FALSE)
-write.csv(vars_df, file.path(outdir, "variable_selection.csv"), row.names = FALSE)
