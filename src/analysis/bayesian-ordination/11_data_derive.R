@@ -24,10 +24,10 @@ filter_dictionary <- read.csv(file.path(datdir, "filter_dictionary.csv"))
 data_catalogue <- read.csv(file.path(datdir, "catalogue.csv"))
 
 # filters
-filter_names <- unique(filter_dictionary$field)
+filter_cols <- unique(filter_dictionary$field)
 
 #---- gender gaps and sex ratios ----#
-key_filters <- setdiff(filter_names, "sex")
+key_filters <- setdiff(filter_cols, "sex")
 
 data_ratio <- data_raw %>%
   filter(sex %in% c("F", "M")) %>%
@@ -53,10 +53,10 @@ data_raw_derive <- bind_rows(data_raw, data_ratio)
 
 #---- post-process derived data ----#
 
-# add variable names (potentially revising old variable names)
+# add variable names (overwrite old variable names)
 data_raw_derive <- variable_names(
   dat = data_raw_derive,
-  filter_cols = filter_names
+  filter_cols = filter_cols
 )
 
 # transform to wide-format

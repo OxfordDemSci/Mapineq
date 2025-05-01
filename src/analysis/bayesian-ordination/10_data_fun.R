@@ -224,7 +224,13 @@ expand_catalogue <- function(catalogue) {
 
 # create variable names based on resource/filter combinations
 variable_names <- function(dat, filter_cols) {
-  dat %>%
+  dat <- dat %>% 
+    select(-variable_name, -variable_name_long)
+
+  vn <- dat %>% 
+    select(f_resource, all_of(filter_cols)) %>%
+    distinct() %>%
+  
     # long variable names
     mutate(
       across(
@@ -245,13 +251,19 @@ variable_names <- function(dat, filter_cols) {
       sep = "|",
       na.rm = TRUE
     ) %>%
+    
     # short variable names
     group_by(f_resource) %>%
     mutate(
       variable_name = paste0(f_resource, "_", row_number())
     ) %>%
-    ungroup() %>%
-    select(variable_name, variable_name_long, f_resource, f_short_description, f_description, everything())
+    ungroup()
+
+  result <- dat %>% 
+    left_join(vn) %>% 
+    select(variable_name, variable_name_long, f_resource, everything())
+  
+  return(result)
 }
 
 # retrieve data for all rows of an expanded catalogue
@@ -309,8 +321,6 @@ data_wide <- function(dat, drop_rows = TRUE) {
     dat <- variable_names(dat)
   }
 
-  vars <- unique(dat$variable_name)
-
   keep_cols <- c("data_year", "geo", "geo_name", "geo_source", "geo_year")
 
   result <- dat %>%
@@ -322,6 +332,7 @@ data_wide <- function(dat, drop_rows = TRUE) {
     )
 
   if (drop_rows) {
+    vars <- unique(dat$variable_name)
     rows_no_data <- apply(result[, vars], 1, function(x) all(is.na(x)))
     result <- result[!rows_no_data, ]
   }
@@ -332,11 +343,11 @@ data_wide <- function(dat, drop_rows = TRUE) {
 # variable selection spreadsheet
 variable_select <- function(dat, catalogue) {
   result <- dat %>%
-    select(variable_name, variable_name_long, f_resource) %>%
-    distinct() %>%
+    distinct(variable_name, variable_name_long, f_resource) %>%
     left_join(
       catalogue %>%
-        select(f_resource, f_short_description, f_description)
+        select(f_resource, f_short_description, f_description) %>%
+        distinct()
     ) %>%
     mutate(
       select_y = 1,
