@@ -106,20 +106,17 @@ get_data <- function(resource, year, level, x_specs) {
             rename(value = x) %>%
             mutate(filters_json = as.character(X_JSON)) %>%
             mutate(
-              filters = map(
-                filters_json,
-                ~ fromJSON(.x, simplifyVector = FALSE)
+              filters = map(filters_json, ~ fromJSON(.x, simplifyVector = FALSE)),
+              combos = map(
+                filters, ~ {
+                  conds <- .x$conditions
+                  named_values <- set_names(
+                    map_chr(conds, "value"),
+                    map_chr(conds, "field")
+                  )
+                  do.call(expand_grid, as.list(named_values))
+                }
               )
-            ) %>%
-            mutate(
-              combos = map(filters, ~ {
-                conds <- .x$conditions
-                named_values <- set_names(
-                  map_chr(conds, "value"),
-                  map_chr(conds, "field")
-                )
-                cross_df(named_values)
-              })
             ) %>%
             select(-filters_json, -filters) %>%
             unnest(combos)
@@ -129,11 +126,9 @@ get_data <- function(resource, year, level, x_specs) {
           message(paste0("No data returned for: \n", X_JSON))
         }
       },
-      warning = function(e) {
-        warning(paste0("WARNING: [", resource, "] ", e))
-      },
       error = function(e) {
         warning(paste0("ERROR: [", resource, "] ", e))
+        return(NULL)
       }
     )
   }
