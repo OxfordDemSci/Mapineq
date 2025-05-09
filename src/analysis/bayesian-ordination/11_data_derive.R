@@ -59,6 +59,24 @@ data_raw_derive <- variable_names(
   filter_cols = filter_cols
 )
 
+# remove variables with insufficient data
+data_raw_derive <- data_raw_derive %>%
+  group_by(variable_name) %>% 
+  mutate(drop =  case_when(
+    all(is.na(value)) ~ TRUE,
+    n_distinct(value, na.rm = TRUE) < 3 ~ TRUE,
+    TRUE ~ FALSE
+  )) %>% 
+  ungroup() %>%
+  filter(drop == FALSE) %>%
+  select(-drop)
+
+# add variable names (overwrite old variable names)
+data_raw_derive <- variable_names(
+  dat = data_raw_derive,
+  filter_cols = filter_cols
+)
+
 # transform to wide-format
 data_wide <- data_wide(
   dat = data_raw_derive, 
@@ -68,6 +86,7 @@ data_wide <- data_wide(
 # create variable selection spreadsheet
 vars_df <- variable_select(
   dat = data_raw_derive,
+  filter_cols = filter_cols,
   catalogue = data_catalogue
 )
 

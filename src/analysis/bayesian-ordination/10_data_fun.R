@@ -341,9 +341,10 @@ data_wide <- function(dat, drop_rows = TRUE) {
 }
 
 # variable selection spreadsheet
-variable_select <- function(dat, catalogue) {
+variable_select <- function(dat, catalogue, filter_cols) {
   result <- dat %>%
-    distinct(variable_name, variable_name_long, f_resource) %>%
+    select(variable_name, variable_name_long, f_resource, all_of(filter_cols)) %>%
+    distinct(variable_name, variable_name_long, f_resource, .keep_all = TRUE) %>%
     left_join(
       catalogue %>%
         select(f_resource, f_short_description, f_description) %>%
@@ -352,6 +353,7 @@ variable_select <- function(dat, catalogue) {
     mutate(
       select_y = 1,
       select_x = 0
-    )
+    ) %>% 
+    select(select_y, select_x, everything())
   return(result)
 }
