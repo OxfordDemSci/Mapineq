@@ -119,6 +119,9 @@ DECLARE
 BEGIN
 	
 	EXECUTE FORMAT (QUERY, strTag, bMatchAll::INTEGER) INTO retArray;
+	IF retArray IS NULL THEN
+		retArray := ARRAY[]::text[];
+	END IF;
 	RETURN retArray;
 END;
 $BODY$
