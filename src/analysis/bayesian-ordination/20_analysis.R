@@ -115,10 +115,10 @@ cat(model)
 
 # clean model data
 md <- dat |> 
-  select(var_select$variable_name)
+  select(data_year, geo, geo_name, geo_source, geo_year, all_of(var_select$variable_name))
 
 # save data
-write.csv(md, file.path(outdir, "md.csv"))
+write.csv(md, file.path(outdir, "md.csv"), row.names=FALSE)
 
 # missingness
 print(paste0("missingness: ", round(sum(is.na(md)) / prod(dim(md)), 2)))

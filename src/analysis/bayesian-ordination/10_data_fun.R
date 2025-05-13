@@ -224,8 +224,9 @@ expand_catalogue <- function(catalogue) {
 
 # create variable names based on resource/filter combinations
 variable_names <- function(dat, filter_cols) {
+  
   dat <- dat %>% 
-    select(-variable_name, -variable_name_long)
+    select(-any_of(c("variable_name", "variable_name_long")))
 
   vn <- dat %>% 
     select(f_resource, all_of(filter_cols)) %>%
