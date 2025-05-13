@@ -94,6 +94,14 @@ var_select <- var_select %>%
   ) %>%
   mutate(
     select_y = ifelse(
+      f_resource == "HLTH_RS_BDSNS" &
+        unit == "P_HTHAB",
+      1,
+      select_y
+    )
+  ) %>%
+  mutate(
+    select_y = ifelse(
       f_resource == "ookla" &
         quarter == "1" &
         direction == "download",
@@ -133,7 +141,7 @@ var_select <- var_select %>%
       1,
       select_y
     )
-  ) 
+  )
 
 var_select %>%
   filter(select_y == 1) %>%
@@ -149,3 +157,4 @@ dat_select <- dat %>%
 
 #---- save to disk ----#
 write.csv(dat_select, file.path(outdir, "data_select.csv"), row.names = FALSE)
+write.csv(var_select, file.path(outdir, "variable_selection.csv"), row.names = FALSE)
