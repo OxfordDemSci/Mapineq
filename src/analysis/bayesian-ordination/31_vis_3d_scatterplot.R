@@ -2,125 +2,102 @@
 rm(list = ls())
 gc()
 
-# install libraries (if needed)
-required_packages <- c("plotly", "htmlwidgets") # "befa"
+# install / load
+required_packages <- c("plotly", "htmlwidgets", "dplyr", "lavaan", "RColorBrewer")
 install.packages(setdiff(required_packages, installed.packages()[, "Package"]))
-
-# load libraries
 library(plotly)
 library(htmlwidgets)
-future::plan("multicore")
-options(mc.cores = 4)
-
-# # load functions
-# source(file.path(getwd(), "src", "analysis", "bayesian-ordination", "3_vis_fun.R"))
+library(dplyr)
+library(lavaan)
+library(RColorBrewer)
 
 # directories
+srcdir <- file.path(getwd(), "src", "analysis", "bayesian-ordination")
 datdir <- file.path(getwd(), "wd", "out", "bayesian-ordination", "analysis")
 outdir <- file.path(getwd(), "wd", "out", "bayesian-ordination", "vis_3d_scatterplot")
-dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
+dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
 
-# load data
+# load
 fit <- readRDS(file.path(datdir, "fit.rds"))
-md <- read.csv(file.path(datdir, "md.csv"))
+md <- read.csv(file.path(datdir, "..", "impute", "md.csv"))
 
-#---- prepare data ----#
-
-# factor scores
-fscores <- lavPredict(fit, type = "lv") # matrix with one column per latent
-
-# data
-df <- cbind(md, as.data.frame(fscores)) %>%
+# prep data
+fscores <- lavPredict(fit, type = "lv")
+df <- bind_cols(md, as.data.frame(fscores)) %>%
   mutate(
     Country = substr(geo, 1, 2),
-    CaseID = paste0(geo_name, " [", geo, "]")
+    CaseID  = paste0(geo_name, " [", geo, "]")
   )
 
-# variables
-orig_vars <- md %>%
-  select(-all_of(c("data_year", "geo", "geo_name", "geo_source", "geo_year"))) %>%
-  colnames()
+orig_vars <- setdiff(names(md), c("data_year", "geo", "geo_name", "geo_source", "geo_year"))
 latents <- colnames(fscores)
-all_choices <- c(latents, orig_vars)
+all_choices <- latents # dropped orig_vars for testing
 
+# remove originals for speed
+df <- df %>% select(CaseID, Country, all_of(latents))
 
-#---- interactive 3D scatterplot ----#
+# assign a distinct hex-colour to each of the 37 countries
+n_ct <- length(unique(df$Country))
+pal <- colorRampPalette(brewer.pal(9, "Set1"))(n_ct)
+df$colHex <- pal[as.numeric(factor(df$Country))]
 
-# axis selection drop-down
-make_axis_menu <- function(axis, button_y) {
-  buttons <- lapply(all_choices, function(var) {
-    list(
-      method = "update",
-      args = list(
-        # first list: traces to update
-        list(
-          x = if (axis == "x") list(df[[var]]) else NULL,
-          y = if (axis == "y") list(df[[var]]) else NULL,
-          z = if (axis == "z") list(df[[var]]) else NULL
-        ),
-        # second list: layout updates
-        list(
-          scene = list(
-            xaxis = list(title = if (axis == "x") var else NULL),
-            yaxis = list(title = if (axis == "y") var else NULL),
-            zaxis = list(title = if (axis == "z") var else NULL)
-          )
-        )
-      ),
-      label = var
-    )
-  })
+# initial axes
+current_axes <- latents[1:3]
 
-  list(
-    x = if (axis == "x") 0.15 else if (axis == "y") 0.50 else 0.85,
-    y = button_y,
-    buttons = buttons,
-    direction = "down",
-    showactive = TRUE,
-    pad = list(r = 10, t = 10),
-    xanchor = "left",
-    yanchor = "top",
-    type = "dropdown"
+# build the multi-trace plot (one trace per country)
+p <- plot_ly()
+for (cty in unique(df$Country)) {
+  dsub <- df[df$Country == cty, ]
+  p <- add_trace(
+    p,
+    data = dsub,
+    x = ~ get(current_axes[1]),
+    y = ~ get(current_axes[2]),
+    z = ~ get(current_axes[3]),
+    type = "scatter3d",
+    mode = "markers",
+    marker = list(
+      color   = dsub$colHex,
+      size    = 5,
+      opacity = 0.8
+    ),
+    key = ~CaseID,
+    text = ~ paste0(
+      "Case: ", CaseID,
+      "<br>", current_axes[1], " = ", round(get(current_axes[1]), 2),
+      "<br>", current_axes[2], " = ", round(get(current_axes[2]), 2),
+      "<br>", current_axes[3], " = ", round(get(current_axes[3]), 2)
+    ),
+    hoverinfo = "text",
+    name = cty,
+    legendgroup = cty,
+    showlegend = TRUE
   )
 }
 
-# make plot
-p <- plot_ly(
-  data = df,
-  x = ~ get(latents[1]), # initial axes
-  y = ~ get(latents[2]),
-  z = ~ get(latents[3]),
-  color = ~Country, # colour by country
-  colors = "Set1", # optional palette
-  key = ~CaseID,
-  text = ~ paste0(
-    "Case: ", CaseID,
-    "<br>", latents[1], " = ", round(get(latents[1]), 2),
-    "<br>", latents[2], " = ", round(get(latents[2]), 2),
-    "<br>", latents[3], " = ", round(get(latents[3]), 2)
-  ),
-  hoverinfo = "text",
-  mode = "markers",
-  type = "scatter3d",
-  marker = list(size = 5, opacity = 0.8)
-) %>%
-  layout(
-    title = "Mapineq Multivariate Space",
-    scene = list(
-      xaxis = list(title = latents[1]),
-      yaxis = list(title = latents[2]),
-      zaxis = list(title = latents[3])
-    ),
-    updatemenus = list(
-      # three dropdown menus, one for each axis
-      make_axis_menu("x", 0.95),
-      make_axis_menu("y", 0.65),
-      make_axis_menu("z", 0.35)
-    )
+p <- p %>% layout(
+  title = "Mapineq Multivariate Space",
+  scene = list(
+    xaxis = list(title = current_axes[1]),
+    yaxis = list(title = current_axes[2]),
+    zaxis = list(title = current_axes[3])
   )
+)
 
-# save to html
-saveWidget(p,
-  file = file.path(outdir, "3d_scatterplot.html"),
+# inject js
+p <- p %>% onRender(
+  htmlwidgets::JS(
+    paste0(
+      readLines(file.path(srcdir, "31_vis_3d_scatterplot.js"), warn = FALSE),
+      collapse = "\n"
+    )
+  ),
+  data = list(df = df, all_choices = all_choices, current_axes = current_axes)
+)
+
+# write out
+saveWidget(
+  p,
+  file          = file.path(outdir, "3d_scatterplot.html"),
   selfcontained = TRUE
 )
