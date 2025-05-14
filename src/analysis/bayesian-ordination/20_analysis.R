@@ -5,14 +5,15 @@ rm(list = ls())
 gc()
 
 # install libraries (if needed)
-required_packages <- c("blavaan", "semPlot") # "befa"
+required_packages <- c("dplyr", "blavaan", "semPlot")
 install.packages(setdiff(required_packages, installed.packages()[, "Package"]))
 
 # load libraries
 library(semPlot)
 library(blavaan)
+library(dplyr)
 future::plan("multicore")
-options(mc.cores=4)
+options(mc.cores = 4)
 
 # # load functions
 # source(file.path(getwd(), "src", "analysis", "bayesian-ordination", "2_analysis_fun.R"))
@@ -32,8 +33,8 @@ lava_econ <- c(
   # "TEPSR_LM220", # gender employment gap
   # "YTH_EMPL_110", # youth unemployment
   "TGS00010", # employment rate
-  "EDAT_LFSE_33" #, # youth NEET
-  #"TESPM050_R" # poverty reduction
+  "EDAT_LFSE_33" # , # youth NEET
+  # "TESPM050_R" # poverty reduction
 )
 lava_edu <- c(
   "EDUC_UOE_ENRA17", # pupils pre-primary
@@ -60,8 +61,8 @@ lava_env <- c(
   "TGS00050" # internet usage
 )
 
-# identify variables with no variance 
-drop_vars <- dat |> 
+# identify variables with no variance
+drop_vars <- dat |>
   select(var_select |> filter(select_y == 1) |> pull(variable_name)) |>
   select(where(
     ~ all(is.na(.)) |
@@ -79,7 +80,7 @@ var_select <- var_select |>
     f_resource %in% lava_econ ~ "Economy",
     f_resource %in% lava_edu ~ "Education",
     f_resource %in% lava_health ~ "Health",
-    f_resource %in% lava_demo ~ "Demography",
+    # f_resource %in% lava_demo ~ "Demography",
     f_resource %in% lava_env ~ "Environment"
   ))
 
@@ -93,7 +94,9 @@ var_select <- var_select |>
 #   Environment =~ env1 + env2 + env3
 # "
 
-lavas <- var_select %>% pull(latent_variable) %>% unique()
+lavas <- var_select %>%
+  pull(latent_variable) %>%
+  unique()
 lavas <- lavas[!is.na(lavas)]
 
 model <- ""
@@ -114,14 +117,18 @@ for (lava in lavas) {
 cat(model)
 
 # clean model data
-md <- dat |> 
+md <- dat |>
   select(data_year, geo, geo_name, geo_source, geo_year, all_of(var_select$variable_name))
 
 # save data
-write.csv(md, file.path(outdir, "md.csv"), row.names=FALSE)
+write.csv(md, file.path(outdir, "md.csv"), row.names = FALSE)
 
 # missingness
-print(paste0("missingness: ", round(sum(is.na(md)) / prod(dim(md)), 2)))
+missingness <-
+  sum(is.na(md[, var_select$variable_name])) /
+    prod(dim(md[, var_select$variable_name]))
+
+print(paste0("missingness: ", round(missingness, 2)))
 
 # random seed
 seed <- sample.int(.Machine$integer.max, 1L)
@@ -132,9 +139,10 @@ fit <- bsem(
   model,
   data = md,
   target = "stan",
-  burnin = 500,
-  sample = 500,
-  seed = seed
+  burnin = 1000,
+  sample = 1000,
+  seed = seed,
+  missing = "fiml"
 )
 time_end <- Sys.time()
 print(time_end - time_start)
@@ -148,8 +156,8 @@ summary(fit, fit.measures = TRUE, standardized = TRUE)
 
 # visualise latent structure
 jpeg(
-  filename = file.path(outdir, "sempath.jpg"), 
-  height= 12, 
+  filename = file.path(outdir, "sempath.jpg"),
+  height = 12,
   width = 12,
   units = "in",
   res = 300
