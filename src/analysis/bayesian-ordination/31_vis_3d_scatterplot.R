@@ -3,23 +3,42 @@ rm(list = ls())
 gc()
 
 # install / load
-required_packages <- c("plotly", "htmlwidgets", "dplyr", "lavaan", "RColorBrewer")
+required_packages <- c("plotly", "htmlwidgets", "dplyr", "lavaan", "RColorBrewer", "sf")
 install.packages(setdiff(required_packages, installed.packages()[, "Package"]))
 library(plotly)
 library(htmlwidgets)
 library(dplyr)
 library(lavaan)
 library(RColorBrewer)
+library(sf)
 
 # directories
 srcdir <- file.path(getwd(), "src", "analysis", "bayesian-ordination")
+dbdir <- file.path(getwd(), "src", "database", "db-data")
 datdir <- file.path(getwd(), "wd", "out", "bayesian-ordination", "analysis")
 outdir <- file.path(getwd(), "wd", "out", "bayesian-ordination", "vis_3d_scatterplot")
 dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
 
-# load
+# load data
 fit <- readRDS(file.path(datdir, "fit.rds"))
 md <- read.csv(file.path(datdir, "..", "impute", "md.csv"))
+nuts <- st_read(file.path(dbdir, "NUTS_RG_20M_2021_4326.geojson"))
+
+# nuts centroids
+nuts_centroids <- nuts %>%
+  filter(LEVL_CODE == 2) %>%
+  mutate(
+    Longitude = st_coordinates(st_centroid(geometry))[, 1],
+    Latitude = st_coordinates(st_centroid(geometry))[, 2]
+  ) %>%
+  st_drop_geometry() %>%
+  rename(geo = NUTS_ID)
+
+md <- md %>%
+  left_join(
+    nuts_centroids %>%
+      select(geo, Longitude, Latitude)
+  )
 
 # prep data
 fscores <- lavPredict(fit, type = "lv")
@@ -29,9 +48,9 @@ df <- bind_cols(md, as.data.frame(fscores)) %>%
     CaseID  = paste0(geo_name, " [", geo, "]")
   )
 
-orig_vars <- lavaan::lavNames(fit, type="ov.nox")
+orig_vars <- lavaan::lavNames(fit, type = "ov.nox")
 latents <- colnames(fscores)
-all_choices <- c(latents, orig_vars) # dropped orig_vars for testing
+all_choices <- c(latents, "Longitude", "Latitude", orig_vars) # dropped orig_vars for testing
 
 # remove originals for speed
 df <- df %>% select(CaseID, Country, all_of(all_choices))
@@ -82,40 +101,40 @@ p <- p %>% layout(
     font = list(color = "white")
   ),
   paper_bgcolor = "black",
-  plot_bgcolor  = "black",
+  plot_bgcolor = "black",
   legend = list(
-    font = list(color="white")
+    font = list(color = "white")
   ),
   scene = list(
     xaxis = list(
       title = list(
-        text = current_axes[1], 
-        font = list(color="white")
+        text = current_axes[1],
+        font = list(color = "white")
       ),
       tickfont = list(color = "white"),
       backgroundcolor = "black",
-      gridcolor       = "white",
-      zerolinecolor   = "white"
+      gridcolor = "white",
+      zerolinecolor = "white"
     ),
     yaxis = list(
       title = list(
-        text = current_axes[2], 
-        font = list(color="white")
+        text = current_axes[2],
+        font = list(color = "white")
       ),
       tickfont = list(color = "white"),
       backgroundcolor = "black",
-      gridcolor       = "white",
-      zerolinecolor   = "white"
+      gridcolor = "white",
+      zerolinecolor = "white"
     ),
     zaxis = list(
       title = list(
-        text = current_axes[3], 
-        font = list(color="white")
+        text = current_axes[3],
+        font = list(color = "white")
       ),
       tickfont = list(color = "white"),
       backgroundcolor = "black",
-      gridcolor       = "white",
-      zerolinecolor   = "white"
+      gridcolor = "white",
+      zerolinecolor = "white"
     )
   )
 )
