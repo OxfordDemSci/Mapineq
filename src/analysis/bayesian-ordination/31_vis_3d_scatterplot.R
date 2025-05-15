@@ -29,12 +29,12 @@ df <- bind_cols(md, as.data.frame(fscores)) %>%
     CaseID  = paste0(geo_name, " [", geo, "]")
   )
 
-orig_vars <- setdiff(names(md), c("data_year", "geo", "geo_name", "geo_source", "geo_year"))
+orig_vars <- lavaan::lavNames(fit, type="ov.nox")
 latents <- colnames(fscores)
-all_choices <- latents # dropped orig_vars for testing
+all_choices <- c(latents, orig_vars) # dropped orig_vars for testing
 
 # remove originals for speed
-df <- df %>% select(CaseID, Country, all_of(latents))
+df <- df %>% select(CaseID, Country, all_of(all_choices))
 
 # assign a distinct hex-colour to each of the 37 countries
 n_ct <- length(unique(df$Country))
@@ -76,11 +76,47 @@ for (cty in unique(df$Country)) {
 }
 
 p <- p %>% layout(
-  title = "Mapineq Multivariate Space",
+  # template = "plotly_dark",
+  title = list(
+    text = "Mapineq Ordination Space",
+    font = list(color = "white")
+  ),
+  paper_bgcolor = "black",
+  plot_bgcolor  = "black",
+  legend = list(
+    font = list(color="white")
+  ),
   scene = list(
-    xaxis = list(title = current_axes[1]),
-    yaxis = list(title = current_axes[2]),
-    zaxis = list(title = current_axes[3])
+    xaxis = list(
+      title = list(
+        text = current_axes[1], 
+        font = list(color="white")
+      ),
+      tickfont = list(color = "white"),
+      backgroundcolor = "black",
+      gridcolor       = "white",
+      zerolinecolor   = "white"
+    ),
+    yaxis = list(
+      title = list(
+        text = current_axes[2], 
+        font = list(color="white")
+      ),
+      tickfont = list(color = "white"),
+      backgroundcolor = "black",
+      gridcolor       = "white",
+      zerolinecolor   = "white"
+    ),
+    zaxis = list(
+      title = list(
+        text = current_axes[3], 
+        font = list(color="white")
+      ),
+      tickfont = list(color = "white"),
+      backgroundcolor = "black",
+      gridcolor       = "white",
+      zerolinecolor   = "white"
+    )
   )
 )
 

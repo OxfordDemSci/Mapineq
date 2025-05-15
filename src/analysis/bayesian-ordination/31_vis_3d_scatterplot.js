@@ -1,5 +1,8 @@
 function(el, x, data) {
-  var df         = data.df,
+  document.body.style.backgroundColor = 'black';
+  document.body.style.color           = 'white';
+  
+  var df = data.df,
       choices    = data.all_choices,
       axes       = data.current_axes.slice(),
       countries  = Array.from(new Set(df.map(d => d.Country)));
@@ -7,6 +10,10 @@ function(el, x, data) {
   // 1) Build dropdown container
   var ctr = document.createElement('div');
   ctr.style.marginBottom = '8px';
+  ctr.style.backgroundColor = 'black';
+  ctr.style.color           = 'white';
+  ctr.style.padding         = '6px';
+
   ctr.innerHTML =
     'X-axis: <select id="selX"></select>' +
     '&nbsp;Y-axis: <select id="selY"></select>' +
@@ -22,6 +29,11 @@ function(el, x, data) {
       if(ch === axes[i]) opt.selected = true;
       sel.appendChild(opt);
     });
+
+    sel.style.backgroundColor = 'black';
+    sel.style.color           = 'white';
+    sel.style.border          = '1px solid white';
+    sel.style.padding         = '2px 4px';
   });
 
   // 3) The update function
