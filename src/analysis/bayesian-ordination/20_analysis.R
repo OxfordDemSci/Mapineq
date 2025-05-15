@@ -62,25 +62,25 @@ lava_env <- c(
 )
 
 # identify variables with no variance
-drop_vars <- dat |>
-  select(var_select |> filter(select_y == 1) |> pull(variable_name)) |>
+drop_vars <- dat %>%
+  select(var_select %>% filter(select_y == 1) %>% pull(variable_name)) %>%
   select(where(
     ~ all(is.na(.)) |
       (is.numeric(.) & n_distinct(., na.rm = TRUE) <= 1)
-  )) |>
+  )) %>%
   names()
 
-View(dat |> select(drop_vars))
+# View(dat %>% select(all_of(drop_vars)))
 
 # make final variable selection
-var_select <- var_select |>
-  filter(select_y == 1) |>
-  filter(!variable_name %in% drop_vars) |>
+var_select <- var_select %>%
+  filter(select_y == 1) %>%
+  filter(!variable_name %in% drop_vars) %>%
   mutate(latent_variable = case_when(
     f_resource %in% lava_econ ~ "Economy",
     f_resource %in% lava_edu ~ "Education",
     f_resource %in% lava_health ~ "Health",
-    # f_resource %in% lava_demo ~ "Demography",
+    f_resource %in% lava_demo ~ "Demography",
     f_resource %in% lava_env ~ "Environment"
   ))
 
@@ -99,16 +99,21 @@ lavas <- var_select %>%
   unique()
 lavas <- lavas[!is.na(lavas)]
 
+vars <- c()
 model <- ""
 for (lava in lavas) {
+  vars_lava <- var_select %>%
+    filter(latent_variable == lava) %>%
+    select(variable_name) %>%
+    pull()
+  
+  vars <- c(vars, vars_lava)
+  
   model <- paste0(
     model,
     lava, " =~ ",
     paste(
-      var_select |>
-        filter(latent_variable == lava) |>
-        select(variable_name) |>
-        pull(),
+      vars_lava,
       collapse = " + "
     ),
     "\n"
@@ -117,8 +122,8 @@ for (lava in lavas) {
 cat(model)
 
 # clean model data
-md <- dat |>
-  select(data_year, geo, geo_name, geo_source, geo_year, all_of(var_select$variable_name))
+md <- dat %>%
+  select(data_year, geo, geo_name, geo_source, geo_year, all_of(vars))
 
 # save data
 write.csv(md, file.path(outdir, "md.csv"), row.names = FALSE)
@@ -139,10 +144,10 @@ fit <- bsem(
   model,
   data = md,
   target = "stan",
-  burnin = 1000,
-  sample = 1000,
-  seed = seed,
-  missing = "fiml"
+  burnin = 500,
+  sample = 500,
+  # save.lvs = TRUE,  # required for blavPredict(..., type = c("yhat", "ypred"))
+  seed = seed
 )
 time_end <- Sys.time()
 print(time_end - time_start)

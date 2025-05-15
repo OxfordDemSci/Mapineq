@@ -3,45 +3,51 @@ rm(list = ls())
 gc()
 
 # install libraries (if needed)
-required_packages <- c("plotly", "htmlwidgets") # "befa"
+required_packages <- c("blavaan", "dplyr")
 install.packages(setdiff(required_packages, installed.packages()[, "Package"]))
 
 # load libraries
 library(blavaan)
+library(dplyr)
 
 # # load functions
 # source(file.path(getwd(), "src", "analysis", "bayesian-ordination", "3_vis_fun.R"))
 
 # directories
 datdir <- file.path(getwd(), "wd", "out", "bayesian-ordination", "analysis")
-outdir <- file.path(getwd(), "wd", "out", "bayesian-ordination", "imputate")
+outdir <- file.path(getwd(), "wd", "out", "bayesian-ordination", "impute")
 dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
 
 # load data
 fit <- readRDS(file.path(datdir, "fit.rds"))
 md <- read.csv(file.path(datdir, "md.csv"))
 
-# posterior predictive samples
-pp_samples <- blavInspect(fit, "ypred")
+# separate row id info
+id_md <- md %>%
+  select(geo, geo_name, geo_source, geo_year, data_year)
 
-# row attributes
-md_attributes <- md %>%
-  select(data_year, geo, geo_name, geo_source, geo_year)
+# subset model data to only variables used by the model
+vars_model <- lavaan::lavNames(fit, type="ov.nox")
+md_impute <- md %>%
+  select(all_of(vars_model))
 
-# model data
-md <- md %>%
-  select(-all_of(c("data_year", "geo", "geo_name", "geo_source", "geo_year")))
+# posterior predictions
+ymis <- blavPredict(fit, type = "ymis")
 
-# identify missing data
-missing_idx <- is.na(md)
+# posterior prediction summary statistic
+ymis_sumstat <- apply(ymis, 2, mean)
 
-# median posterior predictions
-imputed <- apply(pp_samples, c(2, 3), median)
+# fill in missing data
+for(var in names(ymis_sumstat)){
+  split_str <- strsplit(var, "[", fixed = TRUE)[[1]]
+  col <- split_str[1]
+  row <- as.numeric(gsub("]", "", split_str[2], fixed = TRUE))
 
-# combined data
-md_imputed <- md
-md_imputed[missing_idx] <- imputed[missing_idx]
-md_imputed <- cbind(md_attributes, md_imputed)
+  md_impute[row, col] <- ymis_sumstat[var] 
+}
+
+# attach row id info
+md_impute <- cbind(id_md, md_impute)
 
 # save to disk
-write.csv(md_imputed, file.path(outdir, "md.csv"), row.names = FALSE)
+write.csv(md_impute, file.path(outdir, "md.csv"), row.names = FALSE)
