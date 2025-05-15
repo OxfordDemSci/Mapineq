@@ -106,9 +106,9 @@ for (lava in lavas) {
     filter(latent_variable == lava) %>%
     select(variable_name) %>%
     pull()
-  
+
   vars <- c(vars, vars_lava)
-  
+
   model <- paste0(
     model,
     lava, " =~ ",
@@ -130,8 +130,8 @@ write.csv(md, file.path(outdir, "md.csv"), row.names = FALSE)
 
 # missingness
 missingness <-
-  sum(is.na(md[, var_select$variable_name])) /
-    prod(dim(md[, var_select$variable_name]))
+  sum(is.na(md[, vars])) /
+    prod(dim(md[, vars]))
 
 print(paste0("missingness: ", round(missingness, 2)))
 
@@ -144,8 +144,8 @@ fit <- bsem(
   model,
   data = md,
   target = "stan",
-  burnin = 500,
-  sample = 500,
+  burnin = 1000,
+  sample = 2000,
   # save.lvs = TRUE,  # required for blavPredict(..., type = c("yhat", "ypred"))
   seed = seed
 )
