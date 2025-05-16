@@ -29,26 +29,26 @@ var_select <- read.csv(file.path(datdir, "variable_selection.csv"))
 
 # define latent variables
 lava_econ <- c(
-  # "RD_E_GERDREG", # gross domestic expenditure on R&D
-  # "TEPSR_LM220", # gender employment gap
-  # "YTH_EMPL_110", # youth unemployment
+  "RD_E_GERDREG", # gross domestic expenditure on R&D
+  "TEPSR_LM220", # gender employment gap
+  "YTH_EMPL_110", # youth unemployment
   "TGS00010", # employment rate
-  "EDAT_LFSE_33" # , # youth NEET
-  # "TESPM050_R" # poverty reduction
+  "EDAT_LFSE_33", # , # youth NEET
+  "TESPM050_R" # poverty reduction
 )
 lava_edu <- c(
   "EDUC_UOE_ENRA17", # pupils pre-primary
-  # "EDUC_UOE_ENRA13", # distribution of students among education types
-  # "TGS00109", # tertiary educational attainment
+  "EDUC_UOE_ENRA13", # distribution of students among education types
+  "TGS00109", # tertiary educational attainment
   "EDAT_LFS_9918" # educational attainment
 )
 lava_health <- c(
-  # "TGS00064", # hospital beds
-  # "HLTH_RS_BDSNS", # care beds
+  "TGS00064", # hospital beds
+  "HLTH_RS_BDSNS", # care beds
   "TGS00058", # cancer deaths
   "TGS00059", # heart disease deaths
   "DEMO_R_MINFIND", # infant mortality
-  # "HLTH_CD_YPERRTO", # peri- neo-natal mortality
+  "HLTH_CD_YPERRTO", # peri- neo-natal mortality
   "DEMO_R_MLIFEXP" # life expectancy
 )
 lava_demo <- c(
@@ -144,8 +144,8 @@ fit <- bsem(
   model,
   data = md,
   target = "stan",
-  burnin = 1000,
-  sample = 2000,
+  burnin = 500,
+  sample = 1000,
   # save.lvs = TRUE,  # required for blavPredict(..., type = c("yhat", "ypred"))
   seed = seed
 )
