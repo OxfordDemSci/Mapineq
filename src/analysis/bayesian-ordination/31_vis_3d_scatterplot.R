@@ -22,6 +22,7 @@ dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
 # load data
 fit <- readRDS(file.path(datdir, "fit.rds"))
 md <- read.csv(file.path(datdir, "..", "impute", "md.csv"))
+imputed <- read.csv(file.path(datdir, "..", "impute", "imputed.csv"))
 nuts <- st_read(file.path(dbdir, "NUTS_RG_20M_2021_4326.geojson"))
 
 # nuts centroids
@@ -40,20 +41,36 @@ md <- md %>%
       select(geo, Longitude, Latitude)
   )
 
-# prep data
-fscores <- lavPredict(fit, type = "lv")
-df <- bind_cols(md, as.data.frame(fscores)) %>%
+# factor scores
+fscores <- as.data.frame(lavPredict(fit, type = "lv"))
+fscores_lower <- fscores
+fscores_upper <- fscores
+names(fscores_lower) <- paste0(names(fscores), "_lower")
+names(fscores_upper) <- paste0(names(fscores), "_upper")
+
+# combine all data
+df <- bind_cols(
+  md,
+  fscores,
+  fscores_lower,
+  fscores_upper
+) %>%
   mutate(
     Country = substr(geo, 1, 2),
     CaseID  = paste0(geo_name, " [", geo, "]")
   )
 
+# drop-down list items
 orig_vars <- lavaan::lavNames(fit, type = "ov.nox")
-latents <- colnames(fscores)
-all_choices <- c(latents, "Longitude", "Latitude", orig_vars) # dropped orig_vars for testing
+latents <- names(fscores)
+all_choices <- c(latents, "Longitude", "Latitude", orig_vars)
 
-# remove originals for speed
-df <- df %>% select(CaseID, Country, all_of(all_choices))
+# create plot data
+cols_data <- c(
+  c(orig_vars, paste0(orig_vars, "_lower"), paste0(orig_vars, "_upper")),
+  c(latents, paste0(latents, "_lower"), paste0(latents, "_upper"))
+)
+df <- df %>% select(CaseID, Country, Longitude, Latitude, all_of(cols_data))
 
 # assign a distinct hex-colour to each of the 37 countries
 n_ct <- length(unique(df$Country))
@@ -67,6 +84,7 @@ current_axes <- latents[1:3]
 p <- plot_ly()
 for (cty in unique(df$Country)) {
   dsub <- df[df$Country == cty, ]
+
   p <- add_trace(
     p,
     data = dsub,
@@ -147,7 +165,12 @@ p <- p %>% onRender(
       collapse = "\n"
     )
   ),
-  data = list(df = df, all_choices = all_choices, current_axes = current_axes)
+  data = list(
+    df = df,
+    # df_sym = df_sym,
+    all_choices = all_choices,
+    current_axes = current_axes
+  )
 )
 
 # write out
