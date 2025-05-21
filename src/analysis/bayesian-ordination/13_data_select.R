@@ -30,7 +30,6 @@ var_select <- var_select %>%
       f_resource %in% c(
         "DEMO_R_FIND2",
         "DEMO_R_MINFIND",
-        "EDUC_UOE_ENRA13",
         "EDUC_UOE_ENRA17",
         "pm25",
         "TEPSR_LM220",
@@ -39,8 +38,28 @@ var_select <- var_select %>%
         "TGS00058",
         "TGS00059",
         "TGS00064",
-        "TGS00099"
+        "TGS00099",
+        "TGS00103",
+        "TRAN_R_ACCI", 
+        "TGS00101"
       ), 1, select_y
+    )
+  ) %>%
+    mutate(
+      select_y = ifelse(
+        f_resource == "BD_SIZE_R3" &
+          indic_sb %in% c("V97010", "V97020", "V97030") & 
+          sizeclas == "TOTAL",
+        1,
+        select_y
+      )
+    ) %>%
+    mutate(
+    select_y = ifelse(
+      f_resource == "EDUC_UOE_ENRA13" &
+        isced11 %in% c("ED34", "ED35"),
+      1,
+      select_y
     )
   ) %>%
   mutate(
@@ -75,19 +94,9 @@ var_select <- var_select %>%
   ) %>%
   mutate(
     select_y = ifelse(
-      f_resource == "EDAT_LFSE_33" &
-        sex %in% c("T", "R") &
-        age == "Y18-34" &
-        duration == "TOTAL" &
-        isced11 %in% c("TOTAL", "ED0-2", "ED3_4", "ED5-8"),
-      1,
-      select_y
-    )
-  ) %>%
-  mutate(
-    select_y = ifelse(
       f_resource == "HLTH_CD_YPERRTO" &
-        resid == "TOT_IN",
+        resid == "TOT_IN" &
+        indic_de == "PERIMORRT",
       1,
       select_y
     )
@@ -133,15 +142,24 @@ var_select <- var_select %>%
       select_y
     )
   ) %>%
-  mutate(
-    select_y = ifelse(
-      f_resource == "YTH_EMPL_110" &
-        sex %in% c("T", "R") &
-        age %in% c("Y15-19", "Y20-24", "Y25-29"),
-      1,
-      select_y
+    mutate(
+      select_y = ifelse(
+        f_resource == "YTH_EMPL_030" &
+          sex %in% c("T", "R") &
+          age %in% c("Y20-29"),
+        1,
+        select_y
+      )
     )
-  )
+  #   mutate(
+  #   select_y = ifelse(
+  #     f_resource == "YTH_EMPL_110" &
+  #       sex %in% c("T", "R") &
+  #       age %in% c("Y15-19", "Y20-24", "Y25-29"),
+  #     1,
+  #     select_y
+  #   )
+  # )
 
 var_select %>%
   filter(select_y == 1) %>%

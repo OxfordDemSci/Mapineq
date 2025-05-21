@@ -14,6 +14,30 @@ level <- 2
 
 drop_resources <- c("HLTH_CD_ACDR2")
 
+# keep_resources <- c(
+#   "pm25", # air particulates
+#   "ookla", # internet speed
+#   "TGS00050", # internet usage
+#   "TGS00064", # hospital beds
+#   "HLTH_RS_BDSNS", # care beds
+#   "TGS00058", # cancer deaths
+#   "TGS00059", # heart disease deaths
+#   "DEMO_R_MINFIND", # infant mortality
+#   "HLTH_CD_YPERRTO", # peri- neo-natal mortality
+#   "DEMO_R_MLIFEXP", # life expectancy
+#   "EDUC_UOE_ENRA17", # pupils pre-primary
+#   "EDUC_UOE_ENRA13", # distribution of students among education types
+#   "TGS00109", # tertiary educational attainment
+#   "EDAT_LFS_9918", # educational attainment
+#   "RD_E_GERDREG", # gross domestic expenditure on R&D
+#   "TEPSR_LM220", # gender employment gap
+#   "YTH_EMPL_110", # youth unemployment
+#   "TGS00010", # employment rate
+#   "EDAT_LFSE_33", # youth NEET
+#   "TESPM050_R", # poverty reduction
+#   "TGS00099", # population change (natural, migration, total)
+#   "DEMO_R_FIND2" # fertility indicators
+# )
 keep_resources <- c(
   "pm25", # air particulates
   "ookla", # internet speed
@@ -24,19 +48,23 @@ keep_resources <- c(
   "TGS00059", # heart disease deaths
   "DEMO_R_MINFIND", # infant mortality
   "HLTH_CD_YPERRTO", # peri- neo-natal mortality
-  "DEMO_R_MLIFEXP", # life expectancy
+  # "DEMO_R_MLIFEXP", # life expectancy
   "EDUC_UOE_ENRA17", # pupils pre-primary
   "EDUC_UOE_ENRA13", # distribution of students among education types
   "TGS00109", # tertiary educational attainment
   "EDAT_LFS_9918", # educational attainment
-  "RD_E_GERDREG", # gross domestic expenditure on R&D
   "TEPSR_LM220", # gender employment gap
-  "YTH_EMPL_110", # youth unemployment
+  # "YTH_EMPL_110", # youth unemployment
   "TGS00010", # employment rate
   "EDAT_LFSE_33", # youth NEET
   "TESPM050_R", # poverty reduction
   "TGS00099", # population change (natural, migration, total)
-  "DEMO_R_FIND2" # fertility indicators
+  "DEMO_R_FIND2", # fertility indicators
+  "BD_SIZE_R3", # Business demography TODO: select filters in data_select.R
+  "TGS00103", # At-risk-of-poverty rate
+  "TRAN_R_ACCI", # Injuries from vehicle accidents
+  "TGS00101", # life expectancy at birth
+  "YTH_EMPL_030" # Youth employment
 )
 #----------------------#
 

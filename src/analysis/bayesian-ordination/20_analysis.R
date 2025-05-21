@@ -154,7 +154,7 @@ print(time_end - time_start)
 
 # save model
 saveRDS(fit, file.path(outdir, "fit.rds"))
-saveRDS(seed, file.path(outdir, "seed.rds")) # TODO: check if this is already saved in the fit object
+saveRDS(seed, file.path(outdir, "seed.rds")) 
 
 # model summary
 summary(fit, fit.measures = TRUE, standardized = TRUE)

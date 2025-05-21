@@ -61,12 +61,12 @@ data_raw_derive <- variable_names(
 
 # remove variables with insufficient data
 data_raw_derive <- data_raw_derive %>%
-  group_by(variable_name) %>% 
-  mutate(drop =  case_when(
+  group_by(variable_name) %>%
+  mutate(drop = case_when(
     all(is.na(value)) ~ TRUE,
     n_distinct(value, na.rm = TRUE) < 3 ~ TRUE,
     TRUE ~ FALSE
-  )) %>% 
+  )) %>%
   ungroup() %>%
   filter(drop == FALSE) %>%
   select(-drop)
@@ -79,7 +79,7 @@ data_raw_derive <- variable_names(
 
 # transform to wide-format
 data_wide <- data_wide(
-  dat = data_raw_derive, 
+  dat = data_raw_derive,
   drop_rows = TRUE
 )
 
