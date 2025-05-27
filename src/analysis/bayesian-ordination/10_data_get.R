@@ -55,7 +55,7 @@ keep_resources <- c(
   "EDAT_LFS_9918", # educational attainment
   "TEPSR_LM220", # gender employment gap
   # "YTH_EMPL_110", # youth unemployment
-  "TGS00010", # employment rate
+  "TGS00010", # unemployment rate
   "EDAT_LFSE_33", # youth NEET
   "TESPM050_R", # poverty reduction
   "TGS00099", # population change (natural, migration, total)

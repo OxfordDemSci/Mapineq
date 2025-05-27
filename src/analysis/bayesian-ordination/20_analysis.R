@@ -29,12 +29,12 @@ var_select <- read.csv(file.path(datdir, "variable_selection.csv"))
 
 # define latent variables
 lava_econ <- c(
-  "RD_E_GERDREG", # gross domestic expenditure on R&D
   "TEPSR_LM220", # gender employment gap
-  "YTH_EMPL_110", # youth unemployment
-  "TGS00010", # employment rate
-  "EDAT_LFSE_33", # , # youth NEET
-  "TESPM050_R" # poverty reduction
+  # "YTH_EMPL_030", # youth employment rate
+  "TGS00010", # employment rate by education level
+  # "EDAT_LFSE_33", # , # youth NEET employment rates
+  "TGS00103" # poverty reduction
+  #"BD_SIZE_R3" # business demography (births, deaths, change)
 )
 lava_edu <- c(
   "EDUC_UOE_ENRA17", # pupils pre-primary
@@ -44,21 +44,21 @@ lava_edu <- c(
 )
 lava_health <- c(
   "TGS00064", # hospital beds
-  "HLTH_RS_BDSNS", # care beds
   "TGS00058", # cancer deaths
   "TGS00059", # heart disease deaths
   "DEMO_R_MINFIND", # infant mortality
-  "HLTH_CD_YPERRTO", # peri- neo-natal mortality
-  "DEMO_R_MLIFEXP" # life expectancy
+  "HLTH_CD_YPERRTO" # peri- neo-natal mortality
 )
 lava_demo <- c(
   "TGS00099", # population change (natural, migration, total)
-  "DEMO_R_FIND2" # fertility indicators
+  "DEMO_R_FIND2", # fertility indicators
+  "TGS00101"  # life expectancy at birth
 )
 lava_env <- c(
   "pm25", # air particulates
-  "ookla", # internet speed
-  "TGS00050" # internet usage
+  "ookla" # internet speed
+  # "TGS00050" # internet usage
+  # "TRAN_R_ACCI" # transportation accidents
 )
 
 # identify variables with no variance
@@ -82,6 +82,10 @@ var_select <- var_select %>%
     f_resource %in% lava_health ~ "Health",
     f_resource %in% lava_demo ~ "Demography",
     f_resource %in% lava_env ~ "Environment"
+  )) %>% 
+  mutate(select_y = case_when(
+    is.na(latent_variable) ~ 0, 
+    TRUE ~ select_y
   ))
 
 # specify model
@@ -120,6 +124,7 @@ for (lava in lavas) {
   )
 }
 cat(model)
+length(vars)
 
 # clean model data
 md <- dat %>%

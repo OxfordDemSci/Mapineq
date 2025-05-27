@@ -317,7 +317,7 @@ catalogue_data <- function(catalogue, filter_cols, year, level) {
 }
 
 # catalogue data to wide format
-data_wide <- function(dat, drop_rows = TRUE) {
+data_to_wide <- function(dat, drop_rows = TRUE) {
   if (!"variable_name" %in% names(dat)) {
     dat <- variable_names(dat)
   }

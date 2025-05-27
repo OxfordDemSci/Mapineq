@@ -48,19 +48,14 @@ data_ratio <- data_raw %>%
   select(-total_f, -total_m)
 
 # combine derived raw data with original raw data
-data_raw_derive <- bind_rows(data_raw, data_ratio)
+data_raw_derive <- rbind(data_raw, data_ratio)
 
 
 #---- post-process derived data ----#
 
-# add variable names (overwrite old variable names)
-data_raw_derive <- variable_names(
-  dat = data_raw_derive,
-  filter_cols = filter_cols
-)
-
-# remove variables with insufficient data
+# remove variables with insufficient data (renames variables)
 data_raw_derive <- data_raw_derive %>%
+  variable_names(filter_cols = filter_cols) %>%
   group_by(variable_name) %>%
   mutate(drop = case_when(
     all(is.na(value)) ~ TRUE,
@@ -69,16 +64,11 @@ data_raw_derive <- data_raw_derive %>%
   )) %>%
   ungroup() %>%
   filter(drop == FALSE) %>%
-  select(-drop)
-
-# add variable names (overwrite old variable names)
-data_raw_derive <- variable_names(
-  dat = data_raw_derive,
-  filter_cols = filter_cols
-)
+  select(-drop) %>%
+  variable_names(filter_cols = filter_cols)
 
 # transform to wide-format
-data_wide <- data_wide(
+data_wide <- data_to_wide(
   dat = data_raw_derive,
   drop_rows = TRUE
 )
@@ -89,6 +79,28 @@ vars_df <- variable_select(
   filter_cols = filter_cols,
   catalogue = data_catalogue
 )
+
+
+#---- quick test ----#
+test_var_raw <- data_raw %>% filter(f_resource == 'DEMO_R_FIND2' & indic_de=='AGEMOTH' & unit=='YR') %>% pull(variable_name) %>% unique()
+test_var_derive <- data_raw_derive %>% filter(f_resource == 'DEMO_R_FIND2' & indic_de=='AGEMOTH' & unit=='YR') %>% pull(variable_name) %>% unique()
+
+x <- data_raw %>% filter(variable_name == test_var_raw) %>% pull(value)
+mean(is.na(x))
+x <- data_raw_derive %>% filter(variable_name == test_var_derive) %>% pull(value)
+mean(is.na(x))
+x <- data_wide[,test_var_derive]
+mean(is.na(x))
+
+x <- dat %>% filter(variable_name == test_var_derive) %>% pull(value)
+mean(is.na(x))
+
+y <- result %>% pull(test_var_derive)
+mean(is.na(y))
+
+nuts_raw <- data_raw |> filter(variable_name == test_var_raw) |> select(geo_name, geo) |> distinct()
+nuts_wide <- data_wide |> select(geo_name, geo) |> distinct()
+
 
 
 #---- save to disk ----#
