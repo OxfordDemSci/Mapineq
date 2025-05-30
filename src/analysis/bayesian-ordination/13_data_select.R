@@ -40,21 +40,21 @@ var_select <- var_select %>%
         "TGS00064",
         "TGS00099",
         "TGS00103",
-        "TRAN_R_ACCI", 
+        "TRAN_R_ACCI",
         "TGS00101"
       ), 1, select_y
     )
   ) %>%
-    mutate(
-      select_y = ifelse(
-        f_resource == "BD_SIZE_R3" &
-          indic_sb %in% c("V97010", "V97020", "V97030") & 
-          sizeclas == "TOTAL",
-        1,
-        select_y
-      )
-    ) %>%
-    mutate(
+  mutate(
+    select_y = ifelse(
+      f_resource == "BD_SIZE_R3" &
+        indic_sb %in% c("V97010", "V97020", "V97030") &
+        sizeclas == "TOTAL",
+      1,
+      select_y
+    )
+  ) %>%
+  mutate(
     select_y = ifelse(
       f_resource == "EDUC_UOE_ENRA13" &
         isced11 %in% c("ED34", "ED35"),
@@ -142,24 +142,24 @@ var_select <- var_select %>%
       select_y
     )
   ) %>%
-    mutate(
-      select_y = ifelse(
-        f_resource == "YTH_EMPL_030" &
-          sex %in% c("T", "R") &
-          age %in% c("Y20-29"),
-        1,
-        select_y
-      )
+  mutate(
+    select_y = ifelse(
+      f_resource == "YTH_EMPL_030" &
+        sex %in% c("T", "R") &
+        age %in% c("Y20-29"),
+      1,
+      select_y
     )
-  #   mutate(
-  #   select_y = ifelse(
-  #     f_resource == "YTH_EMPL_110" &
-  #       sex %in% c("T", "R") &
-  #       age %in% c("Y15-19", "Y20-24", "Y25-29"),
-  #     1,
-  #     select_y
-  #   )
-  # )
+  )
+#   mutate(
+#   select_y = ifelse(
+#     f_resource == "YTH_EMPL_110" &
+#       sex %in% c("T", "R") &
+#       age %in% c("Y15-19", "Y20-24", "Y25-29"),
+#     1,
+#     select_y
+#   )
+# )
 
 var_select %>%
   filter(select_y == 1) %>%
@@ -171,7 +171,7 @@ vars <- var_select %>%
   pull(variable_name)
 
 dat_select <- dat %>%
-  select(data_year, geo, geo_name, geo_source, geo_year, all_of(vars))
+  select(geo, all_of(vars))
 
 #---- save to disk ----#
 write.csv(dat_select, file.path(outdir, "data_select.csv"), row.names = FALSE)

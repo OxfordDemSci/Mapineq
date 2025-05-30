@@ -224,14 +224,12 @@ expand_catalogue <- function(catalogue) {
 
 # create variable names based on resource/filter combinations
 variable_names <- function(dat, filter_cols) {
-  
-  dat <- dat %>% 
+  dat <- dat %>%
     select(-any_of(c("variable_name", "variable_name_long")))
 
-  vn <- dat %>% 
+  vn <- dat %>%
     select(f_resource, all_of(filter_cols)) %>%
     distinct() %>%
-  
     # long variable names
     mutate(
       across(
@@ -252,7 +250,6 @@ variable_names <- function(dat, filter_cols) {
       sep = "|",
       na.rm = TRUE
     ) %>%
-    
     # short variable names
     group_by(f_resource) %>%
     mutate(
@@ -260,10 +257,10 @@ variable_names <- function(dat, filter_cols) {
     ) %>%
     ungroup()
 
-  result <- dat %>% 
-    left_join(vn) %>% 
+  result <- dat %>%
+    left_join(vn) %>%
     select(variable_name, variable_name_long, f_resource, everything())
-  
+
   return(result)
 }
 
@@ -322,7 +319,8 @@ data_to_wide <- function(dat, drop_rows = TRUE) {
     dat <- variable_names(dat)
   }
 
-  keep_cols <- c("data_year", "geo", "geo_name", "geo_source", "geo_year")
+  # keep_cols <- c("data_year", "geo", "geo_name", "geo_source", "geo_year")
+  keep_cols <- c("geo")
 
   result <- dat %>%
     select(all_of(keep_cols), variable_name, value) %>%
@@ -354,7 +352,7 @@ variable_select <- function(dat, catalogue, filter_cols) {
     mutate(
       select_y = 1,
       select_x = 0
-    ) %>% 
+    ) %>%
     select(select_y, select_x, everything())
   return(result)
 }

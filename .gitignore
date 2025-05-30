@@ -3,6 +3,8 @@
 **/out/
 .idea/
 *.env
+lavExport/
+
 #---- R -----#
 
 # History files

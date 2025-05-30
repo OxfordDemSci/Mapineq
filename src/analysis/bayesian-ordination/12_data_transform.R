@@ -30,7 +30,7 @@ vars <- unique(data_raw$variable_name)
 
 # remove variables with insufficient data
 drop_vars <- which(apply(data_wide[vars], 2, function(x) all(is.na(x)) | length(unique(x)) < 3))
-if(length(drop_vars) > 0){
+if (length(drop_vars) > 0) {
   vars <- vars[-drop_vars]
 }
 

@@ -82,25 +82,35 @@ vars_df <- variable_select(
 
 
 #---- quick test ----#
-test_var_raw <- data_raw %>% filter(f_resource == 'DEMO_R_FIND2' & indic_de=='AGEMOTH' & unit=='YR') %>% pull(variable_name) %>% unique()
-test_var_derive <- data_raw_derive %>% filter(f_resource == 'DEMO_R_FIND2' & indic_de=='AGEMOTH' & unit=='YR') %>% pull(variable_name) %>% unique()
+test_var_raw <- data_raw %>%
+  filter(f_resource == "DEMO_R_FIND2" & indic_de == "AGEMOTH" & unit == "YR") %>%
+  pull(variable_name) %>%
+  unique()
+test_var_derive <- data_raw_derive %>%
+  filter(f_resource == "DEMO_R_FIND2" & indic_de == "AGEMOTH" & unit == "YR") %>%
+  pull(variable_name) %>%
+  unique()
 
-x <- data_raw %>% filter(variable_name == test_var_raw) %>% pull(value)
+x <- data_raw %>%
+  filter(variable_name == test_var_raw) %>%
+  pull(value)
 mean(is.na(x))
-x <- data_raw_derive %>% filter(variable_name == test_var_derive) %>% pull(value)
+x <- data_raw_derive %>%
+  filter(variable_name == test_var_derive) %>%
+  pull(value)
 mean(is.na(x))
-x <- data_wide[,test_var_derive]
+x <- data_wide[, test_var_derive]
 mean(is.na(x))
 
-x <- dat %>% filter(variable_name == test_var_derive) %>% pull(value)
-mean(is.na(x))
+nuts_raw <- data_raw |>
+  filter(variable_name == test_var_raw) |>
+  select(geo) |>
+  distinct()
+nuts_wide <- data_wide |>
+  select(geo) |>
+  distinct()
 
-y <- result %>% pull(test_var_derive)
-mean(is.na(y))
-
-nuts_raw <- data_raw |> filter(variable_name == test_var_raw) |> select(geo_name, geo) |> distinct()
-nuts_wide <- data_wide |> select(geo_name, geo) |> distinct()
-
+setdiff(nuts_wide$geo, nuts_raw$geo)
 
 
 #---- save to disk ----#

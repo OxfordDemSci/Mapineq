@@ -5,13 +5,14 @@ rm(list = ls())
 gc()
 
 # install libraries (if needed)
-required_packages <- c("dplyr", "blavaan", "semPlot")
+required_packages <- c("dplyr", "blavaan", "semPlot", "caret")
 install.packages(setdiff(required_packages, installed.packages()[, "Package"]))
 
 # load libraries
 library(semPlot)
 library(blavaan)
 library(dplyr)
+library(caret)
 future::plan("multicore")
 options(mc.cores = 4)
 
@@ -27,14 +28,16 @@ dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
 dat <- read.csv(file.path(datdir, "data_select.csv"), check.names = FALSE)
 var_select <- read.csv(file.path(datdir, "variable_selection.csv"))
 
-# define latent variables
+
+#---- define latent variables ----#
+
 lava_econ <- c(
   "TEPSR_LM220", # gender employment gap
-  # "YTH_EMPL_030", # youth employment rate
+  "YTH_EMPL_030", # youth employment rate
   "TGS00010", # employment rate by education level
-  # "EDAT_LFSE_33", # , # youth NEET employment rates
-  "TGS00103" # poverty reduction
-  #"BD_SIZE_R3" # business demography (births, deaths, change)
+  "EDAT_LFSE_33", # , # youth NEET employment rates
+  "TGS00103", # poverty reduction
+  "BD_SIZE_R3" # business demography (births, deaths, change)
 )
 lava_edu <- c(
   "EDUC_UOE_ENRA17", # pupils pre-primary
@@ -56,10 +59,13 @@ lava_demo <- c(
 )
 lava_env <- c(
   "pm25", # air particulates
-  "ookla" # internet speed
-  # "TGS00050" # internet usage
-  # "TRAN_R_ACCI" # transportation accidents
+  "ookla", # internet speed
+  "TGS00050", # internet usage
+  "TRAN_R_ACCI" # transportation accidents
 )
+
+
+#---- variable selection ----#
 
 # identify variables with no variance
 drop_vars <- dat %>%
@@ -70,16 +76,14 @@ drop_vars <- dat %>%
   )) %>%
   names()
 
-# View(dat %>% select(all_of(drop_vars)))
-
-# make final variable selection
+# make variable selection
 var_select <- var_select %>%
   filter(select_y == 1) %>%
   filter(!variable_name %in% drop_vars) %>%
   mutate(latent_variable = case_when(
     f_resource %in% lava_econ ~ "Economy",
     f_resource %in% lava_edu ~ "Education",
-    f_resource %in% lava_health ~ "Health",
+    f_resource %in% lava_health ~ "Health" ,
     f_resource %in% lava_demo ~ "Demography",
     f_resource %in% lava_env ~ "Environment"
   )) %>% 
@@ -88,7 +92,47 @@ var_select <- var_select %>%
     TRUE ~ select_y
   ))
 
-# specify model
+# list variables
+vars <- var_select %>% filter(select_y==1) %>% pull(variable_name) %>% sort()
+
+#---- model data ----#
+
+# select columns
+md <- dat %>%
+  select(geo, all_of(vars))
+
+# drop columns to remove collinearity
+cor_mat <- cor(md %>% select(-geo), use="pairwise.complete.obs")
+
+to_drop_idx <- findCorrelation(cor_mat, cutoff = 0.95, verbose = TRUE)
+to_drop_names <- colnames(cor_mat)[to_drop_idx]
+
+md <- md %>% select(-all_of(to_drop_names))
+
+# update variables list and selection
+var_select <- var_select %>% 
+  mutate(select_y = case_when(
+    variable_name %in% to_drop_names ~ 0, 
+    TRUE ~ select_y))
+
+vars <- var_select %>% filter(select_y==1) %>% pull(variable_name) %>% sort()
+
+# drop rows with insufficient data (i.e. need at least 3 data points per row)
+md <- md %>% 
+  filter(rowSums(!is.na(select(., -geo))) >= 3)
+
+# save data
+write.csv(md, file.path(outdir, "md.csv"), row.names = FALSE)
+
+# missingness
+missingness <-
+  sum(is.na(md[, vars])) /
+    prod(dim(md[, vars]))
+
+print(paste0("missingness: ", round(missingness, 2)))
+
+
+#---- specify model ----#
 
 # model <- "
 #   Economy =~ econ1 + econ2 + econ3
@@ -98,20 +142,18 @@ var_select <- var_select %>%
 #   Environment =~ env1 + env2 + env3
 # "
 
+# list latent variables
 lavas <- var_select %>%
   pull(latent_variable) %>%
   unique()
 lavas <- lavas[!is.na(lavas)]
 
-vars <- c()
 model <- ""
 for (lava in lavas) {
   vars_lava <- var_select %>%
-    filter(latent_variable == lava) %>%
+    filter(latent_variable == lava & select_y == TRUE) %>%
     select(variable_name) %>%
     pull()
-
-  vars <- c(vars, vars_lava)
 
   model <- paste0(
     model,
@@ -124,21 +166,9 @@ for (lava in lavas) {
   )
 }
 cat(model)
-length(vars)
 
-# clean model data
-md <- dat %>%
-  select(data_year, geo, geo_name, geo_source, geo_year, all_of(vars))
 
-# save data
-write.csv(md, file.path(outdir, "md.csv"), row.names = FALSE)
-
-# missingness
-missingness <-
-  sum(is.na(md[, vars])) /
-    prod(dim(md[, vars]))
-
-print(paste0("missingness: ", round(missingness, 2)))
+#---- run model ----#
 
 # random seed
 seed <- sample.int(.Machine$integer.max, 1L)

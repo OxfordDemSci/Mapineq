@@ -21,15 +21,15 @@ md <- read.csv(file.path(datdir, "md.csv"))
 
 # separate row id info
 id_md <- md %>%
-  select(geo, geo_name, geo_source, geo_year, data_year)
+  select(geo)
 
 # posterior predictions
 ymis <- blavPredict(fit, type = "ymis")
 
 # posterior prediction summary statistic
 ymis_mean <- apply(ymis, 2, mean)
-ymis_lower <- apply(ymis, 2, quantile, probs=c(0.1))
-ymis_upper <- apply(ymis, 2, quantile, probs=c(0.9))
+ymis_lower <- apply(ymis, 2, quantile, probs = c(0.1))
+ymis_upper <- apply(ymis, 2, quantile, probs = c(0.9))
 
 # subset model data to only variables used by the model
 vars_model <- lavaan::lavNames(fit, type = "ov.nox")
