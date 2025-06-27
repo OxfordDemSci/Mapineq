@@ -255,7 +255,8 @@ endpoint = "functions/postgisftw.get_xy_data/items.json"
 # Endpoint parameters
 params = {
     "_level": 2,
-    "_year": 2018,
+    "_predictor_year": 2018,
+    "_outcome_year": 2018,
     "X_JSON": json.dumps(
         {
             "source": "TGS00103",
