@@ -43,7 +43,6 @@ SELECT
   "obsValue",
   "obsTime",
   metric,
-  freq,
   month
 FROM graced_co2;
 
