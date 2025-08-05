@@ -1,0 +1,3986 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>pydeck</title>
+        <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.13.0/mapbox-gl.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" />
+    <script src='https://cdn.jsdelivr.net/npm/@deck.gl/jupyter-widget@~9.0.*/dist/index.js'></script>
+    <style>
+    body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+#deck-container {
+  width: 100vw;
+  height: 100vh;
+}
+
+#deck-container canvas {
+  z-index: 1;
+  background: none;
+}
+    </style>
+  </head>
+  <body>
+    <div id="deck-container">
+    </div>
+  </body>
+  <script>
+    const container = document.getElementById('deck-container');
+    const jsonInput = {
+  "initialViewState": {
+    "bearing": 0,
+    "latitude": 55.378051,
+    "longitude": -3.435973,
+    "pitch": 40,
+    "zoom": 1.5
+  },
+  "layers": [
+    {
+      "@@type": "ArcLayer",
+      "autoHighlight": true,
+      "data": [
+        {
+          "country_from": "AD",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 3,
+          "source_lat": 42.546245,
+          "source_lon": 1.601554,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "AD \u2192 UK<br />Migrants: 3<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "AE",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1524,
+          "source_lat": 23.424076,
+          "source_lon": 53.847818,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "AE \u2192 UK<br />Migrants: 1524<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "AF",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 107,
+          "source_lat": 33.93911,
+          "source_lon": 67.709953,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "AF \u2192 UK<br />Migrants: 107<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "AL",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 835,
+          "source_lat": 41.153332,
+          "source_lon": 20.168331,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "AL \u2192 UK<br />Migrants: 835<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "AM",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 15,
+          "source_lat": 40.069099,
+          "source_lon": 45.038189,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "AM \u2192 UK<br />Migrants: 15<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "AO",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 39,
+          "source_lat": -11.202692,
+          "source_lon": 17.873887,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "AO \u2192 UK<br />Migrants: 39<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "AR",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 151,
+          "source_lat": -38.416097,
+          "source_lon": -63.616672,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "AR \u2192 UK<br />Migrants: 151<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "AT",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 168,
+          "source_lat": 47.516231,
+          "source_lon": 14.550072,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "AT \u2192 UK<br />Migrants: 168<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "AU",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 4004,
+          "source_lat": -25.274398,
+          "source_lon": 133.775136,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "AU \u2192 UK<br />Migrants: 4004<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "AZ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 72,
+          "source_lat": 40.143105,
+          "source_lon": 47.576927,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "AZ \u2192 UK<br />Migrants: 72<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "BA",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 17,
+          "source_lat": 43.915886,
+          "source_lon": 17.679076,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "BA \u2192 UK<br />Migrants: 17<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "BB",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 64,
+          "source_lat": 13.193887,
+          "source_lon": -59.543198,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "BB \u2192 UK<br />Migrants: 64<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "BD",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 480,
+          "source_lat": 23.684994,
+          "source_lon": 90.356331,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "BD \u2192 UK<br />Migrants: 480<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "BE",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 451,
+          "source_lat": 50.503887,
+          "source_lon": 4.469936,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "BE \u2192 UK<br />Migrants: 451<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "BF",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": 12.238333,
+          "source_lon": -1.561593,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "BF \u2192 UK<br />Migrants: 0<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "BG",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1634,
+          "source_lat": 42.733883,
+          "source_lon": 25.48583,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "BG \u2192 UK<br />Migrants: 1634<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "BH",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 135,
+          "source_lat": 25.930414,
+          "source_lon": 50.637772,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "BH \u2192 UK<br />Migrants: 135<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "BI",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 11,
+          "source_lat": -3.373056,
+          "source_lon": 29.918886,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "BI \u2192 UK<br />Migrants: 11<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "BJ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 8,
+          "source_lat": 9.30769,
+          "source_lon": 2.315834,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "BJ \u2192 UK<br />Migrants: 8<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "BN",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 68,
+          "source_lat": 4.535277,
+          "source_lon": 114.727669,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "BN \u2192 UK<br />Migrants: 68<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "BO",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 39,
+          "source_lat": -16.290154,
+          "source_lon": -63.588653,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "BO \u2192 UK<br />Migrants: 39<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "BR",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1477,
+          "source_lat": -14.235004,
+          "source_lon": -51.92528,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "BR \u2192 UK<br />Migrants: 1477<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "BS",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 35,
+          "source_lat": 25.03428,
+          "source_lon": -77.39628,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "BS \u2192 UK<br />Migrants: 35<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "BT",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": 27.514162,
+          "source_lon": 90.433601,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "BT \u2192 UK<br />Migrants: 0<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "BW",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 46,
+          "source_lat": -22.328474,
+          "source_lon": 24.684866,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "BW \u2192 UK<br />Migrants: 46<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "BY",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 17,
+          "source_lat": 53.709807,
+          "source_lon": 27.953389,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "BY \u2192 UK<br />Migrants: 17<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "BZ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 19,
+          "source_lat": 17.189877,
+          "source_lon": -88.49765,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "BZ \u2192 UK<br />Migrants: 19<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "CA",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1341,
+          "source_lat": 56.130366,
+          "source_lon": -106.346771,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "CA \u2192 UK<br />Migrants: 1341<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "CD",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 15,
+          "source_lat": -4.038333,
+          "source_lon": 21.758664,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "CD \u2192 UK<br />Migrants: 15<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "CF",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 4,
+          "source_lat": 6.611111,
+          "source_lon": 20.939444,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "CF \u2192 UK<br />Migrants: 4<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "CG",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 13,
+          "source_lat": -0.228021,
+          "source_lon": 15.827659,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "CG \u2192 UK<br />Migrants: 13<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "CH",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 372,
+          "source_lat": 46.818188,
+          "source_lon": 8.227512,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "CH \u2192 UK<br />Migrants: 372<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "CI",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 37,
+          "source_lat": 7.539989,
+          "source_lon": -5.54708,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "CI \u2192 UK<br />Migrants: 37<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "CL",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 113,
+          "source_lat": -35.675147,
+          "source_lon": -71.542969,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "CL \u2192 UK<br />Migrants: 113<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "CM",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 37,
+          "source_lat": 7.369722,
+          "source_lon": 12.354722,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "CM \u2192 UK<br />Migrants: 37<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "CO",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 222,
+          "source_lat": 4.570868,
+          "source_lon": -74.297333,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "CO \u2192 UK<br />Migrants: 222<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "CR",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 17,
+          "source_lat": 9.748917,
+          "source_lon": -83.753428,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "CR \u2192 UK<br />Migrants: 17<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "CV",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": 16.002082,
+          "source_lon": -24.013197,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "CV \u2192 UK<br />Migrants: 0<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "CY",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 716,
+          "source_lat": 35.126413,
+          "source_lon": 33.429859,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "CY \u2192 UK<br />Migrants: 716<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "CZ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 434,
+          "source_lat": 49.817492,
+          "source_lon": 15.472962,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "CZ \u2192 UK<br />Migrants: 434<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "DE",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 2168,
+          "source_lat": 51.165691,
+          "source_lon": 10.451526,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "DE \u2192 UK<br />Migrants: 2168<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "DJ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 7,
+          "source_lat": 11.825138,
+          "source_lon": 42.590275,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "DJ \u2192 UK<br />Migrants: 7<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "DK",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 244,
+          "source_lat": 56.26392,
+          "source_lon": 9.501785,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "DK \u2192 UK<br />Migrants: 244<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "DO",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 45,
+          "source_lat": 18.735693,
+          "source_lon": -70.162651,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "DO \u2192 UK<br />Migrants: 45<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "DZ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 109,
+          "source_lat": 28.033886,
+          "source_lon": 1.659626,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "DZ \u2192 UK<br />Migrants: 109<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "EC",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 134,
+          "source_lat": -1.831239,
+          "source_lon": -78.183406,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "EC \u2192 UK<br />Migrants: 134<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "EE",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 43,
+          "source_lat": 58.595272,
+          "source_lon": 25.013607,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "EE \u2192 UK<br />Migrants: 43<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "EG",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 479,
+          "source_lat": 26.820553,
+          "source_lon": 30.802498,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "EG \u2192 UK<br />Migrants: 479<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "ER",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": 15.179384,
+          "source_lon": 39.782334,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "ER \u2192 UK<br />Migrants: 0<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "ES",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 3546,
+          "source_lat": 40.463667,
+          "source_lon": -3.74922,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "ES \u2192 UK<br />Migrants: 3546<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "ET",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 78,
+          "source_lat": 9.145,
+          "source_lon": 40.489673,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "ET \u2192 UK<br />Migrants: 78<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "FI",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 70,
+          "source_lat": 61.92411,
+          "source_lon": 25.748151,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "FI \u2192 UK<br />Migrants: 70<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "FJ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 101,
+          "source_lat": -16.578193,
+          "source_lon": 179.414413,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "FJ \u2192 UK<br />Migrants: 101<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "FM",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 9,
+          "source_lat": 7.425554,
+          "source_lon": 150.550812,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "FM \u2192 UK<br />Migrants: 9<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "FR",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1778,
+          "source_lat": 46.227638,
+          "source_lon": 2.213749,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "FR \u2192 UK<br />Migrants: 1778<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "GA",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 14,
+          "source_lat": -0.803689,
+          "source_lon": 11.609444,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "GA \u2192 UK<br />Migrants: 14<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "GD",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 78,
+          "source_lat": 12.262776,
+          "source_lon": -61.604171,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "GD \u2192 UK<br />Migrants: 78<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "GE",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 80,
+          "source_lat": 42.315407,
+          "source_lon": 43.356892,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "GE \u2192 UK<br />Migrants: 80<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "GH",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 634,
+          "source_lat": 7.946527,
+          "source_lon": -1.023194,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "GH \u2192 UK<br />Migrants: 634<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "GM",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 69,
+          "source_lat": 13.443182,
+          "source_lon": -15.310139,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "GM \u2192 UK<br />Migrants: 69<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "GN",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": 9.945587,
+          "source_lon": -9.696645,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "GN \u2192 UK<br />Migrants: 0<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "GQ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": 1.650801,
+          "source_lon": 10.267895,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "GQ \u2192 UK<br />Migrants: 0<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "EL",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1015,
+          "source_lat": 39.074208,
+          "source_lon": 21.824312,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "EL \u2192 UK<br />Migrants: 1015<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "GT",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 26,
+          "source_lat": 15.783471,
+          "source_lon": -90.230759,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "GT \u2192 UK<br />Migrants: 26<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "GW",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": 11.803749,
+          "source_lon": -15.180413,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "GW \u2192 UK<br />Migrants: 0<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "GY",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 33,
+          "source_lat": 4.860416,
+          "source_lon": -58.93018,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "GY \u2192 UK<br />Migrants: 33<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "HK",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 774,
+          "source_lat": 22.396428,
+          "source_lon": 114.109497,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "HK \u2192 UK<br />Migrants: 774<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "HN",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 25,
+          "source_lat": 15.199999,
+          "source_lon": -86.241905,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "HN \u2192 UK<br />Migrants: 25<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "HR",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 73,
+          "source_lat": 45.1,
+          "source_lon": 15.2,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "HR \u2192 UK<br />Migrants: 73<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "HT",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 24,
+          "source_lat": 18.971187,
+          "source_lon": -72.285215,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "HT \u2192 UK<br />Migrants: 24<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "HU",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 693,
+          "source_lat": 47.162494,
+          "source_lon": 19.503304,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "HU \u2192 UK<br />Migrants: 693<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "ID",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 189,
+          "source_lat": -0.789275,
+          "source_lon": 113.921327,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "ID \u2192 UK<br />Migrants: 189<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "IE",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1233,
+          "source_lat": 53.41291,
+          "source_lon": -8.24389,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "IE \u2192 UK<br />Migrants: 1233<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "IL",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 166,
+          "source_lat": 31.046051,
+          "source_lon": 34.851612,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "IL \u2192 UK<br />Migrants: 166<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "IN",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 7203,
+          "source_lat": 20.593684,
+          "source_lon": 78.96288,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "IN \u2192 UK<br />Migrants: 7203<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "IQ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 564,
+          "source_lat": 33.223191,
+          "source_lon": 43.679291,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "IQ \u2192 UK<br />Migrants: 564<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "IS",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 18,
+          "source_lat": 64.963051,
+          "source_lon": -19.020835,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "IS \u2192 UK<br />Migrants: 18<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "IT",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 2772,
+          "source_lat": 41.87194,
+          "source_lon": 12.56738,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "IT \u2192 UK<br />Migrants: 2772<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "JM",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 189,
+          "source_lat": 18.109581,
+          "source_lon": -77.297508,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "JM \u2192 UK<br />Migrants: 189<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "JO",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 287,
+          "source_lat": 30.585164,
+          "source_lon": 36.238414,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "JO \u2192 UK<br />Migrants: 287<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "JP",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 893,
+          "source_lat": 36.204824,
+          "source_lon": 138.252924,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "JP \u2192 UK<br />Migrants: 893<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "KE",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 301,
+          "source_lat": -0.023559,
+          "source_lon": 37.906193,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "KE \u2192 UK<br />Migrants: 301<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "KG",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": 41.20438,
+          "source_lon": 74.766098,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "KG \u2192 UK<br />Migrants: 0<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "KH",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 50,
+          "source_lat": 12.565679,
+          "source_lon": 104.990963,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "KH \u2192 UK<br />Migrants: 50<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "KI",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 9,
+          "source_lat": -3.370417,
+          "source_lon": -168.734039,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "KI \u2192 UK<br />Migrants: 9<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "KM",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": -11.875001,
+          "source_lon": 43.872219,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "KM \u2192 UK<br />Migrants: 0<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "KR",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 365,
+          "source_lat": 35.907757,
+          "source_lon": 127.766922,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "KR \u2192 UK<br />Migrants: 365<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "KW",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 111,
+          "source_lat": 29.31166,
+          "source_lon": 47.481766,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "KW \u2192 UK<br />Migrants: 111<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "KZ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 27,
+          "source_lat": 48.019573,
+          "source_lon": 66.923684,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "KZ \u2192 UK<br />Migrants: 27<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "LA",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 6,
+          "source_lat": 19.85627,
+          "source_lon": 102.495496,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "LA \u2192 UK<br />Migrants: 6<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "LB",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 193,
+          "source_lat": 33.854721,
+          "source_lon": 35.862285,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "LB \u2192 UK<br />Migrants: 193<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "LC",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 81,
+          "source_lat": 13.909444,
+          "source_lon": -60.978893,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "LC \u2192 UK<br />Migrants: 81<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "LK",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 309,
+          "source_lat": 7.873054,
+          "source_lon": 80.771797,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "LK \u2192 UK<br />Migrants: 309<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "LR",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 7,
+          "source_lat": 6.428055,
+          "source_lon": -9.429499,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "LR \u2192 UK<br />Migrants: 7<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "LS",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 12,
+          "source_lat": -29.609988,
+          "source_lon": 28.233608,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "LS \u2192 UK<br />Migrants: 12<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "LT",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 902,
+          "source_lat": 55.169438,
+          "source_lon": 23.881275,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "LT \u2192 UK<br />Migrants: 902<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "LU",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 55,
+          "source_lat": 49.815273,
+          "source_lon": 6.129583,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "LU \u2192 UK<br />Migrants: 55<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "LV",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 470,
+          "source_lat": 56.879635,
+          "source_lon": 24.603189,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "LV \u2192 UK<br />Migrants: 470<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "LY",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 93,
+          "source_lat": 26.3351,
+          "source_lon": 17.228331,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "LY \u2192 UK<br />Migrants: 93<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "MA",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 282,
+          "source_lat": 31.791702,
+          "source_lon": -7.09262,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "MA \u2192 UK<br />Migrants: 282<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "MD",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 904,
+          "source_lat": 47.411631,
+          "source_lon": 28.369885,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "MD \u2192 UK<br />Migrants: 904<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "ME",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": 42.708678,
+          "source_lon": 19.37439,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "ME \u2192 UK<br />Migrants: 0<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "MG",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 17,
+          "source_lat": -18.766947,
+          "source_lon": 46.869107,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "MG \u2192 UK<br />Migrants: 17<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "MK",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 50,
+          "source_lat": 41.608635,
+          "source_lon": 21.745275,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "MK \u2192 UK<br />Migrants: 50<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "ML",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 4,
+          "source_lat": 17.570692,
+          "source_lon": -3.996166,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "ML \u2192 UK<br />Migrants: 4<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "MM",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 74,
+          "source_lat": 21.913965,
+          "source_lon": 95.956223,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "MM \u2192 UK<br />Migrants: 74<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "MN",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 29,
+          "source_lat": 46.862496,
+          "source_lon": 103.846656,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "MN \u2192 UK<br />Migrants: 29<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "MO",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 54,
+          "source_lat": 22.198745,
+          "source_lon": 113.543873,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "MO \u2192 UK<br />Migrants: 54<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "MR",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": 21.00789,
+          "source_lon": -10.940835,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "MR \u2192 UK<br />Migrants: 0<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "MT",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 177,
+          "source_lat": 35.937496,
+          "source_lon": 14.375416,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "MT \u2192 UK<br />Migrants: 177<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "MU",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 101,
+          "source_lat": -20.348404,
+          "source_lon": 57.552152,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "MU \u2192 UK<br />Migrants: 101<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "MV",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 19,
+          "source_lat": 3.202778,
+          "source_lon": 73.22068,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "MV \u2192 UK<br />Migrants: 19<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "MW",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 26,
+          "source_lat": -13.254308,
+          "source_lon": 34.301525,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "MW \u2192 UK<br />Migrants: 26<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "MX",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 208,
+          "source_lat": 23.634501,
+          "source_lon": -102.552784,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "MX \u2192 UK<br />Migrants: 208<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "MY",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 382,
+          "source_lat": 4.210484,
+          "source_lon": 101.975766,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "MY \u2192 UK<br />Migrants: 382<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "MZ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 23,
+          "source_lat": -18.665695,
+          "source_lon": 35.529562,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "MZ \u2192 UK<br />Migrants: 23<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": NaN,
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 95,
+          "source_lat": -22.95764,
+          "source_lon": 18.49041,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": NaN,
+          "year": 2019
+        },
+        {
+          "country_from": "NE",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 29,
+          "source_lat": 17.607789,
+          "source_lon": 8.081666,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "NE \u2192 UK<br />Migrants: 29<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "NG",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1173,
+          "source_lat": 9.081999,
+          "source_lon": 8.675277,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "NG \u2192 UK<br />Migrants: 1173<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "NI",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 2,
+          "source_lat": 12.865416,
+          "source_lon": -85.207229,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "NI \u2192 UK<br />Migrants: 2<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "NL",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 783,
+          "source_lat": 52.132633,
+          "source_lon": 5.291266,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "NL \u2192 UK<br />Migrants: 783<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "NO",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 273,
+          "source_lat": 60.472024,
+          "source_lon": 8.468946,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "NO \u2192 UK<br />Migrants: 273<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "NP",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 417,
+          "source_lat": 28.394857,
+          "source_lon": 84.124008,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "NP \u2192 UK<br />Migrants: 417<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "NZ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1200,
+          "source_lat": -40.900557,
+          "source_lon": 174.885971,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "NZ \u2192 UK<br />Migrants: 1200<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "OM",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 161,
+          "source_lat": 21.512583,
+          "source_lon": 55.923255,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "OM \u2192 UK<br />Migrants: 161<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "PA",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 17,
+          "source_lat": 8.537981,
+          "source_lon": -80.782127,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "PA \u2192 UK<br />Migrants: 17<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "PE",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 82,
+          "source_lat": -9.189967,
+          "source_lon": -75.015152,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "PE \u2192 UK<br />Migrants: 82<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "PG",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 4,
+          "source_lat": -6.314993,
+          "source_lon": 143.95555,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "PG \u2192 UK<br />Migrants: 4<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "PH",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1259,
+          "source_lat": 12.879721,
+          "source_lon": 121.774017,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "PH \u2192 UK<br />Migrants: 1259<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "PK",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 2021,
+          "source_lat": 30.375321,
+          "source_lon": 69.345116,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "PK \u2192 UK<br />Migrants: 2021<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "PL",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 3088,
+          "source_lat": 51.919438,
+          "source_lon": 19.145136,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "PL \u2192 UK<br />Migrants: 3088<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "PT",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1113,
+          "source_lat": 39.399872,
+          "source_lon": -8.224454,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "PT \u2192 UK<br />Migrants: 1113<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "PY",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 7,
+          "source_lat": -23.442503,
+          "source_lon": -58.443832,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "PY \u2192 UK<br />Migrants: 7<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "QA",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 238,
+          "source_lat": 25.354826,
+          "source_lon": 51.183884,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "QA \u2192 UK<br />Migrants: 238<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "RO",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 6001,
+          "source_lat": 45.943161,
+          "source_lon": 24.96676,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "RO \u2192 UK<br />Migrants: 6001<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "RS",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 53,
+          "source_lat": 44.016521,
+          "source_lon": 21.005859,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "RS \u2192 UK<br />Migrants: 53<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "RU",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 404,
+          "source_lat": 61.52401,
+          "source_lon": 105.318756,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "RU \u2192 UK<br />Migrants: 404<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "RW",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 3,
+          "source_lat": -1.940278,
+          "source_lon": 29.873888,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "RW \u2192 UK<br />Migrants: 3<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "SA",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 719,
+          "source_lat": 23.885942,
+          "source_lon": 45.079162,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "SA \u2192 UK<br />Migrants: 719<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "SB",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": -9.64571,
+          "source_lon": 160.156194,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "SB \u2192 UK<br />Migrants: 0<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "SD",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 106,
+          "source_lat": 12.862807,
+          "source_lon": 30.217636,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "SD \u2192 UK<br />Migrants: 106<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "SE",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 408,
+          "source_lat": 60.128161,
+          "source_lon": 18.643501,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "SE \u2192 UK<br />Migrants: 408<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "SG",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 366,
+          "source_lat": 1.352083,
+          "source_lon": 103.819836,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "SG \u2192 UK<br />Migrants: 366<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "SI",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 23,
+          "source_lat": 46.151241,
+          "source_lon": 14.995463,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "SI \u2192 UK<br />Migrants: 23<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "SK",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 338,
+          "source_lat": 48.669026,
+          "source_lon": 19.699024,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "SK \u2192 UK<br />Migrants: 338<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "SL",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 49,
+          "source_lat": 8.460555,
+          "source_lon": -11.779889,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "SL \u2192 UK<br />Migrants: 49<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "SN",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 19,
+          "source_lat": 14.497401,
+          "source_lon": -14.452362,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "SN \u2192 UK<br />Migrants: 19<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "SR",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 6,
+          "source_lat": 3.919305,
+          "source_lon": -56.027783,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "SR \u2192 UK<br />Migrants: 6<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "SS",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 21,
+          "source_lat": 6.877,
+          "source_lon": 31.307,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "SS \u2192 UK<br />Migrants: 21<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "ST",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 16,
+          "source_lat": 0.18636,
+          "source_lon": 6.613081,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "ST \u2192 UK<br />Migrants: 16<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "SV",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 40,
+          "source_lat": 13.794185,
+          "source_lon": -88.89653,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "SV \u2192 UK<br />Migrants: 40<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "SY",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 36,
+          "source_lat": 34.802075,
+          "source_lon": 38.996815,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "SY \u2192 UK<br />Migrants: 36<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "SZ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": -26.522503,
+          "source_lon": 31.465866,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "SZ \u2192 UK<br />Migrants: 0<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "TD",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1,
+          "source_lat": 15.454166,
+          "source_lon": 18.732207,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "TD \u2192 UK<br />Migrants: 1<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "TG",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 13,
+          "source_lat": 8.619543,
+          "source_lon": 0.824782,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "TG \u2192 UK<br />Migrants: 13<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "TH",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 894,
+          "source_lat": 15.870032,
+          "source_lon": 100.992541,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "TH \u2192 UK<br />Migrants: 894<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "TJ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1,
+          "source_lat": 38.861034,
+          "source_lon": 71.276093,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "TJ \u2192 UK<br />Migrants: 1<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "TL",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 133,
+          "source_lat": -8.874217,
+          "source_lon": 125.727539,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "TL \u2192 UK<br />Migrants: 133<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "TM",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": 38.969719,
+          "source_lon": 59.556278,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "TM \u2192 UK<br />Migrants: 0<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "TN",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 58,
+          "source_lat": 33.886917,
+          "source_lon": 9.537499,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "TN \u2192 UK<br />Migrants: 58<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "TO",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1,
+          "source_lat": -21.178986,
+          "source_lon": -175.198242,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "TO \u2192 UK<br />Migrants: 1<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "TR",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1190,
+          "source_lat": 38.963745,
+          "source_lon": 35.243322,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "TR \u2192 UK<br />Migrants: 1190<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "TT",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 102,
+          "source_lat": 10.691803,
+          "source_lon": -61.222503,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "TT \u2192 UK<br />Migrants: 102<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "TW",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 469,
+          "source_lat": 23.69781,
+          "source_lon": 120.960515,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "TW \u2192 UK<br />Migrants: 469<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "TZ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 48,
+          "source_lat": -6.369028,
+          "source_lon": 34.888822,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "TZ \u2192 UK<br />Migrants: 48<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "UA",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 345,
+          "source_lat": 48.379433,
+          "source_lon": 31.16558,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "UA \u2192 UK<br />Migrants: 345<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "UG",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 95,
+          "source_lat": 1.373333,
+          "source_lon": 32.290275,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "UG \u2192 UK<br />Migrants: 95<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "US",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 7453,
+          "source_lat": 37.09024,
+          "source_lon": -95.712891,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "US \u2192 UK<br />Migrants: 7453<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "UY",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": -32.522779,
+          "source_lon": -55.765835,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "UY \u2192 UK<br />Migrants: 0<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "UZ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": 41.377491,
+          "source_lon": 64.585262,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "UZ \u2192 UK<br />Migrants: 0<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "VC",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 89,
+          "source_lat": 12.984305,
+          "source_lon": -61.287228,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "VC \u2192 UK<br />Migrants: 89<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "VE",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 69,
+          "source_lat": 6.42375,
+          "source_lon": -66.58973,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "VE \u2192 UK<br />Migrants: 69<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "VN",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 379,
+          "source_lat": 14.058324,
+          "source_lon": 108.277199,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "VN \u2192 UK<br />Migrants: 379<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "VU",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 3,
+          "source_lat": -15.376706,
+          "source_lon": 166.959158,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "VU \u2192 UK<br />Migrants: 3<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "WS",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1,
+          "source_lat": -13.759029,
+          "source_lon": -172.104629,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "WS \u2192 UK<br />Migrants: 1<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "XK",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 29,
+          "source_lat": 42.602636,
+          "source_lon": 20.902977,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "XK \u2192 UK<br />Migrants: 29<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "YE",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 24,
+          "source_lat": 15.552727,
+          "source_lon": 48.516388,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "YE \u2192 UK<br />Migrants: 24<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "ZA",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1834,
+          "source_lat": -30.559482,
+          "source_lon": 22.937506,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "ZA \u2192 UK<br />Migrants: 1834<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "ZM",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 44,
+          "source_lat": -13.133897,
+          "source_lon": 27.849332,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "ZM \u2192 UK<br />Migrants: 44<br />Date: 2019-7",
+          "year": 2019
+        },
+        {
+          "country_from": "ZW",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 165,
+          "source_lat": -19.015438,
+          "source_lon": 29.154857,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "tooltip_column": "ZW \u2192 UK<br />Migrants: 165<br />Date: 2019-7",
+          "year": 2019
+        }
+      ],
+      "getSourceColor": [
+        255,
+        0,
+        0,
+        80
+      ],
+      "getSourcePosition": "@@=[source_lon, source_lat]",
+      "getTargetColor": [
+        0,
+        255,
+        0,
+        80
+      ],
+      "getTargetPosition": "@@=[target_lon, target_lat]",
+      "getWidth": "@@=num_migrants / 100",
+      "id": "3ae4bb35-6bd8-4b55-9e3a-e7acedb7d192",
+      "pickable": true
+    },
+    {
+      "@@type": "ScatterplotLayer",
+      "data": [
+        {
+          "country": "AD",
+          "latitude": 42.546245,
+          "longitude": 1.601554,
+          "name": "Andorra",
+          "tooltip_column": "Andorra"
+        },
+        {
+          "country": "AE",
+          "latitude": 23.424076,
+          "longitude": 53.847818,
+          "name": "United Arab Emirates",
+          "tooltip_column": "United Arab Emirates"
+        },
+        {
+          "country": "AF",
+          "latitude": 33.93911,
+          "longitude": 67.709953,
+          "name": "Afghanistan",
+          "tooltip_column": "Afghanistan"
+        },
+        {
+          "country": "AG",
+          "latitude": 17.060816,
+          "longitude": -61.796428,
+          "name": "Antigua and Barbuda",
+          "tooltip_column": "Antigua and Barbuda"
+        },
+        {
+          "country": "AI",
+          "latitude": 18.220554,
+          "longitude": -63.068615,
+          "name": "Anguilla",
+          "tooltip_column": "Anguilla"
+        },
+        {
+          "country": "AL",
+          "latitude": 41.153332,
+          "longitude": 20.168331,
+          "name": "Albania",
+          "tooltip_column": "Albania"
+        },
+        {
+          "country": "AM",
+          "latitude": 40.069099,
+          "longitude": 45.038189,
+          "name": "Armenia",
+          "tooltip_column": "Armenia"
+        },
+        {
+          "country": "AN",
+          "latitude": 12.226079,
+          "longitude": -69.060087,
+          "name": "Netherlands Antilles",
+          "tooltip_column": "Netherlands Antilles"
+        },
+        {
+          "country": "AO",
+          "latitude": -11.202692,
+          "longitude": 17.873887,
+          "name": "Angola",
+          "tooltip_column": "Angola"
+        },
+        {
+          "country": "AQ",
+          "latitude": -75.250973,
+          "longitude": -0.071389,
+          "name": "Antarctica",
+          "tooltip_column": "Antarctica"
+        },
+        {
+          "country": "AR",
+          "latitude": -38.416097,
+          "longitude": -63.616672,
+          "name": "Argentina",
+          "tooltip_column": "Argentina"
+        },
+        {
+          "country": "AS",
+          "latitude": -14.270972,
+          "longitude": -170.132217,
+          "name": "American Samoa",
+          "tooltip_column": "American Samoa"
+        },
+        {
+          "country": "AT",
+          "latitude": 47.516231,
+          "longitude": 14.550072,
+          "name": "Austria",
+          "tooltip_column": "Austria"
+        },
+        {
+          "country": "AU",
+          "latitude": -25.274398,
+          "longitude": 133.775136,
+          "name": "Australia",
+          "tooltip_column": "Australia"
+        },
+        {
+          "country": "AW",
+          "latitude": 12.52111,
+          "longitude": -69.968338,
+          "name": "Aruba",
+          "tooltip_column": "Aruba"
+        },
+        {
+          "country": "AZ",
+          "latitude": 40.143105,
+          "longitude": 47.576927,
+          "name": "Azerbaijan",
+          "tooltip_column": "Azerbaijan"
+        },
+        {
+          "country": "BA",
+          "latitude": 43.915886,
+          "longitude": 17.679076,
+          "name": "Bosnia and Herzegovina",
+          "tooltip_column": "Bosnia and Herzegovina"
+        },
+        {
+          "country": "BB",
+          "latitude": 13.193887,
+          "longitude": -59.543198,
+          "name": "Barbados",
+          "tooltip_column": "Barbados"
+        },
+        {
+          "country": "BD",
+          "latitude": 23.684994,
+          "longitude": 90.356331,
+          "name": "Bangladesh",
+          "tooltip_column": "Bangladesh"
+        },
+        {
+          "country": "BE",
+          "latitude": 50.503887,
+          "longitude": 4.469936,
+          "name": "Belgium",
+          "tooltip_column": "Belgium"
+        },
+        {
+          "country": "BF",
+          "latitude": 12.238333,
+          "longitude": -1.561593,
+          "name": "Burkina Faso",
+          "tooltip_column": "Burkina Faso"
+        },
+        {
+          "country": "BG",
+          "latitude": 42.733883,
+          "longitude": 25.48583,
+          "name": "Bulgaria",
+          "tooltip_column": "Bulgaria"
+        },
+        {
+          "country": "BH",
+          "latitude": 25.930414,
+          "longitude": 50.637772,
+          "name": "Bahrain",
+          "tooltip_column": "Bahrain"
+        },
+        {
+          "country": "BI",
+          "latitude": -3.373056,
+          "longitude": 29.918886,
+          "name": "Burundi",
+          "tooltip_column": "Burundi"
+        },
+        {
+          "country": "BJ",
+          "latitude": 9.30769,
+          "longitude": 2.315834,
+          "name": "Benin",
+          "tooltip_column": "Benin"
+        },
+        {
+          "country": "BM",
+          "latitude": 32.321384,
+          "longitude": -64.75737,
+          "name": "Bermuda",
+          "tooltip_column": "Bermuda"
+        },
+        {
+          "country": "BN",
+          "latitude": 4.535277,
+          "longitude": 114.727669,
+          "name": "Brunei",
+          "tooltip_column": "Brunei"
+        },
+        {
+          "country": "BO",
+          "latitude": -16.290154,
+          "longitude": -63.588653,
+          "name": "Bolivia",
+          "tooltip_column": "Bolivia"
+        },
+        {
+          "country": "BR",
+          "latitude": -14.235004,
+          "longitude": -51.92528,
+          "name": "Brazil",
+          "tooltip_column": "Brazil"
+        },
+        {
+          "country": "BS",
+          "latitude": 25.03428,
+          "longitude": -77.39628,
+          "name": "Bahamas",
+          "tooltip_column": "Bahamas"
+        },
+        {
+          "country": "BT",
+          "latitude": 27.514162,
+          "longitude": 90.433601,
+          "name": "Bhutan",
+          "tooltip_column": "Bhutan"
+        },
+        {
+          "country": "BV",
+          "latitude": -54.423199,
+          "longitude": 3.413194,
+          "name": "Bouvet Island",
+          "tooltip_column": "Bouvet Island"
+        },
+        {
+          "country": "BW",
+          "latitude": -22.328474,
+          "longitude": 24.684866,
+          "name": "Botswana",
+          "tooltip_column": "Botswana"
+        },
+        {
+          "country": "BY",
+          "latitude": 53.709807,
+          "longitude": 27.953389,
+          "name": "Belarus",
+          "tooltip_column": "Belarus"
+        },
+        {
+          "country": "BZ",
+          "latitude": 17.189877,
+          "longitude": -88.49765,
+          "name": "Belize",
+          "tooltip_column": "Belize"
+        },
+        {
+          "country": "CA",
+          "latitude": 56.130366,
+          "longitude": -106.346771,
+          "name": "Canada",
+          "tooltip_column": "Canada"
+        },
+        {
+          "country": "CC",
+          "latitude": -12.164165,
+          "longitude": 96.870956,
+          "name": "Cocos [Keeling] Islands",
+          "tooltip_column": "Cocos [Keeling] Islands"
+        },
+        {
+          "country": "CD",
+          "latitude": -4.038333,
+          "longitude": 21.758664,
+          "name": "Congo [DRC]",
+          "tooltip_column": "Congo [DRC]"
+        },
+        {
+          "country": "CF",
+          "latitude": 6.611111,
+          "longitude": 20.939444,
+          "name": "Central African Republic",
+          "tooltip_column": "Central African Republic"
+        },
+        {
+          "country": "CG",
+          "latitude": -0.228021,
+          "longitude": 15.827659,
+          "name": "Congo [Republic]",
+          "tooltip_column": "Congo [Republic]"
+        },
+        {
+          "country": "CH",
+          "latitude": 46.818188,
+          "longitude": 8.227512,
+          "name": "Switzerland",
+          "tooltip_column": "Switzerland"
+        },
+        {
+          "country": "CI",
+          "latitude": 7.539989,
+          "longitude": -5.54708,
+          "name": "C\u00f4te d'Ivoire",
+          "tooltip_column": "C\u00f4te d'Ivoire"
+        },
+        {
+          "country": "CK",
+          "latitude": -21.236736,
+          "longitude": -159.777671,
+          "name": "Cook Islands",
+          "tooltip_column": "Cook Islands"
+        },
+        {
+          "country": "CL",
+          "latitude": -35.675147,
+          "longitude": -71.542969,
+          "name": "Chile",
+          "tooltip_column": "Chile"
+        },
+        {
+          "country": "CM",
+          "latitude": 7.369722,
+          "longitude": 12.354722,
+          "name": "Cameroon",
+          "tooltip_column": "Cameroon"
+        },
+        {
+          "country": "CN",
+          "latitude": 35.86166,
+          "longitude": 104.195397,
+          "name": "China",
+          "tooltip_column": "China"
+        },
+        {
+          "country": "CO",
+          "latitude": 4.570868,
+          "longitude": -74.297333,
+          "name": "Colombia",
+          "tooltip_column": "Colombia"
+        },
+        {
+          "country": "CR",
+          "latitude": 9.748917,
+          "longitude": -83.753428,
+          "name": "Costa Rica",
+          "tooltip_column": "Costa Rica"
+        },
+        {
+          "country": "CU",
+          "latitude": 21.521757,
+          "longitude": -77.781167,
+          "name": "Cuba",
+          "tooltip_column": "Cuba"
+        },
+        {
+          "country": "CV",
+          "latitude": 16.002082,
+          "longitude": -24.013197,
+          "name": "Cape Verde",
+          "tooltip_column": "Cape Verde"
+        },
+        {
+          "country": "CX",
+          "latitude": -10.447525,
+          "longitude": 105.690449,
+          "name": "Christmas Island",
+          "tooltip_column": "Christmas Island"
+        },
+        {
+          "country": "CY",
+          "latitude": 35.126413,
+          "longitude": 33.429859,
+          "name": "Cyprus",
+          "tooltip_column": "Cyprus"
+        },
+        {
+          "country": "CZ",
+          "latitude": 49.817492,
+          "longitude": 15.472962,
+          "name": "Czech Republic",
+          "tooltip_column": "Czech Republic"
+        },
+        {
+          "country": "DE",
+          "latitude": 51.165691,
+          "longitude": 10.451526,
+          "name": "Germany",
+          "tooltip_column": "Germany"
+        },
+        {
+          "country": "DJ",
+          "latitude": 11.825138,
+          "longitude": 42.590275,
+          "name": "Djibouti",
+          "tooltip_column": "Djibouti"
+        },
+        {
+          "country": "DK",
+          "latitude": 56.26392,
+          "longitude": 9.501785,
+          "name": "Denmark",
+          "tooltip_column": "Denmark"
+        },
+        {
+          "country": "DM",
+          "latitude": 15.414999,
+          "longitude": -61.370976,
+          "name": "Dominica",
+          "tooltip_column": "Dominica"
+        },
+        {
+          "country": "DO",
+          "latitude": 18.735693,
+          "longitude": -70.162651,
+          "name": "Dominican Republic",
+          "tooltip_column": "Dominican Republic"
+        },
+        {
+          "country": "DZ",
+          "latitude": 28.033886,
+          "longitude": 1.659626,
+          "name": "Algeria",
+          "tooltip_column": "Algeria"
+        },
+        {
+          "country": "EC",
+          "latitude": -1.831239,
+          "longitude": -78.183406,
+          "name": "Ecuador",
+          "tooltip_column": "Ecuador"
+        },
+        {
+          "country": "EE",
+          "latitude": 58.595272,
+          "longitude": 25.013607,
+          "name": "Estonia",
+          "tooltip_column": "Estonia"
+        },
+        {
+          "country": "EG",
+          "latitude": 26.820553,
+          "longitude": 30.802498,
+          "name": "Egypt",
+          "tooltip_column": "Egypt"
+        },
+        {
+          "country": "EH",
+          "latitude": 24.215527,
+          "longitude": -12.885834,
+          "name": "Western Sahara",
+          "tooltip_column": "Western Sahara"
+        },
+        {
+          "country": "ER",
+          "latitude": 15.179384,
+          "longitude": 39.782334,
+          "name": "Eritrea",
+          "tooltip_column": "Eritrea"
+        },
+        {
+          "country": "ES",
+          "latitude": 40.463667,
+          "longitude": -3.74922,
+          "name": "Spain",
+          "tooltip_column": "Spain"
+        },
+        {
+          "country": "ET",
+          "latitude": 9.145,
+          "longitude": 40.489673,
+          "name": "Ethiopia",
+          "tooltip_column": "Ethiopia"
+        },
+        {
+          "country": "FI",
+          "latitude": 61.92411,
+          "longitude": 25.748151,
+          "name": "Finland",
+          "tooltip_column": "Finland"
+        },
+        {
+          "country": "FJ",
+          "latitude": -16.578193,
+          "longitude": 179.414413,
+          "name": "Fiji",
+          "tooltip_column": "Fiji"
+        },
+        {
+          "country": "FK",
+          "latitude": -51.796253,
+          "longitude": -59.523613,
+          "name": "Falkland Islands [Islas Malvinas]",
+          "tooltip_column": "Falkland Islands [Islas Malvinas]"
+        },
+        {
+          "country": "FM",
+          "latitude": 7.425554,
+          "longitude": 150.550812,
+          "name": "Micronesia",
+          "tooltip_column": "Micronesia"
+        },
+        {
+          "country": "FO",
+          "latitude": 61.892635,
+          "longitude": -6.911806,
+          "name": "Faroe Islands",
+          "tooltip_column": "Faroe Islands"
+        },
+        {
+          "country": "FR",
+          "latitude": 46.227638,
+          "longitude": 2.213749,
+          "name": "France",
+          "tooltip_column": "France"
+        },
+        {
+          "country": "GA",
+          "latitude": -0.803689,
+          "longitude": 11.609444,
+          "name": "Gabon",
+          "tooltip_column": "Gabon"
+        },
+        {
+          "country": "UK",
+          "latitude": 55.378051,
+          "longitude": -3.435973,
+          "name": "United Kingdom",
+          "tooltip_column": "United Kingdom"
+        },
+        {
+          "country": "GD",
+          "latitude": 12.262776,
+          "longitude": -61.604171,
+          "name": "Grenada",
+          "tooltip_column": "Grenada"
+        },
+        {
+          "country": "GE",
+          "latitude": 42.315407,
+          "longitude": 43.356892,
+          "name": "Georgia",
+          "tooltip_column": "Georgia"
+        },
+        {
+          "country": "GF",
+          "latitude": 3.933889,
+          "longitude": -53.125782,
+          "name": "French Guiana",
+          "tooltip_column": "French Guiana"
+        },
+        {
+          "country": "GG",
+          "latitude": 49.465691,
+          "longitude": -2.585278,
+          "name": "Guernsey",
+          "tooltip_column": "Guernsey"
+        },
+        {
+          "country": "GH",
+          "latitude": 7.946527,
+          "longitude": -1.023194,
+          "name": "Ghana",
+          "tooltip_column": "Ghana"
+        },
+        {
+          "country": "GI",
+          "latitude": 36.137741,
+          "longitude": -5.345374,
+          "name": "Gibraltar",
+          "tooltip_column": "Gibraltar"
+        },
+        {
+          "country": "GL",
+          "latitude": 71.706936,
+          "longitude": -42.604303,
+          "name": "Greenland",
+          "tooltip_column": "Greenland"
+        },
+        {
+          "country": "GM",
+          "latitude": 13.443182,
+          "longitude": -15.310139,
+          "name": "Gambia",
+          "tooltip_column": "Gambia"
+        },
+        {
+          "country": "GN",
+          "latitude": 9.945587,
+          "longitude": -9.696645,
+          "name": "Guinea",
+          "tooltip_column": "Guinea"
+        },
+        {
+          "country": "GP",
+          "latitude": 16.995971,
+          "longitude": -62.067641,
+          "name": "Guadeloupe",
+          "tooltip_column": "Guadeloupe"
+        },
+        {
+          "country": "GQ",
+          "latitude": 1.650801,
+          "longitude": 10.267895,
+          "name": "Equatorial Guinea",
+          "tooltip_column": "Equatorial Guinea"
+        },
+        {
+          "country": "EL",
+          "latitude": 39.074208,
+          "longitude": 21.824312,
+          "name": "Greece",
+          "tooltip_column": "Greece"
+        },
+        {
+          "country": "GS",
+          "latitude": -54.429579,
+          "longitude": -36.587909,
+          "name": "South Georgia and the South Sandwich Islands",
+          "tooltip_column": "South Georgia and the South Sandwich Islands"
+        },
+        {
+          "country": "GT",
+          "latitude": 15.783471,
+          "longitude": -90.230759,
+          "name": "Guatemala",
+          "tooltip_column": "Guatemala"
+        },
+        {
+          "country": "GU",
+          "latitude": 13.444304,
+          "longitude": 144.793731,
+          "name": "Guam",
+          "tooltip_column": "Guam"
+        },
+        {
+          "country": "GW",
+          "latitude": 11.803749,
+          "longitude": -15.180413,
+          "name": "Guinea-Bissau",
+          "tooltip_column": "Guinea-Bissau"
+        },
+        {
+          "country": "GY",
+          "latitude": 4.860416,
+          "longitude": -58.93018,
+          "name": "Guyana",
+          "tooltip_column": "Guyana"
+        },
+        {
+          "country": "GZ",
+          "latitude": 31.354676,
+          "longitude": 34.308825,
+          "name": "Gaza Strip",
+          "tooltip_column": "Gaza Strip"
+        },
+        {
+          "country": "HK",
+          "latitude": 22.396428,
+          "longitude": 114.109497,
+          "name": "Hong Kong",
+          "tooltip_column": "Hong Kong"
+        },
+        {
+          "country": "HM",
+          "latitude": -53.08181,
+          "longitude": 73.504158,
+          "name": "Heard Island and McDonald Islands",
+          "tooltip_column": "Heard Island and McDonald Islands"
+        },
+        {
+          "country": "HN",
+          "latitude": 15.199999,
+          "longitude": -86.241905,
+          "name": "Honduras",
+          "tooltip_column": "Honduras"
+        },
+        {
+          "country": "HR",
+          "latitude": 45.1,
+          "longitude": 15.2,
+          "name": "Croatia",
+          "tooltip_column": "Croatia"
+        },
+        {
+          "country": "HT",
+          "latitude": 18.971187,
+          "longitude": -72.285215,
+          "name": "Haiti",
+          "tooltip_column": "Haiti"
+        },
+        {
+          "country": "HU",
+          "latitude": 47.162494,
+          "longitude": 19.503304,
+          "name": "Hungary",
+          "tooltip_column": "Hungary"
+        },
+        {
+          "country": "ID",
+          "latitude": -0.789275,
+          "longitude": 113.921327,
+          "name": "Indonesia",
+          "tooltip_column": "Indonesia"
+        },
+        {
+          "country": "IE",
+          "latitude": 53.41291,
+          "longitude": -8.24389,
+          "name": "Ireland",
+          "tooltip_column": "Ireland"
+        },
+        {
+          "country": "IL",
+          "latitude": 31.046051,
+          "longitude": 34.851612,
+          "name": "Israel",
+          "tooltip_column": "Israel"
+        },
+        {
+          "country": "IM",
+          "latitude": 54.236107,
+          "longitude": -4.548056,
+          "name": "Isle of Man",
+          "tooltip_column": "Isle of Man"
+        },
+        {
+          "country": "IN",
+          "latitude": 20.593684,
+          "longitude": 78.96288,
+          "name": "India",
+          "tooltip_column": "India"
+        },
+        {
+          "country": "IO",
+          "latitude": -6.343194,
+          "longitude": 71.876519,
+          "name": "British Indian Ocean Territory",
+          "tooltip_column": "British Indian Ocean Territory"
+        },
+        {
+          "country": "IQ",
+          "latitude": 33.223191,
+          "longitude": 43.679291,
+          "name": "Iraq",
+          "tooltip_column": "Iraq"
+        },
+        {
+          "country": "IR",
+          "latitude": 32.427908,
+          "longitude": 53.688046,
+          "name": "Iran",
+          "tooltip_column": "Iran"
+        },
+        {
+          "country": "IS",
+          "latitude": 64.963051,
+          "longitude": -19.020835,
+          "name": "Iceland",
+          "tooltip_column": "Iceland"
+        },
+        {
+          "country": "IT",
+          "latitude": 41.87194,
+          "longitude": 12.56738,
+          "name": "Italy",
+          "tooltip_column": "Italy"
+        },
+        {
+          "country": "JE",
+          "latitude": 49.214439,
+          "longitude": -2.13125,
+          "name": "Jersey",
+          "tooltip_column": "Jersey"
+        },
+        {
+          "country": "JM",
+          "latitude": 18.109581,
+          "longitude": -77.297508,
+          "name": "Jamaica",
+          "tooltip_column": "Jamaica"
+        },
+        {
+          "country": "JO",
+          "latitude": 30.585164,
+          "longitude": 36.238414,
+          "name": "Jordan",
+          "tooltip_column": "Jordan"
+        },
+        {
+          "country": "JP",
+          "latitude": 36.204824,
+          "longitude": 138.252924,
+          "name": "Japan",
+          "tooltip_column": "Japan"
+        },
+        {
+          "country": "KE",
+          "latitude": -0.023559,
+          "longitude": 37.906193,
+          "name": "Kenya",
+          "tooltip_column": "Kenya"
+        },
+        {
+          "country": "KG",
+          "latitude": 41.20438,
+          "longitude": 74.766098,
+          "name": "Kyrgyzstan",
+          "tooltip_column": "Kyrgyzstan"
+        },
+        {
+          "country": "KH",
+          "latitude": 12.565679,
+          "longitude": 104.990963,
+          "name": "Cambodia",
+          "tooltip_column": "Cambodia"
+        },
+        {
+          "country": "KI",
+          "latitude": -3.370417,
+          "longitude": -168.734039,
+          "name": "Kiribati",
+          "tooltip_column": "Kiribati"
+        },
+        {
+          "country": "KM",
+          "latitude": -11.875001,
+          "longitude": 43.872219,
+          "name": "Comoros",
+          "tooltip_column": "Comoros"
+        },
+        {
+          "country": "KN",
+          "latitude": 17.357822,
+          "longitude": -62.782998,
+          "name": "Saint Kitts and Nevis",
+          "tooltip_column": "Saint Kitts and Nevis"
+        },
+        {
+          "country": "KP",
+          "latitude": 40.339852,
+          "longitude": 127.510093,
+          "name": "North Korea",
+          "tooltip_column": "North Korea"
+        },
+        {
+          "country": "KR",
+          "latitude": 35.907757,
+          "longitude": 127.766922,
+          "name": "South Korea",
+          "tooltip_column": "South Korea"
+        },
+        {
+          "country": "KW",
+          "latitude": 29.31166,
+          "longitude": 47.481766,
+          "name": "Kuwait",
+          "tooltip_column": "Kuwait"
+        },
+        {
+          "country": "KY",
+          "latitude": 19.513469,
+          "longitude": -80.566956,
+          "name": "Cayman Islands",
+          "tooltip_column": "Cayman Islands"
+        },
+        {
+          "country": "KZ",
+          "latitude": 48.019573,
+          "longitude": 66.923684,
+          "name": "Kazakhstan",
+          "tooltip_column": "Kazakhstan"
+        },
+        {
+          "country": "LA",
+          "latitude": 19.85627,
+          "longitude": 102.495496,
+          "name": "Laos",
+          "tooltip_column": "Laos"
+        },
+        {
+          "country": "LB",
+          "latitude": 33.854721,
+          "longitude": 35.862285,
+          "name": "Lebanon",
+          "tooltip_column": "Lebanon"
+        },
+        {
+          "country": "LC",
+          "latitude": 13.909444,
+          "longitude": -60.978893,
+          "name": "Saint Lucia",
+          "tooltip_column": "Saint Lucia"
+        },
+        {
+          "country": "LI",
+          "latitude": 47.166,
+          "longitude": 9.555373,
+          "name": "Liechtenstein",
+          "tooltip_column": "Liechtenstein"
+        },
+        {
+          "country": "LK",
+          "latitude": 7.873054,
+          "longitude": 80.771797,
+          "name": "Sri Lanka",
+          "tooltip_column": "Sri Lanka"
+        },
+        {
+          "country": "LR",
+          "latitude": 6.428055,
+          "longitude": -9.429499,
+          "name": "Liberia",
+          "tooltip_column": "Liberia"
+        },
+        {
+          "country": "LS",
+          "latitude": -29.609988,
+          "longitude": 28.233608,
+          "name": "Lesotho",
+          "tooltip_column": "Lesotho"
+        },
+        {
+          "country": "LT",
+          "latitude": 55.169438,
+          "longitude": 23.881275,
+          "name": "Lithuania",
+          "tooltip_column": "Lithuania"
+        },
+        {
+          "country": "LU",
+          "latitude": 49.815273,
+          "longitude": 6.129583,
+          "name": "Luxembourg",
+          "tooltip_column": "Luxembourg"
+        },
+        {
+          "country": "LV",
+          "latitude": 56.879635,
+          "longitude": 24.603189,
+          "name": "Latvia",
+          "tooltip_column": "Latvia"
+        },
+        {
+          "country": "LY",
+          "latitude": 26.3351,
+          "longitude": 17.228331,
+          "name": "Libya",
+          "tooltip_column": "Libya"
+        },
+        {
+          "country": "MA",
+          "latitude": 31.791702,
+          "longitude": -7.09262,
+          "name": "Morocco",
+          "tooltip_column": "Morocco"
+        },
+        {
+          "country": "MC",
+          "latitude": 43.750298,
+          "longitude": 7.412841,
+          "name": "Monaco",
+          "tooltip_column": "Monaco"
+        },
+        {
+          "country": "MD",
+          "latitude": 47.411631,
+          "longitude": 28.369885,
+          "name": "Moldova",
+          "tooltip_column": "Moldova"
+        },
+        {
+          "country": "ME",
+          "latitude": 42.708678,
+          "longitude": 19.37439,
+          "name": "Montenegro",
+          "tooltip_column": "Montenegro"
+        },
+        {
+          "country": "MG",
+          "latitude": -18.766947,
+          "longitude": 46.869107,
+          "name": "Madagascar",
+          "tooltip_column": "Madagascar"
+        },
+        {
+          "country": "MH",
+          "latitude": 7.131474,
+          "longitude": 171.184478,
+          "name": "Marshall Islands",
+          "tooltip_column": "Marshall Islands"
+        },
+        {
+          "country": "MK",
+          "latitude": 41.608635,
+          "longitude": 21.745275,
+          "name": "Macedonia [FYROM]",
+          "tooltip_column": "Macedonia [FYROM]"
+        },
+        {
+          "country": "ML",
+          "latitude": 17.570692,
+          "longitude": -3.996166,
+          "name": "Mali",
+          "tooltip_column": "Mali"
+        },
+        {
+          "country": "MM",
+          "latitude": 21.913965,
+          "longitude": 95.956223,
+          "name": "Myanmar [Burma]",
+          "tooltip_column": "Myanmar [Burma]"
+        },
+        {
+          "country": "MN",
+          "latitude": 46.862496,
+          "longitude": 103.846656,
+          "name": "Mongolia",
+          "tooltip_column": "Mongolia"
+        },
+        {
+          "country": "MO",
+          "latitude": 22.198745,
+          "longitude": 113.543873,
+          "name": "Macau",
+          "tooltip_column": "Macau"
+        },
+        {
+          "country": "MP",
+          "latitude": 17.33083,
+          "longitude": 145.38469,
+          "name": "Northern Mariana Islands",
+          "tooltip_column": "Northern Mariana Islands"
+        },
+        {
+          "country": "MQ",
+          "latitude": 14.641528,
+          "longitude": -61.024174,
+          "name": "Martinique",
+          "tooltip_column": "Martinique"
+        },
+        {
+          "country": "MR",
+          "latitude": 21.00789,
+          "longitude": -10.940835,
+          "name": "Mauritania",
+          "tooltip_column": "Mauritania"
+        },
+        {
+          "country": "MS",
+          "latitude": 16.742498,
+          "longitude": -62.187366,
+          "name": "Montserrat",
+          "tooltip_column": "Montserrat"
+        },
+        {
+          "country": "MT",
+          "latitude": 35.937496,
+          "longitude": 14.375416,
+          "name": "Malta",
+          "tooltip_column": "Malta"
+        },
+        {
+          "country": "MU",
+          "latitude": -20.348404,
+          "longitude": 57.552152,
+          "name": "Mauritius",
+          "tooltip_column": "Mauritius"
+        },
+        {
+          "country": "MV",
+          "latitude": 3.202778,
+          "longitude": 73.22068,
+          "name": "Maldives",
+          "tooltip_column": "Maldives"
+        },
+        {
+          "country": "MW",
+          "latitude": -13.254308,
+          "longitude": 34.301525,
+          "name": "Malawi",
+          "tooltip_column": "Malawi"
+        },
+        {
+          "country": "MX",
+          "latitude": 23.634501,
+          "longitude": -102.552784,
+          "name": "Mexico",
+          "tooltip_column": "Mexico"
+        },
+        {
+          "country": "MY",
+          "latitude": 4.210484,
+          "longitude": 101.975766,
+          "name": "Malaysia",
+          "tooltip_column": "Malaysia"
+        },
+        {
+          "country": "MZ",
+          "latitude": -18.665695,
+          "longitude": 35.529562,
+          "name": "Mozambique",
+          "tooltip_column": "Mozambique"
+        },
+        {
+          "country": NaN,
+          "latitude": -22.95764,
+          "longitude": 18.49041,
+          "name": "Namibia",
+          "tooltip_column": "Namibia"
+        },
+        {
+          "country": "NC",
+          "latitude": -20.904305,
+          "longitude": 165.618042,
+          "name": "New Caledonia",
+          "tooltip_column": "New Caledonia"
+        },
+        {
+          "country": "NE",
+          "latitude": 17.607789,
+          "longitude": 8.081666,
+          "name": "Niger",
+          "tooltip_column": "Niger"
+        },
+        {
+          "country": "NF",
+          "latitude": -29.040835,
+          "longitude": 167.954712,
+          "name": "Norfolk Island",
+          "tooltip_column": "Norfolk Island"
+        },
+        {
+          "country": "NG",
+          "latitude": 9.081999,
+          "longitude": 8.675277,
+          "name": "Nigeria",
+          "tooltip_column": "Nigeria"
+        },
+        {
+          "country": "NI",
+          "latitude": 12.865416,
+          "longitude": -85.207229,
+          "name": "Nicaragua",
+          "tooltip_column": "Nicaragua"
+        },
+        {
+          "country": "NL",
+          "latitude": 52.132633,
+          "longitude": 5.291266,
+          "name": "Netherlands",
+          "tooltip_column": "Netherlands"
+        },
+        {
+          "country": "NO",
+          "latitude": 60.472024,
+          "longitude": 8.468946,
+          "name": "Norway",
+          "tooltip_column": "Norway"
+        },
+        {
+          "country": "NP",
+          "latitude": 28.394857,
+          "longitude": 84.124008,
+          "name": "Nepal",
+          "tooltip_column": "Nepal"
+        },
+        {
+          "country": "NR",
+          "latitude": -0.522778,
+          "longitude": 166.931503,
+          "name": "Nauru",
+          "tooltip_column": "Nauru"
+        },
+        {
+          "country": "NU",
+          "latitude": -19.054445,
+          "longitude": -169.867233,
+          "name": "Niue",
+          "tooltip_column": "Niue"
+        },
+        {
+          "country": "NZ",
+          "latitude": -40.900557,
+          "longitude": 174.885971,
+          "name": "New Zealand",
+          "tooltip_column": "New Zealand"
+        },
+        {
+          "country": "OM",
+          "latitude": 21.512583,
+          "longitude": 55.923255,
+          "name": "Oman",
+          "tooltip_column": "Oman"
+        },
+        {
+          "country": "PA",
+          "latitude": 8.537981,
+          "longitude": -80.782127,
+          "name": "Panama",
+          "tooltip_column": "Panama"
+        },
+        {
+          "country": "PE",
+          "latitude": -9.189967,
+          "longitude": -75.015152,
+          "name": "Peru",
+          "tooltip_column": "Peru"
+        },
+        {
+          "country": "PF",
+          "latitude": -17.679742,
+          "longitude": -149.406843,
+          "name": "French Polynesia",
+          "tooltip_column": "French Polynesia"
+        },
+        {
+          "country": "PG",
+          "latitude": -6.314993,
+          "longitude": 143.95555,
+          "name": "Papua New Guinea",
+          "tooltip_column": "Papua New Guinea"
+        },
+        {
+          "country": "PH",
+          "latitude": 12.879721,
+          "longitude": 121.774017,
+          "name": "Philippines",
+          "tooltip_column": "Philippines"
+        },
+        {
+          "country": "PK",
+          "latitude": 30.375321,
+          "longitude": 69.345116,
+          "name": "Pakistan",
+          "tooltip_column": "Pakistan"
+        },
+        {
+          "country": "PL",
+          "latitude": 51.919438,
+          "longitude": 19.145136,
+          "name": "Poland",
+          "tooltip_column": "Poland"
+        },
+        {
+          "country": "PM",
+          "latitude": 46.941936,
+          "longitude": -56.27111,
+          "name": "Saint Pierre and Miquelon",
+          "tooltip_column": "Saint Pierre and Miquelon"
+        },
+        {
+          "country": "PN",
+          "latitude": -24.703615,
+          "longitude": -127.439308,
+          "name": "Pitcairn Islands",
+          "tooltip_column": "Pitcairn Islands"
+        },
+        {
+          "country": "PR",
+          "latitude": 18.220833,
+          "longitude": -66.590149,
+          "name": "Puerto Rico",
+          "tooltip_column": "Puerto Rico"
+        },
+        {
+          "country": "PS",
+          "latitude": 31.952162,
+          "longitude": 35.233154,
+          "name": "Palestinian Territories",
+          "tooltip_column": "Palestinian Territories"
+        },
+        {
+          "country": "PT",
+          "latitude": 39.399872,
+          "longitude": -8.224454,
+          "name": "Portugal",
+          "tooltip_column": "Portugal"
+        },
+        {
+          "country": "PW",
+          "latitude": 7.51498,
+          "longitude": 134.58252,
+          "name": "Palau",
+          "tooltip_column": "Palau"
+        },
+        {
+          "country": "PY",
+          "latitude": -23.442503,
+          "longitude": -58.443832,
+          "name": "Paraguay",
+          "tooltip_column": "Paraguay"
+        },
+        {
+          "country": "QA",
+          "latitude": 25.354826,
+          "longitude": 51.183884,
+          "name": "Qatar",
+          "tooltip_column": "Qatar"
+        },
+        {
+          "country": "RE",
+          "latitude": -21.115141,
+          "longitude": 55.536384,
+          "name": "R\u00e9union",
+          "tooltip_column": "R\u00e9union"
+        },
+        {
+          "country": "RO",
+          "latitude": 45.943161,
+          "longitude": 24.96676,
+          "name": "Romania",
+          "tooltip_column": "Romania"
+        },
+        {
+          "country": "RS",
+          "latitude": 44.016521,
+          "longitude": 21.005859,
+          "name": "Serbia",
+          "tooltip_column": "Serbia"
+        },
+        {
+          "country": "RU",
+          "latitude": 61.52401,
+          "longitude": 105.318756,
+          "name": "Russia",
+          "tooltip_column": "Russia"
+        },
+        {
+          "country": "RW",
+          "latitude": -1.940278,
+          "longitude": 29.873888,
+          "name": "Rwanda",
+          "tooltip_column": "Rwanda"
+        },
+        {
+          "country": "SA",
+          "latitude": 23.885942,
+          "longitude": 45.079162,
+          "name": "Saudi Arabia",
+          "tooltip_column": "Saudi Arabia"
+        },
+        {
+          "country": "SB",
+          "latitude": -9.64571,
+          "longitude": 160.156194,
+          "name": "Solomon Islands",
+          "tooltip_column": "Solomon Islands"
+        },
+        {
+          "country": "SC",
+          "latitude": -4.679574,
+          "longitude": 55.491977,
+          "name": "Seychelles",
+          "tooltip_column": "Seychelles"
+        },
+        {
+          "country": "SD",
+          "latitude": 12.862807,
+          "longitude": 30.217636,
+          "name": "Sudan",
+          "tooltip_column": "Sudan"
+        },
+        {
+          "country": "SE",
+          "latitude": 60.128161,
+          "longitude": 18.643501,
+          "name": "Sweden",
+          "tooltip_column": "Sweden"
+        },
+        {
+          "country": "SG",
+          "latitude": 1.352083,
+          "longitude": 103.819836,
+          "name": "Singapore",
+          "tooltip_column": "Singapore"
+        },
+        {
+          "country": "SH",
+          "latitude": -24.143474,
+          "longitude": -10.030696,
+          "name": "Saint Helena",
+          "tooltip_column": "Saint Helena"
+        },
+        {
+          "country": "SI",
+          "latitude": 46.151241,
+          "longitude": 14.995463,
+          "name": "Slovenia",
+          "tooltip_column": "Slovenia"
+        },
+        {
+          "country": "SJ",
+          "latitude": 77.553604,
+          "longitude": 23.670272,
+          "name": "Svalbard and Jan Mayen",
+          "tooltip_column": "Svalbard and Jan Mayen"
+        },
+        {
+          "country": "SK",
+          "latitude": 48.669026,
+          "longitude": 19.699024,
+          "name": "Slovakia",
+          "tooltip_column": "Slovakia"
+        },
+        {
+          "country": "SL",
+          "latitude": 8.460555,
+          "longitude": -11.779889,
+          "name": "Sierra Leone",
+          "tooltip_column": "Sierra Leone"
+        },
+        {
+          "country": "SM",
+          "latitude": 43.94236,
+          "longitude": 12.457777,
+          "name": "San Marino",
+          "tooltip_column": "San Marino"
+        },
+        {
+          "country": "SN",
+          "latitude": 14.497401,
+          "longitude": -14.452362,
+          "name": "Senegal",
+          "tooltip_column": "Senegal"
+        },
+        {
+          "country": "SO",
+          "latitude": 5.152149,
+          "longitude": 46.199616,
+          "name": "Somalia",
+          "tooltip_column": "Somalia"
+        },
+        {
+          "country": "SR",
+          "latitude": 3.919305,
+          "longitude": -56.027783,
+          "name": "Suriname",
+          "tooltip_column": "Suriname"
+        },
+        {
+          "country": "ST",
+          "latitude": 0.18636,
+          "longitude": 6.613081,
+          "name": "S\u00e3o Tom\u00e9 and Pr\u00edncipe",
+          "tooltip_column": "S\u00e3o Tom\u00e9 and Pr\u00edncipe"
+        },
+        {
+          "country": "SV",
+          "latitude": 13.794185,
+          "longitude": -88.89653,
+          "name": "El Salvador",
+          "tooltip_column": "El Salvador"
+        },
+        {
+          "country": "SY",
+          "latitude": 34.802075,
+          "longitude": 38.996815,
+          "name": "Syria",
+          "tooltip_column": "Syria"
+        },
+        {
+          "country": "SZ",
+          "latitude": -26.522503,
+          "longitude": 31.465866,
+          "name": "Swaziland",
+          "tooltip_column": "Swaziland"
+        },
+        {
+          "country": "TC",
+          "latitude": 21.694025,
+          "longitude": -71.797928,
+          "name": "Turks and Caicos Islands",
+          "tooltip_column": "Turks and Caicos Islands"
+        },
+        {
+          "country": "TD",
+          "latitude": 15.454166,
+          "longitude": 18.732207,
+          "name": "Chad",
+          "tooltip_column": "Chad"
+        },
+        {
+          "country": "TF",
+          "latitude": -49.280366,
+          "longitude": 69.348557,
+          "name": "French Southern Territories",
+          "tooltip_column": "French Southern Territories"
+        },
+        {
+          "country": "TG",
+          "latitude": 8.619543,
+          "longitude": 0.824782,
+          "name": "Togo",
+          "tooltip_column": "Togo"
+        },
+        {
+          "country": "TH",
+          "latitude": 15.870032,
+          "longitude": 100.992541,
+          "name": "Thailand",
+          "tooltip_column": "Thailand"
+        },
+        {
+          "country": "TJ",
+          "latitude": 38.861034,
+          "longitude": 71.276093,
+          "name": "Tajikistan",
+          "tooltip_column": "Tajikistan"
+        },
+        {
+          "country": "TK",
+          "latitude": -8.967363,
+          "longitude": -171.855881,
+          "name": "Tokelau",
+          "tooltip_column": "Tokelau"
+        },
+        {
+          "country": "TL",
+          "latitude": -8.874217,
+          "longitude": 125.727539,
+          "name": "Timor-Leste",
+          "tooltip_column": "Timor-Leste"
+        },
+        {
+          "country": "TM",
+          "latitude": 38.969719,
+          "longitude": 59.556278,
+          "name": "Turkmenistan",
+          "tooltip_column": "Turkmenistan"
+        },
+        {
+          "country": "TN",
+          "latitude": 33.886917,
+          "longitude": 9.537499,
+          "name": "Tunisia",
+          "tooltip_column": "Tunisia"
+        },
+        {
+          "country": "TO",
+          "latitude": -21.178986,
+          "longitude": -175.198242,
+          "name": "Tonga",
+          "tooltip_column": "Tonga"
+        },
+        {
+          "country": "TR",
+          "latitude": 38.963745,
+          "longitude": 35.243322,
+          "name": "Turkey",
+          "tooltip_column": "Turkey"
+        },
+        {
+          "country": "TT",
+          "latitude": 10.691803,
+          "longitude": -61.222503,
+          "name": "Trinidad and Tobago",
+          "tooltip_column": "Trinidad and Tobago"
+        },
+        {
+          "country": "TV",
+          "latitude": -7.109535,
+          "longitude": 177.64933,
+          "name": "Tuvalu",
+          "tooltip_column": "Tuvalu"
+        },
+        {
+          "country": "TW",
+          "latitude": 23.69781,
+          "longitude": 120.960515,
+          "name": "Taiwan",
+          "tooltip_column": "Taiwan"
+        },
+        {
+          "country": "TZ",
+          "latitude": -6.369028,
+          "longitude": 34.888822,
+          "name": "Tanzania",
+          "tooltip_column": "Tanzania"
+        },
+        {
+          "country": "UA",
+          "latitude": 48.379433,
+          "longitude": 31.16558,
+          "name": "Ukraine",
+          "tooltip_column": "Ukraine"
+        },
+        {
+          "country": "UG",
+          "latitude": 1.373333,
+          "longitude": 32.290275,
+          "name": "Uganda",
+          "tooltip_column": "Uganda"
+        },
+        {
+          "country": "UM",
+          "latitude": NaN,
+          "longitude": NaN,
+          "name": "U.S. Minor Outlying Islands",
+          "tooltip_column": "U.S. Minor Outlying Islands"
+        },
+        {
+          "country": "US",
+          "latitude": 37.09024,
+          "longitude": -95.712891,
+          "name": "United States",
+          "tooltip_column": "United States"
+        },
+        {
+          "country": "UY",
+          "latitude": -32.522779,
+          "longitude": -55.765835,
+          "name": "Uruguay",
+          "tooltip_column": "Uruguay"
+        },
+        {
+          "country": "UZ",
+          "latitude": 41.377491,
+          "longitude": 64.585262,
+          "name": "Uzbekistan",
+          "tooltip_column": "Uzbekistan"
+        },
+        {
+          "country": "VA",
+          "latitude": 41.902916,
+          "longitude": 12.453389,
+          "name": "Vatican City",
+          "tooltip_column": "Vatican City"
+        },
+        {
+          "country": "VC",
+          "latitude": 12.984305,
+          "longitude": -61.287228,
+          "name": "Saint Vincent and the Grenadines",
+          "tooltip_column": "Saint Vincent and the Grenadines"
+        },
+        {
+          "country": "VE",
+          "latitude": 6.42375,
+          "longitude": -66.58973,
+          "name": "Venezuela",
+          "tooltip_column": "Venezuela"
+        },
+        {
+          "country": "VG",
+          "latitude": 18.420695,
+          "longitude": -64.639968,
+          "name": "British Virgin Islands",
+          "tooltip_column": "British Virgin Islands"
+        },
+        {
+          "country": "VI",
+          "latitude": 18.335765,
+          "longitude": -64.896335,
+          "name": "U.S. Virgin Islands",
+          "tooltip_column": "U.S. Virgin Islands"
+        },
+        {
+          "country": "VN",
+          "latitude": 14.058324,
+          "longitude": 108.277199,
+          "name": "Vietnam",
+          "tooltip_column": "Vietnam"
+        },
+        {
+          "country": "VU",
+          "latitude": -15.376706,
+          "longitude": 166.959158,
+          "name": "Vanuatu",
+          "tooltip_column": "Vanuatu"
+        },
+        {
+          "country": "WF",
+          "latitude": -13.768752,
+          "longitude": -177.156097,
+          "name": "Wallis and Futuna",
+          "tooltip_column": "Wallis and Futuna"
+        },
+        {
+          "country": "WS",
+          "latitude": -13.759029,
+          "longitude": -172.104629,
+          "name": "Samoa",
+          "tooltip_column": "Samoa"
+        },
+        {
+          "country": "XK",
+          "latitude": 42.602636,
+          "longitude": 20.902977,
+          "name": "Kosovo",
+          "tooltip_column": "Kosovo"
+        },
+        {
+          "country": "YE",
+          "latitude": 15.552727,
+          "longitude": 48.516388,
+          "name": "Yemen",
+          "tooltip_column": "Yemen"
+        },
+        {
+          "country": "YT",
+          "latitude": -12.8275,
+          "longitude": 45.166244,
+          "name": "Mayotte",
+          "tooltip_column": "Mayotte"
+        },
+        {
+          "country": "ZA",
+          "latitude": -30.559482,
+          "longitude": 22.937506,
+          "name": "South Africa",
+          "tooltip_column": "South Africa"
+        },
+        {
+          "country": "ZM",
+          "latitude": -13.133897,
+          "longitude": 27.849332,
+          "name": "Zambia",
+          "tooltip_column": "Zambia"
+        },
+        {
+          "country": "ZW",
+          "latitude": -19.015438,
+          "longitude": 29.154857,
+          "name": "Zimbabwe",
+          "tooltip_column": "Zimbabwe"
+        },
+        {
+          "country": "SS",
+          "latitude": 6.877,
+          "longitude": 31.307,
+          "name": "South Sudan",
+          "tooltip_column": "South Sudan"
+        }
+      ],
+      "getColor": [
+        0,
+        0,
+        255,
+        160
+      ],
+      "getPosition": "@@=[longitude, latitude]",
+      "getRadius": 30000,
+      "id": "88182438-b788-4341-8078-f89b00ec6a2f",
+      "pickable": true
+    }
+  ],
+  "mapProvider": "carto",
+  "mapStyle": "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
+  "views": [
+    {
+      "@@type": "MapView",
+      "controller": true
+    }
+  ]
+};
+    const tooltip = {'html': '{tooltip_column}', 'style': {'backgroundColor': 'black', 'color': 'white', 'fontFamily': 'Arial, sans-serif', 'fontSize': '14px', 'fontWeight': 'bold', 'padding': '10px', 'borderRadius': '6px'}};
+    const customLibraries = null;
+    const configuration = null;
+
+    const deckInstance = createDeck({
+                  container,
+      jsonInput,
+      tooltip,
+      customLibraries,
+      configuration
+    });
+
+  </script>
+</html>

@@ -1,0 +1,2069 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>pydeck</title>
+        <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.13.0/mapbox-gl.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" />
+    <script src='https://cdn.jsdelivr.net/npm/@deck.gl/jupyter-widget@~9.0.*/dist/index.js'></script>
+    <style>
+    body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+#deck-container {
+  width: 100vw;
+  height: 100vh;
+}
+
+#deck-container canvas {
+  z-index: 1;
+  background: none;
+}
+    </style>
+  </head>
+  <body>
+    <div id="deck-container">
+    </div>
+  </body>
+  <script>
+    const container = document.getElementById('deck-container');
+    const jsonInput = {
+  "initialViewState": {
+    "bearing": 0,
+    "latitude": 55.378051,
+    "longitude": -3.435973,
+    "pitch": 40,
+    "zoom": 1.5
+  },
+  "layers": [
+    {
+      "@@type": "ArcLayer",
+      "autoHighlight": true,
+      "data": [
+        {
+          "country_from": "AD",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 3,
+          "source_lat": 42.546245,
+          "source_lon": 1.601554,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "AE",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1524,
+          "source_lat": 23.424076,
+          "source_lon": 53.847818,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "AF",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 107,
+          "source_lat": 33.93911,
+          "source_lon": 67.709953,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "AL",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 835,
+          "source_lat": 41.153332,
+          "source_lon": 20.168331,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "AM",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 15,
+          "source_lat": 40.069099,
+          "source_lon": 45.038189,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "AO",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 39,
+          "source_lat": -11.202692,
+          "source_lon": 17.873887,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "AR",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 151,
+          "source_lat": -38.416097,
+          "source_lon": -63.616672,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "AT",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 168,
+          "source_lat": 47.516231,
+          "source_lon": 14.550072,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "AU",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 4004,
+          "source_lat": -25.274398,
+          "source_lon": 133.775136,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "AZ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 72,
+          "source_lat": 40.143105,
+          "source_lon": 47.576927,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "BA",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 17,
+          "source_lat": 43.915886,
+          "source_lon": 17.679076,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "BB",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 64,
+          "source_lat": 13.193887,
+          "source_lon": -59.543198,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "BD",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 480,
+          "source_lat": 23.684994,
+          "source_lon": 90.356331,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "BE",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 451,
+          "source_lat": 50.503887,
+          "source_lon": 4.469936,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "BF",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": 12.238333,
+          "source_lon": -1.561593,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "BG",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1634,
+          "source_lat": 42.733883,
+          "source_lon": 25.48583,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "BH",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 135,
+          "source_lat": 25.930414,
+          "source_lon": 50.637772,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "BI",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 11,
+          "source_lat": -3.373056,
+          "source_lon": 29.918886,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "BJ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 8,
+          "source_lat": 9.30769,
+          "source_lon": 2.315834,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "BN",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 68,
+          "source_lat": 4.535277,
+          "source_lon": 114.727669,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "BO",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 39,
+          "source_lat": -16.290154,
+          "source_lon": -63.588653,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "BR",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1477,
+          "source_lat": -14.235004,
+          "source_lon": -51.92528,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "BS",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 35,
+          "source_lat": 25.03428,
+          "source_lon": -77.39628,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "BT",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": 27.514162,
+          "source_lon": 90.433601,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "BW",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 46,
+          "source_lat": -22.328474,
+          "source_lon": 24.684866,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "BY",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 17,
+          "source_lat": 53.709807,
+          "source_lon": 27.953389,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "BZ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 19,
+          "source_lat": 17.189877,
+          "source_lon": -88.49765,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "CA",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1341,
+          "source_lat": 56.130366,
+          "source_lon": -106.346771,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "CD",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 15,
+          "source_lat": -4.038333,
+          "source_lon": 21.758664,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "CF",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 4,
+          "source_lat": 6.611111,
+          "source_lon": 20.939444,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "CG",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 13,
+          "source_lat": -0.228021,
+          "source_lon": 15.827659,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "CH",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 372,
+          "source_lat": 46.818188,
+          "source_lon": 8.227512,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "CI",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 37,
+          "source_lat": 7.539989,
+          "source_lon": -5.54708,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "CL",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 113,
+          "source_lat": -35.675147,
+          "source_lon": -71.542969,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "CM",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 37,
+          "source_lat": 7.369722,
+          "source_lon": 12.354722,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "CO",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 222,
+          "source_lat": 4.570868,
+          "source_lon": -74.297333,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "CR",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 17,
+          "source_lat": 9.748917,
+          "source_lon": -83.753428,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "CV",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": 16.002082,
+          "source_lon": -24.013197,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "CY",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 716,
+          "source_lat": 35.126413,
+          "source_lon": 33.429859,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "CZ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 434,
+          "source_lat": 49.817492,
+          "source_lon": 15.472962,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "DE",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 2168,
+          "source_lat": 51.165691,
+          "source_lon": 10.451526,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "DJ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 7,
+          "source_lat": 11.825138,
+          "source_lon": 42.590275,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "DK",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 244,
+          "source_lat": 56.26392,
+          "source_lon": 9.501785,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "DO",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 45,
+          "source_lat": 18.735693,
+          "source_lon": -70.162651,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "DZ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 109,
+          "source_lat": 28.033886,
+          "source_lon": 1.659626,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "EC",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 134,
+          "source_lat": -1.831239,
+          "source_lon": -78.183406,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "EE",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 43,
+          "source_lat": 58.595272,
+          "source_lon": 25.013607,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "EG",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 479,
+          "source_lat": 26.820553,
+          "source_lon": 30.802498,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "ER",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": 15.179384,
+          "source_lon": 39.782334,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "ES",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 3546,
+          "source_lat": 40.463667,
+          "source_lon": -3.74922,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "ET",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 78,
+          "source_lat": 9.145,
+          "source_lon": 40.489673,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "FI",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 70,
+          "source_lat": 61.92411,
+          "source_lon": 25.748151,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "FJ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 101,
+          "source_lat": -16.578193,
+          "source_lon": 179.414413,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "FM",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 9,
+          "source_lat": 7.425554,
+          "source_lon": 150.550812,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "FR",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1778,
+          "source_lat": 46.227638,
+          "source_lon": 2.213749,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "GA",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 14,
+          "source_lat": -0.803689,
+          "source_lon": 11.609444,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "GD",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 78,
+          "source_lat": 12.262776,
+          "source_lon": -61.604171,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "GE",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 80,
+          "source_lat": 42.315407,
+          "source_lon": 43.356892,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "GH",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 634,
+          "source_lat": 7.946527,
+          "source_lon": -1.023194,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "GM",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 69,
+          "source_lat": 13.443182,
+          "source_lon": -15.310139,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "GN",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": 9.945587,
+          "source_lon": -9.696645,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "GQ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": 1.650801,
+          "source_lon": 10.267895,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "EL",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1015,
+          "source_lat": 39.074208,
+          "source_lon": 21.824312,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "GT",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 26,
+          "source_lat": 15.783471,
+          "source_lon": -90.230759,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "GW",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": 11.803749,
+          "source_lon": -15.180413,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "GY",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 33,
+          "source_lat": 4.860416,
+          "source_lon": -58.93018,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "HK",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 774,
+          "source_lat": 22.396428,
+          "source_lon": 114.109497,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "HN",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 25,
+          "source_lat": 15.199999,
+          "source_lon": -86.241905,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "HR",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 73,
+          "source_lat": 45.1,
+          "source_lon": 15.2,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "HT",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 24,
+          "source_lat": 18.971187,
+          "source_lon": -72.285215,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "HU",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 693,
+          "source_lat": 47.162494,
+          "source_lon": 19.503304,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "ID",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 189,
+          "source_lat": -0.789275,
+          "source_lon": 113.921327,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "IE",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1233,
+          "source_lat": 53.41291,
+          "source_lon": -8.24389,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "IL",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 166,
+          "source_lat": 31.046051,
+          "source_lon": 34.851612,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "IN",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 7203,
+          "source_lat": 20.593684,
+          "source_lon": 78.96288,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "IQ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 564,
+          "source_lat": 33.223191,
+          "source_lon": 43.679291,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "IS",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 18,
+          "source_lat": 64.963051,
+          "source_lon": -19.020835,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "IT",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 2772,
+          "source_lat": 41.87194,
+          "source_lon": 12.56738,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "JM",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 189,
+          "source_lat": 18.109581,
+          "source_lon": -77.297508,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "JO",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 287,
+          "source_lat": 30.585164,
+          "source_lon": 36.238414,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "JP",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 893,
+          "source_lat": 36.204824,
+          "source_lon": 138.252924,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "KE",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 301,
+          "source_lat": -0.023559,
+          "source_lon": 37.906193,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "KG",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": 41.20438,
+          "source_lon": 74.766098,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "KH",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 50,
+          "source_lat": 12.565679,
+          "source_lon": 104.990963,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "KI",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 9,
+          "source_lat": -3.370417,
+          "source_lon": -168.734039,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "KM",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": -11.875001,
+          "source_lon": 43.872219,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "KR",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 365,
+          "source_lat": 35.907757,
+          "source_lon": 127.766922,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "KW",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 111,
+          "source_lat": 29.31166,
+          "source_lon": 47.481766,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "KZ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 27,
+          "source_lat": 48.019573,
+          "source_lon": 66.923684,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "LA",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 6,
+          "source_lat": 19.85627,
+          "source_lon": 102.495496,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "LB",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 193,
+          "source_lat": 33.854721,
+          "source_lon": 35.862285,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "LC",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 81,
+          "source_lat": 13.909444,
+          "source_lon": -60.978893,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "LK",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 309,
+          "source_lat": 7.873054,
+          "source_lon": 80.771797,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "LR",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 7,
+          "source_lat": 6.428055,
+          "source_lon": -9.429499,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "LS",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 12,
+          "source_lat": -29.609988,
+          "source_lon": 28.233608,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "LT",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 902,
+          "source_lat": 55.169438,
+          "source_lon": 23.881275,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "LU",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 55,
+          "source_lat": 49.815273,
+          "source_lon": 6.129583,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "LV",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 470,
+          "source_lat": 56.879635,
+          "source_lon": 24.603189,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "LY",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 93,
+          "source_lat": 26.3351,
+          "source_lon": 17.228331,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "MA",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 282,
+          "source_lat": 31.791702,
+          "source_lon": -7.09262,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "MD",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 904,
+          "source_lat": 47.411631,
+          "source_lon": 28.369885,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "ME",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": 42.708678,
+          "source_lon": 19.37439,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "MG",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 17,
+          "source_lat": -18.766947,
+          "source_lon": 46.869107,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "MK",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 50,
+          "source_lat": 41.608635,
+          "source_lon": 21.745275,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "ML",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 4,
+          "source_lat": 17.570692,
+          "source_lon": -3.996166,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "MM",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 74,
+          "source_lat": 21.913965,
+          "source_lon": 95.956223,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "MN",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 29,
+          "source_lat": 46.862496,
+          "source_lon": 103.846656,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "MO",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 54,
+          "source_lat": 22.198745,
+          "source_lon": 113.543873,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "MR",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": 21.00789,
+          "source_lon": -10.940835,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "MT",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 177,
+          "source_lat": 35.937496,
+          "source_lon": 14.375416,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "MU",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 101,
+          "source_lat": -20.348404,
+          "source_lon": 57.552152,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "MV",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 19,
+          "source_lat": 3.202778,
+          "source_lon": 73.22068,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "MW",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 26,
+          "source_lat": -13.254308,
+          "source_lon": 34.301525,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "MX",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 208,
+          "source_lat": 23.634501,
+          "source_lon": -102.552784,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "MY",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 382,
+          "source_lat": 4.210484,
+          "source_lon": 101.975766,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "MZ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 23,
+          "source_lat": -18.665695,
+          "source_lon": 35.529562,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": NaN,
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 95,
+          "source_lat": -22.95764,
+          "source_lon": 18.49041,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "NE",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 29,
+          "source_lat": 17.607789,
+          "source_lon": 8.081666,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "NG",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1173,
+          "source_lat": 9.081999,
+          "source_lon": 8.675277,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "NI",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 2,
+          "source_lat": 12.865416,
+          "source_lon": -85.207229,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "NL",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 783,
+          "source_lat": 52.132633,
+          "source_lon": 5.291266,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "NO",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 273,
+          "source_lat": 60.472024,
+          "source_lon": 8.468946,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "NP",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 417,
+          "source_lat": 28.394857,
+          "source_lon": 84.124008,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "NZ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1200,
+          "source_lat": -40.900557,
+          "source_lon": 174.885971,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "OM",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 161,
+          "source_lat": 21.512583,
+          "source_lon": 55.923255,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "PA",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 17,
+          "source_lat": 8.537981,
+          "source_lon": -80.782127,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "PE",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 82,
+          "source_lat": -9.189967,
+          "source_lon": -75.015152,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "PG",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 4,
+          "source_lat": -6.314993,
+          "source_lon": 143.95555,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "PH",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1259,
+          "source_lat": 12.879721,
+          "source_lon": 121.774017,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "PK",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 2021,
+          "source_lat": 30.375321,
+          "source_lon": 69.345116,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "PL",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 3088,
+          "source_lat": 51.919438,
+          "source_lon": 19.145136,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "PT",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1113,
+          "source_lat": 39.399872,
+          "source_lon": -8.224454,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "PY",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 7,
+          "source_lat": -23.442503,
+          "source_lon": -58.443832,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "QA",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 238,
+          "source_lat": 25.354826,
+          "source_lon": 51.183884,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "RO",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 6001,
+          "source_lat": 45.943161,
+          "source_lon": 24.96676,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "RS",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 53,
+          "source_lat": 44.016521,
+          "source_lon": 21.005859,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "RU",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 404,
+          "source_lat": 61.52401,
+          "source_lon": 105.318756,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "RW",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 3,
+          "source_lat": -1.940278,
+          "source_lon": 29.873888,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "SA",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 719,
+          "source_lat": 23.885942,
+          "source_lon": 45.079162,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "SB",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": -9.64571,
+          "source_lon": 160.156194,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "SD",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 106,
+          "source_lat": 12.862807,
+          "source_lon": 30.217636,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "SE",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 408,
+          "source_lat": 60.128161,
+          "source_lon": 18.643501,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "SG",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 366,
+          "source_lat": 1.352083,
+          "source_lon": 103.819836,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "SI",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 23,
+          "source_lat": 46.151241,
+          "source_lon": 14.995463,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "SK",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 338,
+          "source_lat": 48.669026,
+          "source_lon": 19.699024,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "SL",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 49,
+          "source_lat": 8.460555,
+          "source_lon": -11.779889,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "SN",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 19,
+          "source_lat": 14.497401,
+          "source_lon": -14.452362,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "SR",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 6,
+          "source_lat": 3.919305,
+          "source_lon": -56.027783,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "SS",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 21,
+          "source_lat": 6.877,
+          "source_lon": 31.307,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "ST",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 16,
+          "source_lat": 0.18636,
+          "source_lon": 6.613081,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "SV",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 40,
+          "source_lat": 13.794185,
+          "source_lon": -88.89653,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "SY",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 36,
+          "source_lat": 34.802075,
+          "source_lon": 38.996815,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "SZ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": -26.522503,
+          "source_lon": 31.465866,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "TD",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1,
+          "source_lat": 15.454166,
+          "source_lon": 18.732207,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "TG",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 13,
+          "source_lat": 8.619543,
+          "source_lon": 0.824782,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "TH",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 894,
+          "source_lat": 15.870032,
+          "source_lon": 100.992541,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "TJ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1,
+          "source_lat": 38.861034,
+          "source_lon": 71.276093,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "TL",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 133,
+          "source_lat": -8.874217,
+          "source_lon": 125.727539,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "TM",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": 38.969719,
+          "source_lon": 59.556278,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "TN",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 58,
+          "source_lat": 33.886917,
+          "source_lon": 9.537499,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "TO",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1,
+          "source_lat": -21.178986,
+          "source_lon": -175.198242,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "TR",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1190,
+          "source_lat": 38.963745,
+          "source_lon": 35.243322,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "TT",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 102,
+          "source_lat": 10.691803,
+          "source_lon": -61.222503,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "TW",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 469,
+          "source_lat": 23.69781,
+          "source_lon": 120.960515,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "TZ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 48,
+          "source_lat": -6.369028,
+          "source_lon": 34.888822,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "UA",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 345,
+          "source_lat": 48.379433,
+          "source_lon": 31.16558,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "UG",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 95,
+          "source_lat": 1.373333,
+          "source_lon": 32.290275,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "US",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 7453,
+          "source_lat": 37.09024,
+          "source_lon": -95.712891,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "UY",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": -32.522779,
+          "source_lon": -55.765835,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "UZ",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 0,
+          "source_lat": 41.377491,
+          "source_lon": 64.585262,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "VC",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 89,
+          "source_lat": 12.984305,
+          "source_lon": -61.287228,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "VE",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 69,
+          "source_lat": 6.42375,
+          "source_lon": -66.58973,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "VN",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 379,
+          "source_lat": 14.058324,
+          "source_lon": 108.277199,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "VU",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 3,
+          "source_lat": -15.376706,
+          "source_lon": 166.959158,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "WS",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1,
+          "source_lat": -13.759029,
+          "source_lon": -172.104629,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "XK",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 29,
+          "source_lat": 42.602636,
+          "source_lon": 20.902977,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "YE",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 24,
+          "source_lat": 15.552727,
+          "source_lon": 48.516388,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "ZA",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 1834,
+          "source_lat": -30.559482,
+          "source_lon": 22.937506,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "ZM",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 44,
+          "source_lat": -13.133897,
+          "source_lon": 27.849332,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        },
+        {
+          "country_from": "ZW",
+          "country_to": "UK",
+          "month": 7,
+          "num_migrants": 165,
+          "source_lat": -19.015438,
+          "source_lon": 29.154857,
+          "target_lat": 55.378051,
+          "target_lon": -3.435973,
+          "year": 2019
+        }
+      ],
+      "getSourceColor": [
+        255,
+        0,
+        0,
+        80
+      ],
+      "getSourcePosition": "@@=[source_lon, source_lat]",
+      "getTargetColor": [
+        0,
+        255,
+        0,
+        80
+      ],
+      "getTargetPosition": "@@=[target_lon, target_lat]",
+      "getWidth": "@@=num_migrants / 100",
+      "id": "59846500-848c-4fa0-bbf6-af3e98eba4f3",
+      "pickable": true
+    }
+  ],
+  "mapProvider": "carto",
+  "mapStyle": "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
+  "views": [
+    {
+      "@@type": "MapView",
+      "controller": true
+    }
+  ]
+};
+    const tooltip = {'html': '<b>{country_from}</b> → <b>{country_to}</b><br />Migrants: <b>{num_migrants}</b><br />Date: {year}-{month}', 'style': {'backgroundColor': 'steelblue', 'color': 'white'}};
+    const customLibraries = null;
+    const configuration = null;
+
+    const deckInstance = createDeck({
+                  container,
+      jsonInput,
+      tooltip,
+      customLibraries,
+      configuration
+    });
+
+  </script>
+</html>
