@@ -36,9 +36,9 @@ For each dataset, the following processing details are included:
 - **Download:** Available via Google Earth Engine:  
 [VIIRS Nighttime Day/Night Annual Band Composites V2.1(20220101 - 20240101)](https://developers.google.com/earth-engine/datasets/catalog/NOAA_VIIRS_DNB_ANNUAL_V21)  
 [VIIRS Nighttime Day/Night Annual Band Composites V2.2(20220101 - 20240101)](https://developers.google.com/earth-engine/datasets/catalog/NOAA_VIIRS_DNB_ANNUAL_V22)  
-- **License and Usage Notes:** [Specify License Details]  
+- **License and Usage Notes:**  
     - Creative Commons Attribution 4.0 International (CC BY 4.0) license.
-    official document: EOG Products CC License (PDF)
+    official document: [EOG Products CC License (PDF)](https://eogdata.mines.edu/files/EOG_products_CC_License.pdf)  
 
     - Data and products from Colorado School of Mines are in the public domain, free of copyright, and may be used for any lawful purpose without restriction.
 
