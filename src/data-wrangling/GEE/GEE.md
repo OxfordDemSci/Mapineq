@@ -53,8 +53,8 @@ NUTS
 
 ### Monthly Data
 
-
 1. **Data**  
+- **Data Period and Frequency:** 2013 - 2024
 - **Homepage:** [Earth Observation Group (EOG) Nighttime Lights Data]()  
 - **Metadata:** [Earth Observation Group (EOG) Nighttime Lights Data]()   
 - **Download:** Available via Google Earth Engine:  
@@ -74,3 +74,25 @@ NUTS
 
 
 ---
+
+
+### Monthly Stray Data
+
+1. **Data**  
+- **Homepage:** [Earth Observation Group (EOG) Nighttime Lights Data]()  
+- **Metadata:** [Earth Observation Group (EOG) Nighttime Lights Data]()   
+- **Download:** Available via Google Earth Engine:  
+[VIIRS Nighttime Day/Night Band Composites Version 1(20130101 - 20210101)]()  
+[VIIRS Nighttime Day/Night Annual Band Composites V2.2(20220101 - 20240101)]()  
+- **License and Usage Notes:**  
+    - Creative Commons Attribution 4.0 International (CC BY 4.0) license.
+    official document: [EOG Products CC License (PDF)](https://eogdata.mines.edu/files/EOG_products_CC_License.pdf)  
+    - Data and products from Colorado School of Mines are in the public domain, free of copyright, and may be used for any lawful purpose without restriction.
+    - When using these data, please cite the Earth Observation Group (EOG) as the data source and reference relevant publications associated with the EOG products you use.
+
+2. **Processing Method**  
+- **Code Link:** [Link to GEE Processing Script]  
+- **Metrics Explanation:** Explanation of calculated metrics such as mean, standard deviation, max radiance  
+- **Shapefile Used:** Description of spatial boundaries (e.g., NUTS regions)  
+NUTS
+
