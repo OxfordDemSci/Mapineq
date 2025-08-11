@@ -45,8 +45,11 @@ For each dataset, the following processing details are included:
 
 2. **Processing Method**  
 - **Code Link:** [Link to GEE Processing Script]  
-- **Metrics Explanation:
-
+- **Metrics Explanation:  
+Calculated metrics are based on the `avg_rad` band of VIIRS Monthly images for each `NUTS_ID` region:
+    - Mean(`mean`): Average radiance within the `NUTS_ID` polygon.
+    - Standard Deviation(`std_dev`): Variation of radiance within the `NUTS_ID` polygon.
+    - Maximum(`max`): Highest radiance value within the `NUTS_ID` polygon.
 - **Shapefile Used:** Description of spatial boundaries (e.g., NUTS regions)  
 NUTS
 
@@ -68,11 +71,11 @@ NUTS
 
 2. **Processing Method**  
 - **Code Link:** [Link to GEE Processing Script]  
-- **Metrics Explanation:** 
-Calculated metrics are based on the `avg_rad` band of VIIRS monthly images for each NUTS region:
-    - Mean(`mean`): Average radiance within the polygon.
-    - Standard Deviation(`std_dev`): Variation of radiance within the polygon.
-    - Maximum(`max`): Highest radiance value within the polygon.
+- **Metrics Explanation:**  
+Calculated metrics are based on the `avg_rad` band of VIIRS monthly images for each `NUTS_ID` region:
+    - Mean(`mean`): Average radiance within the `NUTS_ID` polygon.
+    - Standard Deviation(`std_dev`): Variation of radiance within the `NUTS_ID` polygon.
+    - Maximum(`max`): Highest radiance value within the `NUTS_ID` polygon.
 - **Shapefile Used:** Description of spatial boundaries (e.g., NUTS regions)  
 NUTS
 
