@@ -31,6 +31,7 @@ For each dataset, the following processing details are included:
 ### Yearly Data
 
 1. **Data**  
+- **Data Period and Frequency:** 2013 - 2024, Annual
 - **Homepage:** [Earth Observation Group (EOG) Nighttime Lights Data](https://eogdata.mines.edu/products/vnl/)  
 - **Metadata:** [Earth Observation Group (EOG) Nighttime Lights Data](https://eogdata.mines.edu/products/vnl/)   
 - **Download:** Available via Google Earth Engine:  
@@ -54,12 +55,11 @@ NUTS
 ### Monthly Data
 
 1. **Data**  
-- **Data Period and Frequency:** 2013 - 2024
+- **Data Period and Frequency:** 20120401 - 20250301, Monthly
 - **Homepage:** [Earth Observation Group (EOG) Nighttime Lights Data]()  
 - **Metadata:** [Earth Observation Group (EOG) Nighttime Lights Data]()   
 - **Download:** Available via Google Earth Engine:  
-[VIIRS Nighttime Day/Night Annual Band Composites V2.1(20130101 - 20210101)]()  
-[VIIRS Nighttime Day/Night Annual Band Composites V2.2(20220101 - 20240101)]()  
+[VIIRS Nighttime Day/Night Band Composites Version 1)](https://developers.google.com/earth-engine/datasets/catalog/NOAA_VIIRS_DNB_MONTHLY_V1_VCMCFG)  
 - **License and Usage Notes:**  
     - Creative Commons Attribution 4.0 International (CC BY 4.0) license.
     official document: [EOG Products CC License (PDF)](https://eogdata.mines.edu/files/EOG_products_CC_License.pdf)  
@@ -79,11 +79,12 @@ NUTS
 ### Monthly Stray Data
 
 1. **Data**  
+- **Data Period and Frequency:** 20140101 - 20250301, Monthly
+> 20241101 missing                                                                                                              
 - **Homepage:** [Earth Observation Group (EOG) Nighttime Lights Data]()  
 - **Metadata:** [Earth Observation Group (EOG) Nighttime Lights Data]()   
 - **Download:** Available via Google Earth Engine:  
-[VIIRS Nighttime Day/Night Band Composites Version 1(20130101 - 20210101)]()  
-[VIIRS Nighttime Day/Night Annual Band Composites V2.2(20220101 - 20240101)]()  
+[VIIRS Stray Light Corrected Nighttime Day/Night Band Composites Version 1(20130101 - 20210101)](https://developers.google.com/earth-engine/datasets/catalog/NOAA_VIIRS_DNB_MONTHLY_V1_VCMSLCFG)  
 - **License and Usage Notes:**  
     - Creative Commons Attribution 4.0 International (CC BY 4.0) license.
     official document: [EOG Products CC License (PDF)](https://eogdata.mines.edu/files/EOG_products_CC_License.pdf)  
