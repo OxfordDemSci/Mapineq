@@ -31,11 +31,18 @@ For each dataset, the following processing details are included:
 ### Yearly Data
 
 1. **Data**  
-- **Homepage:** [Earth Observation Group (EOG) Nighttime Lights Data](https://eogdata.mines.edu)  
-- **Metadata:** Earth Observation Group (EOG) Nighttime Lights Data Metadata  
-- **Download:** Available via Google Earth Engine  
-- **License and Usage Notes:** [Specify License Details]
+- **Homepage:** [Earth Observation Group (EOG) Nighttime Lights Data](https://eogdata.mines.edu/products/vnl/)  
+- **Metadata:** [Earth Observation Group (EOG) Nighttime Lights Data](https://eogdata.mines.edu/products/vnl/)   
+- **Download:** Available via Google Earth Engine:  
+[VIIRS Nighttime Day/Night Annual Band Composites V2.1(20220101 - 20240101)](https://developers.google.com/earth-engine/datasets/catalog/NOAA_VIIRS_DNB_ANNUAL_V21)  
+[VIIRS Nighttime Day/Night Annual Band Composites V2.2(20220101 - 20240101)](https://developers.google.com/earth-engine/datasets/catalog/NOAA_VIIRS_DNB_ANNUAL_V22)  
+- **License and Usage Notes:** [Specify License Details]  
+    - Creative Commons Attribution 4.0 International (CC BY 4.0) license.
+    official document: EOG Products CC License (PDF)
 
+    - Data and products from Colorado School of Mines are in the public domain, free of copyright, and may be used for any lawful purpose without restriction.
+
+    - When using these data, please cite the Earth Observation Group (EOG) as the data source and reference relevant publications associated with the EOG products you use.
 2. **Processing Method**  
 - **Code Link:** [Link to GEE Processing Script]  
 - **Metrics Explanation:** Explanation of calculated metrics such as mean, standard deviation, max radiance  
