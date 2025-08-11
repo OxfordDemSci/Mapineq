@@ -45,10 +45,10 @@ For each dataset, the following processing details are included:
 
 2. **Processing Method**  
 - **Code Link:** [Link to GEE Processing Script]  
-- **Metrics Explanation:** Explanation of calculated metrics such as mean, standard deviation, max radiance  
+- **Metrics Explanation:
+
 - **Shapefile Used:** Description of spatial boundaries (e.g., NUTS regions)  
 NUTS
-
 
 ---
 
@@ -59,7 +59,7 @@ NUTS
 - **Homepage:** [Earth Observation Group (EOG) Nighttime Lights Data]()  
 - **Metadata:** [Earth Observation Group (EOG) Nighttime Lights Data]()   
 - **Download:** Available via Google Earth Engine:  
-[VIIRS Nighttime Day/Night Band Composites Version 1)](https://developers.google.com/earth-engine/datasets/catalog/NOAA_VIIRS_DNB_MONTHLY_V1_VCMCFG)  
+[VIIRS Nighttime Day/Night Band Composites Version 1](https://developers.google.com/earth-engine/datasets/catalog/NOAA_VIIRS_DNB_MONTHLY_V1_VCMCFG)  
 - **License and Usage Notes:**  
     - Creative Commons Attribution 4.0 International (CC BY 4.0) license.
     official document: [EOG Products CC License (PDF)](https://eogdata.mines.edu/files/EOG_products_CC_License.pdf)  
@@ -68,7 +68,11 @@ NUTS
 
 2. **Processing Method**  
 - **Code Link:** [Link to GEE Processing Script]  
-- **Metrics Explanation:** Explanation of calculated metrics such as mean, standard deviation, max radiance  
+- **Metrics Explanation:** 
+Calculated metrics are based on the `avg_rad` band of VIIRS monthly images for each NUTS region:
+    - Mean(`mean`): Average radiance within the polygon.
+    - Standard Deviation(`std_dev`): Variation of radiance within the polygon.
+    - Maximum(`max`): Highest radiance value within the polygon.
 - **Shapefile Used:** Description of spatial boundaries (e.g., NUTS regions)  
 NUTS
 
@@ -84,7 +88,7 @@ NUTS
 - **Homepage:** [Earth Observation Group (EOG) Nighttime Lights Data]()  
 - **Metadata:** [Earth Observation Group (EOG) Nighttime Lights Data]()   
 - **Download:** Available via Google Earth Engine:  
-[VIIRS Stray Light Corrected Nighttime Day/Night Band Composites Version 1(20130101 - 20210101)](https://developers.google.com/earth-engine/datasets/catalog/NOAA_VIIRS_DNB_MONTHLY_V1_VCMSLCFG)  
+[VIIRS Stray Light Corrected Nighttime Day/Night Band Composites Version 1](https://developers.google.com/earth-engine/datasets/catalog/NOAA_VIIRS_DNB_MONTHLY_V1_VCMSLCFG)  
 - **License and Usage Notes:**  
     - Creative Commons Attribution 4.0 International (CC BY 4.0) license.
     official document: [EOG Products CC License (PDF)](https://eogdata.mines.edu/files/EOG_products_CC_License.pdf)  
