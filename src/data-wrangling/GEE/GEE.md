@@ -24,6 +24,18 @@ For each dataset, the following processing details are included:
 - **Metrics Explanation:** Description of the metrics or statistics calculated  
 - **Shapefile Used:** Description or link to the shapefile or vector data used for spatial processing  
 
+**NUTS**: 
+Polygons(RG), 01m, EPSG: 3035, year:2003, 2006, 2010, 2013, 2016, 2021, 2024  
+https://ec.europa.eu/eurostat/web/gisco/geodata/statistical-units/territorial-units-statistics  
+
+**ITL**:  
+resolution: BGC, EPSG: 27700, year: 2021, 2025
+https://www.data.gov.uk/search?q=International+Territorial+
+
+**EURO**: 
+EURO2021: NUTS2021 + ITL2021 + ITL0(merged from level1)
+EURO2025: NUTS2024 + ITL2025 + ITL0(merged from level1)
+EPSG:8857
 ---
 
 ## Nighttime Light Data
@@ -50,8 +62,8 @@ Calculated metrics are based on the `avg_rad` band of VIIRS Monthly images for e
     - Mean(`mean`): Average radiance within the polygon.
     - Standard Deviation(`std_dev`): Variation of radiance within the polygon.
     - Maximum(`max`): Highest radiance value within the polygon.
-- **Shapefile Used:** Description of spatial boundaries (e.g., NUTS regions)  
-NUTS
+- **Shapefile Used:** Description of spatial boundaries  
+NUTS, ITL, EURO
 
 ---
 
@@ -59,6 +71,7 @@ NUTS
 
 1. **Data**  
 - **Data Period and Frequency:** 20120401 - 20250301, Monthly
+> 20120401-20120801 UK missing, so ITL start from 20120901
 - **Homepage:** [Earth Observation Group (EOG) Nighttime Lights Data]()  
 - **Metadata:** [Earth Observation Group (EOG) Nighttime Lights Data]()   
 - **Download:** Available via Google Earth Engine:  
@@ -76,9 +89,8 @@ Calculated metrics are based on the `avg_rad` band of VIIRS monthly images for e
     - Mean(`mean`): Average radiance within the polygon.
     - Standard Deviation(`std_dev`): Variation of radiance within the polygon.
     - Maximum(`max`): Highest radiance value within the polygon.
-- **Shapefile Used:** Description of spatial boundaries (e.g., NUTS regions)  
-NUTS
-
+- **Shapefile Used:** Description of spatial boundaries  
+NUTS, ITL, EURO
 
 ---
 
@@ -101,6 +113,6 @@ NUTS
 2. **Processing Method**  
 - **Code Link:** [Link to GEE Processing Script]  
 - **Metrics Explanation:** Explanation of calculated metrics such as mean, standard deviation, max radiance  
-- **Shapefile Used:** Description of spatial boundaries (e.g., NUTS regions)  
-NUTS
+- **Shapefile Used:** Description of spatial boundaries   
+NUTS, ITL, EURO
 
