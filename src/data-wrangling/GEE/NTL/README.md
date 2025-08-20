@@ -56,13 +56,16 @@ EPSG:8857
   - Data and products from Colorado School of Mines are in the public domain, free of copyright, and may be used for any lawful purpose without restriction.  
   - When using these data, please cite the Earth Observation Group (EOG) as the data source.
 
-2. **Processing Method**  
+2. **Processing Method**
+
+The analysis used Google Earth Engine (GEE) to process VIIRS yearly nighttime light data. For each geographical unit (NUTS, ITL, or EURO regions), all light intensity values were extracted, and summary metrics were computed to describe brightness patterns within each region.
+
 - **Code Links:**  
   - [GEE-NUTS](https://github.com/OxfordDemSci/Mapineq/blob/204-gee-sub-night-time-light/src/data-wrangling/GEE/NTL/VIIR_Annual_NUTS.js)  
   - [GEE-ITL/EURO](https://github.com/OxfordDemSci/Mapineq/blob/204-gee-sub-night-time-light/src/data-wrangling/GEE/NTL/VIIR_Annual_ITL.js)  
   - [Post_GEE](https://github.com/OxfordDemSci/Mapineq/blob/204-gee-sub-night-time-light/src/data-wrangling/GEE/NTL/NTL_post_GEE.ipynb)  
 - **Metrics Explanation:**  
-  Calculated metrics are based on the `avg_rad` band of VIIRS Monthly images for each `NUTS_ID` region:  
+  Calculated metrics are based on the `avg_rad` band of VIIRS Yearly images for each region (such as `NUTS_ID`):  
   - Mean (`mean`): Average radiance within the polygon  
   - Standard Deviation (`std_dev`): Variation of radiance within the polygon  
   - Maximum (`max`): Highest radiance value within the polygon  
