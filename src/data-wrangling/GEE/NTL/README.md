@@ -78,8 +78,8 @@ The analysis used Google Earth Engine (GEE) to process VIIRS yearly nighttime li
 1. **Data**  
 - **Data Period and Frequency:** 2012-04-01 - 2025-03-01, Monthly  
 > Note: 20120401-20120801 UK missing, so ITL starts from 2012-09-01  
-- **Homepage:** [Earth Observation Group (EOG) Nighttime Lights Data]()  
-- **Metadata:** [Earth Observation Group (EOG) Nighttime Lights Data]()  
+- **Homepage:** [Earth Observation Group (EOG) Nighttime Lights Data](https://eogdata.mines.edu/products/vnl/)  
+- **Metadata:** [Earth Observation Group (EOG) Nighttime Lights Data](https://eogdata.mines.edu/products/vnl/)  
 - **Download:**  
   [VIIRS Nighttime Day/Night Band Composites Version 1](https://developers.google.com/earth-engine/datasets/catalog/NOAA_VIIRS_DNB_MONTHLY_V1_VCMCFG)  
 - **License and Usage Notes:** Same as yearly data  
@@ -99,8 +99,8 @@ The analysis used Google Earth Engine (GEE) to process VIIRS yearly nighttime li
 1. **Data**  
 - **Data Period and Frequency:** 2014-01-01 - 2025-03-01, Monthly  
 > Note: 2024-11-01 missing  
-- **Homepage:** [Earth Observation Group (EOG) Nighttime Lights Data]()  
-- **Metadata:** [Earth Observation Group (EOG) Nighttime Lights Data]()  
+- **Homepage:** [Earth Observation Group (EOG) Nighttime Lights Data](https://eogdata.mines.edu/products/vnl/)  
+- **Metadata:** [Earth Observation Group (EOG) Nighttime Lights Data](https://eogdata.mines.edu/products/vnl/)  
 - **Download:**  
   [VIIRS Stray Light Corrected Nighttime Day/Night Band Composites Version 1](https://developers.google.com/earth-engine/datasets/catalog/NOAA_VIIRS_DNB_MONTHLY_V1_VCMSLCFG)  
 - **License and Usage Notes:** Same as yearly data  
