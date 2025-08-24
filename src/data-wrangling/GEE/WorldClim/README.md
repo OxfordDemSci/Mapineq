@@ -1,4 +1,4 @@
-# Dataset Documentation for Google Earth Engine Processing
+# WorldClim Processing
 
 This document provides an overview of all datasets processed in Google Earth Engine (GEE) using JavaScript. It includes details about the data sources, processing methods, and metrics used.
 
@@ -18,7 +18,7 @@ For each dataset, the following information is documented:
 
 ## 2. Processing Methodology
 
-For each dataset, the following processing details are included:
+The analysis used Google Earth Engine (GEE) to process WorldClim bioclimatic and climatology data. For each geographical unit (NUTS, ITL, or EURO regions), all values from the selected bands were extracted, and summary metrics were computed to describe climatic patterns within each region. Metrics included mean, minimum, maximum, median, standard deviation, and key percentiles (10th, 25th, 75th, 90th), providing a comprehensive overview of spatial variability.
 
 - **Code Link**  
 - **Metrics Explanation:** Description of the metrics or statistics calculated  
@@ -34,33 +34,30 @@ Resolution: BGC, EPSG:27700, years: 2021, 2025
 Total row: 472   
 
     - **EURO**:  
-- EURO2021: NUTS2021 + ITL2021 + ITL0 (merged from level1)  
-- EURO2025: NUTS2024 + ITL2025 + ITL0 (merged from level1)  
+EURO2021: NUTS2021 + ITL2021 + ITL0 (merged from level1)  
+EURO2025: NUTS2024 + ITL2025 + ITL0 (merged from level1)  
 EPSG:8857   
 Total row: 4282  
 
 ---
 
-## WorldClim
-
-### WorldClim Climatology V1
+## WorldClim Climatology V1
 
 1. **Data**  
 - **Data Period and Frequency:** 1960 - 1991, Aggregated by month  
-- **Homepage:** [Earth Observation Group (EOG) Nighttime Lights Data](https://eogdata.mines.edu/products/vnl/)  
-- **Metadata:** [Earth Observation Group (EOG) Nighttime Lights Data](https://eogdata.mines.edu/products/vnl/)  
+- **Homepage:** [WorldClim](https://www.worldclim.org/)  
+- **Metadata:** [Global climate and weather data](https://www.worldclim.org/data/index.html)  
 - **Download:** Available via Google Earth Engine:  
   - [WorldClim Climatology V1](https://developers.google.com/earth-engine/datasets/catalog/WORLDCLIM_V1_MONTHLY)  
 - **License and Usage Notes:**  
   - CC-BY-SA-4.0
-     
+- **Reference Paper:** [Very high resolution interpolated climate surfaces for global land areas](https://rmets.onlinelibrary.wiley.com/doi/10.1002/joc.1276)
+  
 2. **Processing Method**
-
-The analysis used Google Earth Engine (GEE) to process VIIRS yearly nighttime light data. For each geographical unit (NUTS, ITL, or EURO regions), all light intensity values were extracted, and summary metrics were computed to describe brightness patterns within each region.
 
 - **Code Links:**  
   - [GEE-WC_Bio](https://github.com/OxfordDemSci/Mapineq/blob/208-gee-sub-worldclim/src/data-wrangling/GEE/WorldClim/WC_Bio.js)  
-  - [Post_GEE](src/data-wrangling/GEE/WorldClim/GEE_WC.ipynb)  
+  - [Post_GEE](https://github.com/OxfordDemSci/Mapineq/blob/208-gee-sub-worldclim/src/data-wrangling/GEE/WorldClim/GEE_WC.ipynb)  
 - **Metrics Explanation:**  
 Calculated metrics are based on all bioclimatic bands from the WorldClim dataset for each region:  
     - Mean (`mean`): Average value across all pixels within the polygon  
@@ -74,30 +71,31 @@ Calculated metrics are based on all bioclimatic bands from the WorldClim dataset
 
 ---
 
-### WorldClim BIO Variables V1
+## WorldClim BIO Variables V1
 
 1. **Data**  
 - **Data Period and Frequency:** 2012-04-01 - 2025-03-01, Monthly  
-> Note: 20120401-20120801 UK missing, so ITL starts from 2012-09-01  
-- **Homepage:** [Earth Observation Group (EOG) Nighttime Lights Data](https://eogdata.mines.edu/products/vnl/)  
-- **Metadata:** [Earth Observation Group (EOG) Nighttime Lights Data](https://eogdata.mines.edu/products/vnl/)  
+- **Homepage:** [WorldClim](https://www.worldclim.org/)  
+- **Metadata:** [Global climate and weather data](https://www.worldclim.org/data/index.html)  
 - **Download:**  
   [WorldClim BIO Variables V1](https://developers.google.com/earth-engine/datasets/catalog/WORLDCLIM_V1_BIO)  
 - **License and Usage Notes:**  
   - CC-BY-SA-4.0
+- **Reference Paper:** [Very high resolution interpolated climate surfaces for global land areas](https://rmets.onlinelibrary.wiley.com/doi/10.1002/joc.1276)
+
                                                                             
 2. **Processing Method**  
 - **Code Links:**  
   - [GEE-WC_Climatology](https://github.com/OxfordDemSci/Mapineq/blob/208-gee-sub-worldclim/src/data-wrangling/GEE/WorldClim/WC_Climatology.js)  
-  - [Post_GEE](src/data-wrangling/GEE/WorldClim/GEE_WC.ipynb)  
+  - [Post_GEE](https://github.com/OxfordDemSci/Mapineq/blob/208-gee-sub-worldclim/src/data-wrangling/GEE/WorldClim/GEE_WC.ipynb)  
 - **Metrics Explanation:** 
 Calculated climatology metrics are based on all bands from the WorldClim dataset for each region:  
-- Mean (`mean`): Average climatic value within the polygon  
-- Minimum (`min`): Lowest climatic value within the polygon  
-- Maximum (`max`): Highest climatic value within the polygon  
-- Median (`median`): Middle climatic value within the polygon  
-- Standard Deviation (`stdDev`): Variation of climatic values within the polygon  
-- Percentiles (`10th_percentile`, `25th_percentile`, `75th_percentile`, `90th_percentile`): Climatic values at the 10th, 25th, 75th, and 90th percentiles within the polygon  
+    - Mean (`mean`): Average climatic value within the polygon  
+    - Minimum (`min`): Lowest climatic value within the polygon  
+    - Maximum (`max`): Highest climatic value within the polygon  
+    - Median (`median`): Middle climatic value within the polygon  
+    - Standard Deviation (`stdDev`): Variation of climatic values within the polygon  
+    - Percentiles (`10th_percentile`, `25th_percentile`, `75th_percentile`, `90th_percentile`): Climatic values at the 10th, 25th, 75th, and 90th percentiles within the polygon  
 
 - **Shapefile Used:** NUTS, ITL, EURO  
 
