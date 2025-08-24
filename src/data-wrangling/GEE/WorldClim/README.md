@@ -59,8 +59,8 @@ Total row: 4282
 The analysis used Google Earth Engine (GEE) to process VIIRS yearly nighttime light data. For each geographical unit (NUTS, ITL, or EURO regions), all light intensity values were extracted, and summary metrics were computed to describe brightness patterns within each region.
 
 - **Code Links:**  
-  - [GEE-NUTS](https://github.com/OxfordDemSci/Mapineq/blob/204-gee-sub-night-time-light/src/data-wrangling/GEE/NTL/VIIR_Annual_NUTS.js)  
-  - [Post_GEE](https://github.com/OxfordDemSci/Mapineq/blob/204-gee-sub-night-time-light/src/data-wrangling/GEE/NTL/NTL_post_GEE.ipynb)  
+  - [GEE-WC_Bio](https://github.com/OxfordDemSci/Mapineq/blob/208-gee-sub-worldclim/src/data-wrangling/GEE/WorldClim/WC_Bio.js)  
+  - [Post_GEE](src/data-wrangling/GEE/WorldClim/GEE_WC.ipynb)  
 - **Metrics Explanation:**  
 Calculated metrics are based on all bioclimatic bands from the WorldClim dataset for each region:  
     - Mean (`mean`): Average value across all pixels within the polygon  
@@ -68,7 +68,7 @@ Calculated metrics are based on all bioclimatic bands from the WorldClim dataset
     - Maximum (`max`): Highest value within the polygon  
     - Median (`median`): Middle value within the polygon  
     - Standard Deviation (`stdDev`): Variation of values within the polygon  
-    - Percentiles (`p10`, `p25`, `p75`, `p90`): Values at the 10th, 25th, 75th, and 90th percentiles within the polygon  
+    - Percentiles (`10th_percentile`, `25th_percentile`, `75th_percentile`, `90th_percentile`): Values at the 10th, 25th, 75th, and 90th percentiles within the polygon  
 
 - **Shapefile Used:** NUTS, ITL, EURO  
 
@@ -88,8 +88,8 @@ Calculated metrics are based on all bioclimatic bands from the WorldClim dataset
                                                                             
 2. **Processing Method**  
 - **Code Links:**  
-  - [GEE](https://github.com/OxfordDemSci/Mapineq/blob/204-gee-sub-night-time-light/src/data-wrangling/GEE/NTL/VIIR_Monthly_NUTS.js)  
-  - [Post_GEE](https://github.com/OxfordDemSci/Mapineq/blob/204-gee-sub-night-time-light/src/data-wrangling/GEE/NTL/NTL_post_GEE.ipynb)  
+  - [GEE-WC_Climatology](https://github.com/OxfordDemSci/Mapineq/blob/208-gee-sub-worldclim/src/data-wrangling/GEE/WorldClim/WC_Climatology.js)  
+  - [Post_GEE](src/data-wrangling/GEE/WorldClim/GEE_WC.ipynb)  
 - **Metrics Explanation:** 
 Calculated climatology metrics are based on all bands from the WorldClim dataset for each region:  
 - Mean (`mean`): Average climatic value within the polygon  
@@ -97,7 +97,7 @@ Calculated climatology metrics are based on all bands from the WorldClim dataset
 - Maximum (`max`): Highest climatic value within the polygon  
 - Median (`median`): Middle climatic value within the polygon  
 - Standard Deviation (`stdDev`): Variation of climatic values within the polygon  
-- Percentiles (`p10`, `p25`, `p75`, `p90`): Climatic values at the 10th, 25th, 75th, and 90th percentiles within the polygon  
+- Percentiles (`10th_percentile`, `25th_percentile`, `75th_percentile`, `90th_percentile`): Climatic values at the 10th, 25th, 75th, and 90th percentiles within the polygon  
 
 - **Shapefile Used:** NUTS, ITL, EURO  
 
