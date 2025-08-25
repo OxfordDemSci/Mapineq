@@ -44,7 +44,7 @@ Total row: 4282
 ## WorldClim Climatology V1
 
 1. **Data**  
-- **Data Period and Frequency:** 1960 - 1991, Aggregated by month  
+- **Data Period and Frequency:** 1950–2000 for 50 years, Aggregated by month  
 - **Homepage:** [WorldClim](https://www.worldclim.org/)  
 - **Metadata:** [Global climate and weather data](https://www.worldclim.org/data/index.html)  
 - **Download:** Available via Google Earth Engine:  
@@ -74,7 +74,7 @@ Calculated metrics are based on all bioclimatic bands from the WorldClim dataset
 ## WorldClim BIO Variables V1
 
 1. **Data**  
-- **Data Period and Frequency:** 2012-04-01 - 2025-03-01, Monthly  
+- **Data Period and Frequency:** Aggregated 1950–2000 for 50 years  
 - **Homepage:** [WorldClim](https://www.worldclim.org/)  
 - **Metadata:** [Global climate and weather data](https://www.worldclim.org/data/index.html)  
 - **Download:**  
