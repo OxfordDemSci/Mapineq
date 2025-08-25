@@ -189,3 +189,7 @@ dmypy.json
 src/database/prod.env
 *.gpkg
 /MapIneq.iml
+
+# Ignore Mac system files
+.DS_Store
+**/.DS_Store
