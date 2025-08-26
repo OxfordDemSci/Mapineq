@@ -249,8 +249,17 @@ export class DashboardComponent implements OnInit{
         }
     } // END FUNCTION panelLeftStatusChange
 
+    updateRegionLevelFromSelect(regionLevel: any) {
+      // console.log('* * * updateRegionLevelFromSelect() ...', regionLevel, typeof regionLevel);
+
+      this.displayObject.tableFields[0].tableRegionLevel = regionLevel;
+
+    } // END FUNCTION updateRegionLevelFromSelect
+
 
     updateTableFieldFromSelect(tableField: DisplayTableValueObject) {
+        // console.log(' * * * ' + tableField.tableId.toString() + ' updateTableFieldFromSelect() ... ');
+
         let tableId = tableField.tableId;
 
         let showOnlyOneTableId = -1;
@@ -259,6 +268,7 @@ export class DashboardComponent implements OnInit{
 
 
         if (this.displayObject.numberTableFields > 1  &&  tableField.tableShowOnlyThisTable) {
+            // console.log(' * * * ' + tableId.toString() + ' AAA');
             if (tableField.tableSelectionComplete) {
                 console.log('show only table ', tableField.tableId);
                 showOnlyOneTableId = tableField.tableId;
@@ -273,16 +283,19 @@ export class DashboardComponent implements OnInit{
 
 
         } else {
+            // console.log(' * * * ' + tableId.toString() + ' BBB');
 
             this.displayObject.displayType = this.displayObject.formType;
             this.displayObject.displayTableId = -1;
 
             if (tableField.tableId === 0 && this.displayObject.formType === 'bivariate') {
                 this.displayObject.tableFields[1].tableRegionLevel = this.displayObject.tableFields[0].tableRegionLevel;
+                /* 20250224 TURN OFF DIFFERENT YEARS, because outcome year not depending on predictor year anymore /
                 this.displayObject.tableFields[1].tableYear = this.displayObject.tableFields[0].tableYear;
                 if (this.displayObject.tableFields[0].tableName === '') {
                     this.displayObject.tableFields[1].tableName = '';
                 }
+                /* */
             }
 
             // console.log('CHECK HIER???');
@@ -303,6 +316,8 @@ export class DashboardComponent implements OnInit{
             }
 
             // console.log(' - - doCollectDataForSelection ???');
+            // console.log(' * * * ' + tableId.toString() + ' CCC', doCollectDataForSelection);
+
             if (doCollectDataForSelection) {
                 this.collectDataForSelection(tableId);
                 // SJOERD: tijdelijk UIT gezet
@@ -360,7 +375,7 @@ export class DashboardComponent implements OnInit{
 
 
     collectDataForSelection(tableId = 0) {
-        console.log('CALLED collectDataForSelection() ... ', tableId);
+        console.log(' **  **  **  CALLED collectDataForSelection() ... ', tableId, (tableId === 0 ? 'LEFT' : 'RIGHT'));
 
         // if (this.displayObject.displayType === 'bivariate'  &&  this.displayObject.tableFields.length > 1  &&  tableId === 0) {
         if (tableId === 999) {
@@ -401,7 +416,7 @@ export class DashboardComponent implements OnInit{
                         y_json['conditions'] = y_conditions;
 
                         //console.log('before abc    NET VOOR AANROEP getXYData (bivariate versie)');
-                        this.dashboardFeatureService.getXYData(this.displayObject.tableFields[0].tableRegionLevel, this.displayObject.tableFields[0].tableYear, JSON.stringify(x_json), JSON.stringify(y_json)).subscribe(data => {
+                        this.dashboardFeatureService.getXYData(this.displayObject.tableFields[0].tableRegionLevel, this.displayObject.tableFields[0].tableYear, this.displayObject.tableFields[1].tableYear, JSON.stringify(x_json), JSON.stringify(y_json)).subscribe(data => {
                             //console.log('before abc    A. DISPLAY DATA COLLECTED! (bivariate)', data);
                             this.displayData = data;
                             this.displayDataUpdated = !this.displayDataUpdated;

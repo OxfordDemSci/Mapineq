@@ -8,7 +8,7 @@
         </mat-card-header>
 
         <mat-card-content>
-            <div [id]="'divTableDescr_' + tableSelection.tableId">
+            <div [id]="'divTableDescr_' + tableSelection.tableId" class="divTableDescr">
                 {{tableSelection.tableDescr}}
             </div>
 
@@ -22,11 +22,15 @@
                 <mat-select *ngIf="tableSelection.tableId === 0" [(value)]="tableSelection.tableRegionLevel" (valueChange)="regionLevelChanged()">
                     <mat-option [value]="regionLevel" *ngFor="let regionLevel of availableRegionLevels">{{regionLevel}} - <i>{{regionLevelsText[regionLevel]}}</i></mat-option>
                 </mat-select>
+                <!--
                 <mat-hint *ngIf="tableSelection.tableId === 0">0: countries / 1: large regions / 2: base regions / 3: small regions</mat-hint>
+                -->
 
                 <mat-label *ngIf="tableSelection.tableId === 1">Region Level</mat-label>
                 <input matInput type="text" *ngIf="tableSelection.tableId === 1" readonly [value]="(tableSelection.tableRegionLevel !== '-1' ? tableSelection.tableRegionLevel : '')" [disabled]="true">
+                <!--
                 <mat-hint *ngIf="tableSelection.tableId === 1">(filled automatically)</mat-hint>
+                -->
             </mat-form-field>
 
 
@@ -50,7 +54,9 @@
                         <div class="optionLine2">{{option.f_resource}}</div>
                     </mat-option>
                 </mat-autocomplete>
+                <!--
                 <mat-hint  *ngIf="this.tableSelection.tableName !== ''">This table is available at region level(s): {{availableRegionLevelsForTable}}</mat-hint>
+                -->
             </mat-form-field>
 
 
@@ -60,11 +66,22 @@
                     <mat-option [value]="year" *ngFor="let year of availableYears">{{year}}</mat-option>
                 </mat-select>
 
+                <mat-label *ngIf="tableSelection.tableId === 1">Select year</mat-label>
+                <!--
                 <mat-label *ngIf="tableSelection.tableId === 1">Year</mat-label>
                 <input matInput type="text" *ngIf="tableSelection.tableId === 1" readonly [value]="(tableSelection.tableYear !== '-1' ? tableSelection.tableYear : '')" [disabled]="true">
+                <mat-select *ngIf="tableSelection.tableId === 1" [(value)]="tableSelection.tableYear" (valueChange)="checkTableValueSelectionComplete()">
+                -->
+                <mat-select *ngIf="tableSelection.tableId === 1" [(value)]="tableSelection.tableYear" (valueChange)="getFieldsForTableForYearAndRegionLevel()">
+                  <mat-option [value]="year" *ngFor="let year of availableYears">{{year}}</mat-option>
+                </mat-select>
+                <!--
                 <mat-hint  *ngIf="tableSelection.tableId === 1">(filled automatically)</mat-hint>
+                -->
             </mat-form-field>
+            <!--
             <div *ngIf="availableYears.length > 0"><div class="textSmall">Available years: <i>{{availableYears.join(', ')}}</i></div><div class="divWhiteSpace"></div></div>
+            -->
 
 
 

@@ -105,8 +105,9 @@ export class FeatureService {
 
   //postgisftw.get_source_by_nuts_level
   // IN BIVARIATE CASE: PREDICTOR
-  public getResourceByNutsLevel(nutslevel: string, use_case: number): Observable<any> {
-    let parameters = this.getParameters(`_level=${nutslevel}&limit=2500`, use_case, '&_function=Predictor');
+  public getResourceByNutsLevel(nutslevel: string, use_case: number, tableId = 0): Observable<any> {
+    // let parameters = this.getParameters(`_level=${nutslevel}&limit=2500`, use_case, '&_function=Predictor');
+    let parameters = this.getParameters(`_level=${nutslevel}&limit=2500`, use_case, '&_function=' + (tableId === 0 ? 'Predictor' : 'Outcome') );
     return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_source_by_nuts_level/items.json?${parameters}`).pipe(
       tap((result) => {
         //console.log(result);
@@ -172,6 +173,7 @@ export class FeatureService {
         catchError(this.handleError('search', 'ERROR')))
   }
 
+  /* SJOERD
   public getXYData(regionLevel: string, year: string, selectionJsonX: string, selectionJsonY: string): Observable<any> {
     return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_xy_data/items.json?_level=${regionLevel}&_predictor_year=${year}&_outcome_year=${year}&X_JSON=${selectionJsonX}&Y_JSON=${selectionJsonY}&limit=2500`).pipe(
         tap((result) => {
@@ -179,7 +181,14 @@ export class FeatureService {
         }),
         catchError(this.handleError('search', 'ERROR')))
   } // END FUNCTION getXYData
-
+  */
+  public getXYData(regionLevel: string, yearX: string, yearY: string, selectionJsonX: string, selectionJsonY: string): Observable<any> {
+    return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_xy_data/items.json?_level=${regionLevel}&_predictor_year=${yearX}&_outcome_year=${yearY}&X_JSON=${selectionJsonX}&Y_JSON=${selectionJsonY}&limit=2500`).pipe(
+      tap((result) => {
+        //console.log(result);
+      }),
+      catchError(this.handleError('search', 'ERROR')))
+  } // END FUNCTION getXYData
 
   public getXData(regionLevel: string, year: string, selectionJsonX: string): Observable<any> {
     return this.httpClient.get<string>(`${this.baseUrl}functions/postgisftw.get_x_data/items.json?_level=${regionLevel}&_year=${year}&X_JSON=${selectionJsonX}&limit=2500`).pipe(
