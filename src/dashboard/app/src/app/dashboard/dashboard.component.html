@@ -76,6 +76,9 @@
                 <a [disabled]="displayData?.length < 1" mat-stroked-button type="button" color="primary" (click)="downloadCSV()" [download]="downloadFileName" [href]="downloadUrl" class="buttonFullWidth">
                     <mat-icon>download</mat-icon>Download mapped data as csv
                 </a>
+              <div class="interpretingDataLinkDiv">
+                <a href="https://www.mapineq.org/interpreting-data/" target="_blank" class="linkLook">Info about interpreting this data <mat-icon class="matIconInText">open_in_new</mat-icon></a>
+              </div>
 
             </div>
 
