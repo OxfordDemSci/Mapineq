@@ -18,6 +18,8 @@ For each dataset, the following information is documented:
 
 ## 2. Processing Methodology
 
+The analysis used Google Earth Engine (GEE) to process VIIRS nighttime light data (Yearly, Monthly, and Monthly Stray). For each geographical unit (NUTS, ITL, or EURO regions), all light intensity values were extracted, and summary metrics were computed to describe brightness patterns within each region.  
+
 For each dataset, the following processing details are included:
 
 - **Code Link**  
@@ -57,9 +59,6 @@ EPSG:8857
   - When using these data, please cite the Earth Observation Group (EOG) as the data source.
 
 2. **Processing Method**
-
-The analysis used Google Earth Engine (GEE) to process VIIRS yearly nighttime light data. For each geographical unit (NUTS, ITL, or EURO regions), all light intensity values were extracted, and summary metrics were computed to describe brightness patterns within each region.
-
 - **Code Links:**  
   - [GEE-NUTS](https://github.com/OxfordDemSci/Mapineq/blob/204-gee-sub-night-time-light/src/data-wrangling/GEE/NTL/VIIR_Annual_NUTS.js)  
   - [GEE-ITL/EURO](https://github.com/OxfordDemSci/Mapineq/blob/204-gee-sub-night-time-light/src/data-wrangling/GEE/NTL/VIIR_Annual_ITL.js)  
