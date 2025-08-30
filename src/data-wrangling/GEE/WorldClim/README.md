@@ -53,13 +53,15 @@ Total row: 4282
   - CC-BY-SA-4.0
 - **Reference Paper:** [Very high resolution interpolated climate surfaces for global land areas](https://rmets.onlinelibrary.wiley.com/doi/10.1002/joc.1276)
   
+The most recent version of the dataset are available [here](https://www.worldclim.org/data/monthlywth.html)
+  
 2. **Processing Method**
 
 - **Code Links:**  
   - [GEE-WC_Bio](https://github.com/OxfordDemSci/Mapineq/blob/208-gee-sub-worldclim/src/data-wrangling/GEE/WorldClim/WC_Bio.js)  
   - [Post_GEE](https://github.com/OxfordDemSci/Mapineq/blob/208-gee-sub-worldclim/src/data-wrangling/GEE/WorldClim/GEE_WC.ipynb)  
 - **Metrics Explanation:**  
-Calculated metrics are based on all bioclimatic bands from the WorldClim dataset for each region:  
+Calculated metrics for each region (NUTS, ITL, EURO) are derived from all 4 climatological bands available in the WorldClim dataset, including `mean temperature`, `minimum temperature`, `maximum temperature`, and `precipitation`. Detailed information about each band can be found on [Google Earth Engine](https://developers.google.com/earth-engine/datasets/catalog/WORLDCLIM_V1_MONTHLY#bands). The calculated statistical metrics are summarised below:  
     - Mean (`mean`): Average value across all pixels within the polygon  
     - Minimum (`min`): Lowest value within the polygon  
     - Maximum (`max`): Highest value within the polygon  
@@ -81,15 +83,15 @@ Calculated metrics are based on all bioclimatic bands from the WorldClim dataset
   [WorldClim BIO Variables V1](https://developers.google.com/earth-engine/datasets/catalog/WORLDCLIM_V1_BIO)  
 - **License and Usage Notes:**  
   - CC-BY-SA-4.0
-- **Reference Paper:** [Very high resolution interpolated climate surfaces for global land areas](https://rmets.onlinelibrary.wiley.com/doi/10.1002/joc.1276)
+- **Reference Paper:** [Very high resolution interpolated climate surfaces for global land areas](https://rmets.onlinelibrary.wiley.com/doi/10.1002/joc.1276) 
 
                                                                             
 2. **Processing Method**  
 - **Code Links:**  
   - [GEE-WC_Climatology](https://github.com/OxfordDemSci/Mapineq/blob/208-gee-sub-worldclim/src/data-wrangling/GEE/WorldClim/WC_Climatology.js)  
   - [Post_GEE](https://github.com/OxfordDemSci/Mapineq/blob/208-gee-sub-worldclim/src/data-wrangling/GEE/WorldClim/GEE_WC.ipynb)  
-- **Metrics Explanation:** 
-Calculated climatology metrics are based on all bands from the WorldClim dataset for each region:  
+- **Metrics Explanation:**
+Calculated metrics for each region (NUTS, ITL, EURO) are derived from all 19 bioclimatic bands available in the WorldClim dataset, from `bio01`, `bio02`, ... to `bio19`. Detailed information about each band can be found on [Google Earth Engine](https://developers.google.com/earth-engine/datasets/catalog/WORLDCLIM_V1_BIO) and the [WorldClim website](https://www.worldclim.org/data/bioclim.html). The calculated statistical metrics are summarised below:  
     - Mean (`mean`): Average climatic value within the polygon  
     - Minimum (`min`): Lowest climatic value within the polygon  
     - Maximum (`max`): Highest climatic value within the polygon  
