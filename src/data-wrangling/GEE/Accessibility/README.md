@@ -18,7 +18,7 @@ For each dataset, the following information is documented:
 
 ## 2. Processing Methodology
 
-The analysis used Google Earth Engine (GEE) to process WorldClim bioclimatic and climatology data. For each geographical unit (NUTS, ITL, or EURO regions), all values from the selected bands were extracted, and summary metrics were computed to describe climatic patterns within each region. Metrics included mean, minimum, maximum, median, standard deviation, and key percentiles (10th, 25th, 75th, 90th), providing a comprehensive overview of spatial variability.
+The analysis used Google Earth Engine (GEE) to process the Accessibility to Cities 2015 dataset. For each geographical unit (NUTS, ITL, or EURO regions), values from the accessibility band were extracted, and summary statistics were calculated to describe travel time patterns to cities within each region. Metrics included mean, minimum, maximum, median, standard deviation, coefficient of variation, providing an overview of spatial variability in accessibility.
 
 - **Code Link**  
 - **Metrics Explanation:** Description of the metrics or statistics calculated  
@@ -41,7 +41,7 @@ Total row: 4282
 
 ---
 
-## WorldClim Climatology V1
+## Accessibility to Cities 2015
 
 1. **Data**  
 - **Data Period and Frequency:** 2015–2016  
@@ -51,14 +51,16 @@ Total row: 4282
 - **License and Usage Notes:**  
   CC-BY-SA-4.0
 - **Reference Paper:** [A global map of travel time to cities to assess inequalities in accessibility in 2015](https://www.nature.com/articles/nature25181)
-  
-The most recent version of the dataset is not yet available. 
+
+> Note: Note: The most recent version of the dataset, **Accessibility to Healthcare 2019**, is not yet available on GEE.  
+> Website: [Accessibility to Healthcare 2019](https://developers.google.com/earth-engine/datasets/catalog/Oxford_MAP_accessibility_to_healthcare_2019)(currently throwing an error)
+
   
 2. **Processing Method**
 
 - **Code Links:**  
-  - [GEE-WC_Bio](https://github.com/OxfordDemSci/Mapineq/blob/208-gee-sub-worldclim/src/data-wrangling/GEE/WorldClim/WC_Bio.js)  
-  - [Post_GEE](https://github.com/OxfordDemSci/Mapineq/blob/208-gee-sub-worldclim/src/data-wrangling/GEE/WorldClim/GEE_WC.ipynb)  
+  - [GEE-Acc2City.js](src/data-wrangling/GEE/Accessibility/Acc2City.js)  
+  - [Post_GEE-GEE_Accessibility.ipynb](src/data-wrangling/GEE/Accessibility/GEE_Accessibility.ipynb)  
 - **Metrics Explanation:**  
 Calculated metrics for each region (NUTS, ITL, EURO) are derived from the `accessibility` band of the accessibility_to_cities_2015_v1_0 data.  The calculated statistical metrics are summarised below:  
     - Mean (`mean`): Average value across all pixels within the polygon  
