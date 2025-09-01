@@ -1,4 +1,4 @@
-# WorldClim Processing
+# Accessibility to Cities Processing
 
 This document provides an overview of **Accessibility to Cities 2015** dataset processed in Google Earth Engine (GEE) using JavaScript. It includes details about the data sources, processing methods, and metrics used.
 
