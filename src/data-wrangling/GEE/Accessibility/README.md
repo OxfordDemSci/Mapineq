@@ -47,13 +47,12 @@ Total row: 4282
 - **Data Period and Frequency:** 2015–2016  
 - **Homepage:** [Malaria Atlas Project](https://malariaatlas.org/)  
 - **Metadata:** [Accessibility to Cities 2015 (GEE)](https://developers.google.com/earth-engine/datasets/catalog/Oxford_MAP_accessibility_to_cities_2015_v1_0#description)  
-- **Download:** Available via Google Earth Engine:  
-  - [Accessibility to Cities 2015 (GEE)](https://developers.google.com/earth-engine/datasets/catalog/Oxford_MAP_accessibility_to_cities_2015_v1_0#description)  
+- **Download:** [Accessibility to Cities 2015 (GEE)](https://developers.google.com/earth-engine/datasets/catalog/Oxford_MAP_accessibility_to_cities_2015_v1_0#description)  
 - **License and Usage Notes:**  
-  - CC-BY-SA-4.0
-- **Reference Paper:** [Very high resolution interpolated climate surfaces for global land areas](https://rmets.onlinelibrary.wiley.com/doi/10.1002/joc.1276)
+  CC-BY-SA-4.0
+- **Reference Paper:** [A global map of travel time to cities to assess inequalities in accessibility in 2015](https://www.nature.com/articles/nature25181)
   
-The most recent version of the dataset are available [here](https://www.worldclim.org/data/monthlywth.html)
+The most recent version of the dataset is not yet available. 
   
 2. **Processing Method**
 
@@ -66,6 +65,25 @@ Calculated metrics for each region (NUTS, ITL, EURO) are derived from the `acces
     - Minimum (`min`): Lowest value within the polygon  
     - Maximum (`max`): Highest value within the polygon  
     - Median (`median`): Middle value within the polygon  
-    - Standard Deviation (`stdDev`): Variation of values within the polygon  
+    - Standard Deviation (`stdDev`): Variation of values within the polygon
+    - Coefficient of Variation (`CV`)  
+  Measures **relative variability** by comparing the standard deviation to the mean.  
+  Formula:  
+  \[
+  CV = \frac{\text{stdDev}}{\text{mean}}
+  \]  
+  - **High CV** → Greater variability relative to the mean.  
+  - **Low CV** → More consistent values.
+
+- Mean-to-Median Ratio (`Mean/Median`) 
+  Indicates potential **data skewness**.  
+  Formula:  
+  \[
+  \text{Mean/Median} = \frac{\text{mean}}{\text{median}}
+  \]  
+  - **≈ 1** → Data is approximately symmetric.  
+  - **> 1** → Right-skewed (mean > median).  
+  - **< 1** → Left-skewed (mean < median).
+
 
 - **Shapefile Used:** NUTS, ITL, EURO  
