@@ -67,23 +67,15 @@ Calculated metrics for each region (NUTS, ITL, EURO) are derived from the `acces
     - Median (`median`): Middle value within the polygon  
     - Standard Deviation (`stdDev`): Variation of values within the polygon
     - Coefficient of Variation (`CV`)  
-  Measures **relative variability** by comparing the standard deviation to the mean.  
-  Formula:  
-  \[
-  CV = \frac{\text{stdDev}}{\text{mean}}
-  \]  
-  - **High CV** → Greater variability relative to the mean.  
-  - **Low CV** → More consistent values.
-
-- Mean-to-Median Ratio (`Mean/Median`) 
-  Indicates potential **data skewness**.  
-  Formula:  
-  \[
-  \text{Mean/Median} = \frac{\text{mean}}{\text{median}}
-  \]  
-  - **≈ 1** → Data is approximately symmetric.  
-  - **> 1** → Right-skewed (mean > median).  
-  - **< 1** → Left-skewed (mean < median).
-
+      Measures relative variability by comparing the standard deviation to the mean.  
+      **Formula:  CV = stdDev / mean**
+      - High CV → Greater variability relative to the mean.  
+      - Low CV → More consistent values.
+    - Mean-to-Median Ratio (`Mean/Median`) 
+      Indicates potential data skewness.  
+      **Formula: Mean/Median = mean/median**
+      - ≈ 1 → Data is approximately symmetric.  
+      - \> 1 → Right-skewed (mean > median).  
+      - < 1 → Left-skewed (mean < median).
 
 - **Shapefile Used:** NUTS, ITL, EURO  
