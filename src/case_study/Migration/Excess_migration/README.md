@@ -20,6 +20,9 @@ Complex central American migration:  https://civicdatadesignlab.mit.edu/DISTANCE
 # Cool Project: 
 La Plataforma de Coordinación Interagencial para Refugiados y Migrantes (R4V) https://www.r4v.info/
 Project: https://civicdatadesignlab.mit.edu/Vida-Migrante
+Joint Data Center on forced displacement: https://www.jointdatacenter.org/resources/publications-and-reports/venezuela-migration-report/?utm_source=chatgpt.com
+
+IOM, UNHCR, R4V, and U.S. CBP.  
 
 VE in EQ:  Most migrants put 90% of their income towards necessities like food, rent, and health and cannot afford to pursue opportunities such as training to improve their economic situation
 
@@ -48,4 +51,4 @@ whole census
 
 # **Question**
 1. If people continue moving on the road, how to count thoes?（https://storyteller.iom.int/stories/journeys-hope-venezuelan-families-move-across-south-america?utm_source=chatgpt.com）   
-2. more wealthy/educated population with FB access? so maybe the travel by foot people would not be captured? (FB penetration)
+2. more wealthy/educated population with FB access? so maybe the travel by foot people would not be captured? (FB penetration, walking people cannot afford phone: https://apnews.com/article/immigration-financial-markets-caribbean-ap-top-news-venezuela-a46f4cb58fc94c22bf2b5418ea956c5b?utm_source=chatgpt.com)
