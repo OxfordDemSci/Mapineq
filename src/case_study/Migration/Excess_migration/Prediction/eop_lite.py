@@ -86,6 +86,43 @@ def trailing_share_i_to_j(df: pd.DataFrame, i: str, j: str, window: int = 12) ->
     w = num / den.replace(0, np.nan)
     return w.fillna(0.0).rename(f"w_{i}_to_{j}")
 
+# def compute_eop_lite(df: pd.DataFrame,
+#                      triads: List[Tuple[str,str,str]],
+#                      cfg: CounterfactualConfig) -> pd.DataFrame:
+#     d = complete_months(df).copy()
+#     G = compute_global_trend(d, cfg)
+#     mu, S = compute_mu_and_seasonality(d, cfg)
+#     d['moy'] = d['month'].dt.month
+#     ehat_all = build_counterfactual(d[['orig','dest','month','flow']], mu, S, G, cfg)
+#     d = d.join(ehat_all)
+#     results = []
+#     for (i,j,k) in triads:
+#         mask_jk = (d['orig']==j) & (d['dest']==k)
+#         sub = d.loc[mask_jk, ['month','flow','ehat']].copy().sort_values('month')
+#         if sub.empty:
+#             continue
+#         excess = compute_percent_excess(sub['flow'], sub['ehat'], eps=cfg.eps)
+#         w = trailing_share_i_to_j(d[['orig','dest','month','flow']], i=i, j=j, window=12)
+#         aligned = sub[['month']].merge(w.rename('w'), left_on='month', right_index=True, how='left')
+#         aligned['w'] = aligned['w'].fillna(0.0)
+#         tmp = pd.DataFrame({
+#             'i': i, 'j': j, 'k': k,
+#             'month': sub['month'].values,
+#             'flow_jk': sub['flow'].values,
+#             'ehat_jk': sub['ehat'].values,
+#             'excess_jk': excess.values,
+#             'w_ij': aligned['w'].values
+#         })
+#         tmp['eop_lite'] = tmp['excess_jk'] * tmp['w_ij']
+#         results.append(tmp)
+#     if not results:
+#         return pd.DataFrame(columns=['i','j','k','month','flow_jk','ehat_jk','excess_jk','w_ij','eop_lite'])
+#     out = pd.concat(results, ignore_index=True).sort_values(['i','j','k','month'])
+#     return out
+
+
+from tqdm import tqdm
+
 def compute_eop_lite(df: pd.DataFrame,
                      triads: List[Tuple[str,str,str]],
                      cfg: CounterfactualConfig) -> pd.DataFrame:
@@ -96,7 +133,9 @@ def compute_eop_lite(df: pd.DataFrame,
     ehat_all = build_counterfactual(d[['orig','dest','month','flow']], mu, S, G, cfg)
     d = d.join(ehat_all)
     results = []
-    for (i,j,k) in triads:
+    
+    # Wrap triads with tqdm to get a progress bar
+    for (i,j,k) in tqdm(triads, desc="Processing triads", unit="triad"):
         mask_jk = (d['orig']==j) & (d['dest']==k)
         sub = d.loc[mask_jk, ['month','flow','ehat']].copy().sort_values('month')
         if sub.empty:
@@ -115,6 +154,7 @@ def compute_eop_lite(df: pd.DataFrame,
         })
         tmp['eop_lite'] = tmp['excess_jk'] * tmp['w_ij']
         results.append(tmp)
+    
     if not results:
         return pd.DataFrame(columns=['i','j','k','month','flow_jk','ehat_jk','excess_jk','w_ij','eop_lite'])
     out = pd.concat(results, ignore_index=True).sort_values(['i','j','k','month'])
