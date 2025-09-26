@@ -231,3 +231,99 @@ def diagnose_inputs(flows_df: pd.DataFrame, pop_df: pd.DataFrame, baseline_years
     base = tmp[tmp['year'].isin(baseline_years)]
     rep['has_baseline_years'] = bool(len(base)>0)
     return pd.DataFrame.from_dict(rep, orient='index', columns=['value'])
+
+def penalty_report_from_cf(cf, *, return_deviance=False,
+                           flows_df=None, pop_df=None, covid_df=None):
+    """
+    Returns the L2 penalty breakdown exactly as optimized by PoissonRegressor.
+    Grouping:
+      - ||theta||^2  : pair fixed effects (all non-baseline pairs)
+      - ||s||^2      : month-of-year effects (11 dummies if drop='first')
+      - beta/gamma/delta: continuous covariates (log_pop_o, log_pop_d, H_t, covid_idx)
+    """
+    # --- pull learned coefficients (these are on the *encoded/scaled* design) ---
+    coef = cf.model.coef_.ravel()                     # shape (n_features,)
+    alpha = float(getattr(cf.model, "alpha", cf.best_alpha_))
+
+    # how many columns belong to each block
+    n_pair = len(cf.enc_pair.categories_[0]) - 1      # drop='first'
+    n_moy  = len(cf.enc_moy .categories_[0]) - 1      # drop='first'
+    n_cont = len(coef) - n_pair - n_moy               # should be 4: log_pop_o, log_pop_d, H_t, covid_idx
+
+    i0 = 0
+    i1 = i0 + n_pair
+    i2 = i1 + n_moy
+    i3 = i2 + n_cont
+
+    w_pair = coef[i0:i1]
+    w_moy  = coef[i1:i2]
+    w_cont = coef[i2:i3]   # order: [log_pop_o, log_pop_d, H_t, covid_idx] (after StandardScaler)
+
+    # squared L2 norms by group (on the encoded/scaled space = exact objective space)
+    sq_theta = float(np.dot(w_pair, w_pair))
+    sq_s     = float(np.dot(w_moy,  w_moy))
+    # individual continuous parameters (scaled)
+    names_cont = ["beta_log_pop_o", "beta_log_pop_d", "gamma_Ht", "delta_covid"]
+    cont_squares_scaled = {nm: float(w_cont[k]**2) for k, nm in enumerate(names_cont)}
+
+    # totals (scaled space)
+    sq_total = sq_theta + sq_s + sum(cont_squares_scaled.values())
+
+    # penalty values as used by sklearn and also without the 1/2, if you prefer that style
+    penalty_half = 0.5 * alpha * sq_total            # exact in sklearn
+    penalty_nohalf = alpha * sq_total                # if you want α * (⋯) with no 1/2
+
+    # also provide *de-standardized* continuous coefficients for interpretation
+    if cf.scaler is not None and hasattr(cf.scaler, "scale_"):
+        scales = np.array(cf.scaler.scale_, dtype=float)
+        scales[scales == 0.0] = 1.0
+        cont_coefs_original = (w_cont / scales).tolist()
+    else:
+        cont_coefs_original = w_cont.tolist()
+
+    out = {
+        "alpha": alpha,
+        "groups_sq": {
+            "||theta||^2": sq_theta,
+            "||s||^2": sq_s,
+            **cont_squares_scaled
+        },
+        "sum_sq_all": sq_total,
+        "penalty_value_sklearn": penalty_half,   # = (alpha/2) * ||w||^2
+        "penalty_value_alpha_sum": penalty_nohalf,  # = alpha * (||θ||^2 + ||s||^2 + …)
+        "continuous_coefs_original_scale": dict(zip(
+            ["beta_log_pop_o","beta_log_pop_d","gamma_Ht","delta_covid"], cont_coefs_original))
+    }
+
+    # (optional) total objective on training data
+    if return_deviance:
+        # rebuild the training design to compute deviance on the *train window*
+        d = cf._build_design(flows_df, pop_df, covid_df)
+        d['month'] = pd.to_datetime(d['month']).values.astype("datetime64[M]")
+        train_mask = d['month'] <= pd.to_datetime(cf.cfg.train_end)
+
+        pairs = (d['orig'] + '→' + d['dest'])
+        X_fit = cf._transform(pairs[train_mask], d.loc[train_mask, 'moy'], 
+                              d.loc[train_mask, ['log_pop_o','log_pop_d','H_t','covid_idx']].values)
+        y_fit = d.loc[train_mask, 'flow'].values
+        mu_fit = cf.model.predict(X_fit)
+
+        # Poisson deviance (same convention as sklearn; y=0 terms handled)
+        y = y_fit; mu = np.maximum(mu_fit, 1e-12)
+        # dev = 2.0 * (np.where(y > 0, y * np.log(y / mu) - (y - mu), - (y - mu))).sum()
+
+        eps = 1e-12   # small guard to avoid divide by zero
+        mu_safe = np.clip(mu, eps, None)
+        
+        dev_terms = np.where(
+            y > 0,
+            y * np.log(y / mu_safe) - (y - mu_safe),
+            - (y - mu_safe)   # when y=0
+        )
+        dev = 2.0 * dev_terms.sum()
+        
+        obj = dev + 0.5 * alpha * sq_total
+        out["train_poisson_deviance"] = float(dev)
+        out["train_objective_value"]  = float(obj)
+
+    return out
