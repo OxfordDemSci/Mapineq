@@ -64,7 +64,7 @@ The output is `meta_migration_i`n and `meta_migration_out`.
 - **Metrics Explanation:**  
     - `origin` / `destination`:   
         - All countries: a summary row representing the global total inflow (or outflow).  
-        - Individual countries: a list of all available partner countries contributing to the inflow (or receiving the outflow) for the reporting country (geo). Typically ~180 countries.
+        - Individual countries: a ISO Alpha-2 code list of all available partner countries contributing to the inflow (or receiving the outflow) for the reporting country (`geo`). Typically ~180 countries.
     - `month`:
         - All: a summary row representing the total annual flow.  
         - Individual months: specific monthly values within the time range.
