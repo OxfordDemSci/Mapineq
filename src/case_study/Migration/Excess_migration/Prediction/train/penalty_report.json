@@ -1,0 +1,18 @@
+{
+  "alpha": 1e-06,
+  "groups_sq": {
+    "||theta||^2": 66605.61491827412,
+    "||month_year||^2": 5.807458519107363,
+    "beta_log_pop_o": 0.0029744627537572946,
+    "beta_log_pop_d": 0.0029744627537572946
+  },
+  "sum_sq_all": 66611.42832571873,
+  "penalty_value_sklearn": 0.033305714162859365,
+  "penalty_value_alpha_sum": 0.06661142832571873,
+  "continuous_coefs_original_scale": {
+    "beta_log_pop_o": 0.054538635422581805,
+    "beta_log_pop_d": 0.054538635422581805
+  },
+  "train_poisson_deviance": 41601190.37187343,
+  "train_objective_value": 41601190.40517914
+}
