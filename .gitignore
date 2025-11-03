@@ -3,6 +3,8 @@
 **/out/
 .idea/
 *.env
+*/.DS_Store
+
 #---- R -----#
 
 # History files
