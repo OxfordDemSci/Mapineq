@@ -1,0 +1,715 @@
+```{r}
+# Libraries
+library(tidyverse)
+library(igraph)
+library(ggraph)
+library(RColorBrewer)
+library(unikn)
+```
+
+# My data
+
+```{r}
+Country_region <- read.csv("/Users/wenlanzhang/Downloads/PhD_UCL/Data/Oxford/all.csv")
+Country_region_clean <- Country_region %>%
+  rename(alpha2 = alpha.2,  # adjust if different name
+         region = region,
+         sub_region = sub.region)  # adjust exact name if needed
+Country_region
+```
+
+```{r}
+# --- 0) File paths: adjust if necessary
+migrations_file <- "/Users/wenlanzhang/Downloads/PhD_UCL/Data/Oxford/Migration/international_migration_flow.csv"
+migrations <- read_csv(migrations_file, show_col_types = FALSE)
+migrations
+```
+
+```{r}
+# --- 2) Aggregate directed flows -----------------------------------------
+flows_direct <- migrations %>%
+  group_by(country_from, country_to) %>%
+  summarise(direct_migrants = sum(num_migrants, na.rm = TRUE), .groups = "drop")
+
+flows_direct
+```
+
+```{r}
+# --- 3) Make undirected pairs and compute chosen aggregation -------------
+agg_method <- "sum"    # options: "sum","mean","max","difference","ratio"
+
+flows_undir <- flows_direct %>%
+  filter(country_from != country_to) %>%
+  mutate(pair_a = pmin(country_from, country_to),
+         pair_b = pmax(country_from, country_to)) %>%
+  group_by(pair_a, pair_b) %>%
+  summarise(
+    sum_ab = sum(direct_migrants, na.rm = TRUE),
+    dir_ab = sum(direct_migrants[country_from == pair_a & country_to == pair_b], na.rm = TRUE),
+    dir_ba = sum(direct_migrants[country_from == pair_b & country_to == pair_a], na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    total_migrants = case_when(
+      agg_method == "sum"        ~ dir_ab + dir_ba,
+      agg_method == "mean"       ~ rowMeans(cbind(dir_ab, dir_ba), na.rm = TRUE),
+      agg_method == "max"        ~ pmax(dir_ab, dir_ba, na.rm = TRUE),
+      agg_method == "difference" ~ (dir_ab - dir_ba),
+      agg_method == "ratio"      ~ if_else(dir_ba == 0, NA_real_, dir_ab / dir_ba),
+      TRUE ~ dir_ab + dir_ba
+    )
+  ) %>%
+  rename(country1 = pair_a, country2 = pair_b)
+
+flows_undir
+```
+
+
+```{r}
+threshold <- 150000    # change threshold or use top-N logic later
+# threshold <- 1500    # change threshold or use top-N logic later
+
+# --- 4) Filter by threshold (you can swap to top-N/quantile instead) -----
+if (agg_method %in% c("difference")) {
+  flows_undir <- flows_undir %>% filter(abs(total_migrants) > threshold)
+} else if (agg_method %in% c("ratio")) {
+  flows_undir <- flows_undir %>% filter(is.finite(total_migrants) & total_migrants > threshold)
+} else {
+  flows_undir <- flows_undir %>% filter(total_migrants > threshold)
+}
+
+# If nothing remains after filtering, lower threshold or change selection
+if (nrow(flows_undir) == 0) stop("No flows left after filtering — lower threshold or change selection.")
+
+flows_undir
+```
+
+```{r}
+# --- 5) Join region/subregion info for both endpoints --------------------
+flows_undir_region <- flows_undir %>%
+  left_join(Country_region_clean %>% select(alpha2, region, sub_region),
+            by = c("country1" = "alpha2")) %>%
+  rename(region1 = region, sub_region1 = sub_region) %>%
+  left_join(Country_region_clean %>% select(alpha2, region, sub_region),
+            by = c("country2" = "alpha2")) %>%
+  rename(region2 = region, sub_region2 = sub_region)
+
+flows_undir_region
+```
+```{r}
+# flows_undir_region <- flows_undir_region %>%
+#   filter(region1 == "Europe" & region2 == "Europe")
+
+flows_undir_region <- flows_undir_region %>%
+  filter(!is.na(region1) & region1 != "" & region2 != "")
+
+flows_undir_region
+```
+
+
+```{r}
+# --- 6) Prepare countries list ordered by region then alphabetically -----
+countries_tbl <- tibble(name = unique(c(flows_undir_region$country1, flows_undir_region$country2))) %>%
+  left_join(Country_region_clean %>% select(alpha2, region, sub_region), by = c("name" = "alpha2")) %>%
+  mutate(region = if_else(is.na(region), "Unknown", region))
+
+# Order by region then by code (alphabetical)
+countries_ordered <- countries_tbl %>%
+  arrange(region, name) %>%
+  pull(name)
+
+
+# countries_tbl <- tibble(name = unique(c(flows_undir_region$country1, flows_undir_region$country2))) %>%
+#   left_join(Country_region_clean %>% select(alpha2, region, sub_region), by = c("name" = "alpha2")) %>%
+#   mutate(sub_region = if_else(is.na(sub_region), "Unknown", sub_region))
+# 
+# countries_ordered <- countries_tbl %>%
+#   arrange(sub_region, name) %>%
+#   pull(name)
+
+
+# Build the simple tree edges so leaf order follows countries_ordered
+edges_df <- tibble(from = "root", to = countries_ordered)
+edges_df
+```
+```{r}
+# --- 7) Compute per-country totals for node sizing -----------------------
+country_totals <- bind_rows(
+  flows_undir_region %>% select(country = country1, total_migrants),
+  flows_undir_region %>% select(country = country2, total_migrants)
+) %>%
+  group_by(country) %>%
+  summarise(total_migration = sum(total_migrants, na.rm = TRUE), .groups = "drop")
+country_totals
+```
+
+
+```{r}
+# --- 8) Build vertices (attach region + size) ----------------------------
+vertices <- tibble(name = unique(c(edges_df$from, edges_df$to))) %>%
+  left_join(Country_region_clean %>% select(alpha2, region, sub_region), by = c("name" = "alpha2")) %>%
+  rename(region = region, sub_region = sub_region) %>%
+  left_join(country_totals, by = c("name" = "country")) %>%
+  mutate(
+    total_migration = replace_na(total_migration, 0),
+    value = total_migration + 1,               # +1 avoids zero sizes (tweak as desired)
+    group = if_else(is.na(region), "Unknown", region)
+    # group = if_else(is.na(region), "Unknown", sub_region)
+  )
+
+# compute circular label angles in the exact order defined by edges_df (so regions are contiguous)
+vertices$id <- NA_integer_
+myleaves <- which(is.na(match(vertices$name, edges_df$from)))
+nleaves <- length(myleaves)
+vertices$id[myleaves] <- seq_len(nleaves)
+vertices$angle <- 90 - 360 * vertices$id / nleaves
+vertices$hjust <- ifelse(vertices$angle < -90, 1, 0)
+vertices$angle <- ifelse(vertices$angle < -90, vertices$angle + 180, vertices$angle)
+
+```
+
+
+```{r}
+# --- 9) Graph layout and connection geometry -----------------------------
+mygraph <- igraph::graph_from_data_frame(edges_df, vertices = vertices)
+layout <- create_layout(mygraph, layout = "dendrogram", circular = TRUE)
+
+# Map flows to vertex ids AND keep only valid mappings
+from_ids <- match(flows_undir_region$country1, vertices$name)
+to_ids   <- match(flows_undir_region$country2, vertices$name)
+valid <- !is.na(from_ids) & !is.na(to_ids)
+
+from_ids <- from_ids[valid]
+to_ids   <- to_ids[valid]
+flows_sel <- flows_undir_region[valid, ]
+
+# get_con returns a function that needs layout — call it to produce geometry rows
+con_fun <- ggraph::get_con(from = from_ids, to = to_ids)
+con_df  <- con_fun(layout)
+con_df <- con_df %>% mutate(con.id = as.integer(con.id))
+
+```
+
+
+```{r}
+# --- 10) Attach per-connection attributes (width/alpha) -------------------
+conn_attribs <- tibble(
+  con.id = seq_len(nrow(flows_sel)),
+  scaled_width = scales::rescale(flows_sel$total_migrants, to = c(0.3, 2)),
+  scaled_alpha = scales::rescale(flows_sel$total_migrants, to = c(0.15, 0.95))
+)
+con_df <- left_join(con_df, conn_attribs, by = "con.id")
+
+# join country & region info for the connection (for edge colouring)
+conn_summary_full <- flows_sel %>%
+  mutate(con.id = seq_len(n())) %>%
+  select(con.id, country1, country2, region1, region2, total_migrants)
+
+con_df <- left_join(con_df, conn_summary_full, by = "con.id") %>%
+  mutate(shared_region = if_else(region1 == region2 & !is.na(region1), region1, "Inter-regional"))
+
+```
+
+```{r}
+# --- 11) Colour palettes: regions -> colours -----------------------------
+regions <- unique(na.omit(vertices$group))
+nreg <- length(regions)
+base_pal <- RColorBrewer::brewer.pal(min(max(nreg, 3), 12), "RdPu")
+pal_regions <- rep(base_pal, length.out = nreg)
+names(pal_regions) <- regions
+
+# subregions <- unique(na.omit(vertices$group))
+# nreg <- length(subregions)
+# base_pal <- RColorBrewer::brewer.pal(min(max(nreg, 3), 12), "Set3")
+# pal_regions <- rep(base_pal, length.out = nreg)
+# names(pal_regions) <- subregions
+
+# add fallback colours
+if (!"Unknown" %in% names(pal_regions)) pal_regions <- c(pal_regions, "Unknown" = "grey70")
+if (!"Inter-regional" %in% names(pal_regions)) pal_regions <- c(pal_regions, "Inter-regional" = "grey40")
+
+```
+
+## same line width
+```{r}
+# -------------------------
+# 1) Create / ensure palette (Paired, repeated to match number of subregions)
+groups <- unique(na.omit(vertices$group))
+n_groups <- length(groups)
+
+# pal_nodes <- rep(RColorBrewer::brewer.pal(9, "Paired"), length.out = n_groups)
+pal_nodes <- rep(RColorBrewer::brewer.pal(9, "Set2"), length.out = n_groups)
+
+# from unikn
+# unikn_cols <- as.character(unlist(pal_unikn_pref[1, ]))
+# pal_nodes <- rep(unikn_cols, length.out = n_groups)
+# Check Color:
+# data.frame(index = 1:length(unikn_cols), color = unikn_cols)
+
+names(pal_nodes) <- groups
+if (!"Unknown" %in% names(pal_nodes)) pal_nodes <- c(pal_nodes, "Unknown" = "grey70")
+
+# 2) Main plot: no legends, semi-transparent node circles
+p <- ggraph(mygraph, layout = 'dendrogram', circular = TRUE) + 
+
+  # bundles: gradient colouring kept as in your example
+  geom_conn_bundle(
+    data = get_con(from = from_ids, to = to_ids),
+    aes(colour = after_stat(index)),
+    alpha = 0.20,    # slightly lighter bundles
+    width = 0.9,
+    tension = 0.8,
+    show.legend = FALSE
+  ) +
+  scale_edge_colour_distiller(palette = "RdPu") +
+
+  # labels, coloured by subregion (group) but no legend
+  geom_node_text(
+    aes(x = x * 1.18, y = y * 1.18, filter = leaf, label = name, angle = angle, hjust = hjust, colour = group),
+    size = 4, alpha = 1, show.legend = FALSE
+  ) +
+
+  # nodes: slightly transparent (alpha < 1), no legend for points
+  geom_node_point(
+    aes(filter = leaf, x = x * 1.08, y = y * 1.08, colour = group, size = value),
+    alpha = 0.6, show.legend = FALSE
+  ) +
+
+  # use the named Paired palette (same as example style)
+  scale_colour_manual(values = pal_nodes, na.value = "grey70") +
+
+  # node size scale (bigger circles) — adjust range if you want even larger
+  scale_size_continuous(range = c(2, 15), trans = "sqrt") +
+
+  # remove legends entirely from theme
+  theme_void() +
+  theme(
+    legend.position = "none",
+    plot.margin = unit(c(0, 0, 0, 0), "cm")
+  ) +
+  expand_limits(x = c(-1.45, 1.45), y = c(-1.45, 1.45))
+
+# print to screen
+print(p)
+
+# 3) Save the main figure (png + pdf)
+ggsave("migration_network_by_subregion_nolegend.png", plot = p, width = 10, height = 10, dpi = 300)
+# ggsave("migration_network_by_subregion_nolegend.pdf", plot = p, width = 10, height = 10)
+
+# 4) Save a subregion -> colour mapping as CSV (useful reference)
+mapping_df <- tibble(subregion = names(pal_nodes), colour = unname(pal_nodes))
+# write_csv(mapping_df, "subregion_colors.csv")
+
+# 5) Create and save a compact legend image (subregion dots + labels)
+#    This renders a simple vertical legend you can keep alongside the figure.
+legend_df <- mapping_df %>% mutate(y = row_number())
+
+legend_plot <- ggplot(legend_df, aes(x = 1, y = -y)) +
+  geom_point(aes(color = subregion), size = 5,  alpha = 0.6) +
+  geom_text(aes(label = subregion), hjust = 0, nudge_x = 0.15, size = 3) +
+  scale_color_manual(values = setNames(legend_df$colour, legend_df$subregion)) +
+  xlim(1, 2.5) +
+  theme_void() +
+  theme(legend.position = "none",
+        plot.margin = margin(10, 10, 10, 10))
+
+ggsave("subregion_legend.png", plot = legend_plot, width = 4, height = max(4, 0.25 * nrow(legend_df)), dpi = 300)
+
+```
+
+## by line width
+```{r}
+# 1️⃣ Create con_df with total_migrants included
+con_fun <- ggraph::get_con(from = from_ids, to = to_ids)
+con_df  <- con_fun(create_layout(mygraph, layout = "dendrogram", circular = TRUE)) %>%
+  mutate(con.id = as.integer(con.id)) %>%
+  left_join(
+    flows_sel %>% mutate(con.id = seq_len(n())) %>% select(con.id, total_migrants),
+    by = "con.id"
+  )
+
+# 2️⃣ Plot: variable line thickness by total_migrants
+ggraph(mygraph, layout = 'dendrogram', circular = TRUE) + 
+  geom_conn_bundle(
+    data = con_df,
+    aes(edge_colour = ..index.., edge_width = total_migrants),  # width ~ flow strength
+    alpha = 0.25,
+    tension = 0.8
+  ) +
+  scale_edge_colour_distiller(palette = "RdPu") +
+  scale_edge_width_continuous(range = c(0.2, 7)) +   # adjust contrast here
+  geom_node_point(
+    aes(filter = leaf, x = x*1.08, y = y*1.08, colour = group, size = value),
+    alpha = 0.6, show.legend = FALSE
+  ) +
+  geom_node_text(
+    aes(x = x*1.18, y = y*1.18, filter = leaf, label = name, angle = angle, hjust = hjust, colour = group),
+    size = 3, alpha = 1, show.legend = FALSE
+  ) +
+  scale_colour_manual(values = pal_nodes, na.value = "grey70") +
+  scale_size_continuous(range = c(2, 15), trans = "sqrt") +
+  theme_void() +
+  theme(legend.position = "none") +
+  expand_limits(x = c(-1.45, 1.45), y = c(-1.45, 1.45))
+
+ggsave("migration.png", width = 10, height = 10, dpi = 300)
+
+```
+
+## too many legend
+```{r}
+
+# --- 12) Plot -------------------------------------------------------------
+p <- ggraph(layout) +
+  geom_conn_bundle(
+    data = con_df,
+    aes(edge_colour = shared_region, edge_alpha = scaled_alpha, edge_width = scaled_width),
+    tension = 0.85
+  ) +
+  scale_edge_colour_manual(values = pal_regions) +
+  scale_edge_alpha_continuous(range = c(0.15, 0.95)) +
+  scale_edge_width_continuous(range = c(0.3, 2)) +
+  geom_node_point(aes(filter = leaf, x = x * 1.07, y = y * 1.07, colour = group, size = value),
+                  show.legend = TRUE) +
+  scale_colour_manual(values = pal_regions, na.value = "grey70") +
+  scale_size_continuous(range = c(3, 12), trans = "sqrt") +
+  geom_node_text(aes(x = x * 1.12, y = y * 1.12, filter = leaf, label = name, angle = angle, hjust = hjust),
+                 size = 3, show.legend = FALSE, check_overlap = TRUE) +
+  theme_void() +
+  # theme(legend.position = "right",
+  #       plot.margin = unit(c(0, 0, 0, 0), "cm")) +
+  expand_limits(x = c(-1.3, 1.3), y = c(-1.3, 1.3))
+
+print(p)
+
+# --- 13) Save the figure --------------------------------------------------
+ggsave("migration_network_by_region.png", plot = p, width = 13, height = 10, dpi = 300)
+# --------------------------------------------------------------------------
+
+```
+
+```{r}
+# build a named discrete palette for node groups (subregions)
+groups <- unique(na.omit(vertices$group))
+n_groups <- length(groups)
+pal_nodes <- rep(brewer.pal(9, "Paired"), length.out = n_groups)
+names(pal_nodes) <- groups
+# add fallback for any missing names and ensure "Unknown" exists
+if (!"Unknown" %in% names(pal_nodes)) pal_nodes <- c(pal_nodes, "Unknown" = "grey70")
+
+# Choose node size scaling range (bigger circles)
+size_range <- c(2, 15)
+
+# If you are using 'value' in vertices as node size, ensure it's available:
+# (vertices$value was created earlier; otherwise compute per-country totals)
+
+# Now the plot
+ggraph(mygraph, layout = 'dendrogram', circular = TRUE) + 
+
+  # bundles: evaluate get_con() inline (ggraph will call it), colour by internal index for a gradient
+  geom_conn_bundle(
+    data = get_con(from = from_ids, to = to_ids),
+    aes(colour = ..index..),
+    alpha = 0.25,         # visibility of bundles
+    width = 0.9,
+    tension = 0.8
+  ) +
+  scale_edge_colour_distiller(palette = "RdPu") +   # continuous colour for bundles
+
+  # leaf labels pushed further out; coloured by subregion (group)
+  geom_node_text(
+    aes(x = x * 1.18, y = y * 1.18, filter = leaf, label = name, angle = angle, hjust = hjust, colour = group),
+    size = 2.4, alpha = 1
+  ) +
+
+  # leaf points slightly inside, coloured by subregion, size ~ value
+  geom_node_point(
+    aes(filter = leaf, x = x * 1.08, y = y * 1.08, colour = group, size = value),
+    alpha = 0.9, show.legend = TRUE
+  ) +
+
+  # discrete node colours (subregions)
+  scale_colour_manual(values = pal_nodes, na.value = "grey70") +
+
+  # node size scale (tweak range to make circles larger/smaller)
+  scale_size_continuous(range = size_range, trans = "sqrt") +
+
+  theme_void() +
+  theme(
+    legend.position = "right",
+    plot.margin = unit(c(0, 0, 0, 0), "cm")
+  ) +
+  expand_limits(x = c(-1.45, 1.45), y = c(-1.45, 1.45))
+
+# ggsave("migration_network_by_region2.png", plot = p, width = 13, height = 10, dpi = 300)
+
+```
+
+
+
+
+# Below working but no group / circle color
+```{r}
+# Libraries
+library(ggraph)
+library(igraph)
+library(tidyverse)
+library(RColorBrewer)
+```
+
+```{r}
+migrations <- read.csv("/Users/wenlanzhang/Downloads/PhD_UCL/Data/Oxford/Migration/international_migration_flow.csv")
+# migrations
+
+flows_direct <- migrations %>%
+  group_by(country_from, country_to) %>%
+  summarise(direct_migrants = sum(num_migrants, na.rm = TRUE), .groups = "drop")
+flows_direct
+```
+
+```{r}
+agg_method <- "sum"     # one of: "sum", "mean", "max", "difference", "ratio"
+
+flows_undir <- flows_direct %>%
+  # drop self-links (if you don't want self edges)
+  filter(country_from != country_to) %>%
+  mutate(
+    pair_a = pmin(country_from, country_to),
+    pair_b = pmax(country_from, country_to)
+  ) %>%
+  group_by(pair_a, pair_b) %>%
+  summarise(
+    # compute both directions' sums (if one direction missing, treat as 0)
+    sum_ab = sum(direct_migrants, na.rm = TRUE), # note: this sum includes both directions already, but we show options below
+    # We'll collect the two directed contributions separately to allow more options:
+    dir_ab = sum(direct_migrants[country_from == pair_a & country_to == pair_b], na.rm = TRUE),
+    dir_ba = sum(direct_migrants[country_from == pair_b & country_to == pair_a], na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    # aggregated weight according to the chosen method
+    total_migrants = case_when(
+      agg_method == "sum"        ~ dir_ab + dir_ba,
+      agg_method == "mean" ~ rowMeans(cbind(dir_ab, dir_ba), na.rm = TRUE),
+      agg_method == "max" ~ pmax(dir_ab, dir_ba, na.rm = TRUE),
+      agg_method == "difference" ~ (dir_ab - dir_ba),    # signed: positive means more from pair_a -> pair_b
+      agg_method == "ratio"      ~ if_else(dir_ba == 0, NA_real_, dir_ab / dir_ba),
+      TRUE ~ (dir_ab + dir_ba)   # fallback to sum
+    )
+  ) %>%
+  # keep the original country labels for plotting edges
+  rename(country1 = pair_a, country2 = pair_b)
+
+flows_undir
+```
+
+```{r}
+threshold  <- 100000         # keep only undirected pairs whose aggregated weight > threshold
+
+if (agg_method %in% c("difference")) {
+  # maybe threshold by absolute difference:
+  flows_undir <- flows_undir %>% filter(abs(total_migrants) > threshold)
+} else if (agg_method %in% c("ratio")) {
+  # ratio may contain NA (division by zero). Filter only finite ratios:
+  flows_undir <- flows_undir %>% filter(is.finite(total_migrants) & total_migrants > threshold)
+} else {
+  flows_undir <- flows_undir %>% filter(total_migrants > threshold)
+}
+
+# show result
+flows_undir
+```
+
+```{r}
+flows_undir <- flows_undir %>% mutate(mag = abs(total_migrants), sign = sign(total_migrants))
+```
+
+```{r}
+countries <- sort(unique(c(flows_undir$country1, flows_undir$country2)))
+edges <- tibble(from = "root", to = countries)
+
+vertices <- tibble(name = unique(c(edges$from, edges$to))) %>%
+  mutate(
+    value = runif(n()),       # just for point sizing
+    group = if_else(name == "root", NA_character_, "country")
+  )
+
+# compute angles for labels like before
+vertices$id <- NA_integer_
+myleaves <- which(is.na(match(vertices$name, edges$from)))
+nleaves <- length(myleaves)
+vertices$id[myleaves] <- seq_len(nleaves)
+vertices$angle <- 90 - 360 * vertices$id / nleaves
+vertices$hjust <- ifelse(vertices$angle < -90, 1, 0)
+vertices$angle <- ifelse(vertices$angle < -90, vertices$angle + 180, vertices$angle)
+vertices
+```
+
+```{r}
+mygraph <- igraph::graph_from_data_frame(edges, vertices = vertices)
+
+# map countries to vertex ids
+from_ids <- match(flows_undir$country1, vertices$name)
+to_ids   <- match(flows_undir$country2, vertices$name)
+
+# filter valid
+valid <- !is.na(from_ids) & !is.na(to_ids)
+from_ids <- from_ids[valid]
+to_ids   <- to_ids[valid]
+flows_undir <- flows_undir[valid, ]
+flows_undir
+```
+
+```{r}
+layout <- create_layout(mygraph, layout = "dendrogram", circular = TRUE)
+
+# get_con(...) returns a function that needs a layout; call it immediately:
+con_fun <- ggraph::get_con(from = from_ids, to = to_ids)
+con_df  <- con_fun(layout)
+
+# con_df has many rows per connection (path geometry). Use con.id to attach weights:
+con_df <- con_df %>% mutate(con.id = as.integer(con.id))
+
+conn_summary <- tibble(con.id = seq_len(nrow(flows_undir)), total_migrants = flows_undir$total_migrants)
+con_df <- left_join(con_df, conn_summary, by = "con.id")
+con_df
+```
+
+```{r}
+pal <- rep(brewer.pal(9, "Paired"), length.out = length(vertices$name))
+
+# scale widths between 0.3 and 2 (example); scale alpha between 0.15 and 0.95
+con_summary_vals <- flows_undir$total_migrants
+scaled_width <- scales::rescale(con_summary_vals, to = c(0.3, 2))
+scaled_alpha <- scales::rescale(con_summary_vals, to = c(0.15, 0.95))
+
+# attach these per-connection attributes to con_df via con.id
+conn_attribs <- tibble(con.id = seq_along(con_summary_vals),
+                       scaled_width = scaled_width,
+                       scaled_alpha = scaled_alpha)
+con_df <- left_join(con_df, conn_attribs, by = "con.id")
+
+p <- ggraph(layout) +
+  geom_conn_bundle(data = con_df,
+                   aes(colour = ..index.., alpha = scaled_alpha, width = scaled_width),
+                   tension = 0.8) +
+  scale_edge_colour_distiller(palette = "RdPu") +
+  geom_node_point(aes(filter = leaf, x = x * 1.07, y = y * 1.07, colour = name, size = value), show.legend = FALSE) +
+  scale_colour_manual(values = c("root" = "black", pal)) +
+  scale_size_continuous(range = c(1, 6)) +
+  geom_node_text(aes(x = x * 1.12, y = y * 1.12, filter = leaf, label = name, angle = angle, hjust = hjust),
+                 size = 3, show.legend = FALSE) +
+  theme_void() +
+  theme(legend.position = "none", plot.margin = unit(c(0, 0, 0, 0), "cm")) +
+  expand_limits(x = c(-1.3, 1.3), y = c(-1.3, 1.3))
+
+print(p)
+```
+
+```{r}
+ggsave("migration_network_undirected.png", plot = p, width = 8, height = 8, dpi = 300)
+
+```
+
+
+# Sample data
+```{r}
+# create a data frame giving the hierarchical structure of your individuals
+set.seed(1234)
+d1 <- data.frame(from="origin", to=paste("group", seq(1,10), sep=""))
+d2 <- data.frame(from=rep(d1$to, each=10), to=paste("subgroup", seq(1,100), sep="_"))
+edges <- rbind(d1, d2)
+ 
+# create a dataframe with connection between leaves (individuals)
+all_leaves <- paste("subgroup", seq(1,100), sep="_")
+connect <- rbind( 
+  data.frame( from=sample(all_leaves, 100, replace=T) , to=sample(all_leaves, 100, replace=T)), 
+  data.frame( from=sample(head(all_leaves), 30, replace=T) , to=sample( tail(all_leaves), 30, replace=T)), 
+  data.frame( from=sample(all_leaves[25:30], 30, replace=T) , to=sample( all_leaves[55:60], 30, replace=T)), 
+  data.frame( from=sample(all_leaves[75:80], 30, replace=T) , to=sample( all_leaves[55:60], 30, replace=T)) )
+connect$value <- runif(nrow(connect))
+ 
+# create a vertices data.frame. One line per object of our hierarchy
+vertices  <-  data.frame(
+  name = unique(c(as.character(edges$from), as.character(edges$to))) , 
+  value = runif(111)
+) 
+# Let's add a column with the group of each name. It will be useful later to color points
+vertices$group  <-  edges$from[ match( vertices$name, edges$to ) ]
+
+vertices
+```
+
+
+```{r}
+#Let's add information concerning the label we are going to add: angle, horizontal adjustement and potential flip
+#calculate the ANGLE of the labels
+vertices$id <- NA
+myleaves <- which(is.na( match(vertices$name, edges$from) ))
+nleaves <- length(myleaves)
+vertices$id[ myleaves ] <- seq(1:nleaves)
+vertices$angle <- 90 - 360 * vertices$id / nleaves
+ 
+# calculate the alignment of labels: right or left
+# If I am on the left part of the plot, my labels have currently an angle < -90
+vertices$hjust <- ifelse( vertices$angle < -90, 1, 0)
+ 
+# flip angle BY to make them readable
+vertices$angle <- ifelse(vertices$angle < -90, vertices$angle+180, vertices$angle)
+
+vertices
+```
+
+
+```{r}
+# Create a graph object
+mygraph <- igraph::graph_from_data_frame( edges, vertices=vertices )
+ 
+# The connection object must refer to the ids of the leaves:
+from  <-  match( connect$from, vertices$name)
+to  <-  match( connect$to, vertices$name)
+ 
+# Basic usual argument
+ggraph(mygraph, layout = 'dendrogram', circular = TRUE) + 
+  geom_node_point(aes(filter = leaf, x = x*1.05, y=y*1.05)) +
+  geom_conn_bundle(data = get_con(from = from, to = to), alpha=0.2, colour="skyblue", width=0.9) +
+  geom_node_text(aes(x = x*1.1, y=y*1.1, filter = leaf, label=name, angle = angle, hjust=hjust), size=1.5, alpha=1) +
+  theme_void() +
+  theme(
+    legend.position="none",
+    plot.margin=unit(c(0,0,0,0),"cm"),
+  ) +
+  expand_limits(x = c(-1.2, 1.2), y = c(-1.2, 1.2))
+```
+
+
+```{r}
+ggraph(mygraph, layout = 'dendrogram', circular = TRUE) + 
+  geom_conn_bundle(data = get_con(from = from, to = to), alpha=0.2, width=0.9, aes(colour=..index..)) +
+  scale_edge_colour_distiller(palette = "RdPu") +
+  
+  geom_node_text(aes(x = x*1.15, y=y*1.15, filter = leaf, label=name, angle = angle, hjust=hjust, colour=group), size=2, alpha=1) +
+  
+  geom_node_point(aes(filter = leaf, x = x*1.07, y=y*1.07, colour=group, size=value, alpha=0.2)) +
+  scale_colour_manual(values= rep( brewer.pal(9,"Paired") , 30)) +
+  scale_size_continuous( range = c(0.1,10) ) +
+  
+  theme_void() +
+  theme(
+    legend.position="none",
+    plot.margin=unit(c(0,0,0,0),"cm"),
+  ) +
+  expand_limits(x = c(-1.3, 1.3), y = c(-1.3, 1.3))
+```
+
+
+
+```{r}
+ggsave("example.png", width = 10, height = 10, dpi = 300)
+
+```
+
+
+```{r}
+```
+

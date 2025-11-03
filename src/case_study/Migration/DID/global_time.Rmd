@@ -1,0 +1,264 @@
+```{r}
+# Libraries
+library(tidyverse)
+library(igraph)
+library(ggraph)
+library(RColorBrewer)
+library(ggplot2)
+library(hrbrthemes)
+library(unikn)
+```
+
+# My data
+
+```{r}
+Country_region <- read.csv("/Users/wenlanzhang/Downloads/PhD_UCL/Data/Oxford/all.csv")
+Country_region_clean <- Country_region %>%
+  rename(alpha2 = alpha.2,  # adjust if different name
+         region = region,
+         sub_region = sub.region)  # adjust exact name if needed
+Country_region
+```
+
+```{r}
+# --- 0) File paths: adjust if necessary
+migrations_file <- "/Users/wenlanzhang/Downloads/PhD_UCL/Data/Oxford/Migration/international_migration_flow.csv"
+migrations <- read_csv(migrations_file, show_col_types = FALSE)
+migrations
+```
+```{r}
+# Join region & subregion for both "from" and "to"
+migrations_joined <- migrations %>%
+  left_join(
+    Country_region %>%
+      select(alpha.2, region, sub.region) %>%
+      rename(country_from = alpha.2,
+             region_from = region,
+             subregion_from = sub.region),
+    by = "country_from"
+  ) %>%
+  left_join(
+    Country_region %>%
+      select(alpha.2, region, sub.region) %>%
+      rename(country_to = alpha.2,
+             region_to = region,
+             subregion_to = sub.region),
+    by = "country_to"
+  )
+
+# ✅ View the final data
+migrations_joined
+```
+
+
+```{r}
+library(dplyr)
+library(ggplot2)
+
+# Assuming you already have 'migrations_joined' with region_to, migration_month, num_migrants
+inflow_summary <- migrations_joined %>%
+  group_by(region_to, migration_month) %>%
+  summarise(total_inflow = sum(num_migrants, na.rm = TRUE)) %>%
+  ungroup()
+
+inflow_summary <- inflow_summary %>%
+  filter(!is.na(region_to) & region_to != "")
+
+inflow_summary
+```
+```{r}
+# Convert migration_month to Date (if it’s like "2019-01")
+inflow_summary <- inflow_summary %>%
+  mutate(migration_month = as.Date(paste0(migration_month, "-01")))
+
+# Line plot
+ggplot(inflow_summary, aes(x = migration_month, y = total_inflow, color = region_to)) +
+  geom_line(size = 1) +
+  geom_point(size = 1.5) +
+  labs(
+    title = "Monthly Inflow of Migrants by Destination Region",
+    x = "Month",
+    y = "Total Inflow",
+    color = "Destination Region"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    legend.position = "right",
+    plot.title = element_text(face = "bold", hjust = 0.5)
+  )
+
+```
+```{r}
+# Plot stacked area chart
+ggplot(inflow_summary, aes(x = migration_month, 
+                           y = total_inflow, 
+                           fill = region_to)) +
+  geom_area(alpha = 0.6, size = 0.5, colour = "white") +
+  scale_fill_viridis_d(option = "D", name = "Destination Region") +
+  theme_ipsum() +
+  labs(
+    title = "Monthly Migrant Inflows by Destination Region",
+    subtitle = "Stacked area chart representation",
+    x = "Month",
+    y = "Total inflow"
+  ) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    legend.position = "right"
+  )
+
+```
+
+```{r}
+# Count how many unique regions you have
+n_groups <- inflow_summary %>% distinct(region_to) %>% nrow()
+
+# # Get colors from Set2
+# pal_nodes <- brewer.pal(n = max(3, min(8, n_groups)), name = "Set2")
+# pal_nodes <- rep(pal_nodes, length.out = n_groups)
+pal_nodes <- c("#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F")
+
+
+# # Define colors
+# unikn_cols <- as.character(unlist(pal_unikn_pref[1, ]))
+# pal_nodes <- rep(unikn_cols, length.out = n_groups)
+
+# Plot
+ggplot(inflow_summary, aes(x = as.Date(paste0(migration_month, "-01")),
+                           y = total_inflow,
+                           fill = region_to)) +
+  geom_area(alpha = 0.7, size = 0.5, colour = "white") +
+  scale_fill_manual(values = pal_nodes, name = "Destination Region") +
+  theme_ipsum() +
+  labs(
+    # title = "Monthly Migrant Inflows by Destination Region",
+    # subtitle = "Using Unikn color palette",
+    x = "Month",
+    y = "Total inflow"
+  ) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    
+    # x y, in the middle
+    axis.title.y = element_text(
+      angle = 90, vjust = 0.5, hjust = 0.5, margin = margin(r = 10)),
+    axis.title.x = element_text(
+      hjust = 0.5, margin = margin(t = 10)),
+    # legend position
+    legend.position = "right",
+    legend.justification = "center",
+    legend.box.margin = margin(0, 0, 0, -30),  # pull legend left
+    legend.spacing.x = unit(0.1, "cm"),
+    legend.spacing.y = unit(0.1, "cm"),
+    # grid off 
+    panel.grid.major = element_blank(),  # remove major grid lines
+    panel.grid.minor = element_blank()   # remove minor grid lines
+  )
+
+# Save the last plot
+ggsave("migrant_time.png", 
+       width = 10, height = 6, dpi = 300)
+
+```
+
+
+
+# example
+
+```{r}
+# Packages
+library(ggplot2)
+library(dplyr)
+ 
+# create data
+time <- as.numeric(rep(seq(1,7),each=7))  # x Axis
+value <- runif(49, 10, 100)               # y Axis
+group <- rep(LETTERS[1:7],times=7)        # group, one shape per group
+data1 <- data.frame(time, value, group)
+
+# stacked area chart
+ggplot(data1, aes(x=time, y=value, fill=group)) + 
+    geom_area()
+
+```
+
+
+```{r}
+# Give a specific order:
+data1$group <- factor(data1$group , levels=c("B", "A", "D", "E", "G", "F", "C") )
+
+# Plot again
+ggplot(data1, aes(x=time, y=value, fill=group)) + 
+    geom_area()
+
+# Note: you can also sort levels alphabetically:
+myLevels <- levels(data1$group)
+data1$group <- factor(data1$group , levels=sort(myLevels) )
+
+# Note: sort following values at time = 5
+myLevels <- data1 %>%
+  filter(time==6) %>%
+  arrange(value)
+data1$group <- factor(data1$group , levels=myLevels$group )
+```
+```{r}
+# Compute percentages with dplyr
+library(dplyr)
+library(ggplot2)
+
+data1 <- data1  %>%
+  group_by(time, group) %>%
+  summarise(n = sum(value), .groups = "drop") %>%      # keep 'n' as the summed value
+  mutate(percentage = n / sum(n) * 100)                # convert to percentage
+
+# Plot
+ggplot(data1, aes(x = time, y = percentage, fill = group)) + 
+  geom_area(alpha = 0.6, size = 1, colour = "black")
+
+```
+
+
+```{r}
+# Library
+library(viridis)
+library(hrbrthemes)
+
+# Plot
+ggplot(data1, aes(x=time, y=value, fill=group)) + 
+    geom_area(alpha=0.6 , size=.5, colour="white") +
+    scale_fill_viridis(discrete = T) +
+    theme_ipsum() + 
+    ggtitle("The race between ...")
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+
+
+
