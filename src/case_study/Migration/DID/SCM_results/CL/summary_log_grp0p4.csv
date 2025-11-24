@@ -1,0 +1,5 @@
+Model,Pre_RMSPE,Post_RMSPE,Post/Pre_MSPE_Ratio,Permutation_p_value,N_placebos,Cumulative_ATT_levels,Percent_change_post
+Combined donors,0.084,1.188,202.25,0.048,20,57449.96,239.87
+Origin-only donors,0.157,1.643,109.94,0.091,10,65917.65,425.76
+Destination-only donors,0.35,0.759,4.71,0.545,10,41156.19,102.27
+Combined (leave top donor out: CL->CO),0.098,1.117,130.69,0.05,19,55520.01,214.53

@@ -7,6 +7,8 @@ library(RColorBrewer)
 library(ggplot2)
 library(hrbrthemes)
 library(unikn)
+library(dplyr)
+library(ggplot2)
 ```
 
 # My data
@@ -26,6 +28,7 @@ migrations_file <- "/Users/wenlanzhang/Downloads/PhD_UCL/Data/Oxford/Migration/i
 migrations <- read_csv(migrations_file, show_col_types = FALSE)
 migrations
 ```
+
 ```{r}
 # Join region & subregion for both "from" and "to"
 migrations_joined <- migrations %>%
@@ -52,9 +55,6 @@ migrations_joined
 
 
 ```{r}
-library(dplyr)
-library(ggplot2)
-
 # Assuming you already have 'migrations_joined' with region_to, migration_month, num_migrants
 inflow_summary <- migrations_joined %>%
   group_by(region_to, migration_month) %>%
@@ -66,6 +66,7 @@ inflow_summary <- inflow_summary %>%
 
 inflow_summary
 ```
+
 ```{r}
 # Convert migration_month to Date (if it’s like "2019-01")
 inflow_summary <- inflow_summary %>%
@@ -116,8 +117,8 @@ n_groups <- inflow_summary %>% distinct(region_to) %>% nrow()
 # # Get colors from Set2
 # pal_nodes <- brewer.pal(n = max(3, min(8, n_groups)), name = "Set2")
 # pal_nodes <- rep(pal_nodes, length.out = n_groups)
-pal_nodes <- c("#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F")
-
+# pal_nodes <- c("#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F")
+pal_nodes <- c( '#F0C37E', '#AFDBF4', '#F2C2D8', '#12529A', '#b7a8cf')
 
 # # Define colors
 # unikn_cols <- as.character(unlist(pal_unikn_pref[1, ]))
@@ -128,10 +129,11 @@ ggplot(inflow_summary, aes(x = as.Date(paste0(migration_month, "-01")),
                            y = total_inflow,
                            fill = region_to)) +
   geom_area(alpha = 0.7, size = 0.5, colour = "white") +
-  scale_fill_manual(values = pal_nodes, name = "Destination Region") +
+  # scale_fill_manual(values = pal_nodes, name = "Destination\nRegion") +   
+  scale_fill_manual(values = pal_nodes, name = "Destination Continent") +
   theme_ipsum() +
   labs(
-    # title = "Monthly Migrant Inflows by Destination Region",
+    title = "Monthly Migrant Inflows by Destination Continent",
     # subtitle = "Using Unikn color palette",
     x = "Month",
     y = "Total inflow"
@@ -139,27 +141,41 @@ ggplot(inflow_summary, aes(x = as.Date(paste0(migration_month, "-01")),
   theme(
     plot.title = element_text(face = "bold", hjust = 0.5),
     
+    axis.text.x = element_text(size = 12),
+    axis.text.y = element_text(size = 12),
+    
     # x y, in the middle
-    axis.title.y = element_text(
-      angle = 90, vjust = 0.5, hjust = 0.5, margin = margin(r = 10)),
-    axis.title.x = element_text(
-      hjust = 0.5, margin = margin(t = 10)),
+    axis.title.y = element_text(size = 14,
+      angle = 90, vjust = 0.5, 
+      hjust = 0.5, margin = margin(r = 5)),
+    axis.title.x = element_text(size = 14,
+      hjust = 0.5, margin = margin(t = 5)),
+    
     # legend position
-    legend.position = "right",
-    legend.justification = "center",
-    legend.box.margin = margin(0, 0, 0, -30),  # pull legend left
+    # legend.position = "right",
+    # legend.justification = "center",
+    # legend.box.margin = margin(0, 0, -30, -30),  # pull legend left
+    
+    legend.position = "bottom",
+    legend.direction = "horizontal",
+    legend.box = "horizontal",
+    legend.box.margin = margin(-10, 0, -30, 0),  # pull legend up
+  
     legend.spacing.x = unit(0.1, "cm"),
     legend.spacing.y = unit(0.1, "cm"),
-    # grid off 
+    # grid off
     panel.grid.major = element_blank(),  # remove major grid lines
     panel.grid.minor = element_blank()   # remove minor grid lines
-  )
+  )+
+  guides(fill = guide_legend(nrow = 1))
+
 
 # Save the last plot
-ggsave("migrant_time.png", 
+ggsave("/Users/wenlanzhang/PycharmProjects/Mapineq/src/case_study/Migration/DID/Result/migrant_time.png", 
        width = 10, height = 6, dpi = 300)
 
 ```
+
 
 
 
@@ -201,6 +217,7 @@ myLevels <- data1 %>%
   arrange(value)
 data1$group <- factor(data1$group , levels=myLevels$group )
 ```
+
 ```{r}
 # Compute percentages with dplyr
 library(dplyr)

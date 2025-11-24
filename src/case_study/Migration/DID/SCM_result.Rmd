@@ -1,0 +1,581 @@
+This is to plot result from SCM python
+```{r}
+library(readr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(lubridate)
+library(scales)
+library(geomtextpath)
+library(RColorBrewer)
+
+OUTPUT_DIR <- "/Users/wenlanzhang/PycharmProjects/Mapineq/src/case_study/Migration/DID/SCM_results/CL/"
+
+# filter to one spec (e.g., "log_grp0p40" or "raw_grp0p20_cap0p30"), set this:
+SPEC_TAG <- NULL  
+SPEC_TAG <- 'log_grp0p4' 
+
+my_colors <- c('#5894D0', '#F0C37E', '#AFDBF4', '#F2C2D8', '#12529A', '#b7a8cf')
+
+```
+
+```{r}
+# Small utilities -------------------------------------------------------------
+ff <- function(pattern, spec = SPEC_TAG, dir = OUTPUT_DIR) {
+  all <- list.files(dir, pattern = pattern, full.names = TRUE)
+  # keep only .csv / .tsv (ignore .png, .pdf, etc.)
+  all <- all[grepl("\\.(csv|tsv)$", all, ignore.case = TRUE)]
+  if (!is.null(spec)) all <- all[grepl(spec, all, fixed = TRUE)]
+  if (length(all) == 0) stop("No CSV/TSV files matched: ", pattern,
+                             if (!is.null(spec)) paste0(" + spec=", spec))
+  # Prefer CSV if both exist
+  csvs <- all[grepl("\\.csv$", all, ignore.case = TRUE)]
+  if (length(csvs)) return(csvs[1])
+  all[1]
+}
+
+# Reader that auto-picks CSV vs TSV and reports parse issues
+read_table_auto <- function(path) {
+  line1 <- tryCatch(readr::read_lines(path, n_max = 1), error = function(e) "")
+  if (length(line1) == 0) line1 <- ""
+  if (grepl("\t", line1)) {
+    df <- readr::read_tsv(path, show_col_types = FALSE)
+  } else {
+    df <- readr::read_csv(path, show_col_types = FALSE)
+  }
+  pbs <- readr::problems(df)
+  if (nrow(pbs)) {
+    message("Parsing issues in ", basename(path), ":\n")
+    print(pbs)
+  }
+  df
+}
+
+read_csv_safe <- function(path) read_csv(path, show_col_types = FALSE)
+
+post_line_x <- function(df) {
+  # expects columns date (Date) and is_post (0/1)
+  d <- df %>% filter(is_post == 1) %>% arrange(date)
+  if (nrow(d)) d$date[[1]] else NA
+}
+
+```
+
+
+```{r}
+# 1) Treated vs Synthetic (Combined) ------------------------------------------
+plot_treated_vs_synth <- function(series_file = ff("^series_combined_")) {
+  dat <- read_csv_safe(series_file) %>% mutate(date = as.Date(date))
+  vline_x <- post_line_x(dat)
+
+  ggplot(dat, aes(x = date)) +
+
+    # Lines
+    geom_line(aes(
+      y = on_model_scale_treated,
+      linetype = "Treated",
+      color    = "Treated"
+    ), linewidth = 1.1) +
+    geom_line(aes(
+      y = on_model_scale_synth,
+      linetype = "Synthetic",
+      color    = "Synthetic"
+    ), linewidth = 1.1) +
+
+    # Post-intervention vertical line
+    { if (!is.na(vline_x)) geom_vline(xintercept = vline_x, linetype = "dotted", linewidth = 0.8) } +
+
+    # Manual colors
+    scale_color_manual(
+      values = c(
+        "Treated"   = "#12529A",
+        "Synthetic" = "#F0C37E"
+      )
+    ) +
+
+    # Manual linetypes
+    scale_linetype_manual(
+      values = c(
+        "Treated"   = "solid",
+        "Synthetic" = "dashed"
+      )
+    ) +
+
+    labs(
+      x = "",
+      y = "Model scale (log)",
+      color = "",
+      linetype = "",
+      title = "Treated vs Synthetic — Combined"
+    ) +
+
+    # --- CLEAN & PRETTY THEME ---
+    theme_minimal(base_size = 15) +  # base fontsize ↑
+    theme(
+      plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+      axis.title.y = element_text(size = 16),
+      axis.text.x  = element_text(size = 14),
+      axis.text.y  = element_text(size = 14),
+      legend.title = element_text(size = 14),
+      legend.text  = element_text(size = 14),
+      legend.position = "top",
+      legend.spacing.x = unit(0.4, "cm"),
+
+      # more space for the top legend
+      plot.margin = margin(10, 20, 10, 20)
+    )
+}
+
+print(plot_treated_vs_synth())
+ggsave(file.path(OUTPUT_DIR, "r_treated_vs_synth.png"), plot_treated_vs_synth(), 
+       width = 9, height = 4.5, dpi = 200)
+```
+
+```{r}
+# 2) Gap series (Combined) ----------------------------------------------------
+plot_gap_combined <- function(gap_file = ff("^gap_combined_")) {
+  dat <- read_csv_safe(gap_file) %>% mutate(date = as.Date(date))
+  vline_x <- post_line_x(dat)
+
+  ggplot(dat, aes(x = date, y = gap_model_scale)) +
+
+    # Zero reference line
+    geom_hline(yintercept = 0, linewidth = 0.9, color = "grey40") +
+
+    # Gap line
+    geom_line(linewidth = 1.2, color = '#5894D0') + # "#12529A"
+
+    # Intervention vertical line
+    { if (!is.na(vline_x)) 
+        geom_vline(xintercept = vline_x, linetype = "dotted", linewidth = 0.8)
+    } +
+
+    labs(
+      x = "",
+      y = "Gap (model scale)",
+      title = "Gap Series — Combined"
+    ) +
+
+    # --- PRETTY THEME (matching your other plot) ---
+    theme_minimal(base_size = 15) +
+    theme(
+      plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+      axis.title.y = element_text(size = 16),
+      axis.text.x  = element_text(size = 14),
+      axis.text.y  = element_text(size = 14),
+
+      # spacing
+      plot.margin = margin(10, 20, 10, 20)
+    )
+}
+
+print(plot_gap_combined())
+ggsave(file.path(OUTPUT_DIR, "r_gap_combined.png"), 
+       plot_gap_combined(), width = 9, height = 4.5, dpi = 200)
+```
+
+```{r}
+# 3) Pre-fit scatter (levels) -------------------------------------------------
+
+# ----- Scatter -----
+# plot_prefit_scatter <- function(scatter_file = ff("^prefit_scatter_combined_points_")) {
+#   dat <- read_csv_safe(scatter_file)
+# 
+#   ggplot(dat, aes(x = treated_levels, y = synthetic_levels)) +
+# 
+#     # Points
+#     geom_point(
+#       alpha = 0.75,
+#       size = 2.8,
+#       color = "#0072B2"
+#     ) +
+# 
+#     # 45-degree reference line
+#     geom_abline(
+#       slope = 1, intercept = 0,
+#       linetype = "dashed",
+#       linewidth = 0.8,
+#       color = "grey40",
+#       alpha = 0.80
+#     ) +
+# 
+#     labs(
+#       x = "Treated (levels)",
+#       y = "Synthetic (levels)",
+#       title = "Pre-Period Fit (Levels): Combined"
+#     ) +
+# 
+# #     # --- Pretty theme consistent with your other plots ---
+#     theme_minimal(base_size = 15) +
+#     theme(
+#       plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+#       axis.title = element_text(size = 16),
+#       axis.text  = element_text(size = 14),
+#       panel.grid.minor = element_blank(),
+#       plot.margin = margin(10, 20, 10, 20)
+#     )
+# }
+
+# ----- Scatter + line ---------
+plot_prefit_scatter <- function(scatter_file = ff("^prefit_scatter_combined_points_")) {
+  library(hrbrthemes)   # for geom_labelsmooth()
+
+  dat <- read_csv_safe(scatter_file)
+
+  ggplot(dat, aes(x = treated_levels, y = synthetic_levels)) +
+
+    # Scatter points
+    geom_point(alpha = 0.7, size = 2.8, color = '#12529A') + # '#5894D0'
+
+    # Smooth regression line with label
+    geom_labelsmooth(
+      aes(label = "OLS fit"),
+      method   = "lm",
+      formula  = y ~ x,
+      fill     = "white",
+      linewidth = 1.3,
+      size     = 5,
+      boxlinewidth = 0.6,
+      color = "#F0C37E" #  "#D55E00", "#F0C37E", '#F2C2D8'
+    ) +
+
+    # 1:1 reference line
+    geom_abline(
+      slope = 1, intercept = 0,
+      linetype = "dashed",
+      linewidth = 0.7,
+      color = "grey40",
+      alpha = 0.80
+    ) +
+
+    labs(
+      x = "Treated (levels)",
+      y = "Synthetic (levels)",
+      title = "Pre-Period Fit (Levels): Combined"
+    ) +
+
+    theme_minimal(base_size = 15) +
+    theme(
+      plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+      axis.title = element_text(size = 16),
+      axis.text  = element_text(size = 14),
+      panel.grid.minor = element_blank(),
+      legend.position = "none",
+      plot.margin = margin(10, 20, 10, 20)
+    )
+}
+
+# ----- Plot and save -----
+print(plot_prefit_scatter())
+ggsave(file.path(OUTPUT_DIR, "r_prefit_scatter.png"), 
+       plot_prefit_scatter(), width = 5, height = 5, dpi = 200)
+```
+
+
+```{r}
+# 4) Unit placebo gaps overlay ------------------------------------------------
+plot_unit_placebo_gaps <- function(
+  placebos_long_file = ff("^unit_placebo_gaps_long_"),
+  treated_gap_file  = ff("^gap_combined_"),
+  # colors = list(placebo = "#A6A6A6", treated = "#5894D0"),  # 2 color: Grey and Blue
+  colors = list(treated = "#5894D0")  # only treated color now
+) {
+  # Load data
+  pl <- read_csv_safe(placebos_long_file) %>% mutate(date = as.Date(date))
+  tg <- read_csv_safe(treated_gap_file)   %>% mutate(date = as.Date(date))
+  vline_x <- post_line_x(tg)
+
+  # Assign a color to each placebo unit using Set3
+  placebo_units <- unique(pl$unit)
+  n_units <- length(placebo_units)
+  placebo_colors <- colorRampPalette(brewer.pal(min(12, n_units), "Set3"))(n_units)
+  names(placebo_colors) <- placebo_units
+
+  ggplot() +
+    # Placebo lines with Set3 colors
+    geom_line(data = pl, aes(x = date, y = gap_model_scale, group = unit, color = unit),
+              alpha = 0.4, linewidth = 0.4) +
+
+    # Treated gap line
+    geom_line(data = tg, aes(date, gap_model_scale),
+              color = colors$treated, linewidth = 1) +
+
+    # Post-intervention vertical line
+    { if (!is.na(vline_x)) geom_vline(xintercept = vline_x, linetype = "dotted", linewidth = 0.8) } +
+
+    # Horizontal line at 0
+    geom_hline(yintercept = 0, linewidth = 0.3) +
+
+    # Apply Set3 colors to placebo units
+    scale_color_manual(values = placebo_colors) +
+
+    # Labels
+    labs(
+      x = NULL,
+      y = "Gap (model scale)",
+      title = "Unit Placebos (Gaps) — Combined"
+    ) +
+
+    # Remove legend
+    theme_minimal(base_size = 15) +
+    theme(
+      plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+      axis.title.y = element_text(size = 16),
+      axis.text.x  = element_text(size = 14),
+      axis.text.y  = element_text(size = 14),
+      legend.position = "none",
+      plot.margin = margin(10, 20, 10, 20)
+    )
+}
+
+
+print(plot_unit_placebo_gaps())
+ggsave(file.path(OUTPUT_DIR, "r_unit_placebo_gaps.png"), 
+       plot_unit_placebo_gaps(), width = 9, height = 4.5, dpi = 200)
+
+```
+
+```{r}
+# 5) Unit-placebo MSPE ratio histogram ---------------------------------------
+plot_mspe_hist <- function(ratios_file = ff("^unit_placebo_mspe_ratios_")) {
+  r <- read_csv_safe(ratios_file)
+  treated_val <- r %>% filter(is_treated == 1) %>% pull(post_pre_mspe_ratio)
+  placebos <- r %>% filter(is_treated == 0)
+
+  ggplot(placebos, aes(post_pre_mspe_ratio)) +
+    
+    # geom_histogram(bins = 30) + # Black & White
+    # { if (length(treated_val) == 1) geom_vline(xintercept = treated_val, linetype = "dashed") } +
+    
+      geom_histogram(bins = 30, fill = '#b7a8cf', color = "black", linewidth = 0.15) +
+    { if (length(treated_val) == 1) geom_vline(xintercept = treated_val, linetype = "dashed", color = "red", linewidth = 0.8) } +
+    
+    labs(x = "Post/Pre MSPE ratio (placebos)", 
+         y = "Count", 
+         title = "Unit-placebo MSPE ratios — Combined") +
+    theme_minimal(base_size = 15) +
+    theme(
+      plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+      axis.title.y = element_text(size = 16),
+      axis.text.x  = element_text(size = 14),
+      axis.text.y  = element_text(size = 14),
+
+      # spacing
+      plot.margin = margin(10, 20, 10, 20)
+    )
+}
+
+print(plot_mspe_hist())
+ggsave(file.path(OUTPUT_DIR, "r_unit_placebo_mspe_his.png"), 
+       plot_mspe_hist(), width = 9, height = 4.5, dpi = 200)
+
+```
+
+
+```{r}
+# 6) Origin-only / Destination-only overlays ----------------------------------
+plot_origin_dest_overlays <- function(series_origin_file = ff("^series_origin_only_"),
+                                      series_dest_file   = ff("^series_destination_only_")) {
+  so <- read_csv_safe(series_origin_file) %>% mutate(date = as.Date(date)) %>%
+    mutate(type = "Origin-only")
+  sd <- read_csv_safe(series_dest_file) %>% mutate(date = as.Date(date)) %>%
+    mutate(type = "Destination-only")
+  vline_x <- post_line_x(so)
+
+  p1 <- ggplot(so, aes(date)) +
+    geom_line(aes(y = treated_levels, linetype = "Treated")) +
+    geom_line(aes(y = synthetic_levels, linetype = "Synthetic")) +
+    { if (!is.na(vline_x)) geom_vline(xintercept = vline_x, linetype = "dotted") } +
+    labs(x = NULL, y = "Levels", linetype = "", title = "Origin-only synthetic") +
+    theme_minimal() +
+    theme(
+      plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+      axis.title.y = element_text(size = 16),
+      axis.text.x  = element_text(size = 14),
+      axis.text.y  = element_text(size = 14),
+      legend.position = "top",
+      legend.spacing.x = unit(0.8, "cm"),
+      plot.margin = margin(10, 20, 10, 20)
+    )
+
+  p2 <- ggplot(sd, aes(date)) +
+    geom_line(aes(y = treated_levels, linetype = "Treated")) +
+    geom_line(aes(y = synthetic_levels, linetype = "Synthetic")) +
+    { if (!is.na(vline_x)) geom_vline(xintercept = vline_x, linetype = "dotted") } +
+    labs(x = NULL, y = "Levels", linetype = "", title = "Destination-only synthetic") +
+    theme_minimal() +
+    theme(
+      plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+      axis.title.y = element_text(size = 16),
+      axis.text.x  = element_text(size = 14),
+      axis.text.y  = element_text(size = 14),
+      legend.position = "top",
+      legend.spacing.x = unit(0.8, "cm"),
+      plot.margin = margin(10, 20, 10, 20)
+    )
+  list(origin_only = p1, destination_only = p2)
+}
+
+ov <- plot_origin_dest_overlays()
+print(ov$origin_only); print(ov$destination_only)
+```
+
+```{r}
+# 7) Double-counterfactual gaps (levels) --------------------------------------
+plot_double_counterfactual <- function(double_gap_file = ff("^double_counterfactual_gaps_levels_")) {
+  dg <- read_csv_safe(double_gap_file) %>% mutate(date = as.Date(date))
+  vline_x <- post_line_x(dg)
+
+  long <- dg %>%
+    select(date, gap_vs_origin_levels, gap_vs_destination_levels) %>%
+    pivot_longer(-date, names_to = "series", values_to = "gap")
+
+  ggplot(long, aes(date, gap, color = series)) +
+    geom_hline(yintercept = 0) +
+    geom_line() +
+    { if (!is.na(vline_x)) geom_vline(xintercept = vline_x, linetype = "dotted", color = "black") } +
+    scale_color_manual(values = c("gap_vs_origin_levels" = "#AFDBF4",
+                                  "gap_vs_destination_levels" = "#F2C2D8"),
+                       labels = c("Gap vs origin-only", "Gap vs destination-only")) +
+    labs(x = NULL, y = "Gap (levels)", color = "", title = "Double-counterfactual gaps (levels)") +
+    theme_minimal() +
+    theme(
+      plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+      axis.title.y = element_text(size = 16),
+      axis.text.x  = element_text(size = 14),
+      axis.text.y  = element_text(size = 14),
+      legend.position = "top",
+      legend.spacing.x = unit(0.8, "cm"),
+      plot.margin = margin(10, 20, 10, 20)
+    )
+}
+
+print(plot_double_counterfactual())
+ggsave(file.path(OUTPUT_DIR, "r_double_counterfactual.png"), 
+       plot_double_counterfactual(), width = 9, height = 4.5, dpi = 200)
+```
+
+```{r}
+# 8) Share-of-destination series + projection ---------------------------------
+# plot_share_projection <- function(share_file = ff("^share_of_dest_series_and_projection_")) {
+#   s <- read_csv_safe(share_file) %>% mutate(date = as.Date(date))
+#   vline_x <- post_line_x(s)
+# 
+#   ggplot(s, aes(date)) +
+#     geom_line(aes(y = share, linetype = "Observed share")) +
+#     geom_line(aes(y = pretrend_projection, linetype = "Pre-trend projection")) +
+#     { if (!is.na(vline_x)) geom_vline(xintercept = vline_x, linetype = "dotted") } +
+#     scale_y_continuous(labels = percent_format(accuracy = 0.1)) +
+#     labs(x = NULL, y = "Share", linetype = "", title = "Share of destination inflow & pre-trend projection") +
+#     theme_minimal() +
+#     theme(
+#       plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+#       axis.title.y = element_text(size = 16),
+#       axis.text.x  = element_text(size = 14),
+#       axis.text.y  = element_text(size = 14),
+#       legend.position = "top",
+#       legend.spacing.x = unit(0.8, "cm"),
+#       plot.margin = margin(10, 20, 10, 20)
+#     )
+# }
+
+plot_share_projection <- function(share_file = ff("^share_of_dest_series_and_projection_")) {
+  s <- read_csv_safe(share_file) %>% mutate(date = as.Date(date))
+  vline_x <- post_line_x(s)
+
+  # Define custom colors
+  line_colors <- c("Observed share" = "#5894D0",       # blue
+                   "Pre-trend projection" = "#F0C37E") # orange
+
+  ggplot(s, aes(date)) +
+    geom_line(aes(y = share, linetype = "Observed share", color = "Observed share"), linewidth = 0.8) +
+    geom_line(aes(y = pretrend_projection, linetype = "Pre-trend projection", color = "Pre-trend projection"), linewidth = 0.8) +
+    { if (!is.na(vline_x)) geom_vline(xintercept = vline_x, linetype = "dotted", linewidth = 0.8) } +
+    scale_y_continuous(labels = percent_format(accuracy = 0.1)) +
+
+    # Apply the custom colors
+    scale_color_manual(values = line_colors) +
+    scale_linetype_manual(values = c("Observed share" = "solid", "Pre-trend projection" = "dashed")) +
+    # scale_x_date(
+    #   date_breaks = "6 months",
+    #   date_labels = "%Y-%m"
+    # ) +
+
+    labs(x = NULL, y = "Share", color = "", linetype = "",
+         title = "Share of destination inflow & pre-trend projection") +
+
+    theme_minimal() +
+    theme(
+      plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+      axis.title.y = element_text(size = 16),
+      axis.text.x  = element_text(size = 14),
+      axis.text.y  = element_text(size = 14),
+      legend.position = "top",
+      legend.spacing.x = unit(0.8, "cm"),
+      plot.margin = margin(10, 20, 10, 20)
+    )
+}
+
+print(plot_share_projection())
+ggsave(file.path(OUTPUT_DIR, "r_share_proj.png"), 
+       plot_share_projection(), width = 9, height = 4.5, dpi = 200)
+```
+
+```{r}
+# 9) Month-placebos histogram --------------------------------------------------
+plot_month_placebos_hist <- function(month_pl_file = ff("^month_placebos_"),
+                                     summary_file   = ff("^summary_")) {
+  # Load month-placebo data
+  mp <- read_csv_safe(month_pl_file)
+  
+  # Try to grab the real Combined donors cumulative ATT to overlay
+  real_val <- tryCatch({
+    smry <- read_csv_safe(summary_file)
+    smry %>% filter(grepl("^Combined donors", Model)) %>% slice(1) %>% pull(Cumulative_ATT_levels)
+  }, error = function(e) NA_real_)
+  
+  ggplot(mp %>% filter(!is.na(cum_att_levels)), aes(cum_att_levels)) +
+#     geom_histogram(bins = 12) +
+#     { if (is.finite(real_val)) geom_vline(xintercept = real_val,linetype="dashed")} +
+    geom_histogram(
+      bins = 12,
+      fill = '#F2C2D8',
+      color = "black",
+      linewidth = 0.2  # thin border
+    ) +
+    { if (is.finite(real_val)) geom_vline(
+        xintercept = real_val,
+        linetype = "dashed",
+        color = "red",
+        linewidth = 0.8
+      )
+    } +
+    labs(
+      x = "Cumulative ATT (levels) — placebo post windows",
+      y = "Count",
+      title = "Month-placebo distribution of cumulative ATT (Combined)"
+    ) +
+    theme_minimal(base_size = 15) +
+    theme(
+      plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+      axis.title.y = element_text(size = 16),
+      axis.text.x  = element_text(size = 14),
+      axis.text.y  = element_text(size = 14),
+      plot.margin = margin(10, 20, 10, 20)
+    )
+}
+
+print(plot_month_placebos_hist())
+ggsave(file.path(OUTPUT_DIR, "r_month_placebos_hist.png"), 
+       plot_month_placebos_hist(), width = 9, height = 4.5, dpi = 200)
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+

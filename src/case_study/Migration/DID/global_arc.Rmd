@@ -1,0 +1,276 @@
+```{r}
+# Data manipulation
+library(tidyverse)   # includes dplyr, ggplot2, readr, purrr, etc.
+
+# Spatial / mapping
+library(sf)          # for spatial objects
+library(geosphere)   # for gcIntermediate() great-circle arcs
+
+# Plotting / graphics
+library(jpeg)        # for readJPEG()
+library(grid)        # for rasterGrob()
+library(RColorBrewer) # color palettes
+library(scales)      # for alpha, color scaling
+library(ggplot2)
+
+# Optional (network analysis / graph plotting)
+library(igraph)
+library(ggraph)
+library(unikn)       # color palettes, optional
+```
+
+```{r}
+# Load Basemap and render
+earth <- readJPEG("/Users/wenlanzhang/Code/RCode/Plot/SampleData/BlackMarble_2016_01deg.jpg", native = TRUE)
+earth <- rasterGrob(earth, interpolate = TRUE)
+```
+
+
+```{r}
+country_region <- read_csv('/Users/wenlanzhang/Downloads/PhD_UCL/Data/Oxford/all.csv', show_col_types = FALSE)
+country_region
+```
+
+
+
+```{r}
+migrations_file <- "/Users/wenlanzhang/Downloads/PhD_UCL/Data/Oxford/Migration/international_migration_flow.csv"
+migrations <- read_csv(migrations_file, show_col_types = FALSE)
+
+migrations <- migrations %>%
+  filter(
+    !is.na(country_from),
+    !is.na(country_to),
+    country_from != "",
+    country_to != ""
+  )
+
+# migrations
+
+# Non-directional
+migration_sum <- migrations %>%
+  filter(
+    !is.na(country_from),
+    !is.na(country_to),
+    country_from != "",
+    country_to != ""
+  ) %>%
+  rowwise() %>%
+  mutate(
+    # reorder countries alphabetically for non-directional pairing
+    c1 = min(country_from, country_to),
+    c2 = max(country_from, country_to)
+  ) %>%
+  ungroup() %>%
+  group_by(country_from = c1, country_to = c2) %>%
+  summarise(n = sum(num_migrants, na.rm = TRUE)) %>%
+  ungroup()
+
+# # Directional
+# migration_sum <- migrations %>%
+#   group_by(country_from, country_to) %>%
+#   summarise(n = sum(num_migrants, na.rm = TRUE)) %>%
+#   ungroup()
+
+migration_sum
+```
+
+
+```{r}
+country_center <- read_csv( "/Users/wenlanzhang/Downloads/PhD_UCL/Data/Oxford/Countries_Centrality.csv", show_col_types = FALSE)
+country_center <- country_center %>%
+  add_row(
+    country   = "SS",
+    latitude  = 6.8770,
+    longitude = 31.3070,
+    name      = "South Sudan"
+  )
+country_center
+```
+
+
+```{r}
+# merge migration with country center
+migration_coords <- migration_sum %>%
+  left_join(country_center, by = c("country_from" = "country")) %>%
+  rename(from_lat = latitude, from_lon = longitude, from_name = name) %>%
+  left_join(country_center, by = c("country_to" = "country")) %>%
+  rename(to_lat = latitude, to_lon = longitude, to_name = name)
+migration_coords
+
+# migration_coords %>%
+#   filter(is.na(from_lat) | is.na(from_lon) | is.na(to_lat) | is.na(to_lon))
+```
+
+```{r}
+threshold <- 15000
+migration_coords <- migration_coords %>% filter(n > threshold)
+migration_coords
+```
+
+
+```{r}
+data_for_connection <- function(dep_lon, dep_lat, arr_lon, arr_lat, group){
+  inter <- geosphere::gcIntermediate(
+    c(dep_lon, dep_lat),
+    c(arr_lon, arr_lat),
+    n = 50,
+    addStartEnd = TRUE,
+    breakAtDateLine = FALSE
+  )
+  inter <- data.frame(inter)
+  inter$group <- group
+  return(inter)
+}
+
+data_ready_plot <- map_df(1:nrow(migration_coords), function(i){
+  
+  tmp <- data_for_connection(
+    migration_coords$from_lon[i],
+    migration_coords$from_lat[i],
+    migration_coords$to_lon[i],
+    migration_coords$to_lat[i],
+    group = i
+  )
+  
+  tmp$n <- migration_coords$n[i]
+  tmp$country_from <- migration_coords$country_from[i]
+  tmp
+})
+
+```
+
+
+
+```{r}
+ggplot() +
+  annotation_custom(earth, xmin = -180, xmax = 180, ymin = -90, ymax = 90) +
+  geom_line(
+    data = data_ready_plot,
+    aes(x = lon, y = lat, group = group, colour = n, alpha = n),
+    size = 0.6
+  ) +
+  scale_colour_gradient(low = "lightblue", high = "red") +
+  scale_alpha(range = c(0.1, 1)) +
+  theme_void() +
+  coord_equal() +
+  ggtitle("Global Migration Flows (summed over months)")
+
+# Save last plot
+# ggsave("/Users/wenlanzhang/PycharmProjects/Mapineq/src/case_study/Migration/DID/Result/MigrationArc.png", width = 16, height = 8, units = "in", dpi = 300)
+
+```
+
+
+```{r}
+p <- ggplot() +
+  # Background Earth image
+  annotation_custom(earth, xmin = -180, xmax = 180, ymin = -90, ymax = 90) +
+  
+  # Migration arcs
+  geom_line(
+    data = data_ready_plot,
+    aes(x = lon, y = lat, group = group, colour = n, alpha = n),
+    size = 1
+  ) +
+  
+  # Color gradient by number of migrants
+  scale_colour_gradient(low = "lightblue", high = "lightyellow") +
+  scale_alpha(range = c(0.1, 1)) + # keep transparency relative to migrant number
+  
+  # Clean theme
+  theme_void() +
+  coord_equal(xlim = c(-180, 180), ylim = c(-60, 80)) +
+  theme(
+    legend.position = "none",
+    plot.margin = grid::unit(c(0, 0, 0, 0), "cm"),
+    # panel.background = element_rect(fill = "black", colour = "black")
+  ) +
+
+  # Text annotations
+  annotate(
+    "text", x = -150, y = -45, hjust = 0, size = 11,
+    label = "Global Migration Flows",
+    color = "white"
+  ) +
+  annotate(
+    "text", x = -150, y = -51, hjust = 0, size = 7,
+    label = "Data: Meta International Migration | Visualisation: Non-directional, >15,000 | Base Map: BlackMarble",
+    color = "white", alpha = 0.6
+  )
+
+# Save the fancy plot
+ggsave("/Users/wenlanzhang/PycharmProjects/Mapineq/src/case_study/Migration/DID/Result/MigrationMap_Fancy.png", plot = p, width = 36, height = 15.22, units = "in", dpi = 150)
+
+```
+
+
+
+# Example
+https://www.data-to-viz.com/story/MapConnection.html
+```{r}
+# Load dataset from github (Surfer project)
+data <- read.table("https://github.com/holtzy/data_to_viz/raw/master/Example_dataset/19_MapConnection.csv", header=T, sep=",")
+
+# Download NASA night lights image
+download.file("https://raw.githubusercontent.com/holtzy/data_to_viz/master/story/IMG/BlackMarble_2016_01deg.jpg", 
+destfile = "/Users/wenlanzhang/Code/RCode/Plot/SampleData/BlackMarble_2016_01deg.jpg", mode = "wb")
+
+# Load picture and render
+earth <- readJPEG("/Users/wenlanzhang/Code/RCode/Plot/SampleData/BlackMarble_2016_01deg.jpg", native = TRUE)
+earth <- rasterGrob(earth, interpolate = TRUE)
+
+# Count how many times we have each unique connexion + order by importance
+summary=data %>% 
+  dplyr::count(homelat,homelon,homecontinent, travellat,travellon,travelcontinent) %>%
+  arrange(n)
+
+# A function that makes a dateframe per connection (we will use these connections to plot each lines)
+data_for_connection=function( dep_lon, dep_lat, arr_lon, arr_lat, group){
+  inter <- gcIntermediate(c(dep_lon, dep_lat), c(arr_lon, arr_lat), n=50, addStartEnd=TRUE, breakAtDateLine=F)             
+  inter=data.frame(inter)
+  inter$group=NA
+  diff_of_lon=abs(dep_lon) + abs(arr_lon)
+  if(diff_of_lon > 180){
+    inter$group[ which(inter$lon>=0)]=paste(group, "A",sep="")
+    inter$group[ which(inter$lon<0)]=paste(group, "B",sep="")
+  }else{
+    inter$group=group
+  }
+  return(inter)
+}
+
+# Création d'un dataframe complet avec les points de toutes les lignes à faire.
+data_ready_plot=data.frame()
+for(i in c(1:nrow(summary))){
+  tmp=data_for_connection(summary$homelon[i], summary$homelat[i], summary$travellon[i], summary$travellat[i] , i)
+  tmp$homecontinent=summary$homecontinent[i]
+  tmp$n=summary$n[i]
+  data_ready_plot=rbind(data_ready_plot, tmp)
+}
+data_ready_plot$homecontinent=factor(data_ready_plot$homecontinent, levels=c("Asia","Europe","Australia","Africa","North America","South America","Antarctica"))
+
+# Plot
+p <- ggplot() +
+  annotation_custom(earth, xmin = -180, xmax = 180, ymin = -90, ymax = 90) +
+  geom_line(data=data_ready_plot, aes(x=lon, y=lat, group=group, colour=homecontinent, alpha=n), size=0.6) +
+  scale_color_brewer(palette="Set3") +
+  theme_void() +
+  theme(
+        legend.position="none",
+        panel.background = element_rect(fill = "black", colour = "black"), 
+        panel.spacing=unit(c(0,0,0,0), "null"),
+        plot.margin=grid::unit(c(0,0,0,0), "cm"),
+  ) +
+  ggplot2::annotate("text", x = -150, y = -45, hjust = 0, size = 11, label = paste("Where surfers travel."), color = "white") +
+  ggplot2::annotate("text", x = -150, y = -51, hjust = 0, size = 8, label = paste("data-to-viz.com | NASA.gov | 10,000 #surf tweets recovered"), color = "white", alpha = 0.5) +
+  #ggplot2::annotate("text", x = 160, y = -51, hjust = 1, size = 7, label = paste("Cacedédi Air-Guimzu 2018"), color = "white", alpha = 0.5) +
+  xlim(-180,180) +
+  ylim(-60,80) +
+  scale_x_continuous(expand = c(0.006, 0.006)) +
+  coord_equal() 
+
+# Save at PNG
+ggsave("/Users/wenlanzhang/Code/RCode/Plot/SampleData/Surfer_travel.png", width = 36, height = 15.22, units = "in", dpi = 90)
+```
+

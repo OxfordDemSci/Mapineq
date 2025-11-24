@@ -1,0 +1,11 @@
+donor,weight,group
+NP->US,0.6050590861953395,destination
+TR->US,0.3949409138046605,destination
+TW->US,1.0001592812993514e-18,destination
+BD->US,0.0,destination
+ES->US,0.0,destination
+IT->US,0.0,destination
+JM->US,0.0,destination
+NG->US,0.0,destination
+PK->US,0.0,destination
+TH->US,0.0,destination

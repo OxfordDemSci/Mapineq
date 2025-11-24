@@ -1,0 +1,11 @@
+donor,weight,group
+IN->DE,0.32560393064332827,destination
+RO->DE,0.24734425084275477,destination
+IT->DE,0.17221183087440217,destination
+BG->DE,0.14202131753175928,destination
+GR->DE,0.1043979899516024,destination
+US->DE,0.008420680156152976,destination
+BA->DE,0.0,destination
+ES->DE,0.0,destination
+PL->DE,0.0,destination
+RS->DE,0.0,destination

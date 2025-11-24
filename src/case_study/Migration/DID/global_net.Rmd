@@ -12,21 +12,20 @@ library(unikn)
 ```{r}
 Country_region <- read.csv("/Users/wenlanzhang/Downloads/PhD_UCL/Data/Oxford/all.csv")
 Country_region_clean <- Country_region %>%
-  rename(alpha2 = alpha.2,  # adjust if different name
+  rename(alpha2 = alpha.2,  
          region = region,
-         sub_region = sub.region)  # adjust exact name if needed
+         sub_region = sub.region) 
 Country_region
 ```
 
 ```{r}
-# --- 0) File paths: adjust if necessary
 migrations_file <- "/Users/wenlanzhang/Downloads/PhD_UCL/Data/Oxford/Migration/international_migration_flow.csv"
 migrations <- read_csv(migrations_file, show_col_types = FALSE)
 migrations
 ```
 
 ```{r}
-# --- 2) Aggregate directed flows -----------------------------------------
+# --- Aggregate directed flows -----------------------------------------
 flows_direct <- migrations %>%
   group_by(country_from, country_to) %>%
   summarise(direct_migrants = sum(num_migrants, na.rm = TRUE), .groups = "drop")
@@ -35,7 +34,7 @@ flows_direct
 ```
 
 ```{r}
-# --- 3) Make undirected pairs and compute chosen aggregation -------------
+# --- Make undirected pairs and compute chosen aggregation -------------
 agg_method <- "sum"    # options: "sum","mean","max","difference","ratio"
 
 flows_undir <- flows_direct %>%
@@ -66,8 +65,8 @@ flows_undir
 
 
 ```{r}
-threshold <- 150000    # change threshold or use top-N logic later
-# threshold <- 1500    # change threshold or use top-N logic later
+# threshold <- 150000    # change threshold or use top-N logic later
+threshold <- 15000    # change threshold or use top-N logic later
 
 # --- 4) Filter by threshold (you can swap to top-N/quantile instead) -----
 if (agg_method %in% c("difference")) {
@@ -85,7 +84,7 @@ flows_undir
 ```
 
 ```{r}
-# --- 5) Join region/subregion info for both endpoints --------------------
+# --- Join region/subregion info for both endpoints --------------------
 flows_undir_region <- flows_undir %>%
   left_join(Country_region_clean %>% select(alpha2, region, sub_region),
             by = c("country1" = "alpha2")) %>%
@@ -97,35 +96,38 @@ flows_undir_region <- flows_undir %>%
 flows_undir_region
 ```
 ```{r}
-# flows_undir_region <- flows_undir_region %>%
-#   filter(region1 == "Europe" & region2 == "Europe")
-
 flows_undir_region <- flows_undir_region %>%
-  filter(!is.na(region1) & region1 != "" & region2 != "")
+  filter(region1 == "Europe" & region2 == "Europe")
+
+# flows_undir_region <- flows_undir_region %>%
+#   filter(!is.na(region1) & region1 != "" & region2 != "")
 
 flows_undir_region
 ```
 
 
 ```{r}
-# --- 6) Prepare countries list ordered by region then alphabetically -----
-countries_tbl <- tibble(name = unique(c(flows_undir_region$country1, flows_undir_region$country2))) %>%
-  left_join(Country_region_clean %>% select(alpha2, region, sub_region), by = c("name" = "alpha2")) %>%
-  mutate(region = if_else(is.na(region), "Unknown", region))
+# # --- Prepare countries list ordered by region then alphabetically -----
 
-# Order by region then by code (alphabetical)
-countries_ordered <- countries_tbl %>%
-  arrange(region, name) %>%
-  pull(name)
-
-
+# # ------------ region ----------------
 # countries_tbl <- tibble(name = unique(c(flows_undir_region$country1, flows_undir_region$country2))) %>%
 #   left_join(Country_region_clean %>% select(alpha2, region, sub_region), by = c("name" = "alpha2")) %>%
-#   mutate(sub_region = if_else(is.na(sub_region), "Unknown", sub_region))
+#   mutate(region = if_else(is.na(region), "Unknown", region))
 # 
+# # Order by region then by code (alphabetical)
 # countries_ordered <- countries_tbl %>%
-#   arrange(sub_region, name) %>%
+#   arrange(region, name) %>%
 #   pull(name)
+
+
+# ------------ sub_region ----------------
+countries_tbl <- tibble(name = unique(c(flows_undir_region$country1, flows_undir_region$country2))) %>%
+  left_join(Country_region_clean %>% select(alpha2, region, sub_region), by = c("name" = "alpha2")) %>%
+  mutate(sub_region = if_else(is.na(sub_region), "Unknown", sub_region))
+
+countries_ordered <- countries_tbl %>%
+  arrange(sub_region, name) %>%
+  pull(name)
 
 
 # Build the simple tree edges so leaf order follows countries_ordered
@@ -133,7 +135,7 @@ edges_df <- tibble(from = "root", to = countries_ordered)
 edges_df
 ```
 ```{r}
-# --- 7) Compute per-country totals for node sizing -----------------------
+# ---- Compute per-country totals for node sizing -----------------------
 country_totals <- bind_rows(
   flows_undir_region %>% select(country = country1, total_migrants),
   flows_undir_region %>% select(country = country2, total_migrants)
@@ -145,7 +147,7 @@ country_totals
 
 
 ```{r}
-# --- 8) Build vertices (attach region + size) ----------------------------
+# --- Build vertices (attach region + size) ----------------------------
 vertices <- tibble(name = unique(c(edges_df$from, edges_df$to))) %>%
   left_join(Country_region_clean %>% select(alpha2, region, sub_region), by = c("name" = "alpha2")) %>%
   rename(region = region, sub_region = sub_region) %>%
@@ -153,8 +155,8 @@ vertices <- tibble(name = unique(c(edges_df$from, edges_df$to))) %>%
   mutate(
     total_migration = replace_na(total_migration, 0),
     value = total_migration + 1,               # +1 avoids zero sizes (tweak as desired)
-    group = if_else(is.na(region), "Unknown", region)
-    # group = if_else(is.na(region), "Unknown", sub_region)
+    # group = if_else(is.na(region), "Unknown", region)
+    group = if_else(is.na(region), "Unknown", sub_region)
   )
 
 # compute circular label angles in the exact order defined by edges_df (so regions are contiguous)
@@ -170,7 +172,7 @@ vertices$angle <- ifelse(vertices$angle < -90, vertices$angle + 180, vertices$an
 
 
 ```{r}
-# --- 9) Graph layout and connection geometry -----------------------------
+# --- Graph layout and connection geometry -----------------------------
 mygraph <- igraph::graph_from_data_frame(edges_df, vertices = vertices)
 layout <- create_layout(mygraph, layout = "dendrogram", circular = TRUE)
 
@@ -192,7 +194,7 @@ con_df <- con_df %>% mutate(con.id = as.integer(con.id))
 
 
 ```{r}
-# --- 10) Attach per-connection attributes (width/alpha) -------------------
+# ---  Attach per-connection attributes (width/alpha) -------------------
 conn_attribs <- tibble(
   con.id = seq_len(nrow(flows_sel)),
   scaled_width = scales::rescale(flows_sel$total_migrants, to = c(0.3, 2)),
@@ -211,13 +213,25 @@ con_df <- left_join(con_df, conn_summary_full, by = "con.id") %>%
 ```
 
 ```{r}
-# --- 11) Colour palettes: regions -> colours -----------------------------
-regions <- unique(na.omit(vertices$group))
-nreg <- length(regions)
-base_pal <- RColorBrewer::brewer.pal(min(max(nreg, 3), 12), "RdPu")
-pal_regions <- rep(base_pal, length.out = nreg)
-names(pal_regions) <- regions
+# ---  Colour palettes: regions -> colours -----------------------------
 
+
+# ------------ region ----------------
+# regions <- unique(na.omit(vertices$group))
+# nreg <- length(regions)
+# base_pal <- RColorBrewer::brewer.pal(min(max(nreg, 3), 12), "RdPu")
+# pal_regions <- rep(base_pal, length.out = nreg)
+# names(pal_regions) <- regions
+
+
+my_colors <- c('#5894D0', '#F0C37E', '#AFDBF4', '#F2C2D8', '#12529A', '#b7a8cf') 
+subregions <- unique(na.omit(vertices$group))
+nreg <- length(subregions)
+pal_nodes <- rep(my_colors, length.out = nreg)
+names(pal_nodes) <- subregions
+
+
+# # ------------ sub_region ----------------
 # subregions <- unique(na.omit(vertices$group))
 # nreg <- length(subregions)
 # base_pal <- RColorBrewer::brewer.pal(min(max(nreg, 3), 12), "Set3")
@@ -225,31 +239,35 @@ names(pal_regions) <- regions
 # names(pal_regions) <- subregions
 
 # add fallback colours
-if (!"Unknown" %in% names(pal_regions)) pal_regions <- c(pal_regions, "Unknown" = "grey70")
-if (!"Inter-regional" %in% names(pal_regions)) pal_regions <- c(pal_regions, "Inter-regional" = "grey40")
+if (!"Unknown" %in% names(pal_nodes)) pal_nodes <- c(pal_nodes, "Unknown" = "grey70")
+if (!"Inter-regional" %in% names(pal_nodes)) pal_nodes <- c(pal_nodes, "Inter-regional" = "grey40")
 
 ```
 
+```{r}
+# # -------------------------
+# #  Create / ensure palette (Paired, repeated to match number of subregions)
+# groups <- unique(na.omit(vertices$group))
+# n_groups <- length(groups)
+# 
+# # pal_nodes <- rep(RColorBrewer::brewer.pal(9, "Paired"), length.out = n_groups)
+# pal_nodes <- rep(RColorBrewer::brewer.pal(9, "Set2"), length.out = n_groups)
+# 
+# # from unikn
+# # unikn_cols <- as.character(unlist(pal_unikn_pref[1, ]))
+# # pal_nodes <- rep(unikn_cols, length.out = n_groups)
+# # Check Color:
+# # data.frame(index = 1:length(unikn_cols), color = unikn_cols)
+# 
+# names(pal_nodes) <- groups
+# if (!"Unknown" %in% names(pal_nodes)) pal_nodes <- c(pal_nodes, "Unknown" = "grey70")
+
+```
+
+
 ## same line width
 ```{r}
-# -------------------------
-# 1) Create / ensure palette (Paired, repeated to match number of subregions)
-groups <- unique(na.omit(vertices$group))
-n_groups <- length(groups)
-
-# pal_nodes <- rep(RColorBrewer::brewer.pal(9, "Paired"), length.out = n_groups)
-pal_nodes <- rep(RColorBrewer::brewer.pal(9, "Set2"), length.out = n_groups)
-
-# from unikn
-# unikn_cols <- as.character(unlist(pal_unikn_pref[1, ]))
-# pal_nodes <- rep(unikn_cols, length.out = n_groups)
-# Check Color:
-# data.frame(index = 1:length(unikn_cols), color = unikn_cols)
-
-names(pal_nodes) <- groups
-if (!"Unknown" %in% names(pal_nodes)) pal_nodes <- c(pal_nodes, "Unknown" = "grey70")
-
-# 2) Main plot: no legends, semi-transparent node circles
+#  Main plot: no legends, semi-transparent node circles
 p <- ggraph(mygraph, layout = 'dendrogram', circular = TRUE) + 
 
   # bundles: gradient colouring kept as in your example
@@ -313,13 +331,13 @@ legend_plot <- ggplot(legend_df, aes(x = 1, y = -y)) +
   theme(legend.position = "none",
         plot.margin = margin(10, 10, 10, 10))
 
-ggsave("subregion_legend.png", plot = legend_plot, width = 4, height = max(4, 0.25 * nrow(legend_df)), dpi = 300)
+# ggsave("subregion_legend.png", plot = legend_plot, width = 4, height = max(4, 0.25 * nrow(legend_df)), dpi = 300)
 
 ```
 
 ## by line width
 ```{r}
-# 1️⃣ Create con_df with total_migrants included
+#  Create con_df with total_migrants included
 con_fun <- ggraph::get_con(from = from_ids, to = to_ids)
 con_df  <- con_fun(create_layout(mygraph, layout = "dendrogram", circular = TRUE)) %>%
   mutate(con.id = as.integer(con.id)) %>%
@@ -344,7 +362,7 @@ ggraph(mygraph, layout = 'dendrogram', circular = TRUE) +
   ) +
   geom_node_text(
     aes(x = x*1.18, y = y*1.18, filter = leaf, label = name, angle = angle, hjust = hjust, colour = group),
-    size = 3, alpha = 1, show.legend = FALSE
+    size = 7, alpha = 1, show.legend = FALSE
   ) +
   scale_colour_manual(values = pal_nodes, na.value = "grey70") +
   scale_size_continuous(range = c(2, 15), trans = "sqrt") +
@@ -352,8 +370,8 @@ ggraph(mygraph, layout = 'dendrogram', circular = TRUE) +
   theme(legend.position = "none") +
   expand_limits(x = c(-1.45, 1.45), y = c(-1.45, 1.45))
 
-ggsave("migration.png", width = 10, height = 10, dpi = 300)
-
+ggsave("Result/migration_sub_m.png", width = 10, height = 10, dpi = 300)
+# ggsave("Result/migration_region_m.png", width = 10, height = 10, dpi = 300)
 ```
 
 ## too many legend
@@ -705,7 +723,7 @@ ggraph(mygraph, layout = 'dendrogram', circular = TRUE) +
 
 
 ```{r}
-ggsave("example.png", width = 10, height = 10, dpi = 300)
+ggsave("/Users/wenlanzhang/Code/RCode/Plot/SampleOutput/example.png", width = 10, height = 10, dpi = 300)
 
 ```
 
