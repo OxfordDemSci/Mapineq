@@ -103,7 +103,7 @@ migration_coords
 ```
 
 ```{r}
-threshold <- 15000
+threshold <- 20000
 migration_coords <- migration_coords %>% filter(n > threshold)
 migration_coords
 ```
@@ -195,13 +195,14 @@ p <- ggplot() +
   ) +
   annotate(
     "text", x = -150, y = -51, hjust = 0, size = 7,
-    label = "Data: Meta International Migration | Visualisation: Non-directional, >15,000 | Base Map: BlackMarble",
+    label = "Data: Meta International Migration | Visualisation: Non-directional, >20,000 | Base Map: BlackMarble",
     color = "white", alpha = 0.6
   )
 
 # Save the fancy plot
 ggsave("/Users/wenlanzhang/PycharmProjects/Mapineq/src/case_study/Migration/DID/Result/MigrationMap_Fancy.png", plot = p, width = 36, height = 15.22, units = "in", dpi = 150)
 
+p
 ```
 
 

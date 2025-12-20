@@ -1,0 +1,164 @@
+```{r}
+# Data manipulation
+library(tidyverse)   # includes dplyr, ggplot2, readr, purrr, etc.
+
+# Spatial / mapping
+library(sf)          # for spatial objects
+library(geosphere)   # for gcIntermediate() great-circle arcs
+
+# Plotting / graphics
+library(jpeg)        # for readJPEG()
+library(grid)        # for rasterGrob()
+library(RColorBrewer) # color palettes
+library(scales)      # for alpha, color scaling
+library(ggplot2)
+
+# Optional (network analysis / graph plotting)
+library(igraph)
+library(ggraph)
+library(unikn)       # color palettes, optional
+
+library(dplyr)
+library(ggplot2)
+library(rnaturalearth)
+library(sf)
+```
+
+
+```{r}
+Country_region <- read.csv("/Users/wenlanzhang/Downloads/PhD_UCL/Data/Oxford/all.csv")
+Country_region_clean <- Country_region %>%
+  rename(alpha2 = alpha.2,  # adjust if different name
+         region = region,
+         sub_region = sub.region)  # adjust exact name if needed
+Country_region
+```
+
+
+```{r}
+migrations_file <- "/Users/wenlanzhang/Downloads/PhD_UCL/Data/Oxford/Migration/international_migration_flow.csv"
+migrations <- read_csv(migrations_file, show_col_types = FALSE)
+
+migrations <- migrations %>%
+  filter(
+    !is.na(country_from),
+    !is.na(country_to),
+    country_from != "",
+    country_to != ""
+  )
+# migrations
+
+# Get unique countries from migration data
+countries_with_data <- migrations %>%
+  select(country_from, country_to) %>%
+  pivot_longer(everything(), values_to = "alpha.2") %>%
+  distinct(alpha.2)
+countries_with_data
+```
+
+
+```{r}
+# world <- ne_countries(scale = "medium", returnclass = "sf")
+# world
+```
+
+```{r}
+# Get world map (minimal columns)
+world <- ne_countries(scale = "medium", returnclass = "sf") %>%
+  select(iso_a2, name, geometry)
+
+
+# Fill missing information for France
+world <- world %>%
+  mutate(
+    iso_a2 = ifelse(name == "France" & iso_a2 == "-99", "FR", iso_a2),
+  )
+
+# Fill missing information for Norway
+world <- world %>%
+  mutate(
+    iso_a2 = ifelse(name == "Norway" & iso_a2 == "-99", "NO", iso_a2),
+  )
+
+
+world <- world %>%
+  mutate(
+    iso_a2 = ifelse(name == "Kosovo" & iso_a2 == "-99", "XK", iso_a2),
+  )
+
+
+# Verify
+world %>% filter(name %in% c("France", "Norway", 'Kosovo'))
+
+
+
+# Join with country_region to get regions
+world_region <- world %>%
+  left_join(Country_region %>% select(alpha.2, region), by = c("iso_a2" = "alpha.2"))
+world_region
+```
+
+```{r}
+# 4. Mark which countries have migration data
+world_region <- world_region %>%
+  mutate(has_data = ifelse(iso_a2 %in% countries_with_data$alpha.2, "Yes", "No"))
+
+```
+
+
+
+
+```{r}
+# 5. Define your custom palette
+pal_nodes <- c('#F0C37E', '#AFDBF4', '#F2C2D8', '#12529A', '#b7a8cf')
+
+# 6. Plot map, color by region using custom palette
+
+# Only keep region info for countries with migration data
+world_region_plot <- world_region %>%
+  mutate(region_to_plot = ifelse(has_data == "Yes", region, NA))
+
+# Plot
+ggplot(world_region_plot) +
+  geom_sf(aes(fill = region_to_plot), color = "black", size = 0.1) +
+  scale_fill_manual(values = pal_nodes, na.value = "gray90") +  # countries without migration data = gray
+  theme_minimal() +
+  labs(
+    title = "Countries with Migration Data by Region",
+    fill = "Region"
+  ) 
+
+# ggplot(world_region_plot) +
+#   geom_sf(aes(fill = region_to_plot), color = "black", size = 0.1) +
+#   scale_fill_manual(values = pal_nodes, na.value = "gray90") +
+#   theme_minimal() +
+#   labs(
+#     title = "Countries with Migration Data by Region",
+#     fill = "Region"
+#   ) +
+#   theme(
+#     legend.position = c(1.1, 0.2),   # position relative to plot (x, y from 0 to 1)
+#     legend.background = element_rect(fill = "white", color = "black"),
+#     legend.key.size = unit(0.8, "lines")  # make legend keys smaller
+#   )
+
+
+# Save the last plot
+ggsave("Result/global_migration_country.png", 
+       width = 10, height = 5, dpi = 300)
+```
+
+
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+

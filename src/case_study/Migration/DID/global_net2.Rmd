@@ -1,0 +1,438 @@
+```{r}
+# ============================================================
+# Migration circular dendrogram plot — modular, configurable
+# ============================================================
+
+library(tidyverse)
+library(igraph)
+library(ggraph)
+library(RColorBrewer)
+library(scales)
+library(grid)
+
+# --------------------------- Helper: robust read of country-region file ---------------------------
+read_country_region <- function(path) {
+  df <- read.csv(path, stringsAsFactors = FALSE, na.strings = c("", "NA"))
+  # detect alpha2 column common names
+  if ("alpha2" %in% names(df)) {
+    df <- df %>% rename(alpha2 = alpha2)
+  } else if ("alpha.2" %in% names(df)) {
+    df <- df %>% rename(alpha2 = alpha.2)
+  } else if ("iso_a2" %in% names(df)) {
+    df <- df %>% rename(alpha2 = iso_a2)
+  } else {
+    stop("Could not find alpha2 column in country-region table (expected alpha2 / alpha.2 / iso_a2).")
+  }
+  # normalize region/subregion column names if possible
+  if (!("region" %in% names(df)) && ("Region" %in% names(df))) df <- df %>% rename(region = Region)
+  if (!("sub_region" %in% names(df)) && ("sub.region" %in% names(df))) df <- df %>% rename(sub_region = sub.region)
+  if (!("sub_region" %in% names(df)) && ("subregion" %in% names(df))) df <- df %>% rename(sub_region = subregion)
+  # ensure columns exist (create NA if missing)
+  if (!("region" %in% names(df))) df$region <- NA_character_
+  if (!("sub_region" %in% names(df))) df$sub_region <- NA_character_
+  df <- df %>% mutate(alpha2 = as.character(alpha2))
+  df
+}
+
+# --------------------------- Main: plot_migration_circle ---------------------------
+plot_migration_circle <- function(
+  migrations,                # tibble/data.frame with columns: country_from, country_to, num_migrants
+  country_region,           # tibble/data.frame from read_country_region()
+  agg_method = "sum",       # "sum","mean","max","difference","ratio"
+  threshold = 20000,        # numeric threshold; ignored if top_n provided
+  top_n = NULL,             # integer: keep top-N flows by absolute value (overrides threshold if not NULL)
+  color_by = c("global", "region", "sub_region"),
+  palette = "Set3",         # brewer palette name or character vector of hex colours
+  root_label = "root",      # label for root node
+  restrict_region = NULL,   # e.g., "Europe" to keep only intra-region flows; NULL = global
+  save_path = NULL,         # if not NULL, save plot to file
+  save_width = 10,
+  save_height = 10,
+  save_dpi = 300
+) {
+  # input checks
+  color_by <- match.arg(color_by)
+  # check migrations columns
+  if (!all(c("country_from", "country_to", "num_migrants") %in% names(migrations))) {
+    stop("migrations must contain columns: country_from, country_to, num_migrants")
+  }
+
+  # --- 1) Aggregate directed flows (direct_migrants)
+  flows_direct <- migrations %>%
+    group_by(country_from, country_to) %>%
+    summarise(direct_migrants = sum(num_migrants, na.rm = TRUE), .groups = "drop") %>%
+    filter(country_from != country_to)
+
+  # --- 2) Convert to undirected pairs + compute aggregation
+  flows_undir <- flows_direct %>%
+    mutate(pair_a = pmin(country_from, country_to),
+           pair_b = pmax(country_from, country_to)) %>%
+    group_by(pair_a, pair_b) %>%
+    summarise(
+      dir_ab = sum(direct_migrants[country_from == pair_a & country_to == pair_b], na.rm = TRUE),
+      dir_ba = sum(direct_migrants[country_from == pair_b & country_to == pair_a], na.rm = TRUE),
+      .groups = "drop"
+    ) %>%
+    mutate(
+      total_migrants = case_when(
+        agg_method == "sum"        ~ dir_ab + dir_ba,
+        agg_method == "mean"       ~ rowMeans(cbind(dir_ab, dir_ba), na.rm = TRUE),
+        agg_method == "max"        ~ pmax(dir_ab, dir_ba, na.rm = TRUE),
+        agg_method == "difference" ~ (dir_ab - dir_ba),
+        agg_method == "ratio"      ~ if_else(dir_ba == 0, NA_real_, dir_ab / dir_ba),
+        TRUE ~ dir_ab + dir_ba
+      )
+    ) %>%
+    rename(country1 = pair_a, country2 = pair_b)
+
+  # --- 3) Join region/subregion metadata
+  flows_with_regions <- flows_undir %>%
+    left_join(country_region %>% select(alpha2, region, sub_region),
+              by = c("country1" = "alpha2")) %>%
+    rename(region1 = region, sub_region1 = sub_region) %>%
+    left_join(country_region %>% select(alpha2, region, sub_region),
+              by = c("country2" = "alpha2")) %>%
+    rename(region2 = region, sub_region2 = sub_region)
+
+  # --- 4) Restrict to a specific region if requested
+  if (!is.null(restrict_region)) {
+    flows_with_regions <- flows_with_regions %>%
+      filter(region1 == restrict_region & region2 == restrict_region)
+  }
+
+  # --- 5) Select either top_n or threshold filtering
+  if (!is.null(top_n) && top_n > 0) {
+    flows_sel <- flows_with_regions %>%
+      arrange(desc(abs(total_migrants))) %>%
+      slice_head(n = top_n)
+  } else {
+    if (agg_method %in% c("difference")) {
+      flows_sel <- flows_with_regions %>% filter(abs(total_migrants) > threshold)
+    } else if (agg_method %in% c("ratio")) {
+      flows_sel <- flows_with_regions %>% filter(is.finite(total_migrants) & total_migrants > threshold)
+    } else {
+      flows_sel <- flows_with_regions %>% filter(total_migrants > threshold)
+    }
+  }
+
+  if (nrow(flows_sel) == 0) {
+    stop("No flows left after filtering. Lower threshold, increase top_n, or change restrict_region.")
+  }
+
+  # --- 6) Country totals (for node size)
+  country_totals <- bind_rows(
+    flows_sel %>% select(country = country1, total_migrants),
+    flows_sel %>% select(country = country2, total_migrants)
+  ) %>%
+    group_by(country) %>%
+    summarise(total_migration = sum(total_migrants, na.rm = TRUE), .groups = "drop")
+
+  # --- 7) Decide grouping column based on color_by
+  grouping_col <- switch(color_by,
+                         global = "region",
+                         region = "region",
+                         sub_region = "sub_region")
+
+  # --- 8) Build ordered country list (so leaves of the circle are grouped)
+  countries_tbl <- tibble(name = unique(c(flows_sel$country1, flows_sel$country2))) %>%
+    left_join(country_region %>% select(alpha2, region, sub_region),
+              by = c("name" = "alpha2")) %>%
+    mutate(grouping = coalesce(.data[[grouping_col]], "Unknown"))
+
+  countries_ordered <- countries_tbl %>%
+    arrange(grouping, name) %>%
+    pull(name)
+
+  # edges (root -> country leaves)
+  edges_df <- tibble(from = root_label, to = countries_ordered)
+
+  # --- 9) Build vertices: root + countries, attach sizes & groups
+  vertices <- tibble(name = unique(c(edges_df$from, edges_df$to))) %>%
+    left_join(country_region %>% select(alpha2, region, sub_region), by = c("name" = "alpha2")) %>%
+    left_join(country_totals, by = c("name" = "country")) %>%
+    mutate(
+      total_migration = replace_na(total_migration, 0),
+      value = total_migration + 1,
+      group = case_when(
+        color_by == "global" ~ coalesce(region, "Unknown"),
+        color_by == "region" ~ coalesce(region, "Unknown"),
+        color_by == "sub_region" ~ coalesce(sub_region, "Unknown"),
+        TRUE ~ coalesce(sub_region, "Unknown")
+      )
+    )
+
+  # --- 10) Create igraph and layout once
+  mygraph <- igraph::graph_from_data_frame(edges_df, vertices = vertices)
+  layout <- create_layout(mygraph, layout = "dendrogram", circular = TRUE)
+
+  # compute label angles for leaves (simple, robust approach)
+  leaf_names <- layout$name[layout$leaf]
+  nleaves <- length(leaf_names)
+  angle_vals <- 90 - 360 * seq_along(leaf_names) / nleaves
+  angle_df <- tibble(name = leaf_names, angle = angle_vals) %>%
+    mutate(hjust = ifelse(angle < -90, 1, 0),
+           angle = ifelse(angle < -90, angle + 180, angle))
+  layout <- left_join(layout, angle_df, by = "name")
+
+  # --- 11) Prepare connections geometry with ggraph::get_con
+  from_ids <- match(flows_sel$country1, vertices$name)
+  to_ids <- match(flows_sel$country2, vertices$name)
+  valid <- !is.na(from_ids) & !is.na(to_ids)
+  if (!all(valid)) {
+    flows_sel <- flows_sel[valid, ]
+    from_ids <- from_ids[valid]
+    to_ids <- to_ids[valid]
+  }
+
+  con_fun <- ggraph::get_con(from = from_ids, to = to_ids)
+  con_df <- con_fun(layout) %>% mutate(con.id = as.integer(con.id))
+
+  # attach per-connection attributes
+  conn_attribs <- tibble(con.id = seq_len(nrow(flows_sel)),
+                         total_migrants = flows_sel$total_migrants) %>%
+    mutate(
+      scaled_width = scales::rescale(abs(total_migrants), to = c(0.3, 2)),
+      scaled_alpha = scales::rescale(abs(total_migrants), to = c(0.15, 0.95))
+    )
+  con_df <- left_join(con_df, conn_attribs, by = "con.id")
+  con_df <- con_df %>%
+    left_join(flows_sel %>% mutate(con.id = seq_len(n())) %>%
+                select(con.id, country1, country2, region1, region2, sub_region1, sub_region2, total_migrants),
+              by = "con.id") %>%
+    mutate(shared_region = if_else(region1 == region2 & !is.na(region1), region1, "Inter-regional"))
+
+  # --- 12) Palette function: supports brewer names or custom vectors
+  make_palette <- function(groups, palette) {
+    groups_unique <- unique(na.omit(groups))
+    ng <- length(groups_unique)
+    if (is.character(palette) && length(palette) == 1 && palette %in% rownames(brewer.pal.info)) {
+      maxpal <- brewer.pal.info[palette, "maxcolors"]
+      pal <- brewer.pal(min(maxpal, max(3, ng)), palette)
+      pal <- rep(pal, length.out = ng)
+    } else if (is.character(palette) && length(palette) >= ng) {
+      pal <- palette[1:ng]
+    } else {
+      pal <- hue_pal()(ng)  # fallback
+    }
+    names(pal) <- groups_unique
+    if (!"Unknown" %in% names(pal)) pal <- c(pal, Unknown = "grey70")
+    pal
+  }
+
+  pal_nodes <- make_palette(vertices$group, palette)
+
+  # --- 13) Build ggplot/ggraph plot
+  p <- ggraph(layout) + 
+    # bundled connections (map edge_width to scaled_width and alpha to scaled_alpha)
+    geom_conn_bundle(
+      data = con_df,
+      aes(edge_width = scaled_width, alpha = scaled_alpha),
+      edge_colour = "grey60",
+      alpha = 0.5,          
+      tension = 0.8,
+      show.legend = TRUE          # allow edge legend
+    ) +
+  
+    # Provide a named edge-width scale so it appears in the legend
+    scale_edge_width_continuous(
+      name = "Flow (migrants)",
+      range = c(0.3, 6),
+      guide = guide_legend(
+        title.position = "top",
+        title.hjust = 0.5,
+        nrow = 1,
+        byrow = TRUE,
+        override.aes = list(colour = "grey60", alpha = 1)  # clearer keys in legend
+      )
+    ) +
+  
+    # Optionally provide an alpha legend too (commented out; enable if desired)
+    # scale_edge_alpha_continuous(
+    #   name = "Flow (alpha)",
+    #   range = c(0.2, 1),
+    #   guide = guide_legend(nrow = 1, byrow = TRUE, title.position = "top")
+    # ) +
+  
+    # node points (only leaves) — colour by group (this creates the region legend)
+    geom_node_point(
+      aes(filter = leaf, x = x * 1.06, y = y * 1.06, colour = group, size = value),
+      alpha = 0.7,
+      show.legend = TRUE
+    ) +
+  
+    geom_node_text(
+      aes(x = x * 1.12, y = y * 1.12, filter = leaf,
+          label = name, angle = angle, hjust = hjust, colour = group),
+      size = 9, alpha = 1, show.legend = FALSE
+    ) +
+    guides(
+      edge_width = "none",
+      edge_alpha = "none"
+    ) + 
+  
+    # Colour legend (region/subregion), force one horizontal row for the colour keys
+    scale_colour_manual(
+      values = pal_nodes,
+      na.value = "grey70",
+      name = tools::toTitleCase(color_by),
+      guide = guide_legend(
+        nrow = 1,
+        byrow = TRUE,
+        title.position = "top",
+        override.aes = list(size = 5, shape = 20, alpha = 0.8)  # shape 16 = solid circle
+      )
+    ) +
+  
+    # keep node-size legend suppressed as before (or enable if you want)
+    scale_size_continuous(range = c(2, 20), trans = "sqrt", guide = "none") +
+  
+    # Theme: place legends at bottom, stack them vertically (two rows)
+    theme_void() +
+    theme(
+      legend.position = "bottom",
+      legend.direction = "horizontal",
+      legend.box = "vertical",
+      legend.title = element_text(size = 20, face = "bold"),
+      legend.text  = element_text(size = 18, vjust = 0.2),       # vertical centering for text
+      legend.key.size = unit(1, "lines"),                     # controls symbol cell size
+      legend.spacing.x = unit(0.3, "cm")
+    ) +
+    expand_limits(x = c(1.2, 1.2), y = c(1.2, 1.2))
+  
+  # Save optional
+  if (!is.null(save_path)) {
+    ggsave(filename = save_path, plot = p, width = save_width, height = save_height, dpi = save_dpi)
+  }
+
+  # Return useful objects for further inspection
+  return(list(plot = p, flows = flows_sel, vertices = vertices, connections = con_df))
+}
+
+```
+
+```{r}
+# ============================ Example: run with your files ============================
+# 1) Adjust these file paths to your environment
+country_region_file <- "/Users/wenlanzhang/Downloads/PhD_UCL/Data/Oxford/all.csv"
+migrations_file     <- "/Users/wenlanzhang/Downloads/PhD_UCL/Data/Oxford/Migration/international_migration_flow.csv"
+
+# 2) Read inputs (uses helper for robustness)
+Country_region <- read_country_region(country_region_file)
+migrations <- read_csv(migrations_file, show_col_types = FALSE)
+
+```
+
+
+```{r}
+# 3) Call function: example 1 — sub_region colouring, top 150 flows, Europe-only
+res <- plot_migration_circle(
+  migrations = migrations,
+  country_region = Country_region,
+  agg_method = "sum",
+  top_n = 150,
+  color_by = "sub_region",
+  palette = "Set3",
+  restrict_region = "Europe",
+  save_path = "Result/test.png",
+  save_width = 12,
+  save_height = 12
+)
+
+# display
+print(res$plot)
+```
+
+
+```{r}
+# 4) Call function: example 2 — global colouring by region, threshold 50000, custom hex palette
+custom_colors <- c("#5894D0", "#F0C37E", "#AFDBF4", "#F2C2D8", "#12529A", "#b7a8cf")
+res2 <- plot_migration_circle(
+  migrations = migrations,
+  country_region = Country_region,
+  agg_method = "sum",
+  threshold = 50000,
+  top_n = NULL,
+  color_by = "region",
+  palette = custom_colors,
+  restrict_region = NULL,
+  save_path = "Result/migration_region_threshold50k.png",
+  save_width = 10,
+  save_height = 10
+)
+
+print(res2$plot)
+
+# end of script
+
+```
+
+```{r}
+# ----------------------------
+# Generate one figure per region (fixed palette + threshold)
+# ----------------------------
+custom_colors <- c('#5894D0', '#F0C37E', '#AFDBF4', '#F2C2D8', '#12529A', '#b7a8cf')
+
+output_dir <- "Result/regions"
+if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
+
+regions <- Country_region %>%
+  pull(region) %>%
+  unique() %>%
+  na.omit() %>%
+  as.character() %>%
+  sort()
+
+regions <- regions[regions != "" & tolower(regions) != "unknown"]
+
+common_args <- list(
+  migrations = migrations,
+  country_region = Country_region,
+  agg_method = "sum",
+  threshold = 20000,          
+  top_n = NULL, 
+  color_by = "sub_region",
+  palette = custom_colors,    
+  save_width = 12,
+  save_height = 12,
+  save_dpi = 300
+)
+
+results_summary <- tibble(
+  region = character(),
+  status = character(),
+  file = character(),
+  message = character()
+)
+
+for (reg in regions) {
+  safe_name <- gsub("\\s+", "_", reg) %>% tolower()
+  save_file <- file.path(output_dir, paste0("migration_", safe_name, "_20k.png"))
+
+  cat("Rendering region:", reg, "\n")
+
+  res <- tryCatch({
+    args <- common_args
+    args$restrict_region <- reg
+    args$save_path <- save_file
+    out <- do.call(plot_migration_circle, args)
+    list(success = TRUE)
+  }, error = function(e) {
+    list(success = FALSE, error = conditionMessage(e))
+  })
+
+  if (isTRUE(res$success)) {
+    results_summary <- results_summary %>%
+      add_row(region = reg, status = "OK", file = save_file, message = "")
+  } else {
+    results_summary <- results_summary %>%
+      add_row(region = reg, status = "ERROR", file = save_file, message = res$error)
+    message(sprintf("ERROR rendering region '%s': %s", reg, res$error))
+  }
+}
+
+print(results_summary)
+
+```
+
+
+

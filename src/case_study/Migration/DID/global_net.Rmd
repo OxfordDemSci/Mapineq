@@ -5,6 +5,10 @@ library(igraph)
 library(ggraph)
 library(RColorBrewer)
 library(unikn)
+library(ggraph)
+library(ggplot2)
+library(dplyr)
+library(grid)
 ```
 
 # My data
@@ -65,8 +69,8 @@ flows_undir
 
 
 ```{r}
-# threshold <- 150000    # change threshold or use top-N logic later
-threshold <- 15000    # change threshold or use top-N logic later
+# threshold <- 200000    # change threshold or use top-N logic later
+threshold <- 20000    # change threshold or use top-N logic later
 
 # --- 4) Filter by threshold (you can swap to top-N/quantile instead) -----
 if (agg_method %in% c("difference")) {
@@ -93,9 +97,6 @@ flows_undir_region <- flows_undir %>%
             by = c("country2" = "alpha2")) %>%
   rename(region2 = region, sub_region2 = sub_region)
 
-flows_undir_region
-```
-```{r}
 flows_undir_region <- flows_undir_region %>%
   filter(region1 == "Europe" & region2 == "Europe")
 
@@ -106,10 +107,11 @@ flows_undir_region
 ```
 
 
+
 ```{r}
 # # --- Prepare countries list ordered by region then alphabetically -----
 
-# # ------------ region ----------------
+# ------------ region ----------------
 # countries_tbl <- tibble(name = unique(c(flows_undir_region$country1, flows_undir_region$country2))) %>%
 #   left_join(Country_region_clean %>% select(alpha2, region, sub_region), by = c("name" = "alpha2")) %>%
 #   mutate(region = if_else(is.na(region), "Unknown", region))
@@ -209,12 +211,11 @@ conn_summary_full <- flows_sel %>%
 
 con_df <- left_join(con_df, conn_summary_full, by = "con.id") %>%
   mutate(shared_region = if_else(region1 == region2 & !is.na(region1), region1, "Inter-regional"))
-
 ```
+
 
 ```{r}
 # ---  Colour palettes: regions -> colours -----------------------------
-
 
 # ------------ region ----------------
 # regions <- unique(na.omit(vertices$group))
@@ -223,8 +224,8 @@ con_df <- left_join(con_df, conn_summary_full, by = "con.id") %>%
 # pal_regions <- rep(base_pal, length.out = nreg)
 # names(pal_regions) <- regions
 
-
-my_colors <- c('#5894D0', '#F0C37E', '#AFDBF4', '#F2C2D8', '#12529A', '#b7a8cf') 
+ 
+my_colors <- c('#5894D0', '#F0C37E', '#AFDBF4', '#F2C2D8', '#12529A', '#b7a8cf')
 subregions <- unique(na.omit(vertices$group))
 nreg <- length(subregions)
 pal_nodes <- rep(my_colors, length.out = nreg)
@@ -232,17 +233,18 @@ names(pal_nodes) <- subregions
 
 
 # # ------------ sub_region ----------------
-# subregions <- unique(na.omit(vertices$group))
-# nreg <- length(subregions)
-# base_pal <- RColorBrewer::brewer.pal(min(max(nreg, 3), 12), "Set3")
-# pal_regions <- rep(base_pal, length.out = nreg)
-# names(pal_regions) <- subregions
+subregions <- unique(na.omit(vertices$group))
+nreg <- length(subregions)
+base_pal <- RColorBrewer::brewer.pal(min(max(nreg, 3), 12), "Set3")
+pal_regions <- rep(base_pal, length.out = nreg)
+names(pal_regions) <- subregions
 
 # add fallback colours
 if (!"Unknown" %in% names(pal_nodes)) pal_nodes <- c(pal_nodes, "Unknown" = "grey70")
 if (!"Inter-regional" %in% names(pal_nodes)) pal_nodes <- c(pal_nodes, "Inter-regional" = "grey40")
 
 ```
+
 
 ```{r}
 # # -------------------------
@@ -311,7 +313,7 @@ p <- ggraph(mygraph, layout = 'dendrogram', circular = TRUE) +
 print(p)
 
 # 3) Save the main figure (png + pdf)
-ggsave("migration_network_by_subregion_nolegend.png", plot = p, width = 10, height = 10, dpi = 300)
+# ggsave("migration_network_by_subregion_nolegend.png", plot = p, width = 10, height = 10, dpi = 300)
 # ggsave("migration_network_by_subregion_nolegend.pdf", plot = p, width = 10, height = 10)
 
 # 4) Save a subregion -> colour mapping as CSV (useful reference)
@@ -350,12 +352,14 @@ con_df  <- con_fun(create_layout(mygraph, layout = "dendrogram", circular = TRUE
 ggraph(mygraph, layout = 'dendrogram', circular = TRUE) + 
   geom_conn_bundle(
     data = con_df,
-    aes(edge_colour = ..index.., edge_width = total_migrants),  # width ~ flow strength
-    alpha = 0.25,
+    # aes(edge_colour = ..index.., edge_width = total_migrants),  # width ~ flow strength
+    aes(edge_width = total_migrants),
+    edge_colour = "grey60",
+    alpha = 0.35,
     tension = 0.8
   ) +
   scale_edge_colour_distiller(palette = "RdPu") +
-  scale_edge_width_continuous(range = c(0.2, 7)) +   # adjust contrast here
+  scale_edge_width_continuous(range = c(0.1, 8)) +   # adjust contrast here
   geom_node_point(
     aes(filter = leaf, x = x*1.08, y = y*1.08, colour = group, size = value),
     alpha = 0.6, show.legend = FALSE
@@ -370,11 +374,96 @@ ggraph(mygraph, layout = 'dendrogram', circular = TRUE) +
   theme(legend.position = "none") +
   expand_limits(x = c(-1.45, 1.45), y = c(-1.45, 1.45))
 
-ggsave("Result/migration_sub_m.png", width = 10, height = 10, dpi = 300)
-# ggsave("Result/migration_region_m.png", width = 10, height = 10, dpi = 300)
+ggsave("Result/migration_sub_m_20.png", width = 10, height = 10, dpi = 300)
+# ggsave("Result/migration_region_m_20.png", width = 10, height = 10, dpi = 300)
 ```
 
+
+```{r}
+# --- prepare con_df (ensure total_migrants present) ---
+con_fun <- ggraph::get_con(from = from_ids, to = to_ids)
+con_df  <- con_fun(create_layout(mygraph, layout = "dendrogram", circular = TRUE)) %>%
+  mutate(con.id = as.integer(con.id)) %>%
+  left_join(
+    flows_sel %>% mutate(con.id = seq_len(n())) %>% select(con.id, total_migrants),
+    by = "con.id"
+  )
+
+# --- Plot: larger circle + single-row legend for 'group' at bottom ---
+p <- ggraph(mygraph, layout = 'dendrogram', circular = TRUE) + 
+
+  # bundled connections: no legends for edges (visualised by colour/width)
+  geom_conn_bundle(
+    data = con_df,
+    # aes(edge_colour = total_migrants, edge_width = total_migrants),
+    aes(edge_width = total_migrants),
+    edge_colour = "grey60",
+    alpha = 0.25,
+    tension = 0.8,
+    show.legend = FALSE
+  ) +
+  scale_edge_colour_distiller(palette = "RdPu", guide = "none") +
+  scale_edge_width_continuous(range = c(0.1, 8), guide = "none") +
+
+  # node points: colour by group (we want this legend), size by value (no legend)
+  geom_node_point(
+    aes(filter = leaf, x = x * 1.06, y = y * 1.06, colour = group, size = value),
+    alpha = 0.6,
+    show.legend = TRUE
+  ) +
+  # node labels: coloured but do not create legend entries
+  geom_node_text(
+    aes(x = x * 1.12, y = y * 1.12, filter = leaf,
+        label = name, angle = angle, hjust = hjust, colour = group),
+    size = 7, alpha = 1, show.legend = FALSE
+  ) +
+
+  # explicit group legend - force one row
+  scale_colour_manual(
+    values = pal_nodes,
+    na.value = "grey70",
+    name = "Group",
+    guide = guide_legend(
+      nrow = 1,
+      byrow = TRUE,
+      title.position = "top",
+      keywidth = unit(1.4, "cm"),
+      override.aes = list(size = 6, alpha = 0.7) 
+    )
+  ) +
+
+  # suppress size legend for node size
+  scale_size_continuous(range = c(2, 15), trans = "sqrt", guide = "none") +
+
+  # tighten plot limits so the circular layout appears larger
+  theme_void() +
+  theme(
+    legend.position = "bottom",
+    legend.direction = "horizontal",
+    legend.box = "horizontal",
+    legend.title = element_text(size = 20, face = "bold"),
+    legend.text  = element_text(size = 16),
+    legend.spacing.x = unit(0.08, "cm"),
+    plot.margin = margin(t = 0, r = 0, b = 10, l = 0, unit = "pt"),
+    legend.box.margin = margin(t = -50, unit = "pt"),
+    legend.spacing.y  = unit(0, "pt")
+  ) +
+  expand_limits(x = c(-1.2, 1.2), y = c(-1.2, 1.2))
+
+# Print and save (wider canvas to avoid legend wrapping)
+print(p)
+ggsave(
+  filename = "Result/migration_sub_m_group_legend_bottom_20.png",
+  # filename = "Result/migration_region_m_group_legend_bottom_20.png",
+  plot = p, width = 10, height = 10.4, dpi = 300)
+
+```
+
+
+
+
 ## too many legend
+## Below delete
 ```{r}
 
 # --- 12) Plot -------------------------------------------------------------
@@ -405,6 +494,7 @@ ggsave("migration_network_by_region.png", plot = p, width = 13, height = 10, dpi
 # --------------------------------------------------------------------------
 
 ```
+
 
 ```{r}
 # build a named discrete palette for node groups (subregions)
