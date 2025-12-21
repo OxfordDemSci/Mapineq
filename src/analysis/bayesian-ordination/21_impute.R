@@ -21,7 +21,7 @@ md <- read.csv(file.path(datdir, "md.csv"))
 
 # separate row id info
 id_md <- md %>%
-  select(geo)
+  select(geo, geo_name)
 
 # posterior predictions
 ymis <- blavPredict(fit, type = "ymis")

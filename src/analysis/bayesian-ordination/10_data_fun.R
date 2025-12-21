@@ -328,7 +328,13 @@ data_to_wide <- function(dat, drop_rows = TRUE) {
       id_cols = all_of(keep_cols),
       names_from = variable_name,
       values_from = value
-    )
+    ) %>% 
+    left_join(
+      dat %>%
+        select(geo, geo_name) %>% 
+        distinct(geo, .keep_all = TRUE)
+      )
+  
 
   if (drop_rows) {
     vars <- unique(dat$variable_name)

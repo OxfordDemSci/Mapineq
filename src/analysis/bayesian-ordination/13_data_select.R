@@ -171,7 +171,7 @@ vars <- var_select %>%
   pull(variable_name)
 
 dat_select <- dat %>%
-  select(geo, all_of(vars))
+  select(geo, geo_name, all_of(vars))
 
 #---- save to disk ----#
 write.csv(dat_select, file.path(outdir, "data_select.csv"), row.names = FALSE)
