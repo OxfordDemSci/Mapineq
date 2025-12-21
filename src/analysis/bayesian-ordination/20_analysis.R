@@ -4,10 +4,6 @@
 rm(list = ls())
 gc()
 
-#---- USER OPTIONS ----#
-extend_fit <- TRUE
-#----------------------#
-
 # install libraries (if needed)
 required_packages <- c("dplyr", "blavaan", "semPlot", "caret", "coda", "bayesplot")
 install.packages(setdiff(required_packages, installed.packages()[, "Package"]))
@@ -33,37 +29,44 @@ dir.create(file.path(outdir, "traceplots"), showWarnings = FALSE, recursive = TR
 # load data
 dat <- read.csv(file.path(datdir, "data_select.csv"), check.names = FALSE)
 var_select <- read.csv(file.path(datdir, "variable_selection.csv"))
-if(extend_fit) fit_initial <- readRDS(file.path(outdir, "fit.rds"))
-
 
 #---- define latent variables ----#
 
+# Economics
 lava_econ <- c(
   "TEPSR_LM220", # gender employment gap
   "YTH_EMPL_030", # youth employment rate
-  "TGS00010", # employment rate by education level
-  "EDAT_LFSE_33", # , # youth NEET employment rates
-  "TGS00103", # poverty reduction
-  "BD_SIZE_R3" # business demography (births, deaths, change)
+  "EDAT_LFSE_33" # , # youth NEET employment rates
 )
+  # "TGS00103", # poverty reduction
+  # "BD_SIZE_R3" # business demography (births, deaths, change)
+  # "TGS00010", # employment rate by education level
+
+# Education
 lava_edu <- c(
   "EDUC_UOE_ENRA17", # pupils pre-primary
-  "EDUC_UOE_ENRA13", # distribution of students among education types
   "TGS00109", # tertiary educational attainment
   "EDAT_LFS_9918" # educational attainment
 )
+  # "EDUC_UOE_ENRA13", # distribution of students among education types
+
+# Health
 lava_health <- c(
-  "TGS00064", # hospital beds
   "TGS00058", # cancer deaths
   "TGS00059", # heart disease deaths
   "DEMO_R_MINFIND", # infant mortality
   "HLTH_CD_YPERRTO" # peri- neo-natal mortality
 )
+  # "TGS00064", # hospital beds
+
+# Demography
 lava_demo <- c(
-  "TGS00099", # population change (natural, migration, total)
   "DEMO_R_FIND2", # fertility indicators
   "TGS00101" # life expectancy at birth
 )
+  # "TGS00099", # population change (natural, migration, total)
+
+# Environment
 lava_env <- c(
   "pm25", # air particulates
   "ookla", # internet speed
@@ -165,7 +168,7 @@ lavas <- var_select %>%
   pull(latent_variable) %>%
   unique()
 lavas <- lavas[!is.na(lavas)]
-# lavas <- lavas[-which(lavas=="Demography")]
+
 
 model <- ""
 for (lava in lavas) {
@@ -191,13 +194,10 @@ cat(model)
 
 # random seed
 seed <- sample.int(.Machine$integer.max, 1L)
-sample <- ifelse(!extend_fit, 1000, 2000)
 
-if(!extend_fit){
-  inits <- "simple"
-} else {
-  inits <- blavInspect(fit_initial, "inits")
-}
+# inits
+inits <- "simple"
+# inits <- blavInspect(fit_initial, "inits")
 
 
 # run Bayesian structural equation model
@@ -208,7 +208,9 @@ fit <- bsem(
   target = "stan",
   inits = inits,
   burnin = 500,
-  sample = sample,
+  sample = 2000,
+  std.lv = TRUE,
+  meanstructure = TRUE,
   # save.lvs = TRUE,  # required for blavPredict(..., type = c("yhat", "ypred"))
   seed = seed
 )
@@ -216,13 +218,8 @@ time_end <- Sys.time()
 print(time_end - time_start)
 
 # save model
-if(!extend_fit){
-  saveRDS(fit, file.path(outdir, "fit.rds"))
-  saveRDS(seed, file.path(outdir, "seed.rds"))
-} else {
-  saveRDS(fit, file.path(outdir, "fit_extend.rds"))
-  saveRDS(seed, file.path(outdir, "seed_extend.rds"))
-} 
+saveRDS(fit, file.path(outdir, "fit.rds"))
+saveRDS(seed, file.path(outdir, "seed.rds"))
 
 # model summary
 summary(fit, fit.measures = TRUE, standardized = TRUE)

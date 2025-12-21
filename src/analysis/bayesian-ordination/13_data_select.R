@@ -37,36 +37,14 @@ var_select <- var_select %>%
         "TGS00050",
         "TGS00058",
         "TGS00059",
-        "TGS00064",
-        "TGS00099",
-        "TGS00103",
-        "TRAN_R_ACCI",
         "TGS00101"
       ), 1, select_y
     )
   ) %>%
   mutate(
     select_y = ifelse(
-      f_resource == "BD_SIZE_R3" &
-        indic_sb %in% c("V97010", "V97020", "V97030") &
-        sizeclas == "TOTAL",
-      1,
-      select_y
-    )
-  ) %>%
-  mutate(
-    select_y = ifelse(
-      f_resource == "EDUC_UOE_ENRA13" &
-        isced11 %in% c("ED34", "ED35"),
-      1,
-      select_y
-    )
-  ) %>%
-  mutate(
-    select_y = ifelse(
-      f_resource == "DEMO_R_MLIFEXP" &
-        sex %in% c("T", "R") &
-        age %in% c("Y5", paste0("Y", seq(20, 80, 20))),
+      f_resource == "TRAN_R_ACCI" &
+        victim %in% c("KIL"),
       1,
       select_y
     )
@@ -76,7 +54,8 @@ var_select <- var_select %>%
       f_resource == "EDAT_LFS_9918" &
         sex %in% c("T", "R") &
         age == "Y25-64" &
-        citizen == "TOTAL",
+        citizen == "TOTAL" &
+        isced11 %in% c("ED3_4", "ED3-8", "ED5-8"),
       1,
       select_y
     )
@@ -87,7 +66,7 @@ var_select <- var_select %>%
         sex %in% c("T", "R") &
         age == "Y18-34" &
         duration == "TOTAL" &
-        isced11 %in% c("TOTAL", "ED0-2", "ED3_4", "ED5-8"),
+        isced11 %in% c("TOTAL", "ED3_4", "ED5-8"),
       1,
       select_y
     )
@@ -103,14 +82,6 @@ var_select <- var_select %>%
   ) %>%
   mutate(
     select_y = ifelse(
-      f_resource == "HLTH_RS_BDSNS" &
-        unit == "P_HTHAB",
-      1,
-      select_y
-    )
-  ) %>%
-  mutate(
-    select_y = ifelse(
       f_resource == "ookla" &
         quarter == "1" &
         direction == "download",
@@ -120,16 +91,9 @@ var_select <- var_select %>%
   ) %>%
   mutate(
     select_y = ifelse(
-      f_resource == "RD_E_GERDREG" &
-        unit == "PPS_HAB_KP05",
-      1,
-      select_y
-    )
-  ) %>%
-  mutate(
-    select_y = ifelse(
       f_resource == "TGS00010" &
-        sex %in% c("T", "R"),
+        sex %in% c("T", "R") &
+        isced11 %in% c("TOTAL", "ED3_4", "ED5-8"),
       1,
       select_y
     )
@@ -151,15 +115,6 @@ var_select <- var_select %>%
       select_y
     )
   )
-#   mutate(
-#   select_y = ifelse(
-#     f_resource == "YTH_EMPL_110" &
-#       sex %in% c("T", "R") &
-#       age %in% c("Y15-19", "Y20-24", "Y25-29"),
-#     1,
-#     select_y
-#   )
-# )
 
 var_select %>%
   filter(select_y == 1) %>%
@@ -176,3 +131,63 @@ dat_select <- dat %>%
 #---- save to disk ----#
 write.csv(dat_select, file.path(outdir, "data_select.csv"), row.names = FALSE)
 write.csv(var_select, file.path(outdir, "variable_selection.csv"), row.names = FALSE)
+
+
+
+#---- variable selection graveyard ----#
+
+# "TGS00064",
+# "TGS00099",
+# "TGS00103",
+
+# mutate(
+#   select_y = ifelse(
+#     f_resource == "BD_SIZE_R3" &
+#       indic_sb %in% c("V97010", "V97020", "V97030") &
+#       sizeclas == "TOTAL",
+#     1,
+#     select_y
+#   )
+# ) %>%
+# mutate(
+#   select_y = ifelse(
+#     f_resource == "EDUC_UOE_ENRA13" &
+#       isced11 %in% c("ED34", "ED35"),
+#     1,
+#     select_y
+#   )
+# ) %>%
+# mutate(
+#   select_y = ifelse(
+#     f_resource == "DEMO_R_MLIFEXP" &
+#       sex %in% c("T", "R") &
+#       age %in% c("Y5", paste0("Y", seq(20, 80, 20))),
+#     1,
+#     select_y
+#   )
+# ) %>%
+# mutate(
+#   select_y = ifelse(
+#     f_resource == "RD_E_GERDREG" &
+#       unit == "PPS_HAB_KP05",
+#     1,
+#     select_y
+#   )
+# ) %>%
+#   mutate(
+#   select_y = ifelse(
+#     f_resource == "YTH_EMPL_110" &
+#       sex %in% c("T", "R") &
+#       age %in% c("Y15-19", "Y20-24", "Y25-29"),
+#     1,
+#     select_y
+#   )
+# )
+# mutate(
+#   select_y = ifelse(
+#     f_resource == "HLTH_RS_BDSNS" &
+#       unit == "P_HTHAB",
+#     1,
+#     select_y
+#   )
+# ) %>%
