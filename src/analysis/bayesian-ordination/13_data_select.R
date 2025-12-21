@@ -14,6 +14,7 @@ library(tidyr)
 source(file.path(getwd(), "src", "analysis", "bayesian-ordination", "10_data_fun.R"))
 
 # directories
+indir <- file.path(getwd(), "wd", "in")
 datdir <- file.path(getwd(), "wd", "out", "bayesian-ordination")
 outdir <- file.path(getwd(), "wd", "out", "bayesian-ordination", "data_select")
 dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
@@ -21,6 +22,11 @@ dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
 # load data
 dat <- read.csv(file.path(datdir, "data_transform", "data_scale.csv"))
 var_select <- read.csv(file.path(datdir, "data_derive", "variable_selection.csv"))
+var_names <- read.csv(file.path(indir, "varnames.csv"))
+
+# join custom variable names
+var_select <- var_select %>%
+  left_join(var_names %>% select(variable_name, custom_name))
 
 # make selection programatically (if not done manually in the csv)
 var_select <- var_select %>%
@@ -37,7 +43,8 @@ var_select <- var_select %>%
         "TGS00050",
         "TGS00058",
         "TGS00059",
-        "TGS00101"
+        "TGS00101",
+        "TGS00103"
       ), 1, select_y
     )
   ) %>%
@@ -138,7 +145,6 @@ write.csv(var_select, file.path(outdir, "variable_selection.csv"), row.names = F
 
 # "TGS00064",
 # "TGS00099",
-# "TGS00103",
 
 # mutate(
 #   select_y = ifelse(

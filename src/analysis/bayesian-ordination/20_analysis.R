@@ -32,50 +32,48 @@ var_select <- read.csv(file.path(datdir, "variable_selection.csv"))
 
 #---- define latent variables ----#
 
-# Economics
-lava_econ <- c(
-  "TEPSR_LM220", # gender employment gap
+# Gender equality
+lava1 <- c(
+  "TEPSR_LM220" # gender employment gap
+)
+
+# Economic Development
+lava2 <- c(
   "YTH_EMPL_030", # youth employment rate
-  "EDAT_LFSE_33" # , # youth NEET employment rates
-)
-  # "TGS00103", # poverty reduction
-  # "BD_SIZE_R3" # business demography (births, deaths, change)
-  # "TGS00010", # employment rate by education level
-
-# Education
-lava_edu <- c(
-  "EDUC_UOE_ENRA17", # pupils pre-primary
-  "TGS00109", # tertiary educational attainment
-  "EDAT_LFS_9918" # educational attainment
-)
-  # "EDUC_UOE_ENRA13", # distribution of students among education types
-
-# Health
-lava_health <- c(
-  "TGS00058", # cancer deaths
-  "TGS00059", # heart disease deaths
-  "DEMO_R_MINFIND", # infant mortality
-  "HLTH_CD_YPERRTO" # peri- neo-natal mortality
-)
-  # "TGS00064", # hospital beds
-
-# Demography
-lava_demo <- c(
-  "DEMO_R_FIND2", # fertility indicators
-  "TGS00101" # life expectancy at birth
-)
-  # "TGS00099", # population change (natural, migration, total)
-
-# Environment
-lava_env <- c(
+  "EDAT_LFSE_33" , # youth NEET employment rates
+  "TGS00103", # poverty reduction
+  "TGS00010", # employment rate by education level
   "pm25", # air particulates
   "ookla", # internet speed
-  "TGS00050", # internet usage
-  "TRAN_R_ACCI" # transportation accidents
+  "TGS00050" # internet usage
 )
 
+# Human Capital
+lava3 <- c(
+  "TGS00058", # cancer deaths
+  "TGS00059", # heart disease deaths
+  "DEMO_R_FIND2", # fertility indicators
+  "TGS00101", # life expectancy at birth
+  "TGS00109", # tertiary educational attainment
+  "DEMO_R_MINFIND", # infant mortality
+  "HLTH_CD_YPERRTO", # peri- neo-natal mortality
+  "EDUC_UOE_ENRA17" # pupils pre-primary
+)
+
+# "EDAT_LFS_9918" # educational attainment
+# "TGS00064", # hospital beds
+# "TGS00099", # population change (natural, migration, total)
+# "TRAN_R_ACCI" # transportation accidents
+# "BD_SIZE_R3" # business demography (births, deaths, change)
+# "EDUC_UOE_ENRA13", # distribution of students among education types
+
+lava_vars <- c(lava1, lava2, lava3)
 
 #---- variable selection ----#
+
+# unselect variables not in latent variables
+var_select <- var_select %>% 
+  mutate(select_y = ifelse(!f_resource %in% lava_vars, 0, select_y))
 
 # identify variables with no variance
 drop_vars <- dat %>%
@@ -86,16 +84,17 @@ drop_vars <- dat %>%
   )) %>%
   names()
 
+kill_list <- c() # "TGS00109_4", "TGS00101_4", "TGS00101_2", "TEPSR_LM220_1"
+drop_vars <- c(drop_vars, kill_list)
+
 # make variable selection
 var_select <- var_select %>%
   filter(select_y == 1) %>%
   filter(!variable_name %in% drop_vars) %>%
   mutate(latent_variable = case_when(
-    f_resource %in% lava_econ ~ "Economy",
-    f_resource %in% lava_edu ~ "Education",
-    f_resource %in% lava_health ~ "Health",
-    f_resource %in% lava_demo ~ "Demography",
-    f_resource %in% lava_env ~ "Environment"
+    f_resource %in% lava1 | sex == "R" ~ "Gender_Equality",
+    f_resource %in% lava2 ~ "Economic_Development",
+    f_resource %in% lava3 ~ "Human_Capital"
   )) %>%
   mutate(select_y = case_when(
     is.na(latent_variable) ~ 0,
@@ -117,7 +116,7 @@ md <- dat %>%
 # drop columns to remove collinearity
 cor_mat <- cor(md %>% select(-geo, -geo_name), use = "pairwise.complete.obs")
 
-to_drop_idx <- findCorrelation(cor_mat, cutoff = 0.95, verbose = TRUE)
+to_drop_idx <- findCorrelation(cor_mat, cutoff = 0.9, verbose = TRUE)
 to_drop_names <- colnames(cor_mat)[to_drop_idx]
 
 md <- md %>% select(-all_of(to_drop_names))
@@ -141,6 +140,10 @@ drop_rows <- md %>%
 
 md <- md %>%
   filter(!geo %in% drop_rows)
+
+# country
+md <- md %>%
+  mutate(country = substr(geo, 1, 2))
 
 # save data
 write.csv(md, file.path(outdir, "md.csv"), row.names = FALSE)
@@ -199,6 +202,11 @@ seed <- sample.int(.Machine$integer.max, 1L)
 inits <- "simple"
 # inits <- blavInspect(fit_initial, "inits")
 
+# priors
+# my_priors <- dpriors(
+#   lambda = "normal(0, 1)", 
+#   alpha = "normal(0, 1)"
+# )
 
 # run Bayesian structural equation model
 time_start <- Sys.time()
@@ -207,8 +215,10 @@ fit <- bsem(
   data = md,
   target = "stan",
   inits = inits,
+  # cluster = "country",
   burnin = 500,
-  sample = 2000,
+  sample = 1000,
+  # dpriors = my_priors,
   std.lv = TRUE,
   meanstructure = TRUE,
   # save.lvs = TRUE,  # required for blavPredict(..., type = c("yhat", "ypred"))
