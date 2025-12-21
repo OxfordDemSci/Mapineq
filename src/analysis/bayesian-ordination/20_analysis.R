@@ -191,6 +191,14 @@ cat(model)
 
 # random seed
 seed <- sample.int(.Machine$integer.max, 1L)
+sample <- ifelse(!extend_fit, 1000, 2000)
+
+if(!extend_fit){
+  inits <- "simple"
+} else {
+  inits <- blavInspect(fit_initial, "inits")
+}
+
 
 # run Bayesian structural equation model
 time_start <- Sys.time()
@@ -198,9 +206,9 @@ fit <- bsem(
   model,
   data = md,
   target = "stan",
-  inits = ifelse(extend_fit, blavInspect(fit_initial, "inits"), "simple"),
+  inits = inits,
   burnin = 500,
-  sample = ifelse(extend_fit, 2000, 1000),
+  sample = sample,
   # save.lvs = TRUE,  # required for blavPredict(..., type = c("yhat", "ypred"))
   seed = seed
 )
@@ -208,8 +216,13 @@ time_end <- Sys.time()
 print(time_end - time_start)
 
 # save model
-saveRDS(fit, file.path(outdir, "fit.rds"))
-saveRDS(seed, file.path(outdir, "seed.rds"))
+if(!extend_fit){
+  saveRDS(fit, file.path(outdir, "fit.rds"))
+  saveRDS(seed, file.path(outdir, "seed.rds"))
+} else {
+  saveRDS(fit, file.path(outdir, "fit_extend.rds"))
+  saveRDS(seed, file.path(outdir, "seed_extend.rds"))
+} 
 
 # model summary
 summary(fit, fit.measures = TRUE, standardized = TRUE)

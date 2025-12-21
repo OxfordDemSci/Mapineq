@@ -20,7 +20,11 @@ outdir <- file.path(getwd(), "wd", "out", "bayesian-ordination", "vis_3d_scatter
 dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
 
 # load data
-fit <- readRDS(file.path(datdir, "fit.rds"))
+if(file.exists(file.path(datdir, "fit_extend.rds"))){
+  fit <- readRDS(file.path(datdir, "fit_extend.rds"))
+} else {
+  fit <- readRDS(file.path(datdir, "fit.rds"))
+}
 md <- read.csv(file.path(datdir, "..", "impute", "md.csv"))
 imputed <- read.csv(file.path(datdir, "..", "impute", "imputed.csv"))
 nuts <- st_read(file.path(dbdir, "NUTS_RG_20M_2021_4326.geojson"))

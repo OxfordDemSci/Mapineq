@@ -17,7 +17,11 @@ outdir <- file.path(getwd(), "wd", "out", "bayesian-ordination", "vis_factor_loa
 dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
 
 # load data
-fit <- readRDS(file.path(datdir, "fit.rds"))
+if(file.exists(file.path(datdir, "fit_extend.rds"))){
+  fit <- readRDS(file.path(datdir, "fit_extend.rds"))
+} else {
+  fit <- readRDS(file.path(datdir, "fit.rds"))
+}
 md <- read.csv(file.path(datdir, "md.csv"))
 
 # get posterior samples
