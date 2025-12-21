@@ -20,7 +20,7 @@ outdir <- file.path(getwd(), "wd", "out", "bayesian-ordination", "vis_3d_scatter
 dir.create(outdir, recursive = TRUE, showWarnings = FALSE)
 
 # load data
-if(file.exists(file.path(datdir, "fit_extend.rds"))){
+if (file.exists(file.path(datdir, "fit_extend.rds"))) {
   fit <- readRDS(file.path(datdir, "fit_extend.rds"))
 } else {
   fit <- readRDS(file.path(datdir, "fit.rds"))
@@ -28,6 +28,26 @@ if(file.exists(file.path(datdir, "fit_extend.rds"))){
 md <- read.csv(file.path(datdir, "..", "impute", "md.csv"))
 imputed <- read.csv(file.path(datdir, "..", "impute", "imputed.csv"))
 nuts <- st_read(file.path(dbdir, "NUTS_RG_20M_2021_4326.geojson"))
+var_names <- read.csv(file.path(datdir, "..", "data_select", "variable_selection.csv"))
+
+#---- variable names ----#
+md_orig <- md
+
+model_vars <- lavaan::lavNames(fit, type = "ov.nox")
+
+var_names <- var_names %>%
+  filter(select_y == 1 & variable_name %in% model_vars) %>%
+  select(custom_name, variable_name)
+
+mapping <- with(var_names, setNames(custom_name, variable_name))
+
+mapping_lower <- setNames(paste0(mapping, "_lower"), paste0(names(mapping), "_lower"))
+mapping_upper <- setNames(paste0(mapping, "_upper"), paste0(names(mapping), "_upper"))
+
+full_map <- c(mapping, mapping_lower, mapping_upper)
+
+md <- md_orig %>% rename(any_of(setNames(names(full_map), full_map)))
+
 
 # nuts centroids
 nuts_centroids <- nuts %>%
@@ -65,13 +85,12 @@ df <- bind_cols(
   )
 
 # drop-down list items
-orig_vars <- lavaan::lavNames(fit, type = "ov.nox")
 latents <- names(fscores)
-all_choices <- c(latents, "Longitude", "Latitude", orig_vars)
+all_choices <- c(latents, "Longitude", "Latitude", as.vector(full_map))
 
 # create plot data
 cols_data <- c(
-  c(orig_vars, paste0(orig_vars, "_lower"), paste0(orig_vars, "_upper")),
+  c(as.vector(mapping), as.vector(mapping_lower), as.vector(mapping_upper)),
   c(latents, paste0(latents, "_lower"), paste0(latents, "_upper"))
 )
 df <- df %>% select(CaseID, Country, Longitude, Latitude, all_of(cols_data))
