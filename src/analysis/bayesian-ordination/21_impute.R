@@ -36,6 +36,9 @@ vars_model <- lavaan::lavNames(fit, type = "ov.nox")
 md_impute_mean <- md %>%
   select(all_of(vars_model))
 
+# indicator of imputed values
+imputed <- as.data.frame(is.na(md_impute_mean) + 0)
+
 # setup data frame to include mean, lower, and upper
 md_impute_lower <- md_impute_mean
 md_impute_upper <- md_impute_mean
@@ -56,6 +59,8 @@ names(md_impute_upper) <- paste0(names(md_impute_mean), "_upper")
 
 # combine row id info, mean, lower, and upper
 md_impute <- cbind(id_md, md_impute_mean, md_impute_lower, md_impute_upper)
+imputed <- cbind(id_md, imputed)
 
 # save to disk
 write.csv(md_impute, file.path(outdir, "md.csv"), row.names = FALSE)
+write.csv(imputed, file.path(outdir, "imputed.csv"), row.names = FALSE)

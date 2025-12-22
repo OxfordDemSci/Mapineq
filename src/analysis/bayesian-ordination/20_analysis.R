@@ -107,6 +107,9 @@ vars <- var_select %>%
   pull(variable_name) %>%
   sort()
 
+# save variable selection
+write.csv(var_select, file=file.path(outdir, "var_select.csv"), row.names=FALSE)
+
 #---- model data ----#
 
 # select columns

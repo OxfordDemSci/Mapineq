@@ -29,6 +29,7 @@ var_names <- read.csv(file.path(indir, "varnames.csv"))
 
 #---- variable names ----#
 md_orig <- md
+imputed_orig <- imputed
 
 model_vars <- lavaan::lavNames(fit, type = "ov.nox")
 
@@ -45,6 +46,8 @@ full_map <- c(mapping, mapping_lower, mapping_upper)
 
 md <- md_orig %>% rename(any_of(setNames(names(full_map), full_map)))
 
+imputed <- imputed_orig %>%
+  rename(any_of(setNames(names(mapping), mapping)))
 
 # nuts centroids
 nuts_centroids <- nuts %>%
@@ -90,7 +93,7 @@ cols_data <- c(
   c(as.vector(mapping), as.vector(mapping_lower), as.vector(mapping_upper)),
   c(latents, paste0(latents, "_lower"), paste0(latents, "_upper"))
 )
-df <- df %>% select(CaseID, Country, Longitude, Latitude, all_of(cols_data))
+df <- df %>% select(CaseID, Country, geo, Longitude, Latitude, all_of(cols_data))
 
 # assign a distinct hex-colour to each of the 37 countries
 n_ct <- length(unique(df$Country))
@@ -105,6 +108,12 @@ p <- plot_ly()
 for (cty in unique(df$Country)) {
   dsub <- df[df$Country == cty, ]
 
+  # Calculate the distance for the error bars
+  # (Upper Bound minus the Estimate)
+  err_x <- dsub[[paste0(current_axes[1], "_upper")]] - dsub[[current_axes[1]]]
+  err_y <- dsub[[paste0(current_axes[2], "_upper")]] - dsub[[current_axes[2]]]
+  err_z <- dsub[[paste0(current_axes[3], "_upper")]] - dsub[[current_axes[3]]]
+
   p <- add_trace(
     p,
     data = dsub,
@@ -113,6 +122,11 @@ for (cty in unique(df$Country)) {
     z = ~ get(current_axes[3]),
     type = "scatter3d",
     mode = "markers",
+
+    # 3D Error Bars configuration
+    error_x = list(type = "data", array = rep(0, nrow(dsub)), color = dsub$colHex, thickness = 1),
+    error_y = list(type = "data", array = rep(0, nrow(dsub)), color = dsub$colHex, thickness = 1),
+    error_z = list(type = "data", array = rep(0, nrow(dsub)), color = dsub$colHex, thickness = 1),
     marker = list(
       color   = dsub$colHex,
       size    = 5,
@@ -187,7 +201,7 @@ p <- p %>% onRender(
   ),
   data = list(
     df = df,
-    # df_sym = df_sym,
+    imputed = imputed,
     all_choices = all_choices,
     current_axes = current_axes
   )
