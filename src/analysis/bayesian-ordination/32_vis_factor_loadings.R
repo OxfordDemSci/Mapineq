@@ -65,7 +65,7 @@ for (f in unique(draws_long$factor)) {
     scale_y_discrete(labels = function(x) str_wrap(x, width = 30)) +
     scale_fill_viridis_d(guide = "none") +
     labs(
-      title = paste("Standardized Factor Loadings:", f),
+      title = paste("Factor Loadings:", f),
       subtitle = "Posterior distributions (ordered by mean loading)",
       x = "Standardized Loading",
       y = NULL

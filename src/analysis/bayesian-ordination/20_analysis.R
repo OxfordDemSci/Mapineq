@@ -92,9 +92,9 @@ var_select <- var_select %>%
   filter(select_y == 1) %>%
   filter(!variable_name %in% drop_vars) %>%
   mutate(latent_variable = case_when(
-    f_resource %in% lava1 | sex == "R" ~ "Gender_Equality",
-    f_resource %in% lava2 ~ "Economic_Development",
-    f_resource %in% lava3 ~ "Human_Capital"
+    f_resource %in% lava1 | sex == "R" ~ "Gender_Inequality",
+    f_resource %in% lava2 ~ "Economic_and_Digital_Development",
+    f_resource %in% lava3 ~ "Risks_to_Human_Capital"
   )) %>%
   mutate(select_y = case_when(
     is.na(latent_variable) ~ 0,
