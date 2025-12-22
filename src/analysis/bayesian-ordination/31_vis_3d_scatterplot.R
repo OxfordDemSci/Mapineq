@@ -86,7 +86,9 @@ df <- bind_cols(
 
 # drop-down list items
 latents <- names(fscores)
-all_choices <- c(latents, "Longitude", "Latitude", as.vector(full_map))
+indicators <- as.vector(full_map)
+indicators <- indicators[!grepl("_lower", indicators) & !grepl("_upper", indicators)]
+all_choices <- c(latents, "Longitude", "Latitude", indicators)
 
 # create plot data
 cols_data <- c(
