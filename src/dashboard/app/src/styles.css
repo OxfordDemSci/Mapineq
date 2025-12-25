@@ -496,6 +496,11 @@ div.divLoading:after {
 #drawer_selection_part_content {
 }
 
+.divTableDescr {
+  height: 3em;
+  overflow-y: auto;
+}
+
 
 #drawer_button_part {
     border-top: 2px solid var(--color-toolbar);
