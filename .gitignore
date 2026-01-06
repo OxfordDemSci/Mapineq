@@ -191,3 +191,5 @@ dmypy.json
 src/database/prod.env
 *.gpkg
 /MapIneq.iml
+.DS_Store
+**/.DS_Store
