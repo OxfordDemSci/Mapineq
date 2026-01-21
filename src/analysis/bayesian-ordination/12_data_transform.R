@@ -63,7 +63,7 @@ data_trans <- data_wide
 
 # log transform
 x <- data_wide[, vars_log]
-data_trans[, vars_log] <- log(x + 1)
+data_trans[, vars_log] <- asinh(x) # log(x + 1)
 
 # # logit transform
 # eps <- 1e-3
@@ -90,14 +90,21 @@ data_scale <- data_wide
 for (var in vars) {
   mu <- sumstats[var, "mean"]
   sigma <- sumstats[var, "sd"]
-  data_scale[, var] <- (data_wide[, var] - mu) / sigma
+  data_scale[, var] <- (data_trans[, var] - mu) / sigma
 }
 
-# spot-check histograms
-var <- vars[sample(1:length(vars), 1)]
-hist(data_wide[, var], main = var)
-hist(data_trans[, var], main = var)
-hist(data_scale[, var], main = var)
+# check histograms
+dir.create(file.path(outdir, "histograms"), recursive = T, showWarnings = F)
+for (var in vars) {
+  jpeg(file.path(outdir, "histograms", paste0(var, ".jpg")))
+  par(mfrow = c(3, 1), mar = c(1, 1, 1, 1))
+
+  hist(data_wide[, var], main = var)
+  hist(data_trans[, var], main = var)
+  hist(data_scale[, var], main = var)
+  dev.off()
+}
+par(mfrow = c(1, 1))
 
 #---- save to disk ----#
 write.csv(data_scale, file.path(outdir, "data_scale.csv"), row.names = FALSE)

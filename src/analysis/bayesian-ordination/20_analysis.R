@@ -40,7 +40,7 @@ lava1 <- c(
 # Economic Development
 lava2 <- c(
   "YTH_EMPL_030", # youth employment rate
-  "EDAT_LFSE_33" , # youth NEET employment rates
+  "EDAT_LFSE_33", # youth NEET employment rates
   "TGS00103", # poverty reduction
   "TGS00010", # employment rate by education level
   "pm25", # air particulates
@@ -72,7 +72,7 @@ lava_vars <- c(lava1, lava2, lava3)
 #---- variable selection ----#
 
 # unselect variables not in latent variables
-var_select <- var_select %>% 
+var_select <- var_select %>%
   mutate(select_y = ifelse(!f_resource %in% lava_vars, 0, select_y))
 
 # identify variables with no variance
@@ -108,7 +108,7 @@ vars <- var_select %>%
   sort()
 
 # save variable selection
-write.csv(var_select, file=file.path(outdir, "var_select.csv"), row.names=FALSE)
+write.csv(var_select, file = file.path(outdir, "var_select.csv"), row.names = FALSE)
 
 #---- model data ----#
 
@@ -207,7 +207,7 @@ inits <- "simple"
 
 # priors
 # my_priors <- dpriors(
-#   lambda = "normal(0, 1)", 
+#   lambda = "normal(0, 1)",
 #   alpha = "normal(0, 1)"
 # )
 
