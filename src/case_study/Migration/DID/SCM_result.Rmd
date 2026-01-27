@@ -9,11 +9,15 @@ library(scales)
 library(geomtextpath)
 library(RColorBrewer)
 
-OUTPUT_DIR <- "/Users/wenlanzhang/PycharmProjects/Mapineq/src/case_study/Migration/DID/SCM_results/CL/"
+OUTPUT_DIR <- "/Users/wenlanzhang/PycharmProjects/Mapineq/src/case_study/Migration/DID/SCM_results/TR/"
 
 # filter to one spec (e.g., "log_grp0p40" or "raw_grp0p20_cap0p30"), set this:
-SPEC_TAG <- NULL  
-SPEC_TAG <- 'log_grp0p4' 
+# SPEC_TAG <- 'log_grp0p4' 
+SPEC_TAG <- 'raw_grp0p4' 
+
+# Determine if log or raw based on SPEC_TAG
+IS_LOG <- grepl("^log_", SPEC_TAG)
+FIG_PREFIX <- ifelse(IS_LOG, "l", "r")  # l for log results, r for raw results
 
 my_colors <- c('#5894D0', '#F0C37E', '#AFDBF4', '#F2C2D8', '#12529A', '#b7a8cf')
 
@@ -59,31 +63,70 @@ post_line_x <- function(df) {
   if (nrow(d)) d$date[[1]] else NA
 }
 
+# Helper function to generate numbered filenames
+fig_filename <- function(base_name, fig_num) {
+  paste0(fig_num, FIG_PREFIX, "_", base_name, ".png")
+}
+
 ```
 
-
+# 1) Treated vs Synthetic (Combined)
 ```{r}
 # 1) Treated vs Synthetic (Combined) ------------------------------------------
 plot_treated_vs_synth <- function(series_file = ff("^series_combined_")) {
   dat <- read_csv_safe(series_file) %>% mutate(date = as.Date(date))
   vline_x <- post_line_x(dat)
+  
+  # Use column names based on IS_LOG: log uses on_model_scale_*, raw uses treated_levels/synthetic_levels
+  if (IS_LOG) {
+    treated_col <- "on_model_scale_treated"
+    synth_col <- "on_model_scale_synth"
+  } else {
+    treated_col <- "treated_levels"
+    synth_col <- "synthetic_levels"
+  }
+
+  # Calculate y range for text positioning - align end of text with max y
+  y_range <- range(c(dat[[treated_col]], dat[[synth_col]]), na.rm = TRUE)
+  y_text <- y_range[2]  # Position at max y so end of text aligns with max
+  # Calculate date range for horizontal offset
+  date_range <- as.numeric(range(dat$date, na.rm = TRUE))
+  x_offset <- (date_range[2] - date_range[1]) * 0.02  # Small offset to move text away from line
+  
+  # Calculate policy publication date (3 months after anticipation)
+  vline_x2 <- if (!is.na(vline_x)) vline_x + months(3) else NA
 
   ggplot(dat, aes(x = date)) +
 
     # Lines
     geom_line(aes(
-      y = on_model_scale_treated,
+      y = .data[[treated_col]],
       linetype = "Treated",
       color    = "Treated"
     ), linewidth = 1.1) +
     geom_line(aes(
-      y = on_model_scale_synth,
+      y = .data[[synth_col]],
       linetype = "Synthetic",
       color    = "Synthetic"
     ), linewidth = 1.1) +
 
-    # Post-intervention vertical line
-    { if (!is.na(vline_x)) geom_vline(xintercept = vline_x, linetype = "dotted", linewidth = 0.8) } +
+    # Post-intervention vertical line (Anticipation) - red for analysis
+    { if (!is.na(vline_x)) geom_vline(xintercept = vline_x, linetype = "dotted", linewidth = 0.8, color = "red") } +
+    
+    # Policy publication vertical line (3 months later)
+    { if (!is.na(vline_x2)) geom_vline(xintercept = vline_x2, linetype = "dotted", linewidth = 0.8) } +
+    
+    # Add "Anticipation" text label - end of text at max y, offset from line
+    { if (!is.na(vline_x)) 
+        annotate("text", x = vline_x + x_offset, y = y_text, label = "Anticipation",
+                 angle = 90, hjust = 1, vjust = 0.5, size = 4, color = "black")
+    } +
+    
+    # Add "Policy Publication" text label - end of text at max y, offset from line
+    { if (!is.na(vline_x2)) 
+        annotate("text", x = vline_x2 + x_offset, y = y_text, label = "Policy Publication",
+                 angle = 90, hjust = 1, vjust = 0.5, size = 4, color = "black")
+    } +
 
     # Manual colors
     scale_color_manual(
@@ -103,7 +146,7 @@ plot_treated_vs_synth <- function(series_file = ff("^series_combined_")) {
 
     labs(
       x = "",
-      y = "Model scale (log)",
+      y = ifelse(IS_LOG, "Model scale (log)", "Model scale (levels)"),
       color = "",
       linetype = "",
       title = "Treated vs Synthetic — Combined"
@@ -127,17 +170,44 @@ plot_treated_vs_synth <- function(series_file = ff("^series_combined_")) {
 }
 
 print(plot_treated_vs_synth())
-ggsave(file.path(OUTPUT_DIR, "r_treated_vs_synth.png"), plot_treated_vs_synth(), 
+ggsave(file.path(OUTPUT_DIR, fig_filename("treated_vs_synth", 1)), plot_treated_vs_synth(), 
        width = 9, height = 4.5, dpi = 200)
 ```
 
+# 2) Gap series (Combined)
 ```{r}
 # 2) Gap series (Combined) ----------------------------------------------------
 plot_gap_combined <- function(gap_file = ff("^gap_combined_")) {
   dat <- read_csv_safe(gap_file) %>% mutate(date = as.Date(date))
   vline_x <- post_line_x(dat)
+  
+  # Determine gap column name - check what's actually available
+  # For log: gap_model_scale, for raw: could be gap_levels or gap_model_scale
+  if (IS_LOG) {
+    gap_col <- "gap_model_scale"
+  } else {
+    # For raw data, check which column exists
+    if ("gap_levels" %in% names(dat)) {
+      gap_col <- "gap_levels"
+    } else if ("gap_model_scale" %in% names(dat)) {
+      gap_col <- "gap_model_scale"
+    } else {
+      stop("Could not find gap column. Available columns: ", 
+           paste(names(dat), collapse = ", "))
+    }
+  }
 
-  ggplot(dat, aes(x = date, y = gap_model_scale)) +
+  # Calculate y range for text positioning - align end of text with max y
+  y_range <- range(dat[[gap_col]], na.rm = TRUE)
+  y_text <- y_range[2]  # Position at max y so end of text aligns with max
+  # Calculate date range for horizontal offset
+  date_range <- as.numeric(range(dat$date, na.rm = TRUE))
+  x_offset <- (date_range[2] - date_range[1]) * 0.02  # Small offset to move text away from line
+  
+  # Calculate policy publication date (3 months after anticipation)
+  vline_x2 <- if (!is.na(vline_x)) vline_x + months(3) else NA
+
+  ggplot(dat, aes(x = date, y = .data[[gap_col]])) +
 
     # Zero reference line
     geom_hline(yintercept = 0, linewidth = 0.9, color = "grey40") +
@@ -145,9 +215,26 @@ plot_gap_combined <- function(gap_file = ff("^gap_combined_")) {
     # Gap line
     geom_line(linewidth = 1.2, color = '#5894D0') + # "#12529A"
 
-    # Intervention vertical line
+    # Post-intervention vertical line (Anticipation) - red for analysis
     { if (!is.na(vline_x)) 
-        geom_vline(xintercept = vline_x, linetype = "dotted", linewidth = 0.8)
+        geom_vline(xintercept = vline_x, linetype = "dotted", linewidth = 0.8, color = "red")
+    } +
+    
+    # Policy publication vertical line (3 months later)
+    { if (!is.na(vline_x2)) 
+        geom_vline(xintercept = vline_x2, linetype = "dotted", linewidth = 0.8)
+    } +
+    
+    # Add "Anticipation" text label - end of text at max y, offset from line
+    { if (!is.na(vline_x)) 
+        annotate("text", x = vline_x + x_offset, y = y_text, label = "Anticipation",
+                 angle = 90, hjust = 1, vjust = 0.5, size = 4, color = "black")
+    } +
+    
+    # Add "Policy Publication" text label - end of text at max y, offset from line
+    { if (!is.na(vline_x2)) 
+        annotate("text", x = vline_x2 + x_offset, y = y_text, label = "Policy Publication",
+                 angle = 90, hjust = 1, vjust = 0.5, size = 4, color = "black")
     } +
 
     labs(
@@ -170,10 +257,11 @@ plot_gap_combined <- function(gap_file = ff("^gap_combined_")) {
 }
 
 print(plot_gap_combined())
-ggsave(file.path(OUTPUT_DIR, "r_gap_combined.png"), 
+ggsave(file.path(OUTPUT_DIR, fig_filename("gap_combined", 2)), 
        plot_gap_combined(), width = 9, height = 4.5, dpi = 200)
 ```
 
+# 3) Pre-fit scatter (levels) 
 ```{r}
 # 3) Pre-fit scatter (levels) -------------------------------------------------
 
@@ -267,11 +355,11 @@ plot_prefit_scatter <- function(scatter_file = ff("^prefit_scatter_combined_poin
 
 # ----- Plot and save -----
 print(plot_prefit_scatter())
-ggsave(file.path(OUTPUT_DIR, "r_prefit_scatter.png"), 
+ggsave(file.path(OUTPUT_DIR, fig_filename("prefit_scatter", 3)), 
        plot_prefit_scatter(), width = 5, height = 5, dpi = 200)
 ```
 
-
+# 4) Unit placebo gaps overlay
 ```{r}
 # 4) Unit placebo gaps overlay ------------------------------------------------
 plot_unit_placebo_gaps <- function(
@@ -284,6 +372,28 @@ plot_unit_placebo_gaps <- function(
   pl <- read_csv_safe(placebos_long_file) %>% mutate(date = as.Date(date))
   tg <- read_csv_safe(treated_gap_file)   %>% mutate(date = as.Date(date))
   vline_x <- post_line_x(tg)
+  
+  # Determine gap column name - check what's actually available
+  # For log: gap_model_scale, for raw: could be gap_levels or gap_model_scale
+  if (IS_LOG) {
+    gap_col <- "gap_model_scale"
+  } else {
+    # For raw data, check which column exists
+    if ("gap_levels" %in% names(pl)) {
+      gap_col <- "gap_levels"
+    } else if ("gap_model_scale" %in% names(pl)) {
+      gap_col <- "gap_model_scale"
+    } else {
+      stop("Could not find gap column. Available columns in placebo file: ", 
+           paste(names(pl), collapse = ", "))
+    }
+  }
+  
+  # Verify the column exists in treated gap file too
+  if (!gap_col %in% names(tg)) {
+    stop("Column '", gap_col, "' not found in treated gap file. Available columns: ", 
+         paste(names(tg), collapse = ", "))
+  }
 
   # Assign a color to each placebo unit using Set3
   placebo_units <- unique(pl$unit)
@@ -293,11 +403,11 @@ plot_unit_placebo_gaps <- function(
 
   ggplot() +
     # Placebo lines with Set3 colors
-    geom_line(data = pl, aes(x = date, y = gap_model_scale, group = unit, color = unit),
+    geom_line(data = pl, aes(x = date, y = .data[[gap_col]], group = unit, color = unit),
               alpha = 0.4, linewidth = 0.4) +
 
     # Treated gap line
-    geom_line(data = tg, aes(date, gap_model_scale),
+    geom_line(data = tg, aes(x = date, y = .data[[gap_col]]),
               color = colors$treated, linewidth = 1) +
 
     # Post-intervention vertical line
@@ -330,11 +440,12 @@ plot_unit_placebo_gaps <- function(
 
 
 print(plot_unit_placebo_gaps())
-ggsave(file.path(OUTPUT_DIR, "r_unit_placebo_gaps.png"), 
+ggsave(file.path(OUTPUT_DIR, fig_filename("unit_placebo_gaps", 4)), 
        plot_unit_placebo_gaps(), width = 9, height = 4.5, dpi = 200)
 
 ```
 
+# 5) Unit-placebo MSPE ratio histogram
 ```{r}
 # 5) Unit-placebo MSPE ratio histogram ---------------------------------------
 plot_mspe_hist <- function(ratios_file = ff("^unit_placebo_mspe_ratios_")) {
@@ -347,7 +458,7 @@ plot_mspe_hist <- function(ratios_file = ff("^unit_placebo_mspe_ratios_")) {
     # geom_histogram(bins = 30) + # Black & White
     # { if (length(treated_val) == 1) geom_vline(xintercept = treated_val, linetype = "dashed") } +
     
-      geom_histogram(bins = 30, fill = '#b7a8cf', color = "black", linewidth = 0.15) +
+      geom_histogram(bins = 30, fill = '#AFDBF4', color = "black", linewidth = 0.15) +
     { if (length(treated_val) == 1) geom_vline(xintercept = treated_val, linetype = "dashed", color = "red", linewidth = 0.8) } +
     
     labs(x = "Post/Pre MSPE ratio (placebos)", 
@@ -366,12 +477,12 @@ plot_mspe_hist <- function(ratios_file = ff("^unit_placebo_mspe_ratios_")) {
 }
 
 print(plot_mspe_hist())
-ggsave(file.path(OUTPUT_DIR, "r_unit_placebo_mspe_his.png"), 
+ggsave(file.path(OUTPUT_DIR, fig_filename("unit_placebo_mspe_his", 5)), 
        plot_mspe_hist(), width = 9, height = 4.5, dpi = 200)
 
 ```
 
-
+# 6) Origin-only / Destination-only overlays
 ```{r}
 # 6) Origin-only / Destination-only overlays ----------------------------------
 plot_origin_dest_overlays <- function(series_origin_file = ff("^series_origin_only_"),
@@ -418,8 +529,13 @@ plot_origin_dest_overlays <- function(series_origin_file = ff("^series_origin_on
 
 ov <- plot_origin_dest_overlays()
 print(ov$origin_only); print(ov$destination_only)
+ggsave(file.path(OUTPUT_DIR, fig_filename("origin_only", 6)), 
+       ov$origin_only, width = 9, height = 4.5, dpi = 200)
+ggsave(file.path(OUTPUT_DIR, fig_filename("destination_only", 6)), 
+       ov$destination_only, width = 9, height = 4.5, dpi = 200)
 ```
 
+# 7) Double-counterfactual gaps (levels)
 ```{r}
 # 7) Double-counterfactual gaps (levels) --------------------------------------
 plot_double_counterfactual <- function(double_gap_file = ff("^double_counterfactual_gaps_levels_")) {
@@ -451,10 +567,11 @@ plot_double_counterfactual <- function(double_gap_file = ff("^double_counterfact
 }
 
 print(plot_double_counterfactual())
-ggsave(file.path(OUTPUT_DIR, "r_double_counterfactual.png"), 
+ggsave(file.path(OUTPUT_DIR, fig_filename("double_counterfactual", 7)), 
        plot_double_counterfactual(), width = 9, height = 4.5, dpi = 200)
 ```
 
+# 8) Share-of-destination series + projection
 ```{r}
 # 8) Share-of-destination series + projection ---------------------------------
 # plot_share_projection <- function(share_file = ff("^share_of_dest_series_and_projection_")) {
@@ -517,10 +634,11 @@ plot_share_projection <- function(share_file = ff("^share_of_dest_series_and_pro
 }
 
 print(plot_share_projection())
-ggsave(file.path(OUTPUT_DIR, "r_share_proj.png"), 
+ggsave(file.path(OUTPUT_DIR, fig_filename("share_proj", 8)), 
        plot_share_projection(), width = 9, height = 4.5, dpi = 200)
 ```
 
+# 9) Month-placebos histogram
 ```{r}
 # 9) Month-placebos histogram --------------------------------------------------
 plot_month_placebos_hist <- function(month_pl_file = ff("^month_placebos_"),
@@ -539,7 +657,7 @@ plot_month_placebos_hist <- function(month_pl_file = ff("^month_placebos_"),
 #     { if (is.finite(real_val)) geom_vline(xintercept = real_val,linetype="dashed")} +
     geom_histogram(
       bins = 12,
-      fill = '#F2C2D8',
+      fill = '#AFDBF4',
       color = "black",
       linewidth = 0.2  # thin border
     ) +
@@ -566,7 +684,7 @@ plot_month_placebos_hist <- function(month_pl_file = ff("^month_placebos_"),
 }
 
 print(plot_month_placebos_hist())
-ggsave(file.path(OUTPUT_DIR, "r_month_placebos_hist.png"), 
+ggsave(file.path(OUTPUT_DIR, fig_filename("month_placebos_hist", 9)), 
        plot_month_placebos_hist(), width = 9, height = 4.5, dpi = 200)
 ```
 
