@@ -3,6 +3,7 @@
 **/out/
 .idea/
 *.env
+lavExport/
 */.DS_Store
 
 #---- R -----#
